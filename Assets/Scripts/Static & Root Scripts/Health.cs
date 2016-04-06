@@ -1,0 +1,134 @@
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+[RequireComponent(typeof(AudioSource))]
+
+public class Health : MonoBehaviour {
+
+	public bool dead = false;
+	public int health = 5;
+	public int maxHealth = 5; //formerly 100
+	public int awareness = 0;
+	public int maxAwareness = 5;
+	[Tooltip ("Per bar, in seconds")]
+	public float awarenessRechargeTime = 3;
+	public int snapFocusAmount = 1;
+	public int armourPoints = 0;
+
+	//not used on basic fighters now
+	public float healthRecoveryRate = 0; //formerly 2
+	public bool hasFireExtinguisher = true;
+
+	public Vector3 sixOclockPos = new Vector3(0, -6, 0);
+
+	public LayerMask friendlyFire;
+
+	protected bool temporarilyInvincible = false; //used instead of flashing the collider on and off. Prevents two shots close together both hitting													
+	protected bool shouldTurnBackOffTempInvincibility = true;
+
+	[Header("For Effects")]
+	public ParticleSystem smoke;
+	protected ParticleSystem.EmissionModule smokeEm;
+	public ParticleSystem flames;
+	protected ParticleSystem.EmissionModule flamesEm;
+	public Slider healthSlider;
+	public Slider awarenessSlider;
+	Image healthSliderColour;
+	public AudioClip playerHitSound;
+	protected Image bloodSplashImage;
+	public Color bloodSplashColour;
+	public float flashFadeSpeed = 5;
+	protected AudioSource myAudioSource;
+
+
+
+
+	protected void AwakeBaseClass()
+	{
+		dead = false;
+		health = Mathf.Clamp(health, 0, maxHealth);
+		awareness = Mathf.Clamp(awareness, 0, maxAwareness);
+
+		GameObject craftsSix = new GameObject();
+		craftsSix.transform.parent = this.transform;
+		craftsSix.transform.position = this.transform.position + sixOclockPos;
+		craftsSix.name = "Craft's Six";
+
+		bloodSplashImage = GameObject.FindGameObjectWithTag ("Manager Tools").transform.FindChild 
+			("Canvas (Effects, screen)/Blood Splash").GetComponent<Image>();
+
+		if(healthSlider != null)
+			healthSliderColour = healthSlider.GetComponentInChildren<Image> ();
+
+		myAudioSource = GetComponent<AudioSource> ();
+
+		smokeEm = smoke.emission;
+		flamesEm = flames.emission;
+	}
+
+
+	protected void UpdateBaseClass()
+	{
+		/*if (healthRecoveryRate !=0 && health > 0f && health < maxHealth) 
+		{
+			health += (healthRecoveryRate * Time.deltaTime);
+		}*/
+
+		if(this.tag == "PlayerFighter")
+		{
+			healthSlider.value = (float)health/(float)maxHealth * 100;
+
+			//FOR HEALTH BAR COLOUR
+			float alpha = healthSliderColour.color.a;
+			
+			if(health < maxHealth)
+			{
+				alpha = 0.75f;
+				healthSliderColour.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth) * alpha;
+			}
+			
+			else if(health >=maxHealth)
+			{
+				alpha = 0f;
+				healthSliderColour.color = Color.green * alpha;
+				smoke.gameObject.SetActive(false);
+				flames.gameObject.SetActive(false);
+			}
+			
+			//FOR BLOOD SPLASH
+			if(bloodSplashImage.color != Color.clear)
+			{
+				bloodSplashImage.color = Color.Lerp (bloodSplashImage.color, Color.clear, flashFadeSpeed * Time.deltaTime);
+			}
+		}
+		else if(healthSlider && awarenessSlider)
+		{
+			healthSlider.value = (float)health/(float)maxHealth * 100;
+			awarenessSlider.value = (float)awareness/(float)maxAwareness * 100;
+		}
+	}
+
+
+	protected IEnumerator FlashOnInvincibility()
+	{
+		shouldTurnBackOffTempInvincibility = true;
+		yield return new WaitForEndOfFrame();
+
+		temporarilyInvincible = true;
+		yield return new WaitForSeconds (0.25f);
+
+		if(shouldTurnBackOffTempInvincibility)
+		{
+			temporarilyInvincible = false;
+		}
+	}
+
+
+	protected void Deactivate()
+	{
+		transform.SetParent (GameObject.Find ("Dead Craft Bin (doesn't destroy)").transform);
+		gameObject.SetActive (false);
+	}
+
+}//MONO

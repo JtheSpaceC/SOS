@@ -1,0 +1,245 @@
+fileFormatVersion: 2
+guid: b5832c9dae890b2419e6fdc15c897db3
+timeCreated: 1457101704
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: box_top_right_panel_0
+    21300002: box_top_right_panel_1
+    21300004: box_top_right_panel_2
+    21300006: box_top_right_panel_3
+    21300008: box_top_right_panel_4
+    21300010: box_top_right_panel_5
+    21300012: box_top_right_panel_6
+    21300014: box_top_right_panel_7
+    21300016: box_top_right_panel_8
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 235, y: 141, z: 235, w: 141}
+  spritePixelsToUnits: 256
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: box_top_right_panel_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 500
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 87, y: 120}
+        - {x: -41, y: 120}
+        - {x: -51, y: 110}
+        - {x: -105, y: 110}
+        - {x: -109, y: 106}
+        - {x: -109, y: 13}
+        - {x: -105, y: 9}
+        - {x: -104, y: 9}
+        - {x: -94, y: -1}
+        - {x: -90, y: -2}
+        - {x: -90, y: -107}
+        - {x: -91, y: -108}
+        - {x: -91, y: -125}
+        - {x: 125, y: -125}
+        - {x: 125, y: 109}
+        - {x: 98, y: 109}
+    - name: box_top_right_panel_1
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 500
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -125, y: -125}
+        - {x: 125, y: -125}
+        - {x: 125, y: 109}
+        - {x: -125, y: 109}
+    - name: box_top_right_panel_2
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 500
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 106, y: 9}
+        - {x: 110, y: 13}
+        - {x: 110, y: 106}
+        - {x: 106, y: 110}
+        - {x: 52, y: 110}
+        - {x: 42, y: 120}
+        - {x: -86, y: 120}
+        - {x: -97, y: 109}
+        - {x: -125, y: 109}
+        - {x: -125, y: -125}
+        - {x: 92, y: -125}
+        - {x: 92, y: -1}
+        - {x: 95, y: -1}
+        - {x: 105, y: 9}
+    - name: box_top_right_panel_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 250
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -91, y: 125}
+        - {x: -91, y: -125}
+        - {x: 125, y: -125}
+        - {x: 125, y: 125}
+    - name: box_top_right_panel_4
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 250
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -125, y: 125}
+        - {x: -125, y: -125}
+        - {x: 125, y: -125}
+        - {x: 125, y: 125}
+    - name: box_top_right_panel_5
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 250
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 92, y: -125}
+        - {x: 92, y: 125}
+        - {x: -125, y: 125}
+        - {x: -125, y: -125}
+    - name: box_top_right_panel_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -91, y: 125}
+        - {x: -91, y: 107}
+        - {x: -92, y: 106}
+        - {x: -92, y: 1}
+        - {x: -94, y: 1}
+        - {x: -104, y: -9}
+        - {x: -105, y: -9}
+        - {x: -109, y: -13}
+        - {x: -109, y: -106}
+        - {x: -105, y: -110}
+        - {x: -51, y: -110}
+        - {x: -41, y: -120}
+        - {x: 87, y: -120}
+        - {x: 98, y: -109}
+        - {x: 125, y: -109}
+        - {x: 125, y: 125}
+    - name: box_top_right_panel_7
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 0
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -125, y: 125}
+        - {x: -125, y: -109}
+        - {x: 125, y: -109}
+        - {x: 125, y: 125}
+    - name: box_top_right_panel_8
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 110, y: -13}
+        - {x: 106, y: -9}
+        - {x: 105, y: -9}
+        - {x: 95, y: 1}
+        - {x: 92, y: 1}
+        - {x: 92, y: 125}
+        - {x: -125, y: 125}
+        - {x: -125, y: -109}
+        - {x: -97, y: -109}
+        - {x: -86, y: -120}
+        - {x: 42, y: -120}
+        - {x: 52, y: -110}
+        - {x: 106, y: -110}
+        - {x: 110, y: -106}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

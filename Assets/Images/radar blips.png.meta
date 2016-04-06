@@ -1,0 +1,131 @@
+fileFormatVersion: 2
+guid: 0c1bc6065fd4f974daf75f201bae8991
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: radar blips
+    21300002: radar blips_0
+    21300004: radar blips_1
+    21300006: radar blips_2
+    21300008: radar blips_3
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: 0
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 12.5
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: radar blips_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4
+        width: 56
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -3, y: 27}
+        - {x: -28, y: -22}
+        - {x: -28, y: -27}
+        - {x: 28, y: -27}
+        - {x: 28, y: -20}
+        - {x: 4, y: 27}
+    - name: radar blips_1
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 3
+        width: 55
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -3.5, y: 27.5}
+        - {x: -6.5, y: 20.5}
+        - {x: -27.5, y: -22.5}
+        - {x: -27.5, y: -27.5}
+        - {x: 27.5, y: -27.5}
+        - {x: 27.5, y: -22.5}
+        - {x: 2.5, y: 27.5}
+    - name: radar blips_2
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 6
+        width: 49
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -3.5, y: 24}
+        - {x: -24.5, y: 3}
+        - {x: -24.5, y: -3}
+        - {x: -3.5, y: -24}
+        - {x: 3.5, y: -24}
+        - {x: 24.5, y: -3}
+        - {x: 24.5, y: 3}
+        - {x: 3.5, y: 24}
+    - name: radar blips_3
+      rect:
+        serializedVersion: 2
+        x: 190
+        y: 3
+        width: 60
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -26, y: 28}
+        - {x: -30, y: 25}
+        - {x: -30, y: -19}
+        - {x: -26, y: -28}
+        - {x: 30, y: -28}
+        - {x: 30, y: 28}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

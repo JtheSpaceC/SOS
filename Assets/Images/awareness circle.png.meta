@@ -1,0 +1,137 @@
+fileFormatVersion: 2
+guid: 8251a556e66410b40b308dc2ebf02e9b
+timeCreated: 1450378475
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: awareness circle_0
+    21300002: awareness circle_1
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 128
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: awareness circle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -31, y: -1}
+        - {x: -64, y: -1}
+        - {x: -64, y: -36}
+        - {x: -63, y: -45}
+        - {x: -24, y: -64}
+        - {x: -1, y: -64}
+        - {x: -1, y: -32}
+        - {x: -2, y: -27}
+      - - {x: 1, y: -33}
+        - {x: 1, y: -62}
+        - {x: 4, y: -64}
+        - {x: 32, y: -64}
+        - {x: 64, y: -32}
+        - {x: 64, y: -1}
+        - {x: 31, y: -1}
+        - {x: 27, y: -2}
+      - - {x: -30, y: 64}
+        - {x: -64, y: 27}
+        - {x: -64, y: 2}
+        - {x: -61, y: 1}
+        - {x: -15, y: 1}
+        - {x: -1, y: 30}
+        - {x: -1, y: 64}
+      - - {x: 1, y: 28}
+        - {x: 31, y: 1}
+        - {x: 64, y: 1}
+        - {x: 64, y: 22}
+        - {x: 43, y: 64}
+        - {x: 1, y: 64}
+    - name: awareness circle_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -64, y: 0}
+        - {x: -64, y: -35}
+        - {x: -33, y: -63}
+        - {x: -22, y: -64}
+        - {x: 0, y: -64}
+        - {x: 0, y: -30}
+        - {x: -30, y: 0}
+      - - {x: 28, y: 0}
+        - {x: 0, y: -29}
+        - {x: 0, y: -64}
+        - {x: 40, y: -64}
+        - {x: 49, y: -63}
+        - {x: 64, y: -27}
+        - {x: 64, y: 0}
+      - - {x: -63, y: 33}
+        - {x: -64, y: 27}
+        - {x: -64, y: 0}
+        - {x: -28, y: 0}
+        - {x: 0, y: 29}
+        - {x: 0, y: 64}
+        - {x: -34, y: 64}
+      - - {x: 0, y: 64}
+        - {x: 0, y: 28}
+        - {x: 29, y: 0}
+        - {x: 64, y: 0}
+        - {x: 64, y: 35}
+        - {x: 34, y: 64}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
