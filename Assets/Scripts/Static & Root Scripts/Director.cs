@@ -12,9 +12,12 @@ public class Director : MonoBehaviour {
 	Text gameTimeText;
 	Text playerKillsText;
 
+	public GameObject pilotEVAPrefab;
+
 	[HideInInspector] public int playerKills = 0;
 
 	[Tooltip("Just for turning something on/of in the scene for testing. Like a background or spawner. Just one object.")]
+	public bool screenshotMode = false;
 	public GameObject toggleableObject9;
 	public GameObject toggleableObject8;
 	public GameObject toggleableObject7;
@@ -44,6 +47,15 @@ public class Director : MonoBehaviour {
 		}catch{}
 	}
 
+	void OnEnable()
+	{
+		_battleEventManager.playerRescued += WarpPlayerToSafety;
+	}
+
+	void OnDisable()
+	{
+		_battleEventManager.playerRescued -= WarpPlayerToSafety;
+	}
 
 	void Update () 
 	{
@@ -54,9 +66,7 @@ public class Director : MonoBehaviour {
 				//Mission Clock Stuff
 
 				timer += Time.deltaTime;
-
 				mins = Mathf.FloorToInt (timer / 60);
-
 				seconds = Mathf.FloorToInt(timer);
 
 				while (seconds >= 60)
@@ -67,10 +77,19 @@ public class Director : MonoBehaviour {
 				string secsString = seconds < 10 ? "0" + seconds.ToString () : seconds.ToString ();
 
 				gameTimeText.text = "Time: " + minsString + " : " + secsString;
-
 				playerKillsText.text = "Kills: " + playerKills;
 			}
 
+			#if UNITY_EDITOR
+
+			if(Input.GetKeyDown(KeyCode.T))
+				GameObject.FindGameObjectWithTag("PlayerFighter").GetComponent<HealthFighter>().health = 0;
+			
+			#endif
+
+			if(!screenshotMode)
+				return;
+			
 			if(Input.GetKeyDown(KeyCode.Keypad9) && toggleableObject9 != null)
 				toggleableObject9.SetActive(!toggleableObject9.activeSelf);
 			if(Input.GetKeyDown(KeyCode.Keypad8) && toggleableObject8 != null)
@@ -90,5 +109,24 @@ public class Director : MonoBehaviour {
 			if(Input.GetKeyDown(KeyCode.Keypad1) && toggleableObject1 != null)
 				toggleableObject1.SetActive(!toggleableObject1.activeSelf);
 		}
+	}
+		
+
+	public void SpawnPilotEVA(Vector2 pos, Quaternion rot, bool isPlayer)
+	{
+		GameObject pilot = Instantiate(pilotEVAPrefab, pos, rot) as GameObject;
+		if(isPlayer)
+		{
+			pilot.tag = "PlayerEVA";
+			pilot.name = "EVA Pilot";
+			PMCMisisonSupports.instance.AutoRetrievePlayer();
+			StartCoroutine(Camera.main.GetComponent<CameraControllerFighter>().CameraZoomToSize(3, 1.5f, 6));
+		}
+	}
+
+	public void WarpPlayerToSafety()
+	{
+		PMCMisisonSupports.instance.retrievalShuttle.GetComponent<AIAssaultShuttle>().
+			ChangeToNewState(AIAssaultShuttle.StateMachine.WarpOut);	
 	}
 }

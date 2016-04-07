@@ -542,6 +542,8 @@ public class HealthFighter : Health {
 			myAIScript.myAttackers.Clear();
 
 			Tools.instance.VibrateController(0, 1, 1, 0.75f);
+
+			Director.instance.SpawnPilotEVA(transform.position, transform.rotation, true);
 		}
 		//any other fighter death
 		else

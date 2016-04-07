@@ -4,14 +4,7 @@ using System.Collections;
 
 public class PlayerFighterMovement : EnginesFighter {
 
-
-
 	Text playerSpeedText;
-
-	public int maxNitro = 600;
-	[HideInInspector] public float nitroRemaining;
-	public float nitroBurnRate = 10;
-
 
 	
 	void Awake()
@@ -23,7 +16,7 @@ public class PlayerFighterMovement : EnginesFighter {
 		}
 		catch
 		{
-			//Debug.Log("GUI items missing for Player");
+			//Debug.Log("GUI Player Speed Text missing for Player");
 		}
 
 		turnSpeed = maxRotateSpeed;

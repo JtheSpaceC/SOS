@@ -10,15 +10,21 @@ public class PMCMisisonSupports : MonoBehaviour {
 	public List<string> availableSupports;
 	public List<string> backup;
 	public int availableFighterTransports = 3;
+	public int availableRetrievalShuttles = 3;
 
 	public bool carrierAvailable = false;
 	public bool carrierDeployed = false;
 
 	[Header("Prefabs")]
 	public GameObject fighterTransportPrefab;
+	public GameObject retrievalShuttlePrefab;
+	public float retrievalShuttleSpawnRadius = 20;
 
 	Vector2 insertionPoint;
 	Vector2 spawnPos;
+
+	[HideInInspector] public GameObject retrievalShuttle;
+	GameObject playerEVA;
 
 
 	void Awake () 
@@ -34,6 +40,7 @@ public class PMCMisisonSupports : MonoBehaviour {
 
 		pmcCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
 	}
+		
 	
 	public void CallSupportMenu()
 	{
@@ -100,5 +107,22 @@ public class PMCMisisonSupports : MonoBehaviour {
 		transport.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.warpIn);
 		transport.GetComponent<AITransport>().theCaller = theCaller;
 		transport.GetComponent<AITransport>().insertionPoint = insertionPoint;
+	}
+
+	public void AutoRetrievePlayer()
+	{
+		if(availableRetrievalShuttles > 0)
+		{
+			Subtitles.instance.PostSubtitle(new string[]{"Pilot is EVA! Shuttle moving in to retrieve!"});
+			playerEVA = GameObject.FindGameObjectWithTag("PlayerEVA");
+
+			retrievalShuttle = Instantiate(retrievalShuttlePrefab, (Vector2)playerEVA.transform.position + 
+				(Random.insideUnitCircle.normalized * retrievalShuttleSpawnRadius), Quaternion.identity) as GameObject;
+			retrievalShuttle.name = "RESCUE 1";
+
+			AIAssaultShuttle retrievalAI = retrievalShuttle.GetComponent<AIAssaultShuttle>();
+			retrievalAI.dockTarget = playerEVA.transform;
+			retrievalAI.ChangeToNewState(AIAssaultShuttle.StateMachine.Docking);
+		}
 	}
 }//Mono

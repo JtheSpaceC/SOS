@@ -11,7 +11,6 @@ public class SupportShipFunctions : TargetableObject {
 
 	[Header ("Warp Stuff")]
 	public float warpInTime = 10;
-	public SpriteRenderer warpBubble;
 	public AudioSource engineAudioSource;
 	public AudioClip warpStart;
 	public AudioClip warpLoop;
@@ -48,5 +47,14 @@ public class SupportShipFunctions : TargetableObject {
 		{
 			completedState = true;
 		}
+	}
+
+	protected void MatchTargetVelocity(Vector2 targetPosition, Rigidbody2D targetRB, Vector2 offset)
+	{
+		Vector2 desiredPos = targetPosition + offset + targetRB.velocity;
+		if(targetRB.velocity.magnitude < 0.25f)
+			engineScript.MoveToTarget (desiredPos, true);
+		else 
+			engineScript.MoveToTarget (desiredPos, false);
 	}
 }

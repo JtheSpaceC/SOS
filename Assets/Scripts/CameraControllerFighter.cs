@@ -74,8 +74,21 @@ public class CameraControllerFighter : MonoBehaviour {
 			GetComponent<Camera>().orthographicSize += (startingSize * sizeAdjustRatio);
 			if(sizeAdjustRatio > 0)
 				Debug.Log ("Adjusting Camera Size on " + this.name+ " by " + sizeAdjustRatio);
+		}		
+	}
+
+	public IEnumerator CameraZoomToSize(float newSize, float delayTime, float zoomTime)
+	{
+		yield return new WaitForSeconds(delayTime);
+
+		float startTime = Time.time;
+		float startSize = Camera.main.orthographicSize;
+
+		while(Camera.main.orthographicSize != newSize)
+		{
+			Camera.main.orthographicSize = Mathf.Lerp(startSize, newSize, (Time.time - startTime)/zoomTime);
+			yield return new WaitForEndOfFrame();
 		}
-		
 	}
 
 	

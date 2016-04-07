@@ -34,6 +34,12 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void PlayerLeaving();
 	public static event PlayerLeaving playerLeaving;
 
+	public delegate void PlayerRescued();
+	public static event PlayerRescued playerRescued;
+
+	public delegate void PlayerCaptured();
+	public static event PlayerCaptured playerCaptured;
+
 
 	void Awake()
 	{
@@ -86,6 +92,14 @@ public class _battleEventManager : MonoBehaviour {
 	public void CallPlayerLeaving()
 	{
 		playerLeaving ();
+	}
+	public void CallPlayerRescued()
+	{
+		playerRescued();
+	}
+	public void CallPlayerCaptured()
+	{
+		playerCaptured();
 	}
 
 

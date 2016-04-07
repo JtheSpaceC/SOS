@@ -6,6 +6,7 @@ public class TargetableObject : MonoBehaviour {
 
 	[HideInInspector]public AICommander myCommander;
 	[HideInInspector]public AICommander enemyCommander;
+	[HideInInspector]public WarpDrive warpDrive;
 
 	protected Rigidbody2D myRigidbody;
 

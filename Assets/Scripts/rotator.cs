@@ -28,11 +28,10 @@ public class rotator : MonoBehaviour {
 		if(Mode == myMode.RandomizedAtStart)
 		{
 			rotSpeed = Random.Range(minSpeed, maxSpeed);
-
-			if(randomizeDirection)
-				rotSpeed *= Mathf.Pow(-1, Random.Range(1, 3));
 		}
 			
+		if(randomizeDirection)
+			rotSpeed *= Mathf.Pow(-1, Random.Range(1, 3));
 	}
 
 	void FixedUpdate () 

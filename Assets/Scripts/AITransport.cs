@@ -48,10 +48,7 @@ public class AITransport : SupportShipFunctions {
 	{
 		healthScript = GetComponent<HealthTransport> ();
 		engineScript = GetComponent<EnginesFighter> ();
-<<<<<<< HEAD
 		warpDrive = GetComponentInChildren<WarpDrive>();
-=======
->>>>>>> parent of ac76538... EVA Pilot, New Warp script. Assault Shuttle work.
 		//myRenderer = GetComponent<SpriteRenderer> ();
 		//myRigidbody = GetComponent<Rigidbody2D> ();
 
@@ -151,7 +148,7 @@ public class AITransport : SupportShipFunctions {
 	{
 		previousState = currentState;
 
-		warpBubble.enabled = false;
+		warpDrive.warpBubble.enabled = false;
 
 		currentState = newState;
 		switchingState = true;
@@ -481,7 +478,7 @@ public class AITransport : SupportShipFunctions {
 			}
 
 			camOffset = new Vector3(0, 0, -50);
-			warpBubble.enabled = true;
+			warpDrive.warpBubble.enabled = true;
 
 			engineAudioSource.clip = warpLoop;
 			engineAudioSource.loop = true;
@@ -584,9 +581,9 @@ public class AITransport : SupportShipFunctions {
 		{
 			engineScript.LookAtTarget(loadingUpLookAtPoint);
 		}
-		else if(!warpBubble.enabled)
+		else if(!warpDrive.warpBubble.enabled)
 		{
-			warpBubble.enabled = true;
+			warpDrive.warpBubble.enabled = true;
 			startTime = Time.time;
 			engineScript.enabled = false;
 
@@ -599,7 +596,7 @@ public class AITransport : SupportShipFunctions {
 			transform.position += transform.up * Mathf.Pow((Time.time - startTime), 2) * 4 * Time.deltaTime;
 		}
 		//this will start the loop part of the warp noise after the first noise has played
-		if(!engineAudioSource.isPlaying && warpBubble.enabled)
+		if(!engineAudioSource.isPlaying && warpDrive.warpBubble.enabled)
 		{
 			engineAudioSource.Stop();
 			engineAudioSource.clip = warpLoop;

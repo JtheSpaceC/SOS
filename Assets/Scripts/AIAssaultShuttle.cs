@@ -15,11 +15,15 @@ public class AIAssaultShuttle : SupportShipFunctions {
 	float dockTimer;
 	public float dockTime = 1.5f;
 
+	Rigidbody2D targetRB;
+	Vector2 dockingLookPos;
+
 
 	void Awake()
 	{
 		healthScript = GetComponent<HealthTransport> ();
 		engineScript = GetComponent<EnginesFighter> ();
+		warpDrive = GetComponentInChildren<WarpDrive>();
 		myRigidbody = GetComponent<Rigidbody2D>();
 
 		if (whichSide == WhichSide.Ally)
@@ -71,7 +75,8 @@ public class AIAssaultShuttle : SupportShipFunctions {
 	{
 		previousState = currentState;
 
-		warpBubble.enabled = false;
+		warpDrive.warpBubble.enabled = false;
+		dockingLookPos = Vector2.zero;
 
 		if(newState != StateMachine.Docked)
 			transform.SetParent(null);
@@ -86,21 +91,29 @@ public class AIAssaultShuttle : SupportShipFunctions {
 		if(switchingState)
 		{
 			switchingState = false;
+			if(dockTarget.parent != null)
+				targetRB = dockTarget.transform.parent.transform.parent.transform.parent.GetComponent<Rigidbody2D>();
+			else
+			{
+				targetRB = dockTarget.GetComponent<Rigidbody2D>();
+				dockingLookPos = (Vector2)(dockTarget.position - transform.position).normalized;
+			}
 		}
 		targetPosition = dockTarget.position;
 
-		engineScript.LookAtTarget(targetPosition + (Vector2)dockTarget.up * 5);
-		engineScript.MoveToTarget(targetPosition, true);
+		if(dockingLookPos != Vector2.zero)
+			engineScript.LookAtTarget((Vector2)transform.position + dockingLookPos);
+		else
+			engineScript.LookAtTarget(targetPosition + (Vector2)dockTarget.up * 5);
+		
+		MatchTargetVelocity((Vector2)dockTarget.position, targetRB, Vector2.zero);
 
-		if(Vector2.Distance(transform.position, targetPosition) < 0.1f)
+		if(Vector2.Distance(transform.position, targetPosition) < 0.2f)
 		{
 			dockTimer += Time.deltaTime;
 			if(dockTimer >= dockTime)
 			{
-				transform.position = dockTarget.position;
-				myRigidbody.velocity = Vector2.zero;
 				Subtitles.instance.PostSubtitle(new string[] {name + " has docked with " + dockTarget.transform.root.name});
-<<<<<<< HEAD
 
 				if(dockTarget.tag == "PlayerEVA" || dockTarget.tag == "PilotEVA")
 				{
@@ -122,10 +135,6 @@ public class AIAssaultShuttle : SupportShipFunctions {
 					myRigidbody.isKinematic = true;
 					ChangeToNewState(StateMachine.Docked);
 				}
-=======
-				transform.parent = dockTarget;
-				ChangeToNewState(StateMachine.Docked);
->>>>>>> parent of ac76538... EVA Pilot, New Warp script. Assault Shuttle work.
 			}
 		}
 		else 
@@ -135,5 +144,11 @@ public class AIAssaultShuttle : SupportShipFunctions {
 	void Docked()
 	{
 		
+	}
+
+	void ReleaseFromDock()
+	{
+		transform.SetParent(null);
+		myRigidbody.isKinematic = false;
 	}
 }

@@ -28,6 +28,9 @@ public class EnginesFighter : MonoBehaviour {
 	public float maxNormalVelocity = 7f;
 	[Tooltip("Ship lengths (Unity Units) per second. Speedometer will read m/sec, which is 10 times this amount.")] 
 	public float maxAfterburnerVelocity = 12f;
+	public int maxNitro = 600;
+	[HideInInspector] public float nitroRemaining;
+	[Tooltip("Per second.")] public float nitroBurnRate = 10;
 
 	[HideInInspector] public float currentMaxVelocityAllowed;
 	float speed;
