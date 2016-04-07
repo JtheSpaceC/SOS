@@ -38,6 +38,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		target = GameObject.FindGameObjectWithTag ("Fighter");
 		Invoke("FindATargetFalse", 1);
 
+		Invoke("FixMaxAwareness", 0.05f);
+
 		followCamText.text = "";
 		if (spawnerOn) 
 		{
@@ -192,6 +194,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			return;
 
 		Instantiate (PMCFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 55), Quaternion.identity);
+
+		Invoke("FixMaxAwareness", 0.05f);
 	}
 	void SpawnEnemy()
 	{
@@ -201,8 +205,24 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		}
 		
 		Instantiate (EnemyFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 100), Quaternion.identity);
+		Invoke("FixMaxAwareness", 0.05f);
 	}
-		
+	void FixMaxAwareness()
+	{
+		AIFighter[] fighterscripts = FindObjectsOfType<AIFighter>();
+		foreach(AIFighter fighter in fighterscripts)
+		{
+			if (fighter.whichSide == TargetableObject.WhichSide.Ally)
+			{
+				fighter.healthScript.maxAwareness = 3;
+			}
+			else
+			{
+				fighter.healthScript.healthSlider.gameObject.SetActive(false);
+				fighter.healthScript.awarenessSlider.gameObject.SetActive(false);
+			}			
+		}
+	}
 
 
 	void FixedUpdate()

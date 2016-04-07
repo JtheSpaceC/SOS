@@ -186,89 +186,87 @@ public class DemoLevel : MonoBehaviour {
 
 	void Update () 
 	{
-		//for HINTS
-		if (!playerKnowsHowToMove && Input.GetAxis ("Accelerate") != 0)
-			playerKnowsHowToMove = true;
-		if (!playerKnowsHowToShoot && player.GetComponentInChildren<WeaponsPrimaryFighter> ().allowedToFire
-		    && player.GetComponentInChildren<WeaponsPrimaryFighter> ().enabled && Input.GetButtonDown ("FirePrimary"))
-			playerKnowsHowToShoot = true;
-		if (!playerKnowsHowToDodge && Input.GetButton ("Dodge"))
-			playerKnowsHowToDodge = true;
-		if (!playerKnowsHowToAfterburn && Input.GetButton ("Afterburners"))
-			playerKnowsHowToAfterburn = true;
-		if(!playerKnowsOrders && RadioCommands.instance.buttonsShown)
-			playerKnowsOrders = true;
-		if (!playerKnowsMap && tacMapCamera.enabled)
-			playerKnowsMap = true;
-
-		if(!missionComplete && !playerKnowsHowToMove && timer > 9) 
-		{
-			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
-				Subtitles.instance.PostHint(new string[] {"Press UP ARROW to ACCELERATE"});
-			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-				Subtitles.instance.PostHint(new string[] {"Press RIGHT TRIGGER to ACCELERATE"});			
-			Subtitles.instance.CoolDownHintNoise();
-			Subtitles.instance.CoolDownHintHighlight();
-		}
-		else if(!missionComplete && playerKnowsHowToMove && !playerKnowsHowToShoot && timer > 14)
-		{
-			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
-				Subtitles.instance.PostHint(new string[] {"Press SPACEBAR to SHOOT"});
-			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-				Subtitles.instance.PostHint(new string[] {"Press A to SHOOT"});	
-			Subtitles.instance.CoolDownHintNoise();
-			Subtitles.instance.CoolDownHintHighlight();
-		}
-		else if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && !playerKnowsHowToDodge && timer > 21)
-		{
-			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
-				Subtitles.instance.PostHint(new string[] {"Press LEFT CTRL to DODGE"});
-			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-				Subtitles.instance.PostHint(new string[] {"Press B to DODGE"});				
-			Subtitles.instance.CoolDownHintNoise();
-			Subtitles.instance.CoolDownHintHighlight();
-		}
-		else if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge && !playerKnowsHowToAfterburn && timer > 27)
-		{
-			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
-				Subtitles.instance.PostHint(new string[] {"Hold LEFT SHIFT while accelerating for AFTERBURNERS"});
-			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-				Subtitles.instance.PostHint(new string[] {"Hold X while accelerating for AFTERBURNERS"});
-			Subtitles.instance.CoolDownHintNoise();
-			Subtitles.instance.CoolDownHintHighlight();
-		}
-		else if(!missionComplete && !playerKnowsOrders && timer > 60 && Subtitles.instance.hintsPanel.color == Color.clear)
-		{
-			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
-				Subtitles.instance.PostHint(new string[] {"Experiment with the RADIO to give orders to wingmen or call for EXTRACTION.",
-					"Use NUMBER KEYS 1,2,3,4 for RADIO commands."});
-			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-				Subtitles.instance.PostHint(new string[] {"Experiment with the RADIO to give orders to wingmen or call for EXTRACTION.",
-						"Use the D-PAD for RADIO commands."});	
-			Subtitles.instance.CoolDownHintNoise();
-			Subtitles.instance.CoolDownHintHighlight();
-		}
-		else if(!missionComplete && !playerKnowsMap && timer > 90)
-		{
-			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
-				Subtitles.instance.PostHint(new string[] {"Press TAB or M to view the TACTICAL MAP"});
-			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-				Subtitles.instance.PostHint(new string[] {"Press BACK to view the TACTICAL MAP"});				Subtitles.instance.CoolDownHintNoise();
-			Subtitles.instance.CoolDownHintHighlight();
-		}
-
-		if(playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge)
-		{
-			spawnerScript.enabled = true;
-		}
-
-
-
-		//for other stuff
 		if(!playerHealth.dead)
 		{
+			//for HINTS
+			if (!playerKnowsHowToMove && Input.GetAxis ("Accelerate") != 0)
+				playerKnowsHowToMove = true;
+			if (!playerKnowsHowToShoot && player.GetComponentInChildren<WeaponsPrimaryFighter> ().allowedToFire
+			    && player.GetComponentInChildren<WeaponsPrimaryFighter> ().enabled && Input.GetButtonDown ("FirePrimary"))
+				playerKnowsHowToShoot = true;
+			if (!playerKnowsHowToDodge && Input.GetButton ("Dodge"))
+				playerKnowsHowToDodge = true;
+			if (!playerKnowsHowToAfterburn && Input.GetButton ("Afterburners"))
+				playerKnowsHowToAfterburn = true;
+			if(!playerKnowsOrders && RadioCommands.instance.buttonsShown)
+				playerKnowsOrders = true;
+			if (!playerKnowsMap && tacMapCamera.enabled)
+				playerKnowsMap = true;
+
+			if(!missionComplete && !playerKnowsHowToMove && timer > 9) 
+			{
+				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+					Subtitles.instance.PostHint(new string[] {"Press UP ARROW to ACCELERATE"});
+				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+					Subtitles.instance.PostHint(new string[] {"Press RIGHT TRIGGER to ACCELERATE"});			
+				Subtitles.instance.CoolDownHintNoise();
+				Subtitles.instance.CoolDownHintHighlight();
+			}
+			else if(!missionComplete && playerKnowsHowToMove && !playerKnowsHowToShoot && timer > 14)
+			{
+				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+					Subtitles.instance.PostHint(new string[] {"Press SPACEBAR to SHOOT"});
+				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+					Subtitles.instance.PostHint(new string[] {"Press A to SHOOT"});	
+				Subtitles.instance.CoolDownHintNoise();
+				Subtitles.instance.CoolDownHintHighlight();
+			}
+			else if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && !playerKnowsHowToDodge && timer > 21)
+			{
+				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+					Subtitles.instance.PostHint(new string[] {"Press LEFT CTRL to DODGE"});
+				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+					Subtitles.instance.PostHint(new string[] {"Press B to DODGE"});				
+				Subtitles.instance.CoolDownHintNoise();
+				Subtitles.instance.CoolDownHintHighlight();
+			}
+			else if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge && !playerKnowsHowToAfterburn && timer > 27)
+			{
+				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+					Subtitles.instance.PostHint(new string[] {"Hold LEFT SHIFT while accelerating for AFTERBURNERS"});
+				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+					Subtitles.instance.PostHint(new string[] {"Hold X while accelerating for AFTERBURNERS"});
+				Subtitles.instance.CoolDownHintNoise();
+				Subtitles.instance.CoolDownHintHighlight();
+			}
+			else if(!missionComplete && !playerKnowsOrders && timer > 60 && Subtitles.instance.hintsPanel.color == Color.clear)
+			{
+				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+					Subtitles.instance.PostHint(new string[] {"Experiment with the RADIO to give orders to wingmen or call for EXTRACTION.",
+						"Use NUMBER KEYS 1,2,3,4 for RADIO commands."});
+				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+					Subtitles.instance.PostHint(new string[] {"Experiment with the RADIO to give orders to wingmen or call for EXTRACTION.",
+							"Use the D-PAD for RADIO commands."});	
+				Subtitles.instance.CoolDownHintNoise();
+				Subtitles.instance.CoolDownHintHighlight();
+			}
+			else if(!missionComplete && !playerKnowsMap && timer > 90)
+			{
+				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+					Subtitles.instance.PostHint(new string[] {"Press TAB or M to view the TACTICAL MAP"});
+				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+					Subtitles.instance.PostHint(new string[] {"Press BACK to view the TACTICAL MAP"});				Subtitles.instance.CoolDownHintNoise();
+				Subtitles.instance.CoolDownHintHighlight();
+			}
+
+			if(playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge)
+			{
+				spawnerScript.enabled = true;
+			}
+
 			timer += Time.deltaTime;
 		}
+			
 			
 		//for mission insertion
 
