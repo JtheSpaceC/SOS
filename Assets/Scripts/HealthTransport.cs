@@ -64,7 +64,7 @@ public class HealthTransport : Health {
 
 		//1. apply damage
 		
-		health -= (int)damage;
+		//health -= (int)damage; TODO: restore this, as Transport never takes damage now.
 		Tools.instance.SpawnExplosionMini (this.gameObject, .75f);
 		
 		if (theBullet.tag != "Asteroid" && theBullet.tag != "Bomb") 
@@ -83,7 +83,7 @@ public class HealthTransport : Health {
 			myAudioSource.Play();
 		}
 		
-		if(health <= 0 && dead == false)
+		if(health <= 0 && !dead)
 		{
 			Death();
 			
@@ -112,7 +112,7 @@ public class HealthTransport : Health {
 		SpriteExploder.instance.Explode (this.gameObject, 5, 2.5f);
 
 		//blow up all the armour I had left
-		foreach(GameObject armour in myArmour)
+		/*foreach(GameObject armour in myArmour)
 		{
 			armour.GetComponent<Armour>().FractureThenScatter();
 
@@ -122,7 +122,7 @@ public class HealthTransport : Health {
 
 				effectChild.GetComponent<Armour>().FractureThenScatter();
 			}
-		}
+		}*/
 
 
 		myAIScript.myCommander.myTransports.Remove (this.gameObject);

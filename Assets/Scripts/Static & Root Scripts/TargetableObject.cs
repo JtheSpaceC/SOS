@@ -205,7 +205,7 @@ public class TargetableObject : MonoBehaviour {
 	}
 	
 	protected bool CheckTargetIsRetreating(GameObject targetToCheck)
-	{
+	{		
 		if (targetToCheck == null)
 		{
 			Debug.LogError("ERROR: " + this.name + " checked if a NULL target was retreating. ");
@@ -221,12 +221,12 @@ public class TargetableObject : MonoBehaviour {
 			return false;
 		}
 		else if(targetToCheck.GetComponent<AIFighter>().currentState == AIFighter.StateMachine.Evade || 
-		        targetToCheck.GetComponent<AIFighter>().currentState == AIFighter.StateMachine.Retreat)
+			targetToCheck.GetComponent<AIFighter>().currentState == AIFighter.StateMachine.Retreat)
 		{
 			return true;
 		}
 		else 
-			return false;
+			return false;		
 	}
 	
 	void AddSomeoneAttackingMe(GameObject attacker)
@@ -259,7 +259,7 @@ public class TargetableObject : MonoBehaviour {
 				Subtitles.instance.PostSubtitle(killConfirms);
 				_battleEventManager.instance.CallWingmanGotAKill();
 
-				if(GetComponent<AIFighter>().myCharacterAvatarScript)
+				if(GetComponent<AIFighter>() && GetComponent<AIFighter>().myCharacterAvatarScript)
 					GetComponent<AIFighter>().myCharacterAvatarScript.StartCoroutine("Speaking");
 			}
 		}

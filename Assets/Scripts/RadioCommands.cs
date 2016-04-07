@@ -344,6 +344,8 @@ public class RadioCommands : MonoBehaviour {
 			remainingButton = button1;
 			Invoke("FadeOutRemainingButtons", 1);
 
+			_battleEventManager.instance.CallPlayerBeganDocking();
+
 			communicatingGameObject.GetComponent<AITransport>().reelingInPlayerGroup = true;
 			communicatingGameObject.GetComponent<AITransport>().sentRadioMessageToPlayerGroup = false;
 			communicatingGameObject.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.reelingInPassengers);

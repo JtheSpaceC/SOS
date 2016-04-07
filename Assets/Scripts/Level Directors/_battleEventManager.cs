@@ -43,6 +43,9 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void PlayerCaptured();
 	public static event PlayerCaptured playerCaptured;
 
+	public delegate void PlayerBeganDocking();
+	public static event PlayerBeganDocking playerBeganDocking;
+
 
 	void Awake()
 	{
@@ -107,6 +110,10 @@ public class _battleEventManager : MonoBehaviour {
 	public void CallPlayerShotDown()
 	{
 		playerShotDown();
+	}
+	public void CallPlayerBeganDocking()
+	{
+		playerBeganDocking();
 	}
 
 

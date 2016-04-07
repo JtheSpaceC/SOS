@@ -46,6 +46,8 @@ public class HealthFighter : Health {
 	[HideInInspector]public float rollSkill;
 	[HideInInspector]public float normalRollSkill;
 
+	float testTimer;
+
 
 	void Awake()
 	{
@@ -100,6 +102,15 @@ public class HealthFighter : Health {
 	
 	void Update()
 	{
+		if(!ClickToPlay.instance.paused && temporarilyInvincible)
+		{
+			testTimer ++;
+			if(testTimer > 1.5f)
+				Debug.LogError ("Check my invincibility. " + name);
+		}
+		else if(!ClickToPlay.instance.paused) 
+			testTimer = 0;
+
 		UpdateBaseClass (); //only affects Player through 'Health' script
 		
 		//FOR PARTICLE DAMAGE

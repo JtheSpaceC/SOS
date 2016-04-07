@@ -61,7 +61,10 @@ public class DemoLevel : MonoBehaviour {
 	bool playerKnowsHowToAfterburn = false;
 	bool playerKnowsOrders = false;
 	bool playerKnowsMap = false;
+	bool playerKnowsDocking = false;
 	bool postedEndMessage = false;
+
+	float timeWhenFirstSawFighterTransportPickup = -1;
 
 	bool setWingmanOrders = false;
 
@@ -108,6 +111,8 @@ public class DemoLevel : MonoBehaviour {
 		startPos = (GameObject.FindGameObjectWithTag ("AIManager").transform.FindChild ("PMC Commander").position - Vector3.zero).normalized * 500;
 
 		spawnerScript = GetComponent<Spawner> ();
+
+		InvokeRepeating("CheckPlayerHasSeenTransport", 17, 1);
 	}
 
 	void OnEnable()
@@ -115,6 +120,7 @@ public class DemoLevel : MonoBehaviour {
 		_battleEventManager.playerLeaving += TidyUpAsPlayerLeaves;
 		_battleEventManager.playerShotDown += PlayerWasShotDown;
 		_battleEventManager.playerRescued += PlayerWasRescued;
+		_battleEventManager.playerBeganDocking += PlayerBeganDocking;
 	}
 
 	void OnDisable()
@@ -122,6 +128,7 @@ public class DemoLevel : MonoBehaviour {
 		_battleEventManager.playerLeaving -= TidyUpAsPlayerLeaves;
 		_battleEventManager.playerShotDown -= PlayerWasShotDown;
 		_battleEventManager.playerRescued -= PlayerWasRescued;
+		_battleEventManager.playerBeganDocking -= PlayerBeganDocking;
 	}
 
 	void Start()
@@ -255,9 +262,18 @@ public class DemoLevel : MonoBehaviour {
 				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 					Subtitles.instance.PostHint(new string[] {"Press TAB or M to view the TACTICAL MAP"});
 				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-					Subtitles.instance.PostHint(new string[] {"Press BACK to view the TACTICAL MAP"});				Subtitles.instance.CoolDownHintNoise();
+					Subtitles.instance.PostHint(new string[] {"Press BACK to view the TACTICAL MAP"});				
+				Subtitles.instance.CoolDownHintNoise();
 				Subtitles.instance.CoolDownHintHighlight();
 			}
+			else if(!missionComplete && !playerKnowsDocking && timeWhenFirstSawFighterTransportPickup > 0 && timer > timeWhenFirstSawFighterTransportPickup + 7)
+			{
+				Subtitles.instance.PostHint(new string[] {"To DOCK, fly over the Transport and then respond to the new RADIO command." +
+					" This is timed. Try again if you miss."});				
+				Subtitles.instance.CoolDownHintNoise();
+				Subtitles.instance.CoolDownHintHighlight();
+			}
+				
 
 			if(playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge)
 			{
@@ -421,6 +437,27 @@ public class DemoLevel : MonoBehaviour {
 		//Invoke("CommenceFadeout", waitTimeAfterDeath - 4);
 		Invoke("LoadAutoPlayLevel", waitTimeAfterDeath);
 		FadeOutAudio();
+	}
+	void CheckPlayerHasSeenTransport()
+	{
+		if(FindObjectOfType<AITransport>() != null)
+		{
+			if(GameObject.Find("Transport 1") != null)
+			{
+				if(Vector2.Distance(GameObject.Find("Transport 1").transform.position, GameObject.FindGameObjectWithTag("PlayerFighter").transform.position)
+					< 15)
+				{
+					timeWhenFirstSawFighterTransportPickup = Time.time;
+					CancelInvoke("CheckPlayerHasSeenTransport");
+				}
+			}
+		}
+	}
+	void PlayerBeganDocking()
+	{
+		playerKnowsDocking = true;
+		playerKnowsOrders = true;
+		playerKnowsMap = true;
 	}
 	
 	void TidyUpAsPlayerLeaves()

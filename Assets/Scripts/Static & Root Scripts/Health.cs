@@ -24,7 +24,7 @@ public class Health : MonoBehaviour {
 
 	public LayerMask friendlyFire;
 
-	protected bool temporarilyInvincible = false; //used instead of flashing the collider on and off. Prevents two shots close together both hitting													
+	public bool temporarilyInvincible = false; //used instead of flashing the collider on and off. Prevents two shots close together both hitting													
 	protected bool shouldTurnBackOffTempInvincibility = true;
 
 	[Header("For Effects")]

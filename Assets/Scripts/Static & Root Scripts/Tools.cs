@@ -253,7 +253,7 @@ public class Tools: MonoBehaviour
 
 	public void VibrateController(PlayerIndex playerIndex, float leftIntensity, float rightIntensity, float duration)
 	{
-		if(!allowVibrationThisSession)
+		if(!allowVibrationThisSession || InputManager.instance.inputFrom != InputManager.InputFrom.controller)
 			return;
 		
 		//we run the Coroutine from here (instead of directly) because if the caller dies in the game, the vibration may never finish (Vibration Stop())
