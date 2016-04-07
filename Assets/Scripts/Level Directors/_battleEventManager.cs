@@ -34,6 +34,9 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void PlayerLeaving();
 	public static event PlayerLeaving playerLeaving;
 
+	public delegate void PlayerShotDown();
+	public static event PlayerShotDown playerShotDown;
+
 	public delegate void PlayerRescued();
 	public static event PlayerRescued playerRescued;
 
@@ -100,6 +103,10 @@ public class _battleEventManager : MonoBehaviour {
 	public void CallPlayerCaptured()
 	{
 		playerCaptured();
+	}
+	public void CallPlayerShotDown()
+	{
+		playerShotDown();
 	}
 
 

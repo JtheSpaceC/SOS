@@ -16,7 +16,6 @@ public class DemoLevel : MonoBehaviour {
 
 	public int killLimitForDemo = 4;
 
-	public Text playerKillsText;
 	public Text missileAmmoText;
 	public Text objectiveText;
 	public Button feedbackButton;
@@ -114,11 +113,15 @@ public class DemoLevel : MonoBehaviour {
 	void OnEnable()
 	{
 		_battleEventManager.playerLeaving += TidyUpAsPlayerLeaves;
+		_battleEventManager.playerShotDown += PlayerWasShotDown;
+		_battleEventManager.playerRescued += PlayerWasRescued;
 	}
 
 	void OnDisable()
 	{
 		_battleEventManager.playerLeaving -= TidyUpAsPlayerLeaves;
+		_battleEventManager.playerShotDown -= PlayerWasShotDown;
+		_battleEventManager.playerRescued -= PlayerWasRescued;
 	}
 
 	void Start()
@@ -266,18 +269,7 @@ public class DemoLevel : MonoBehaviour {
 		{
 			timer += Time.deltaTime;
 		}
-		else if(playerHealth.dead && deathPanel.activeSelf == false)
-		{
-			deathPanel.SetActive(true);
-			missionComplete = true;
-
-			Invoke("ActivateDeathButtons", 1f);
-			Invoke("CommenceFadeout", waitTimeAfterDeath - 4);
-			Invoke("LoadAutoPlayLevel", waitTimeAfterDeath);
-		}
-
-		playerKillsText.text = "Kills: " + playerLogicScript.kills;
-
+			
 		//for mission insertion
 
 		if(AITrans != null && AITrans.currentState == AITransport.StateMachine.holdingPosition && timer >5 && !setWingmanOrders)
@@ -414,6 +406,24 @@ public class DemoLevel : MonoBehaviour {
 		SceneManager.LoadScene (levelToLoad);
 	}
 
+	void FadeOutAudio()
+	{
+		AudioMasterScript.instance.FadeChannel("SFX vol", -80, 6, 6);
+	}
+
+	void PlayerWasShotDown()
+	{
+	}
+	void PlayerWasRescued()
+	{
+		deathPanel.SetActive(true);
+		missionComplete = true;
+
+		Invoke("ActivateDeathButtons", 1f);
+		//Invoke("CommenceFadeout", waitTimeAfterDeath - 4);
+		Invoke("LoadAutoPlayLevel", waitTimeAfterDeath);
+		FadeOutAudio();
+	}
 	
 	void TidyUpAsPlayerLeaves()
 	{

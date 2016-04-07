@@ -543,6 +543,7 @@ public class HealthFighter : Health {
 
 			Tools.instance.VibrateController(0, 1, 1, 0.75f);
 
+			_battleEventManager.instance.CallPlayerShotDown();
 			Director.instance.SpawnPilotEVA(transform.position, transform.rotation, true);
 		}
 		//any other fighter death

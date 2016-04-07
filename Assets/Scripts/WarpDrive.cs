@@ -10,10 +10,5 @@ public class WarpDrive : MonoBehaviour {
 	{
 		warpBubble = GetComponentInChildren<SpriteRenderer>();
 	}
-	
 
-	public void WarpOut()
-	{
-		
-	}
 }

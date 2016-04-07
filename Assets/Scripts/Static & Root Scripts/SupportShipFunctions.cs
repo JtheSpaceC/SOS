@@ -57,4 +57,9 @@ public class SupportShipFunctions : TargetableObject {
 		else 
 			engineScript.MoveToTarget (desiredPos, false);
 	}
+
+	protected void CommenceFadeout()
+	{
+		Tools.instance.CommenceFadeout (3);
+	}
 }

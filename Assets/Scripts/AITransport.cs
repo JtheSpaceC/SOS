@@ -37,9 +37,6 @@ public class AITransport : SupportShipFunctions {
 	Vector3 camOffset;
 
 	[HideInInspector] public GameObject theCaller;
-	[HideInInspector] public Vector2 insertionPoint;
-	[HideInInspector] public Vector2 literalSpawnPoint;
-	[HideInInspector] public Vector2 loadingUpLookAtPoint;
 	[HideInInspector] public bool thisWasInitialInsertionJump = false;
 
 
@@ -72,7 +69,7 @@ public class AITransport : SupportShipFunctions {
 			}
 		}
 
-		loadingUpLookAtPoint = myCommander.transform.position;
+		warpOutLookAtPoint = myCommander.transform.position;
 		carrySpots = new Transform[]{carry1, carry2, carry3};
 	}
 
@@ -208,7 +205,7 @@ public class AITransport : SupportShipFunctions {
 
 			waypoint = (Vector2)transform.position + 2*GetComponent<Rigidbody2D>().velocity;
 
-			loadingUpLookAtPoint = literalSpawnPoint;
+			warpOutLookAtPoint = literalSpawnPoint;
 		
 			SetUpReferences();
 
@@ -216,7 +213,7 @@ public class AITransport : SupportShipFunctions {
 		}//end of switch state. now for the actual function
 
 		engineScript.MoveToTarget (waypoint, true);
-		engineScript.LookAtTarget (loadingUpLookAtPoint);
+		engineScript.LookAtTarget (warpOutLookAtPoint);
 
 		if(reelingInPlayerGroup)
 		{
@@ -390,7 +387,7 @@ public class AITransport : SupportShipFunctions {
 		}
 
 		engineScript.MoveToTarget (waypoint, true);
-		engineScript.LookAtTarget (loadingUpLookAtPoint);
+		engineScript.LookAtTarget (warpOutLookAtPoint);
 
 		//for if this was the player group, but player dies before he presses Leave
 		if(reelingInPlayerGroup && carryFighter1.GetComponent<HealthFighter>().dead)		
@@ -566,7 +563,7 @@ public class AITransport : SupportShipFunctions {
 			}
 			camOffset = Camera.main.transform.position - transform.position;
 
-			loadingUpLookAtPoint = literalSpawnPoint;
+			warpOutLookAtPoint = literalSpawnPoint;
 
 			if(whichSide == WhichSide.Ally)
 			{
@@ -577,9 +574,9 @@ public class AITransport : SupportShipFunctions {
 		}
 
 
-		if(!AmILookingAt(loadingUpLookAtPoint, transform.up, 5))
+		if(!AmILookingAt(warpOutLookAtPoint, transform.up, 5))
 		{
-			engineScript.LookAtTarget(loadingUpLookAtPoint);
+			engineScript.LookAtTarget(warpOutLookAtPoint);
 		}
 		else if(!warpDrive.warpBubble.enabled)
 		{
@@ -669,11 +666,7 @@ public class AITransport : SupportShipFunctions {
 		fightersToCarry = new GameObject[0];
 		reelingInPlayerGroup = false;
 	}//end of ReleaseFighters
-
-	void CommenceFadeout()
-	{
-		Tools.instance.CommenceFadeout (3);
-	}
+		
 
 	void ReportActivity()
 	{
