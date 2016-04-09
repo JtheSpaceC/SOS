@@ -9,6 +9,7 @@ public class Dodge : MonoBehaviour
 	PlayerFighterMovement playerMovementScript;
 	EnginesFighter enginesFighterScript;
 	AIFighter aiFighterScript;
+	HealthFighter healthScript;
 	bool hasAvatar = false;
 
 	public bool playerControlled = false;
@@ -28,9 +29,6 @@ public class Dodge : MonoBehaviour
 
 	private Animator animator;
 
-	//for Awareness stuff
-	[Tooltip("Only needed on Player's Dodge")] public int currentAwarenessLevel = 2;
-	int maxAwarenessLevel = 4;
 
 	[HideInInspector] public Image awarenessManaFillImage;
 	[HideInInspector] public Image powerupReadyImage;
@@ -53,6 +51,7 @@ public class Dodge : MonoBehaviour
 		playerMovementScript = transform.parent.transform.parent.GetComponent<PlayerFighterMovement>();
 		enginesFighterScript = transform.parent.transform.parent.GetComponent<EnginesFighter>();
 		aiFighterScript = enginesFighterScript.GetComponent<AIFighter>();
+		healthScript = transform.parent.transform.parent.GetComponent<HealthFighter>();
 
 		if(aiFighterScript && aiFighterScript.myCharacterAvatarScript)
 			hasAvatar = true;
@@ -67,8 +66,8 @@ public class Dodge : MonoBehaviour
 
 			if(powerupMechanicEnabled)
 			{
-				awarenessManaFillImage.fillAmount = (float)currentAwarenessLevel/maxAwarenessLevel;
-				if(currentAwarenessLevel != maxAwarenessLevel)
+				awarenessManaFillImage.fillAmount = (float)healthScript.awareness/healthScript.maxAwareness;
+				if(healthScript.awareness != healthScript.maxAwareness)
 					powerupReadyImage.transform.localScale = Vector3.zero;
 				else
 				{
@@ -203,9 +202,9 @@ public class Dodge : MonoBehaviour
 		originalBarFill = awarenessManaFillImage.fillAmount;
 		logoScale = powerupReadyImage.transform.localScale.x;
 
-		currentAwarenessLevel -= howMany;
-		if(currentAwarenessLevel < 0)
-			currentAwarenessLevel = 0;
+		healthScript.awareness -= howMany;
+		if(healthScript.awareness < 0)
+			healthScript.awareness = 0;
 
 		if(_battleEventManager.instance.playerHasOneHitKills && howMany >1)
 		{
@@ -218,7 +217,7 @@ public class Dodge : MonoBehaviour
 
 		_battleEventManager.instance.playerHasOneHitKills = false;
 
-		while(awarenessManaFillImage.fillAmount > (float)currentAwarenessLevel/(float)maxAwarenessLevel)
+		while(awarenessManaFillImage.fillAmount > (float)healthScript.awareness/healthScript.maxAwareness)
 		{
 			awarenessManaFillImage.fillAmount -= originalBarFill * Time.deltaTime;
 			if(logoScale > 0)
@@ -228,7 +227,7 @@ public class Dodge : MonoBehaviour
 			}
 			yield return new WaitForEndOfFrame();
 		}
-		awarenessManaFillImage.fillAmount = (float)currentAwarenessLevel/maxAwarenessLevel;
+		awarenessManaFillImage.fillAmount = (float)healthScript.awareness/healthScript.maxAwareness;
 		powerupReadyImage.transform.localScale = Vector3.zero;
 	}
 
@@ -238,10 +237,10 @@ public class Dodge : MonoBehaviour
 		if(!powerupMechanicEnabled)
 			yield break;
 		
-		if(currentAwarenessLevel < maxAwarenessLevel)
+		if(healthScript.awareness < healthScript.maxAwareness)
 		{
-			currentAwarenessLevel++;
-			if(currentAwarenessLevel == maxAwarenessLevel)
+			healthScript.awareness++;
+			if(healthScript.awareness == healthScript.maxAwareness)
 			{
 				awarenessMeterAudioSource.clip = manaFullSound;
 				_battleEventManager.instance.playerHasOneHitKills = true;
@@ -252,19 +251,19 @@ public class Dodge : MonoBehaviour
 			awarenessMeterAudioSource.Play();
 		}
 
-		while(awarenessManaFillImage.fillAmount < (float)currentAwarenessLevel/maxAwarenessLevel)
+		while(awarenessManaFillImage.fillAmount < (float)healthScript.awareness/healthScript.maxAwareness)
 		{
 			awarenessManaFillImage.fillAmount += Time.deltaTime;
 			if(logoScale > 0)
 			{
 				logoScale -= Time.deltaTime;
-				powerupReadyImage.transform.localScale = new Vector3 (logoScale, logoScale, maxAwarenessLevel);
+				powerupReadyImage.transform.localScale = new Vector3 (logoScale, logoScale, healthScript.maxAwareness);
 			}
 			yield return new WaitForEndOfFrame();
 		}
-		awarenessManaFillImage.fillAmount = (float)currentAwarenessLevel/maxAwarenessLevel;
+		awarenessManaFillImage.fillAmount = (float)healthScript.awareness/healthScript.maxAwareness;
 
-		if(currentAwarenessLevel >= maxAwarenessLevel)
+		if(healthScript.awareness >= healthScript.maxAwareness)
 		{
 			logoScale = powerupReadyImage.transform.localScale.x;
 

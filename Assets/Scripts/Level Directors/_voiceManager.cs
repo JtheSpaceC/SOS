@@ -18,6 +18,7 @@ public class _voiceManager : MonoBehaviour {
 	public AudioClip[] pickupNegative;
 
 	public AudioClip[] playerLeaving;
+	public AudioClip[] playerShotDown;
 
 	public bool haveAcceptedAudioThisFrame = false;
 
@@ -41,6 +42,7 @@ public class _voiceManager : MonoBehaviour {
 		_battleEventManager.pickupNegative += PickupNegative;
 
 		_battleEventManager.playerLeaving += PlayerLeaving;
+		_battleEventManager.playerShotDown += PlayerShotDown;
 	}
 	void OnDisable()
 	{
@@ -55,6 +57,7 @@ public class _voiceManager : MonoBehaviour {
 		_battleEventManager.pickupNegative -= PickupNegative;
 
 		_battleEventManager.playerLeaving -= PlayerLeaving;
+		_battleEventManager.playerShotDown -= PlayerShotDown;
 	}
 
 	void LoadClipAndPlay(AudioClip[] ac)
@@ -137,6 +140,11 @@ public class _voiceManager : MonoBehaviour {
 	void PlayerLeaving()
 	{
 		LoadClipAndPlay (playerLeaving);
+	}
+
+	void PlayerShotDown()
+	{
+		
 	}
 
 

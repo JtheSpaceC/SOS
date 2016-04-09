@@ -82,7 +82,7 @@ public class Director : MonoBehaviour {
 
 			#if UNITY_EDITOR
 
-			if(Input.GetKeyDown(KeyCode.T))
+			if(Input.GetKeyDown(KeyCode.Delete))
 				GameObject.FindGameObjectWithTag("PlayerFighter").GetComponent<HealthFighter>().health = 0;
 			
 			#endif

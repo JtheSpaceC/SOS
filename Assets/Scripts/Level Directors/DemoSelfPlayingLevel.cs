@@ -12,6 +12,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public Text followCamText;
 	public Text pressStartText;
 
+	public float sceneResetTime = 90;
 	public float maxPMCFighters = 3;
 	public float maxStormwallFighters = 6;
 
@@ -86,7 +87,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			Invoke("LoadMainLevel", 1.6f);
 		}
 
-		if(Director.instance.timer > 90)
+		if(Director.instance.timer > sceneResetTime)
 		{
 			Director.instance.timer = -999;
 			Tools.instance.CommenceFadeout(2.5f);

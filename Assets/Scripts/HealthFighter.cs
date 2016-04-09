@@ -46,8 +46,6 @@ public class HealthFighter : Health {
 	[HideInInspector]public float rollSkill;
 	[HideInInspector]public float normalRollSkill;
 
-	float testTimer;
-
 
 	void Awake()
 	{
@@ -102,15 +100,6 @@ public class HealthFighter : Health {
 	
 	void Update()
 	{
-		if(!ClickToPlay.instance.paused && temporarilyInvincible)
-		{
-			testTimer ++;
-			if(testTimer > 1.5f)
-				Debug.LogError ("Check my invincibility. " + name);
-		}
-		else if(!ClickToPlay.instance.paused) 
-			testTimer = 0;
-
 		UpdateBaseClass (); //only affects Player through 'Health' script
 		
 		//FOR PARTICLE DAMAGE
@@ -199,19 +188,17 @@ public class HealthFighter : Health {
 
 			//3. see if you can dodge out of trouble
 
-			if(playerHasAutoDodge && dodgeScript.canDodge && dodgeScript.currentAwarenessLevel >0)
+			if(playerHasAutoDodge && dodgeScript.canDodge && awareness >0)
 			{
 				if(theBullet.tag == "Bomb" && missileDodgeSkill <= 0)
 				{/*do nothing*/}
 				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0)
 				{					
-					shouldTurnBackOffTempInvincibility = false;
 					dodgeScript.Roll();
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 				}
 				else
 				{
-					shouldTurnBackOffTempInvincibility = false;
 					dodgeScript.Roll();
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 					return;
@@ -271,8 +258,6 @@ public class HealthFighter : Health {
 			//7. Flash collider off to reduce repeat hits all at once
 			if (!dead)
 				StartCoroutine (FlashOnInvincibility ());
-			else
-				shouldTurnBackOffTempInvincibility = false;
 
 			//8. flash screen white and vibrate for pain
 			StartCoroutine (Tools.instance.WhiteScreenFlash(0.1f));
@@ -329,7 +314,6 @@ public class HealthFighter : Health {
 					diceRoll = Random.Range(0, 101);
 					if(diceRoll <= missileDodgeSkill)
 					{
-						shouldTurnBackOffTempInvincibility = false;
 						dodgeScript.Roll();
 						return;
 					}
@@ -369,7 +353,6 @@ public class HealthFighter : Health {
 				{	
 					awareness--;
 					UpdateAvatarAwarenessBars();
-					shouldTurnBackOffTempInvincibility = false;
 					dodgeScript.Roll();
 
 					if(awarenessRechargeTime > 0)
@@ -424,8 +407,6 @@ public class HealthFighter : Health {
 			//5. Flash collider off to reduce repeat hits all at once
 			if (!dead)
 				StartCoroutine (FlashOnInvincibility ());
-			else
-				shouldTurnBackOffTempInvincibility = false;
 
 			if(theAttacker.tag == "PlayerFighter")
 			{
