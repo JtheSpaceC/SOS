@@ -76,7 +76,8 @@ public class Tools: MonoBehaviour
 		if (PlayerPrefsManager.GetVibrateKey() == "true")
 		{
 			allowVibrationThisSession = true;
-			allowVibrationToggleSwitch.isOn = true;
+			if(allowVibrationToggleSwitch)
+				allowVibrationToggleSwitch.isOn = true;
 		}
 		else if(PlayerPrefsManager.GetVibrateKey() == "false")
 		{

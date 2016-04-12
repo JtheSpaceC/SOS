@@ -32,7 +32,9 @@ public class Health : MonoBehaviour {
 	public ParticleSystem flames;
 	protected ParticleSystem.EmissionModule flamesEm;
 	public Slider healthSlider;
+	public GameObject healthBarDividingBox;
 	public Slider awarenessSlider;
+	public GameObject awarenessBarDividingBox;
 	Image healthSliderColour;
 	public AudioClip playerHitSound;
 	protected Image bloodSplashImage;
@@ -58,7 +60,34 @@ public class Health : MonoBehaviour {
 			("Canvas (Effects, screen)/Blood Splash").GetComponent<Image>();
 
 		if(healthSlider != null)
+		{
 			healthSliderColour = healthSlider.GetComponentInChildren<Image> ();
+			healthBarDividingBox.SetActive(false);
+			for (int i = 1; i < maxHealth; i++)
+			{
+				GameObject newBox = Instantiate(healthBarDividingBox);
+				newBox.transform.SetParent(healthBarDividingBox.transform.parent);
+				newBox.transform.localScale = Vector3.one;
+			}
+			for(int i = 0; i < healthBarDividingBox.transform.parent.childCount; i++)
+			{
+				healthBarDividingBox.transform.parent.GetChild(i).gameObject.SetActive(true);
+			}
+		}
+		if(awarenessSlider != null)
+		{
+			awarenessBarDividingBox.SetActive(false);
+			for (int i = 1; i < maxAwareness; i++)
+			{
+				GameObject newBox = Instantiate(awarenessBarDividingBox);
+				newBox.transform.SetParent(awarenessBarDividingBox.transform.parent);
+				newBox.transform.localScale = Vector3.one;
+			}
+			for(int i = 0; i < awarenessBarDividingBox.transform.parent.childCount; i++)
+			{
+				awarenessBarDividingBox.transform.parent.GetChild(i).gameObject.SetActive(true);
+			}
+		}
 
 		myAudioSource = GetComponent<AudioSource> ();
 
@@ -85,6 +114,7 @@ public class Health : MonoBehaviour {
 			{
 				alpha = 0.75f;
 				healthSliderColour.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth) * alpha;
+				healthBarDividingBox.transform.parent.gameObject.SetActive(true);
 			}
 			
 			else if(health >=maxHealth)
@@ -111,7 +141,7 @@ public class Health : MonoBehaviour {
 
 	protected IEnumerator FlashOnInvincibility()
 	{
-		yield return new WaitForEndOfFrame();
+		//yield return new WaitForEndOfFrame();
 		temporarilyInvincible = true;
 		yield return new WaitForSeconds (0.25f);
 		temporarilyInvincible = false;
