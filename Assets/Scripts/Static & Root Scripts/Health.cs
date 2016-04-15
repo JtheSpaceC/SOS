@@ -98,10 +98,11 @@ public class Health : MonoBehaviour {
 
 	protected void UpdateBaseClass()
 	{
-		/*if (healthRecoveryRate !=0 && health > 0f && health < maxHealth) 
+		if(health < maxHealth)
 		{
-			health += (healthRecoveryRate * Time.deltaTime);
-		}*/
+			healthSliderColour.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth);
+			healthBarDividingBox.transform.parent.gameObject.SetActive(true);
+		}
 
 		if(this.tag == "PlayerFighter")
 		{
@@ -113,8 +114,6 @@ public class Health : MonoBehaviour {
 			if(health < maxHealth)
 			{
 				alpha = 0.75f;
-				healthSliderColour.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth) * alpha;
-				healthBarDividingBox.transform.parent.gameObject.SetActive(true);
 			}
 			
 			else if(health >=maxHealth)

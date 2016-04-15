@@ -6,17 +6,17 @@ public class moverBasic : MonoBehaviour {
 	[Tooltip("Apply the speed to the Rigidbody2D at start. " +
 		"Doesn't use Update (cannot change speed during play). If False, FixedUpdate is used.")]
 	public bool applyForceAtStart = false;
-	public float speed = 3;
+	public Vector3 speed = new Vector3 (0, 1, 0);
 
 	void Start()
 	{
 		if(applyForceAtStart)
-			GetComponent<Rigidbody2D>().AddForce(new Vector2(0, speed), ForceMode2D.Impulse);
+			GetComponent<Rigidbody2D>().AddForce(speed, ForceMode2D.Impulse);
 	}
 
 	void FixedUpdate () 
 	{
 		if(!applyForceAtStart)
-			transform.position += transform.up * Time.deltaTime * speed;
+			transform.Translate(speed * Time.deltaTime);
 	}
 }

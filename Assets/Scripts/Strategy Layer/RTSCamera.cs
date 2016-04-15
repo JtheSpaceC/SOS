@@ -57,6 +57,7 @@ public class RTSCamera : MonoBehaviour {
 			cameraToControl = Camera.main;
 
 		CamStartSize = cameraToControl.orthographicSize;
+		defaultZoom = CamStartSize;
 		cameraToSize = CamStartSize;
 
 		billboardSizes = new float[backgroundBillboards.Length]; 
