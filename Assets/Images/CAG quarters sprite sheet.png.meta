@@ -1,0 +1,182 @@
+fileFormatVersion: 2
+guid: 722146288871f964e8d241d3e87df855
+timeCreated: 1460979487
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: CAG quarters sprite sheet_0
+    21300002: CAG quarters sprite sheet_1
+    21300004: CAG quarters sprite sheet_2
+    21300006: CAG quarters sprite sheet_3
+    21300008: CAG quarters sprite sheet_4
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: CAG quarters sprite sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 442
+        height: 764
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 218, y: -182}
+        - {x: 218, y: 382}
+        - {x: -221, y: 382}
+        - {x: -221, y: -382}
+        - {x: 221, y: -382}
+        - {x: 221, y: -183}
+        - {x: 220, y: -182}
+    - name: CAG quarters sprite sheet_1
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 234
+        width: 264
+        height: 508
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 125, y: 254}
+        - {x: -126, y: 254}
+        - {x: -132, y: 248}
+        - {x: -132, y: -248}
+        - {x: -126, y: -254}
+        - {x: 126, y: -254}
+        - {x: 130, y: -251}
+        - {x: 132, y: -246}
+        - {x: 132, y: 247}
+    - name: CAG quarters sprite sheet_2
+      rect:
+        serializedVersion: 2
+        x: 751
+        y: 254
+        width: 239
+        height: 508
+      alignment: 9
+      pivot: {x: 0.43462855, y: 0.97841674}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 108.12378, y: -266.0357}
+        - {x: 130.12378, y: -262.0357}
+        - {x: 135.12378, y: -256.0357}
+        - {x: 135.12378, y: -225.0357}
+        - {x: 111.12378, y: -57.035706}
+        - {x: 105.12378, y: -48.035706}
+        - {x: 91.12378, y: -46.035706}
+        - {x: 73.12378, y: -40.035706}
+        - {x: 27.12378, y: -39.035706}
+        - {x: 6.1237793, y: -16.035706}
+        - {x: 16.12378, y: -5.0357056}
+        - {x: 17.12378, y: 3.9642944}
+        - {x: 13.123779, y: 10.964294}
+        - {x: -6.8762207, y: 10.964294}
+        - {x: -9.876221, y: 8.964294}
+        - {x: -9.876221, y: -5.0357056}
+        - {x: -13.876221, y: -40.035706}
+        - {x: -51.87622, y: -40.035706}
+        - {x: -80.87622, y: -47.035706}
+        - {x: -86.87622, y: -56.035706}
+        - {x: -103.87622, y: -221.0357}
+        - {x: -103.87622, y: -250.0357}
+        - {x: -97.87622, y: -258.0357}
+        - {x: -77.87622, y: -262.0357}
+        - {x: -62.87622, y: -261.0357}
+        - {x: -62.87622, y: -487.0357}
+        - {x: -61.87622, y: -492.0357}
+        - {x: -54.87622, y: -497.0357}
+        - {x: 72.12378, y: -497.0357}
+        - {x: 78.12378, y: -494.0357}
+        - {x: 79.12378, y: -257.0357}
+        - {x: 91.12378, y: -268.0357}
+    - name: CAG quarters sprite sheet_3
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 243
+        width: 141
+        height: 485
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -37.5, y: 242.5}
+        - {x: -70.5, y: 230.5}
+        - {x: -70.5, y: -159.5}
+        - {x: -65.5, y: -242.5}
+        - {x: 70.5, y: -242.5}
+        - {x: 70.5, y: 230.5}
+        - {x: 62.5, y: 242.5}
+    - name: CAG quarters sprite sheet_4
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 17
+        width: 206
+        height: 195
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -40, y: 97.5}
+        - {x: -44, y: 95.5}
+        - {x: -75, y: -0.5}
+        - {x: -103, y: -20.5}
+        - {x: -103, y: -33.5}
+        - {x: 19, y: -97.5}
+        - {x: 48, y: -97.5}
+        - {x: 103, y: -35.5}
+        - {x: 103, y: 45.5}
+        - {x: -17, y: 97.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
