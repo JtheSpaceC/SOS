@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 using System.Collections;
 
 [RequireComponent (typeof(Collider2D))]
 public class SpriteHighlighter : MonoBehaviour {
 
 	SpriteRenderer myRenderer;
+	AudioSource myAudioSource;
 	Color startColor;
 	Shader shaderGUItext;
 	Shader shaderSpritesDefault;
 
-	public enum Behaviour {None, SlideTransform, ColourChange, Grow, Pop};
+	public enum MouseOverBehaviour {None, SlideTransform, ColourChange, Grow, Pop};
 
 	[Header("Mouse Over Behaviour + Variables")]
-	public Behaviour behaviour;
+	public MouseOverBehaviour mouseOverBehaviour;
 	public Vector3 slideDistance = new Vector3 (1, 0, 0);
 	[Tooltip("How many seconds to reach new position.")]
 	public float slideTime = 0.5f;
@@ -22,6 +25,18 @@ public class SpriteHighlighter : MonoBehaviour {
 	public float newColourBalance = 0.5f;
 	public Vector3 growthAddition = new Vector3 (0.2f, 0.2f, 0);
 	public float growTime = 0.1f;
+	public Text popupText;
+	public string textToDisplay = "";
+	public bool playAudioOnOver = false;
+	public bool playAudioOnExit = false;
+	public UnityEvent myMouseOverEvents;
+
+
+	[Header("Do On Click")]
+	public bool doBlink = false;
+	[Tooltip("Fading in and out both take this long. Total time is double this.")]
+	public float blinkTime = 0.35f;
+	public UnityEvent myClickEvents;
 
 	[Header("Debugging")]
 	[Tooltip("If true, the hotkey will toggle the sprite whitener on/off")]
@@ -43,6 +58,7 @@ public class SpriteHighlighter : MonoBehaviour {
 			objectInQuestion = this.transform;
 		}
 		myRenderer = objectInQuestion.GetComponent<SpriteRenderer>();
+		myAudioSource = GetComponent<AudioSource>();
 		startColor = myRenderer.color;
 		startPos = transform.position;
 		normalScale = objectInQuestion.localScale;
@@ -65,39 +81,69 @@ public class SpriteHighlighter : MonoBehaviour {
 
 	void OnMouseEnter()
 	{
-		if(behaviour == Behaviour.ColourChange)
+		myMouseOverEvents.Invoke();
+
+		if(mouseOverBehaviour == MouseOverBehaviour.ColourChange)
 		{
 			WhitenSprite();
 			myRenderer.color = Color.Lerp(myRenderer.color, newColour, newColourBalance);
 		}
-		else if(behaviour == Behaviour.SlideTransform)
+		else if(mouseOverBehaviour == MouseOverBehaviour.SlideTransform)
 		{
 			StopCoroutine("SlideAnimation");
 			StartCoroutine("SlideAnimation", startPos + slideDistance);
 		}
-		else if(behaviour == Behaviour.Grow || behaviour == Behaviour.Pop)
+		else if(mouseOverBehaviour == MouseOverBehaviour.Grow || mouseOverBehaviour == MouseOverBehaviour.Pop)
 		{
 			StopCoroutine("GrowSprite");
 			StartCoroutine("GrowSprite", false);
 		}
+
+		if(playAudioOnOver && myAudioSource != null)
+		{
+			myAudioSource.Play();
+		}
+			
+		if(popupText != null && textToDisplay != "")
+			popupText.text = textToDisplay;
 	}
 
 	void OnMouseExit()
 	{
-		if(behaviour == Behaviour.ColourChange)
+		if(mouseOverBehaviour == MouseOverBehaviour.ColourChange)
 		{
 			NormalizeSprite();
 		}
-		else if(behaviour == Behaviour.SlideTransform)
+		else if(mouseOverBehaviour == MouseOverBehaviour.SlideTransform)
 		{
 			StopCoroutine("SlideAnimation");
 			StartCoroutine("SlideAnimation", startPos);
 		}
-		else if(behaviour == Behaviour.Grow)
+		else if(mouseOverBehaviour == MouseOverBehaviour.Grow)
 		{
 			StopCoroutine("GrowSprite");
 			StartCoroutine("GrowSprite", true);
 		}
+
+		if(playAudioOnExit && myAudioSource != null)
+		{
+			myAudioSource.Play();
+		}
+
+		if(popupText != null)
+			popupText.text = "";
+	}
+
+	void OnMouseDown()
+	{
+		if(doBlink)
+		{
+			CAGManager.instance.callingSpriteHightlerScript = this;
+			CAGManager.instance.SetFadeToClearAfterBlack();
+			CAGManager.instance.CallFadeToBlack(blinkTime);
+		}
+		else
+			myClickEvents.Invoke();
 	}
 
 	IEnumerator SlideAnimation(Vector3 destination)
@@ -126,7 +172,7 @@ public class SpriteHighlighter : MonoBehaviour {
 				yield return new WaitForEndOfFrame();
 			}
 		}
-		if(behaviour == Behaviour.Pop || shrinkNow)
+		if(mouseOverBehaviour == MouseOverBehaviour.Pop || shrinkNow)
 		{
 			growAnimStartTime = Time.time;
 			transform.localScale = normalScale + growthAddition;
