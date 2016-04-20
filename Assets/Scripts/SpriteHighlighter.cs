@@ -19,6 +19,7 @@ public class SpriteHighlighter : MonoBehaviour {
 	public Vector3 slideDistance = new Vector3 (1, 0, 0);
 	[Tooltip("How many seconds to reach new position.")]
 	public float slideTime = 0.5f;
+	[Tooltip("Specify another object to control. If blank, defaults to this.")]
 	public Transform objectInQuestion;
 	public Color newColour = Color.white;
 	[Range(0f, 1f)]
@@ -33,6 +34,7 @@ public class SpriteHighlighter : MonoBehaviour {
 
 
 	[Header("Do On Click")]
+	[Tooltip("For picking up an item or transitioning within room. DON'T USE WHEN CHANGING ROOMS!! Causes Stack Overflow Exception.")]
 	public bool doBlink = false;
 	[Tooltip("Fading in and out both take this long. Total time is double this.")]
 	public float blinkTime = 0.35f;
@@ -81,6 +83,7 @@ public class SpriteHighlighter : MonoBehaviour {
 
 	void OnMouseEnter()
 	{
+		CAGManager.instance.callingSpriteHightlerScript = this;
 		myMouseOverEvents.Invoke();
 
 		if(mouseOverBehaviour == MouseOverBehaviour.ColourChange)
@@ -138,7 +141,6 @@ public class SpriteHighlighter : MonoBehaviour {
 	{
 		if(doBlink)
 		{
-			CAGManager.instance.callingSpriteHightlerScript = this;
 			CAGManager.instance.SetFadeToClearAfterBlack();
 			CAGManager.instance.CallFadeToBlack(blinkTime);
 		}
@@ -183,6 +185,11 @@ public class SpriteHighlighter : MonoBehaviour {
 				yield return new WaitForEndOfFrame();
 			}
 		}
+	}
+
+	public void ResetMovingParts()
+	{
+		objectInQuestion.transform.position = startPos;
 	}
 
 	public void WhitenSprite() 

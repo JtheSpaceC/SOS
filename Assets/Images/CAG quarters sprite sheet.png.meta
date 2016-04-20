@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 722146288871f964e8d241d3e87df855
-timeCreated: 1460979487
+timeCreated: 1461155479
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -143,17 +143,17 @@ TextureImporter:
         y: 243
         width: 141
         height: 485
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5307799, y: 0.74876267}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -37.5, y: 242.5}
-        - {x: -70.5, y: 230.5}
-        - {x: -70.5, y: -159.5}
-        - {x: -65.5, y: -242.5}
-        - {x: 70.5, y: -242.5}
-        - {x: 70.5, y: 230.5}
-        - {x: 62.5, y: 242.5}
+      - - {x: -41.839966, y: 121.8501}
+        - {x: -74.839966, y: 109.8501}
+        - {x: -74.839966, y: -280.1499}
+        - {x: -69.839966, y: -363.1499}
+        - {x: 66.160034, y: -363.1499}
+        - {x: 66.160034, y: 109.8501}
+        - {x: 58.160034, y: 121.8501}
     - name: CAG quarters sprite sheet_4
       rect:
         serializedVersion: 2

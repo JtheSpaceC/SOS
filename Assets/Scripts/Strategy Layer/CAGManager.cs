@@ -11,6 +11,7 @@ public class CAGManager : MonoBehaviour {
 
 	public Image blackoutPanel;
 	public Text contextualText;
+	public Transform cameraBackButton;
 
 	bool fadeToClearAfterBlack = false;
 
@@ -28,6 +29,8 @@ public class CAGManager : MonoBehaviour {
 	public GameObject bar;
 	public Image barHeaderSprite;
 
+	Vector3 cameraRestorePosition;
+
 
 	void Awake()
 	{
@@ -44,18 +47,7 @@ public class CAGManager : MonoBehaviour {
 	{
 		callingSpriteHightlerScript = spriteHighlighter;
 	}
-
-	public void NewDay()
-	{
-		CAGDirector.instance.gameDay++;
-		CAGDirector.instance.wearingClothes = false;
-	}
-
-	public void PutOnJumpsuit()
-	{
-		CAGDirector.instance.wearingClothes = true;
-	}
-
+		
 	public void CheckQuartersDoor()
 	{
 		if(!CAGDirector.instance.wearingClothes)
@@ -67,28 +59,46 @@ public class CAGManager : MonoBehaviour {
 			callingSpriteHightlerScript.textToDisplay = "Start Your Rounds";
 		}
 	}
+
+	#region Leave Various Room Conditions
+
 	public void LeaveQuarters()
 	{
 		if(CAGDirector.instance.wearingClothes)
 		{
 			CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
-			Invoke("SetAllRoomsInactive", callingSpriteHightlerScript.blinkTime);
+			Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
 		}
 	}
-
-	void SetAllRoomsInactive()
+	public void LeaveBrig()
 	{
-		quarters.SetActive(false);
-		quartersHeaderSprite.color = Color.white;
-		brig.SetActive(false);
-		brigHeaderSprite.color = Color.white;
-		squadronHQ.SetActive(false);
-		squadronHQHeaderSprite.color = Color.white;
-		quartermaster.SetActive(false);
-		quartermasterHeaderSprite.color = Color.white;
-		bar.SetActive(false);
-		barHeaderSprite.color = Color.white;
-		contextualText.text = "";
+		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
+		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime );
+	}
+	public void LeaveSquadronHQ()
+	{
+		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
+		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
+	}
+	public void LeaveQuartermaster()
+	{
+		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
+		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
+	}
+	public void LeaveBar()
+	{
+		CAGDirector.instance.NewDay();
+		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
+		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
+
+		//TODO: Put in an end of day info panel
+	}
+	#endregion
+
+	void CallLoadNextRoom()
+	{
+		//reset moving sprites like open doors
+		callingSpriteHightlerScript.ResetMovingParts();
 
 		//set an active room
 		CAGDirector.instance.ActivateNextRoom();
@@ -143,6 +153,37 @@ public class CAGManager : MonoBehaviour {
 		fadeToClearAfterBlack = true;
 	}
 	#endregion
+
+	public void CameraCloseup(Transform who)
+	{
+		cameraRestorePosition = Camera.main.transform.position;
+		Camera.main.transform.position = new Vector3 (who.position.x, who.position.y, Camera.main.transform.position.z);
+		Camera.main.orthographicSize /= 3;
+		cameraBackButton.localScale = new Vector3(cameraBackButton.localScale.x, Camera.main.orthographicSize/3, 1);
+		cameraBackButton.localPosition = new Vector3(0, - Camera.main.orthographicSize, cameraBackButton.localPosition.z);
+		cameraBackButton.GetComponent<Collider2D>().enabled = true;
+
+		EnablePrisonerColliders(false);
+	}
+
+	public void CameraRestore()
+	{
+		Camera.main.transform.position = cameraRestorePosition;
+		Camera.main.orthographicSize *= 3;
+		cameraBackButton.GetComponent<Collider2D>().enabled = false;
+
+		EnablePrisonerColliders(true);
+	}
+
+	public void EnablePrisonerColliders(bool trueOrFalse)
+	{
+		BrigPerson[] brigPeople = Object.FindObjectsOfType<BrigPerson>();
+
+		foreach(BrigPerson brigPerson in brigPeople)
+		{
+			brigPerson.myCollider.enabled = trueOrFalse;
+		}
+	}
 }
 
 public class FadeTimes
