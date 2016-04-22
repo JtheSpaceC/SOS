@@ -11,6 +11,7 @@ public class CAGManager : MonoBehaviour {
 
 	public Image blackoutPanel;
 	public Text contextualText;
+	public Text dayText;
 	public Transform cameraBackButton;
 
 	bool fadeToClearAfterBlack = false;

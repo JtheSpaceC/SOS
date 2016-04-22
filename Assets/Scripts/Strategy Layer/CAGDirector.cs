@@ -54,6 +54,8 @@ public class CAGDirector : MonoBehaviour {
 		rooms[currentRoom].myHeaderIcon.color = Color.green;
 
 		currentRoom++;
+
+		CAGManager.instance.dayText.text = "Day " + gameDay;
 	}
 	void DeactivateRooms()
 	{
