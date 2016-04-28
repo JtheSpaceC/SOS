@@ -20,7 +20,10 @@ public class Director : MonoBehaviour {
 	[HideInInspector] public int numberOfAutomatedDodges = 0;
 	[HideInInspector] public int numberOfSpecialsUsed = 0;
 
-	[HideInInspector] public float timeUntilFirstKill;
+	[HideInInspector] public float timeUntilFirstKill = 0;
+
+	[HideInInspector] public int radioButtonPresses = 0;
+	[HideInInspector] public int tacMapUses = 0;
 
 
 	[Tooltip("Just for turning something on/of in the scene for testing. Like a background or spawner. Just one object.")]

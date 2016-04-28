@@ -98,7 +98,7 @@ public class Health : MonoBehaviour {
 
 	protected void UpdateBaseClass()
 	{
-		if(health < maxHealth)
+		if(health < maxHealth && healthSliderColour != null)
 		{
 			healthSliderColour.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth);
 			healthBarDividingBox.transform.parent.gameObject.SetActive(true);

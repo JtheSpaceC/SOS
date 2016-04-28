@@ -81,8 +81,8 @@ public class Analytics_Demo1 : MonoBehaviour {
 				{"Successful Dodges made", Director.instance.numberOfSuccessfulDodges},
 				{"Automated Dodges made", Director.instance.numberOfAutomatedDodges},
 				{"One Hit Kills", Director.instance.numberOfSpecialsUsed},
-				{"Radio Button Presses", FindObjectOfType<RadioCommands>().radioButtonPresses},
-				{"Tac Map Uses", FindObjectOfType<CameraTactical>().mapUses}
+				{"Radio Button Presses", Director.instance.radioButtonPresses},
+				{"Tac Map Uses", Director.instance.tacMapUses}
 			});
 	}
 
@@ -99,8 +99,8 @@ public class Analytics_Demo1 : MonoBehaviour {
 				{"Successful Dodges made", Director.instance.numberOfSuccessfulDodges},
 				{"Automated Dodges made", Director.instance.numberOfAutomatedDodges},
 				{"One Hit Kills", Director.instance.numberOfSpecialsUsed},
-				{"Radio Button Presses", FindObjectOfType<RadioCommands>().radioButtonPresses},
-				{"Tac Map Uses", FindObjectOfType<CameraTactical>().mapUses}
+				{"Radio Button Presses", Director.instance.radioButtonPresses},
+				{"Tac Map Uses", Director.instance.tacMapUses}
 			});
 	}
 

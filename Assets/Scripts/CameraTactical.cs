@@ -17,8 +17,6 @@ public class CameraTactical : MonoBehaviour {
 
 	public bool canAccessTacticalMap = false;
 	[HideInInspector]public bool mapIsShown = false;
-	[HideInInspector] public int mapUses = 0;
-
 
 	public GameObject playerFighterUI;
 
@@ -195,7 +193,7 @@ public class CameraTactical : MonoBehaviour {
 		else //if we're turning it on
 		{
 			AudioMasterScript.instance.MuteSFX();
-			mapUses ++;
+			Director.instance.tacMapUses ++;
 			//SetUpShipLists(pmcCommander);
 		}
 
