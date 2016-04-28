@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class DemoLevel : MonoBehaviour {
 
+	public static DemoLevel instance;
+
 	HealthFighter playerHealth;
 	AITransport AITrans;
 	Spawner spawnerScript;
@@ -73,7 +75,7 @@ public class DemoLevel : MonoBehaviour {
 	public List<GameObject> playerGroup;
 	[HideInInspector] public Vector2 startPos;
 
-	bool missionComplete = false;
+	[HideInInspector] public bool missionComplete = false;
 	float clearedKillLimitAtThisTime = Mathf.Infinity;
 
 	[Header("End of level stuff")]
@@ -84,6 +86,15 @@ public class DemoLevel : MonoBehaviour {
 	
 	void Awake()
 	{
+		if(instance == null)
+			instance = this;
+		else
+		{
+			Debug.Log("There were 2 DemoLevel scripts. Destroying 1.");
+			Destroy(gameObject);
+			return;
+		}
+
 		player = GameObject.FindGameObjectWithTag ("PlayerFighter");
 		player.GetComponentInChildren<WeaponsPrimaryFighter> ().allowedToFire = false;
 
@@ -240,9 +251,9 @@ public class DemoLevel : MonoBehaviour {
 			else if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge && !playerKnowsHowToAfterburn && timer > 27)
 			{
 				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
-					Subtitles.instance.PostHint(new string[] {"Hold LEFT SHIFT while accelerating for AFTERBURNERS"});
+					Subtitles.instance.PostHint(new string[] {"Hold LEFT SHIFT for AFTERBURNERS (uses Nitro)"});
 				else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-					Subtitles.instance.PostHint(new string[] {"Hold X while accelerating for AFTERBURNERS"});
+					Subtitles.instance.PostHint(new string[] {"Hold X for AFTERBURNERS (uses Nitro)"});
 				Subtitles.instance.CoolDownHintNoise();
 				Subtitles.instance.CoolDownHintHighlight();
 			}

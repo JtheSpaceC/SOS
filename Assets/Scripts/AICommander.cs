@@ -112,8 +112,8 @@ public class AICommander : MonoBehaviour {
 	{
 		foreach(GameObject fighter in myFighters)
 		{
+			fighter.GetComponent<AIFighter>().ChangeToNewState(new AIFighter.StateMachine[] {AIFighter.StateMachine.Retreat}, new float[] {1});
 			fighter.GetComponent<AIFighter>().orders = AIFighter.Orders.FullRetreat;
-			fighter.GetComponent<AIFighter>().currentState = AIFighter.StateMachine.Retreat;
 		}
 	}
 

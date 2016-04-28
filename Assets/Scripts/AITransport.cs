@@ -73,6 +73,16 @@ public class AITransport : SupportShipFunctions {
 		carrySpots = new Transform[]{carry1, carry2, carry3};
 	}
 
+	void OnEnable()
+	{
+		_battleEventManager.playerBeganDocking += PlayerCommencedDocking;
+	}
+
+	void OnDisable()
+	{		
+		_battleEventManager.playerBeganDocking -= PlayerCommencedDocking;		
+	}
+
 
 	void Update()
 	{
@@ -166,7 +176,7 @@ public class AITransport : SupportShipFunctions {
 			return;
 
 		if(other.tag == "PlayerFighter")
-		{
+		{ //TODO: Change this to be easier
 			if(!RadioCommands.instance.buttonsShown)
 			{
 				RadioCommands.instance.communicatingGameObject = this.gameObject;
@@ -201,8 +211,6 @@ public class AITransport : SupportShipFunctions {
 	{
 		if(switchingState)
 		{
-			Subtitles.instance.PostSubtitle (new string[]{"Engaging Docking Procedure.", "Roger, recovering fighters."});
-
 			waypoint = (Vector2)transform.position + 2*GetComponent<Rigidbody2D>().velocity;
 
 			warpOutLookAtPoint = literalSpawnPoint;
@@ -680,6 +688,11 @@ public class AITransport : SupportShipFunctions {
 			PlayerPrefs.SetString ("craftHealth", "Damaged");
 		else
 			PlayerPrefs.SetString ("craftHealth", "Fully Functional");
+	}
+
+	void PlayerCommencedDocking()
+	{
+		Subtitles.instance.PostSubtitle (new string[]{"Engaging Docking Procedure.", "Roger, recovering fighters."});
 	}
 
 }//Mono

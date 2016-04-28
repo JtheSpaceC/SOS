@@ -218,6 +218,10 @@ public class AIFighter : FighterFunctions {
 
 	public void ChangeToNewState(StateMachine [] possibleStates, float[] weights)
 	{
+		//TODO: Make this a better check
+		if(orders == Orders.FullRetreat)
+			return;
+
 		if(target != null)
 		{
 			target.SendMessage("RemoveSomeoneAttackingMe", this.gameObject, SendMessageOptions.DontRequireReceiver); 

@@ -42,9 +42,9 @@ public class PlayerFighterMovement : EnginesFighter {
 			if(!engineNoise.gameObject.activeSelf)
 				engineNoise.gameObject.SetActive(true);
 
-			if (Input.GetButton ("Afterburners") && !afterburnerNoise.isPlaying && Input.GetAxis("Accelerate") != 0 && nitroRemaining > 0)
+			if (Input.GetButton ("Afterburners") && !afterburnerNoise.isPlaying /*&& Input.GetAxis("Accelerate") != 0 */ && nitroRemaining > 0)
 				afterburnerNoise.Play ();
-			else if(!Input.GetButton("Afterburners") || Input.GetAxis("Accelerate") == 0 || nitroRemaining <= 0)
+			else if(!Input.GetButton("Afterburners")/* || Input.GetAxis("Accelerate") == 0*/ || nitroRemaining <= 0)
 				afterburnerNoise.Stop ();
 		}
 		else
@@ -93,6 +93,7 @@ public class PlayerFighterMovement : EnginesFighter {
 		//FOR BASIC MOVEMENT
 		braking = false;
 
+		//for braking
 		if(Input.GetAxis("Accelerate") > 0 && Input.GetAxis("Reverse") >0)
 		{
 			braking = true;
@@ -101,6 +102,10 @@ public class PlayerFighterMovement : EnginesFighter {
 		else if(Input.GetAxis("Accelerate")>0)
 		{
 			ForwardOrBackwardThrust(Input.GetAxis("Accelerate"), true);
+		}
+		else if(Input.GetButton("Afterburners")) //UNDONE: added afterburners here to allow them on without RT
+		{
+			ForwardOrBackwardThrust(1, true);
 		}
 		else if(Input.GetAxis("Reverse")>0) //reversing
 		{
@@ -142,7 +147,7 @@ public class PlayerFighterMovement : EnginesFighter {
 
 		//FOR AFTERBURNERS
 	
-		if(!braking && Input.GetButton("Afterburners") && nitroRemaining > 0 && Input.GetAxis("Accelerate") > 0)
+		if(!braking && Input.GetButton("Afterburners") && nitroRemaining > 0 /*&& Input.GetAxis("Accelerate") > 0*/)
 		{
 			Tools.instance.VibrateController(0, 0.1f, 0.1f, 0.1f);
 			afterburnerIsOn = true;
@@ -176,9 +181,8 @@ public class PlayerFighterMovement : EnginesFighter {
 		}
 		else if(Input.GetButton("Afterburners"))
 		{
-			//turnSpeed = maxRotateSpeed / 4f;
-		}
-		
+			turnSpeed = maxRotateSpeed / 4f;
+		}		
 		else if(Input.GetAxis("Accelerate") == 0 && !Input.GetButton("Afterburners"))
 		{
 			turnSpeed = maxRotateSpeed;
