@@ -14,6 +14,7 @@ public class AITransport : SupportShipFunctions {
 	bool playerHadAutoDodge;
 	int playerManaToRestore;
 
+	public CircleCollider2D pickupOfferCollider;
 	public Transform carry1;
 	public Transform carry2;
 	public Transform carry3;
@@ -71,6 +72,12 @@ public class AITransport : SupportShipFunctions {
 
 		warpOutLookAtPoint = myCommander.transform.position;
 		carrySpots = new Transform[]{carry1, carry2, carry3};
+		pickupOfferCollider.enabled = false;
+	}
+
+	void Start()
+	{
+		ChangeToNewState(currentState);
 	}
 
 	void OnEnable()
@@ -113,8 +120,8 @@ public class AITransport : SupportShipFunctions {
 
 		if(currentState == StateMachine.awaitingPickup)
 		{
-			HoldPosition();
 			AwaitingPickup();
+			HoldPosition();
 		}
 		else if(currentState == StateMachine.holdingPosition)
 		{
@@ -156,6 +163,7 @@ public class AITransport : SupportShipFunctions {
 		previousState = currentState;
 
 		warpDrive.warpBubble.enabled = false;
+		pickupOfferCollider.enabled = false;
 
 		currentState = newState;
 		switchingState = true;
@@ -166,6 +174,8 @@ public class AITransport : SupportShipFunctions {
 	{
 		if(switchingState)
 		{
+			pickupOfferCollider.enabled = true;
+
 			switchingState = false;
 		}
 	}
