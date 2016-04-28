@@ -41,7 +41,7 @@ public class _voiceManager : MonoBehaviour {
 		_battleEventManager.pickupOnTheWay += PickupOnTheWay;
 		_battleEventManager.pickupNegative += PickupNegative;
 
-		_battleEventManager.playerLeaving += PlayerLeaving;
+		_battleEventManager.playerLeavingByWarp += PlayerLeaving;
 		_battleEventManager.playerShotDown += PlayerShotDown;
 	}
 	void OnDisable()
@@ -56,7 +56,7 @@ public class _voiceManager : MonoBehaviour {
 		_battleEventManager.pickupOnTheWay -= PickupOnTheWay;
 		_battleEventManager.pickupNegative -= PickupNegative;
 
-		_battleEventManager.playerLeaving -= PlayerLeaving;
+		_battleEventManager.playerLeavingByWarp -= PlayerLeaving;
 		_battleEventManager.playerShotDown -= PlayerShotDown;
 	}
 

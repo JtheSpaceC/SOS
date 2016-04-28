@@ -117,12 +117,12 @@ public class DemoLevelOld : MonoBehaviour {
 
 	void OnEnable()
 	{
-		_battleEventManager.playerLeaving += TidyUpAsPlayerLeaves;
+		_battleEventManager.playerLeavingByWarp += TidyUpAsPlayerLeaves;
 	}
 
 	void OnDisable()
 	{
-		_battleEventManager.playerLeaving -= TidyUpAsPlayerLeaves;
+		_battleEventManager.playerLeavingByWarp -= TidyUpAsPlayerLeaves;
 	}
 
 	void Start()

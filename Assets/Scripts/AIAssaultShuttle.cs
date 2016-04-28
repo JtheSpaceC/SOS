@@ -167,7 +167,10 @@ public class AIAssaultShuttle : SupportShipFunctions {
 				Subtitles.instance.PostSubtitle(new string[]{name + ", Engaging Warp Drive"});
 				Camera.main.GetComponent<CameraControllerFighter>().target = null;
 				Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
-				_battleEventManager.instance.CallPlayerLeaving();
+
+				if(!_battleEventManager.instance.playerHasBeenRescued)
+					_battleEventManager.instance.CallPlayerLeaving();
+			
 				Invoke("CommenceFadeout", 6);
 				Tools.instance.ClearWaypoints();
 

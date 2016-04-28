@@ -101,6 +101,9 @@ public class Tools: MonoBehaviour
 			Debug.LogError("Vibrate Key wasn't blank, true, or false. Something has set it incorrectly. Resetting..");
 			PlayerPrefsManager.SetVibrateKey("");
 		}
+
+		AudioMasterScript.instance.StopAllCoroutines();
+		AudioMasterScript.instance.ZeroSFX();
 	}
 
 

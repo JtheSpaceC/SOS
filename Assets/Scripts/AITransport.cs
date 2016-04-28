@@ -644,6 +644,7 @@ public class AITransport : SupportShipFunctions {
 			carryFighter1.SendMessage("ToggleWeaponsOnOff", true);
 			carryFighter1Health.playerHasAutoDodge = playerHadAutoDodge;
 			carryFighter1Health.manaToRestoreOnAHit = playerManaToRestore;
+			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.CoverMe; //TODO: May move this line to respect AI leaders
 		}
 		else
 		{

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class Analytics_Demo1 : MonoBehaviour {
 
 	public static Analytics_Demo1 instance;
-	public bool doAnalytics = true;
 
 	float timeTakenToCallTransport;
 
@@ -18,23 +17,20 @@ public class Analytics_Demo1 : MonoBehaviour {
 			Debug.Log("There were 2 Analytics_Demo1 scripts. Destroying 1.");
 			Destroy(gameObject);
 		}
-
-		if(!doAnalytics)
-			this.enabled = false;
 	}
 
 	void OnEnable()
 	{
 		_battleEventManager.pickupOnTheWay += PlayerCalledTransport;
 		_battleEventManager.playerBeganDocking += PlayerCommencedDocking;
-		_battleEventManager.playerLeaving += PlayerWarpedOut;
+		_battleEventManager.playerLeavingByWarp += PlayerWarpedOut;
 		_battleEventManager.playerShotDown += PlayerDied;
 	}
 	void OnDisable()
 	{
 		_battleEventManager.pickupOnTheWay -= PlayerCalledTransport;
 		_battleEventManager.playerBeganDocking += PlayerCommencedDocking;
-		_battleEventManager.playerLeaving -= PlayerWarpedOut;
+		_battleEventManager.playerLeavingByWarp -= PlayerWarpedOut;
 		_battleEventManager.playerShotDown -= PlayerDied;
 	}
 

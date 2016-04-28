@@ -128,7 +128,7 @@ public class DemoLevel : MonoBehaviour {
 
 	void OnEnable()
 	{
-		_battleEventManager.playerLeaving += TidyUpAsPlayerLeaves;
+		_battleEventManager.playerLeavingByWarp += TidyUpAsPlayerLeaves;
 		_battleEventManager.playerShotDown += PlayerWasShotDown;
 		_battleEventManager.playerRescued += PlayerWasRescued;
 		_battleEventManager.playerBeganDocking += PlayerBeganDocking;
@@ -136,7 +136,7 @@ public class DemoLevel : MonoBehaviour {
 
 	void OnDisable()
 	{
-		_battleEventManager.playerLeaving -= TidyUpAsPlayerLeaves;
+		_battleEventManager.playerLeavingByWarp -= TidyUpAsPlayerLeaves;
 		_battleEventManager.playerShotDown -= PlayerWasShotDown;
 		_battleEventManager.playerRescued -= PlayerWasRescued;
 		_battleEventManager.playerBeganDocking -= PlayerBeganDocking;
@@ -309,15 +309,6 @@ public class DemoLevel : MonoBehaviour {
 			AITrans.currentState = AITransport.StateMachine.warpOut;
 		}
 
-		//for mission extraction
-
-		if(playerLogicScript.orders == PlayerAILogic.Orders.RTB)
-		{
-			missionComplete = true;
-			Invoke("PostMissionCompleteMessage", 6);
-			playerLogicScript.orders = PlayerAILogic.Orders.NA;
-			Invoke("MissionCompleteScreen", 10.5f);
-		}
 
 		//for ending the demo with kill limit
 		if(playerLogicScript.kills >= killLimitForDemo && clearedKillLimitAtThisTime == Mathf.Infinity)
@@ -361,6 +352,7 @@ public class DemoLevel : MonoBehaviour {
 
 	void PostMissionCompleteMessage()
 	{
+		print("Posting mission complete message.");
 		if(player.GetComponent<PlayerAILogic>().kills >= killLimitForDemo)
 		{
 			Subtitles.instance.PostHint (new string[]{"---MISSION COMPLETE---"});
@@ -421,6 +413,8 @@ public class DemoLevel : MonoBehaviour {
 
 	void MissionCompleteScreen()
 	{
+		print("Showing mission complete SCREEN.");
+
 		AudioMasterScript.instance.MuteSFX ();
 		missionCompleteMenu.SetActive (true);
 		Invoke ("LoadAutoPlayLevel", 20f);
@@ -442,6 +436,7 @@ public class DemoLevel : MonoBehaviour {
 	void PlayerWasRescued()
 	{
 		deathPanel.SetActive(true);
+		deathPanel.GetComponentInParent<Canvas>().sortingOrder += 10;
 		missionComplete = true;
 
 		Invoke("ActivateDeathButtons", 1f);
@@ -474,6 +469,11 @@ public class DemoLevel : MonoBehaviour {
 	void TidyUpAsPlayerLeaves()
 	{
 		timePlayerStartedLeaving = timer;
+
+		missionComplete = true;
+		Invoke("PostMissionCompleteMessage", 6);
+		playerLogicScript.orders = PlayerAILogic.Orders.NA;
+		Invoke("MissionCompleteScreen", 10.5f);
 	}
 
 	public void LeaveFeedback()

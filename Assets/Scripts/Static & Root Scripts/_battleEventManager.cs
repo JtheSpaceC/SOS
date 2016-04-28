@@ -34,14 +34,16 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void PickupNegative();
 	public static event PickupNegative pickupNegative;
 
-	public delegate void PlayerLeaving();
-	public static event PlayerLeaving playerLeaving;
+	public delegate void PlayerLeavingByWarp();
+	public static event PlayerLeavingByWarp playerLeavingByWarp;
 
 	public delegate void PlayerShotDown();
 	public static event PlayerShotDown playerShotDown;
 
 	public delegate void PlayerRescued();
 	public static event PlayerRescued playerRescued;
+
+	[HideInInspector] public bool playerHasBeenRescued = false;
 
 	public delegate void PlayerCaptured();
 	public static event PlayerCaptured playerCaptured;
@@ -104,11 +106,12 @@ public class _battleEventManager : MonoBehaviour {
 	}
 	public void CallPlayerLeaving()
 	{
-		playerLeaving ();
+		playerLeavingByWarp ();
 	}
 	public void CallPlayerRescued()
 	{
 		playerRescued();
+		playerHasBeenRescued = true;
 	}
 	public void CallPlayerCaptured()
 	{
