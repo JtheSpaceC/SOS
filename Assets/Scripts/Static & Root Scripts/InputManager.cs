@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class InputManager : MonoBehaviour {
 
@@ -93,6 +92,7 @@ public class InputManager : MonoBehaviour {
 			ChangeTo(InputFrom.controller);
 			restartTimer = 0;
 		}
+		print(Input.GetAxis("Gamepad Left Vertical"));
 	}
 
 	public void ChangeTo(InputFrom newType)

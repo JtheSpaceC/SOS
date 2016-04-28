@@ -72,6 +72,7 @@ public class Analytics_Demo1 : MonoBehaviour {
 			{
 				{"Time in session", Director.instance.timer},
 				{"Kills: ", Director.instance.playerKills},
+				{"Missile Kills", Director.instance.playerMissileKills},
 				{"Time until first kill: ", Director.instance.timeUntilFirstKill},
 				{"Manual Dodges made", Director.instance.numberOfManualDodges},
 				{"Successful Dodges made", Director.instance.numberOfSuccessfulDodges},
@@ -90,6 +91,7 @@ public class Analytics_Demo1 : MonoBehaviour {
 			{
 				{"Time in session", Director.instance.timer},
 				{"Kills: ", Director.instance.playerKills},
+				{"Missile Kills", Director.instance.playerMissileKills},
 				{"Time until first kill: ", Director.instance.timeUntilFirstKill},
 				{"Manual Dodges made", Director.instance.numberOfManualDodges},
 				{"Successful Dodges made", Director.instance.numberOfSuccessfulDodges},

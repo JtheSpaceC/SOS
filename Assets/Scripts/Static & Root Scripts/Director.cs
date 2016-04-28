@@ -15,6 +15,7 @@ public class Director : MonoBehaviour {
 	public GameObject pilotEVAPrefab;
 
 	[HideInInspector] public int playerKills = 0;
+	[HideInInspector] public int playerMissileKills = 0;
 	[HideInInspector] public int numberOfManualDodges = 0;
 	[HideInInspector] public int numberOfSuccessfulDodges = 0;
 	[HideInInspector] public int numberOfAutomatedDodges = 0;

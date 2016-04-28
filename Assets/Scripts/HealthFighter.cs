@@ -401,6 +401,11 @@ public class HealthFighter : Health {
 				{
 					StartCoroutine(theAttacker.GetComponent<Asteroid>().DestroyAsteroid());
 				}
+
+				if(theBullet.tag == "Bomb" && theAttacker.tag == "PlayerFighter")
+				{
+					Director.instance.playerMissileKills ++;
+				}
 			}
 			else if(health > 0 && theBullet.tag == "Bomb") //happens if their health was greater than the missile damage
 			{
