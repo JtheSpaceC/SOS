@@ -15,6 +15,13 @@ public class Director : MonoBehaviour {
 	public GameObject pilotEVAPrefab;
 
 	[HideInInspector] public int playerKills = 0;
+	[HideInInspector] public int numberOfManualDodges = 0;
+	[HideInInspector] public int numberOfSuccessfulDodges = 0;
+	[HideInInspector] public int numberOfAutomatedDodges = 0;
+	[HideInInspector] public int numberOfSpecialsUsed = 0;
+
+	[HideInInspector] public float timeUntilFirstKill;
+
 
 	[Tooltip("Just for turning something on/of in the scene for testing. Like a background or spawner. Just one object.")]
 	public bool screenshotMode = false;
@@ -50,11 +57,13 @@ public class Director : MonoBehaviour {
 	void OnEnable()
 	{
 		_battleEventManager.playerRescued += WarpPlayerToSafety;
+		_battleEventManager.playerGotKill += PlayerGotAKill;
 	}
 
 	void OnDisable()
 	{
 		_battleEventManager.playerRescued -= WarpPlayerToSafety;
+		_battleEventManager.playerGotKill -= PlayerGotAKill;
 	}
 
 	void Update () 
@@ -121,6 +130,16 @@ public class Director : MonoBehaviour {
 			pilot.name = "EVA Pilot";
 			PMCMisisonSupports.instance.AutoRetrievePlayer();
 			StartCoroutine(Camera.main.GetComponent<CameraControllerFighter>().CameraZoomToSize(3, 1.5f, 6));
+		}
+	}
+
+	public void PlayerGotAKill()
+	{
+		playerKills ++;
+
+		if(playerKills == 1)
+		{
+			timeUntilFirstKill = timer;
 		}
 	}
 

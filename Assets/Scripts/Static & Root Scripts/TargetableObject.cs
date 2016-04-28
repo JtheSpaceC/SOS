@@ -265,7 +265,7 @@ public class TargetableObject : MonoBehaviour {
 		}
 		if(tag == "PlayerFighter")
 		{
-			Director.instance.playerKills ++;
+			_battleEventManager.instance.CallPlayerGotKill();
 			Tools.instance.StartCoroutine(Tools.instance.TextAnim(Tools.instance.killsText, Color.green, Color.white, 0.5f));
 		}
 	}

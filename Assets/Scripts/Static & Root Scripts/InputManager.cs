@@ -5,6 +5,11 @@ public class InputManager : MonoBehaviour {
 
 	public static InputManager instance;
 
+	[Tooltip("Enables Game Restart if no input for X time.")]
+	public bool expoBuild = false;
+	public float restartTime = 90;
+	float restartTimer;
+
 	public enum InputFrom {controller, keyboardMouse};
 	public InputFrom inputFrom;
 
@@ -42,12 +47,40 @@ public class InputManager : MonoBehaviour {
 
 	void Update()
 	{
+		if(expoBuild)
+		{
+			if(Input.anyKey)
+				restartTimer = 0;
+
+			restartTimer += Time.fixedDeltaTime;
+
+			if(restartTimer >= restartTime)
+			{
+				Time.timeScale = 1;
+				if(!ClickToPlay.instance.paused)
+				{
+					ClickToPlay.instance.escGivesQuitMenu = false;
+					FindObjectOfType<CameraTactical>().enabled = false;
+					StartCoroutine(ClickToPlay.instance.LoadScene(0, 1));
+				}
+				else 
+				{
+					Time.timeScale = 1;
+					ClickToPlay.instance.LoadScene(0);
+				}
+
+				try{FindObjectOfType<Analytics_Demo1>().PlayerWalkedAwayFromConsole();}
+				catch{Debug.Log("No Analytics script hooked up to Demo Restart.");}
+			}
+		}
+
 		if(!Mathf.Approximately(Input.GetAxis("Mouse X"), 0) || !Mathf.Approximately(Input.GetAxis("Mouse Y"), 0) ||
 			Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
 			Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)||
 			Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Space))
 		{
 			ChangeTo(InputFrom.keyboardMouse);
+			restartTimer = 0;
 		}
 
 		else if (!Mathf.Approximately(Input.GetAxis("Gamepad Left Horizontal"), 0) || 
@@ -58,6 +91,7 @@ public class InputManager : MonoBehaviour {
 			!Mathf.Approximately(Input.GetAxis("Orders Horizontal"), 0))
 		{
 			ChangeTo(InputFrom.controller);
+			restartTimer = 0;
 		}
 	}
 

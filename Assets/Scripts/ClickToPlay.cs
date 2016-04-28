@@ -52,7 +52,6 @@ public class ClickToPlay : MonoBehaviour
 	{
 		if (usingSlides)
 			NextSlide(0);
-
 	}
 
 	void Update()
@@ -82,6 +81,12 @@ public class ClickToPlay : MonoBehaviour
 
 	public void LoadScene(int whichScene)
 	{
+		SceneManager.LoadScene(whichScene);
+	}
+	public IEnumerator LoadScene(int whichScene, float blackoutTime)
+	{
+		Tools.instance.CommenceFadeout(blackoutTime);
+		yield return new WaitForSeconds(blackoutTime);
 		SceneManager.LoadScene(whichScene);
 	}
 	public void LoadScene(string whichScene)

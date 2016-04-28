@@ -4,6 +4,10 @@ public class _battleEventManager : MonoBehaviour {
 
 	public static _battleEventManager instance;
 
+
+	public delegate void PlayerGotKill();
+	public static event PlayerGotKill playerGotKill;
+
 	public delegate void FirstWingmanClash();
 	public static event FirstWingmanClash wingmanFirstClash;
 	[HideInInspector] public bool firstClashCalled = false;
@@ -59,6 +63,10 @@ public class _battleEventManager : MonoBehaviour {
 		}
 	}
 
+	public void CallPlayerGotKill()
+	{
+		playerGotKill();
+	}
 	public void CallFirstWingmanClash()
 	{
 		if (!firstClashCalled) {

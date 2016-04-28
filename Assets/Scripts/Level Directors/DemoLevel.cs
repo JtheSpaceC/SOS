@@ -76,7 +76,7 @@ public class DemoLevel : MonoBehaviour {
 	[HideInInspector] public Vector2 startPos;
 
 	[HideInInspector] public bool missionComplete = false;
-	float clearedKillLimitAtThisTime = Mathf.Infinity;
+	[HideInInspector] public float clearedKillLimitAtThisTime = Mathf.Infinity;
 
 	[Header("End of level stuff")]
 	public string levelToLoad = "";

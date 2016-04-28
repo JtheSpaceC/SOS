@@ -96,6 +96,7 @@ public class Dodge : MonoBehaviour
 				{
 					if(canDodge == true)
 					{
+						Director.instance.numberOfManualDodges++;
 						playerActivatedManualDodge = true;
 						Roll ();
 					}

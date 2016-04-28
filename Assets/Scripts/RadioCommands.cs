@@ -7,6 +7,7 @@ public class RadioCommands : MonoBehaviour {
 	public static RadioCommands instance;
 
 	public bool canAccessRadio = true;
+	[HideInInspector] public int radioButtonPresses = 0;
 	
 	public Button button1;
 	public Text button1Text;
@@ -216,6 +217,8 @@ public class RadioCommands : MonoBehaviour {
 
 	public void DoRadioOption(string code)
 	{
+		radioButtonPresses ++;
+
 		switch (code)
 		{
 		default: Debug.LogError("Radio code error! " + code);

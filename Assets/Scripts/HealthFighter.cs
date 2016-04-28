@@ -175,6 +175,7 @@ public class HealthFighter : Health {
 				{
 					dodgeScript.playerActivatedManualDodge = false;
 					StartCoroutine(dodgeScript.IncreasePlayerAwarenessMana());
+					Director.instance.numberOfSuccessfulDodges ++;
 				}
 				return;
 			}
@@ -186,7 +187,7 @@ public class HealthFighter : Health {
 				return;
 			}
 
-			//3. see if you can dodge out of trouble
+			//3. see if you can auto-dodge out of trouble
 
 			if(playerHasAutoDodge && dodgeScript.canDodge && awareness >0)
 			{
@@ -195,11 +196,13 @@ public class HealthFighter : Health {
 				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0)
 				{					
 					dodgeScript.Roll();
+					Director.instance.numberOfAutomatedDodges++;
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 				}
 				else
 				{
 					dodgeScript.Roll();
+					Director.instance.numberOfAutomatedDodges++;
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 					return;
 				}
@@ -297,6 +300,7 @@ public class HealthFighter : Health {
 
 			if(theAttacker.tag == "PlayerFighter" && _battleEventManager.instance.playerHasOneHitKills && theBullet.tag != "Bomb")
 			{
+				Director.instance.numberOfSpecialsUsed ++;
 				theAttacker.SendMessage("CallDumpAwarenessMana", 3); //TODO: Make this less arbitrary
 				_battleEventManager.instance.playerHasOneHitKills = false;
 				Death();
