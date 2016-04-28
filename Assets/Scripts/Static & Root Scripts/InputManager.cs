@@ -6,7 +6,7 @@ public class InputManager : MonoBehaviour {
 	public static InputManager instance;
 
 	[Tooltip("Enables Game Restart if no input for X time.")]
-	public bool expoBuild = false;
+	public bool conventionMode = false;
 	public float restartTime = 90;
 	float restartTimer;
 
@@ -47,7 +47,7 @@ public class InputManager : MonoBehaviour {
 
 	void Update()
 	{
-		if(expoBuild)
+		if(conventionMode)
 		{
 			if(Input.anyKey)
 				restartTimer = 0;
