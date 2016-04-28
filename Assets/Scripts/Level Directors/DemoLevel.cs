@@ -352,7 +352,6 @@ public class DemoLevel : MonoBehaviour {
 
 	void PostMissionCompleteMessage()
 	{
-		print("Posting mission complete message.");
 		if(player.GetComponent<PlayerAILogic>().kills >= killLimitForDemo)
 		{
 			Subtitles.instance.PostHint (new string[]{"---MISSION COMPLETE---"});
@@ -413,10 +412,9 @@ public class DemoLevel : MonoBehaviour {
 
 	void MissionCompleteScreen()
 	{
-		print("Showing mission complete SCREEN.");
-
 		AudioMasterScript.instance.MuteSFX ();
 		missionCompleteMenu.SetActive (true);
+		missionCompleteMenu.GetComponentInParent<Canvas>().sortingOrder += 10;
 		Invoke ("LoadAutoPlayLevel", 20f);
 	}
 

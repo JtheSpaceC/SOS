@@ -10,9 +10,15 @@ public class PointerHUDElement : MonoBehaviour {
 	public Vector2 targetWP;
 
 	public Image arrowPointerImage;
-	public Image unitNumberImage;
+	public Image mainImage;
 	public Image distanceTextPanel;
 	public Text distanceText;
+
+	[Tooltip("Does the image fade if you're near it. Set -1 for 'no'. " +
+		"Otherwise greater numbers mean greater fade (stay under camera ortho size).")]
+	public float fadeBuffer = -1;
+
+	Color mainImageColor;
 
 	public Sprite[] numberImages;
 
@@ -39,51 +45,51 @@ public class PointerHUDElement : MonoBehaviour {
 	{
 		if(name.EndsWith(" 1"))
 		{
-			unitNumberImage.sprite = numberImages[1];
+			mainImage.sprite = numberImages[1];
 		}
 		else if(name.EndsWith(" 2"))
 		{
-			unitNumberImage.sprite = numberImages[2];
+			mainImage.sprite = numberImages[2];
 		}
 		else if(name.EndsWith("3"))
 		{
-			unitNumberImage.sprite = numberImages[3];
+			mainImage.sprite = numberImages[3];
 		}
 		else if(name.EndsWith("4"))
 		{
-			unitNumberImage.sprite = numberImages[4];
+			mainImage.sprite = numberImages[4];
 		}
 		else if(name.EndsWith("5"))
 		{
-			unitNumberImage.sprite = numberImages[5];
+			mainImage.sprite = numberImages[5];
 		}
 		else if(name.EndsWith("6"))
 		{
-			unitNumberImage.sprite = numberImages[6];
+			mainImage.sprite = numberImages[6];
 		}
 		else if(name.EndsWith("7"))
 		{
-			unitNumberImage.sprite = numberImages[7];
+			mainImage.sprite = numberImages[7];
 		}
 		else if(name.EndsWith("8"))
 		{
-			unitNumberImage.sprite = numberImages[8];
+			mainImage.sprite = numberImages[8];
 		}
 		else if(name.EndsWith("9"))
 		{
-			unitNumberImage.sprite = numberImages[9];
+			mainImage.sprite = numberImages[9];
 		}
 		else if(name.EndsWith("10"))
 		{
-			unitNumberImage.sprite = numberImages[10];
+			mainImage.sprite = numberImages[10];
 		}
 		else if(name.EndsWith("11"))
 		{
-			unitNumberImage.sprite = numberImages[11];
+			mainImage.sprite = numberImages[11];
 		}
 		else if(name.EndsWith("12"))
 		{
-			unitNumberImage.sprite = numberImages[12];
+			mainImage.sprite = numberImages[12];
 		}
 		else
 		{
@@ -138,7 +144,7 @@ public class PointerHUDElement : MonoBehaviour {
 
 			transform.position = Camera.main.ViewportToWorldPoint(centreScreen + (Vector3)directionToTarget);
 		}
-		else 
+		else //turn off arrow part
 		{
 			arrowPointerImage.enabled = false;
 			distanceTextPanel.enabled = false;
@@ -149,6 +155,15 @@ public class PointerHUDElement : MonoBehaviour {
 			pos.x = Mathf.Clamp01(pos.x);
 			pos.y = Mathf.Clamp01(pos.y);
 			transform.position = Camera.main.ViewportToWorldPoint(pos);
+
+			float distToTarget = Vector2.Distance(targetWP, (Vector2) Camera.main.transform.position);
+
+			if(fadeBuffer >= 0 && distToTarget < Camera.main.orthographicSize)
+			{
+				mainImageColor = mainImage.color;
+				mainImageColor.a = Mathf.Clamp((distToTarget - fadeBuffer)/Camera.main.orthographicSize, 0, 1);
+				mainImage.color = mainImageColor;
+			}
 		}
 	}
 }
