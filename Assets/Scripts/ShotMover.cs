@@ -8,6 +8,7 @@ public class ShotMover : MonoBehaviour {
 
 	float defaultShotSpeed;
 	ShotHit shotHit;
+	public Color orangeLaserColour;
 	public Color greenLaserColour;
 	SpriteRenderer myRenderer;
 	
@@ -27,7 +28,7 @@ public class ShotMover : MonoBehaviour {
 		if(theFirer.layer == LayerMask.NameToLayer("PMCFighters"))
 		{
 			this.gameObject.layer = LayerMask.NameToLayer("PMCBullets");
-			myRenderer.color = Color.white;
+			myRenderer.color = orangeLaserColour;
 		}
 		else if(theFirer.layer == LayerMask.NameToLayer("EnemyFighters"))
 		{
@@ -37,7 +38,7 @@ public class ShotMover : MonoBehaviour {
 		else if(theFirer.layer == LayerMask.NameToLayer("PMCTurrets"))
 		{
 			this.gameObject.layer = LayerMask.NameToLayer("PMCBullets");
-			myRenderer.color = Color.white;
+			myRenderer.color = orangeLaserColour;
 		}
 		else if(theFirer.layer == LayerMask.NameToLayer("EnemyTurrets"))
 		{
@@ -47,7 +48,7 @@ public class ShotMover : MonoBehaviour {
 		else if(theFirer.layer == LayerMask.NameToLayer("PMCTransports"))
 		{
 			this.gameObject.layer = LayerMask.NameToLayer("PMCBullets");
-			myRenderer.color = Color.white;
+			myRenderer.color = orangeLaserColour;
 		}
 		else if(theFirer.layer == LayerMask.NameToLayer("EnemyTransports"))
 		{

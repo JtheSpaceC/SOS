@@ -17,6 +17,8 @@ public class MusicManager : MonoBehaviour {
 
 	public float fadeSpeed = 0.25f;
 
+	[Tooltip("Will track A fade to B when enemies are near, or just continue?")]
+	public bool switchableTracks = true;
 	public float dangerZone = 75f;
 	public LayerMask mask1;
 	public bool InAction = false;
@@ -59,14 +61,14 @@ public class MusicManager : MonoBehaviour {
 
 	void Update()
 	{
-		if(!muteMusic)
+		if(!muteMusic && switchableTracks)
 		{
 			if(player != null)
 			{				
 				Collider2D[] enemyFighterArray = Physics2D.OverlapCircleAll (player.transform.position, dangerZone, mask1);
 				if(enemyFighterArray.Length <= 0)
 				{
-					Invoke("SwitchInAction", 2f);
+					Invoke("SwitchInAction", 1.5f);
 				}
 				else if (enemyFighterArray.Length > 0)
 				{

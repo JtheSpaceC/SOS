@@ -30,8 +30,6 @@ public class HealthFighter : Health {
 	public SpriteRenderer sideOnSprite;
 	public GameObject radarSig;
 	public AudioSource engineNoise;
-	public TrailRenderer trailRenderer;
-	public GameObject thrustersParent;
 
 	[Header("Other")]
 	public GameObject previousAttacker;

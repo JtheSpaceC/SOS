@@ -1,9 +1,12 @@
 fileFormatVersion: 2
 guid: 21d080e752cf389428cea2412252bb9d
+timeCreated: 1462198337
+licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: weapons
     21300002: weapons_0
+    21300004: weapons_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -46,6 +49,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
@@ -53,14 +57,27 @@ TextureImporter:
     - name: weapons_0
       rect:
         serializedVersion: 2
-        x: 148
-        y: 464
+        x: 12
+        y: 51
         width: 17
         height: 63
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
+      tessellationDetail: 0
+    - name: weapons_1
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 50
+        width: 17
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 
