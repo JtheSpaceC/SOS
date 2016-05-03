@@ -39,8 +39,10 @@ public class Tools: MonoBehaviour
 	public Color whiteOutColour;
 
 	public Toggle allowVibrationToggleSwitch;
-	[HideInInspector] public bool allowVibrationPlayerPref;
 	bool allowVibrationThisSession = true;
+
+	public Toggle useHintsToggleSwitch;
+	[HideInInspector] public bool useHintsThisSession = true;
 
 	[HideInInspector] public enum WaypointTypes {Extraction, Move, SearchAndDestroy, Follow, Support};
 
@@ -70,6 +72,23 @@ public class Tools: MonoBehaviour
 			{
 				scroller.basedOnPlayer = false;
 			}
+		}
+
+		if(PlayerPrefsManager.GetHintsKey() == "On")
+		{
+			useHintsThisSession = true;
+			if(useHintsToggleSwitch)
+				useHintsToggleSwitch.isOn = true;
+		}
+		else if(PlayerPrefsManager.GetHintsKey() == "Off")
+		{
+			useHintsThisSession = false;
+			if(useHintsToggleSwitch)
+				useHintsToggleSwitch.isOn = false;
+		}
+		else
+		{
+			Debug.Log("Something went wrong");
 		}
 
 
@@ -281,6 +300,13 @@ public class Tools: MonoBehaviour
 		allowVibrationThisSession = allowVibrationToggleSwitch.isOn;
 		string value = allowVibrationThisSession == false? "false": "true";
 		PlayerPrefsManager.SetVibrateKey(value);
+	}
+
+	public void ToggleHints()
+	{
+		useHintsThisSession = useHintsToggleSwitch.isOn;
+		string value = useHintsThisSession == false? "false": "true";
+		PlayerPrefsManager.SetHintsKey(value);
 	}
 
 	[ContextMenu("Clear Player Prefs")]
