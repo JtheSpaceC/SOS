@@ -11,7 +11,7 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void FirstWingmanClash();
 	public static event FirstWingmanClash wingmanFirstClash;
 	[HideInInspector] public bool firstClashCalled = false;
-	[HideInInspector] public bool playerHasOneHitKills = false;
+	public bool playerHasOneHitKills = false;
 
 	public delegate void WingmanGotKill();
 	public static event WingmanGotKill wingmanGotAKill;

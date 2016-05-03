@@ -11,7 +11,7 @@ public class Health : MonoBehaviour {
 	public int maxHealth = 5; //formerly 100
 	public int awareness = 0;
 	public int maxAwareness = 5;
-	[Tooltip ("Per bar, in seconds")]
+	[Tooltip ("AI only. Per bar, in seconds")]
 	public float awarenessRechargeTime = 3;
 	public int snapFocusAmount = 1;
 	public int armourPoints = 0;
@@ -35,7 +35,7 @@ public class Health : MonoBehaviour {
 	public GameObject healthBarDividingBox;
 	public Slider awarenessSlider;
 	public GameObject awarenessBarDividingBox;
-	Image healthSliderColour;
+	Image healthSliderFill;
 	public AudioClip playerHitSound;
 	protected Image bloodSplashImage;
 	public Color bloodSplashColour;
@@ -61,7 +61,7 @@ public class Health : MonoBehaviour {
 
 		if(healthSlider != null)
 		{
-			healthSliderColour = healthSlider.GetComponentInChildren<Image> ();
+			healthSliderFill = healthSlider.GetComponentInChildren<Image> ();
 			healthBarDividingBox.SetActive(false);
 			for (int i = 1; i < maxHealth; i++)
 			{
@@ -87,6 +87,8 @@ public class Health : MonoBehaviour {
 			{
 				awarenessBarDividingBox.transform.parent.GetChild(i).gameObject.SetActive(true);
 			}
+
+			awarenessSlider.value = (float)awareness/maxAwareness * 100/1;
 		}
 
 		myAudioSource = GetComponent<AudioSource> ();
@@ -98,9 +100,9 @@ public class Health : MonoBehaviour {
 
 	protected void UpdateBaseClass()
 	{
-		if(health < maxHealth && healthSliderColour != null)
+		if(health < maxHealth && healthSliderFill != null)
 		{
-			healthSliderColour.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth);
+			healthSliderFill.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth);
 			healthBarDividingBox.transform.parent.gameObject.SetActive(true);
 		}
 
@@ -109,17 +111,17 @@ public class Health : MonoBehaviour {
 			healthSlider.value = (float)health/(float)maxHealth * 100;
 
 			//FOR HEALTH BAR COLOUR
-			float alpha = healthSliderColour.color.a;
+			/*float alpha = healthSliderFill.color.a;
 			
 			if(health < maxHealth)
 			{
 				alpha = 0.75f;
 			}
 			
-			else if(health >=maxHealth)
+			else*/ if(health >=maxHealth)
 			{
-				alpha = 0f;
-				healthSliderColour.color = Color.green * alpha;
+				//alpha = 0f;
+				//healthSliderFill.color = Color.green * alpha;
 				smoke.gameObject.SetActive(false);
 				flames.gameObject.SetActive(false);
 			}

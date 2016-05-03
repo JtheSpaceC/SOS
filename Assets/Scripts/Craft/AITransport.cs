@@ -312,8 +312,8 @@ public class AITransport : SupportShipFunctions {
 			carryFighter1Engines = carryFighter1.GetComponent<EnginesFighter>();
 			carryFighter1Health = carryFighter1.GetComponent<HealthFighter>();
 			playerHadAutoDodge = carryFighter1Health.playerHasAutoDodge;
-			playerManaToRestore = carryFighter1Health.manaToRestoreOnAHit;
-			carryFighter1Health.manaToRestoreOnAHit = 0;
+			playerManaToRestore = carryFighter1Health.snapFocusAmount;
+			carryFighter1Health.snapFocusAmount = 0;
 			carryFighter1Health.playerHasAutoDodge = false;
 			carryFighter1.SendMessage("ToggleWeaponsOnOff", false);
 		}
@@ -653,7 +653,7 @@ public class AITransport : SupportShipFunctions {
 			carryFighter1.GetComponentInChildren<Dodge>().enabled = true;
 			carryFighter1.SendMessage("ToggleWeaponsOnOff", true);
 			carryFighter1Health.playerHasAutoDodge = playerHadAutoDodge;
-			carryFighter1Health.manaToRestoreOnAHit = playerManaToRestore;
+			carryFighter1Health.snapFocusAmount = playerManaToRestore;
 			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.CoverMe; //TODO: May move this line to respect AI leaders
 		}
 		else

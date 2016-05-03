@@ -30,8 +30,11 @@ public class Dodge : MonoBehaviour
 	private Animator animator;
 
 
-	[HideInInspector] public Image awarenessManaFillImage;
-	[HideInInspector] public Image powerupReadyImage;
+	//public Image awarenessManaFillImage;
+	//[HideInInspector] public Image powerupReadyImage; //TODO: delete this?
+	Image sliderFillImage;
+	Color originalSliderColour;
+	float startTime;
 	AudioSource myAudioSource;
 	AudioSource awarenessMeterAudioSource;
 	[Tooltip("Only needed on Player's Dodge")] public AudioClip manaDumpSound;
@@ -42,7 +45,7 @@ public class Dodge : MonoBehaviour
 	float originalBarFill;
 	float logoScale;
 
-	
+
 	void Start()
 	{
 		animator = transform.parent.parent.GetComponent<Animator> ();
@@ -60,24 +63,34 @@ public class Dodge : MonoBehaviour
 		{
 			/*dodgeCooldownImage = GameObject.Find("Dodge Cooldown Image").GetComponent<Image>();
 			dodgeCooldownImageText = dodgeCooldownImage.GetComponentInChildren<Text>();*/
-			awarenessManaFillImage = GameObject.Find("Awareness Image").GetComponent<Image>();
-			awarenessMeterAudioSource = awarenessManaFillImage.GetComponent<AudioSource>();
-			powerupReadyImage = GameObject.Find("Powerup Image").GetComponent<Image>();
+			//awarenessManaFillImage = GameObject.Find("Awareness Image").GetComponent<Image>();
+			awarenessMeterAudioSource = healthScript.awarenessSlider.GetComponent<AudioSource>();
+			//powerupReadyImage = GameObject.Find("Powerup Image").GetComponent<Image>();
 
 			if(powerupMechanicEnabled)
 			{
-				awarenessManaFillImage.fillAmount = (float)healthScript.awareness/healthScript.maxAwareness;
-				if(healthScript.awareness != healthScript.maxAwareness)
+				healthScript.awarenessSlider.value = (float)healthScript.awareness/healthScript.maxAwareness * 100/1;
+
+				sliderFillImage = healthScript.awarenessSlider.transform.FindChild("Fill Area/Fill").GetComponent<Image>();
+				originalSliderColour = sliderFillImage.color;
+
+				if(healthScript.awareness >= healthScript.maxAwareness)
+
+				/*if(healthScript.awareness < healthScript.maxAwareness)
 					powerupReadyImage.transform.localScale = Vector3.zero;
 				else
+				{*/
+					//powerupReadyImage.transform.localScale = Vector3.one;
+				if(healthScript.awareness >= healthScript.maxAwareness)
 				{
-					powerupReadyImage.transform.localScale = Vector3.one;
+					sliderFillImage.color = Color.yellow;
 					_battleEventManager.instance.playerHasOneHitKills = true;
 				}
+				//}
 			}
 			else
 			{
-				awarenessManaFillImage.gameObject.SetActive(false);
+				healthScript.awarenessSlider.gameObject.SetActive(false);
 			}
 		}
 
@@ -200,8 +213,8 @@ public class Dodge : MonoBehaviour
 		if(!powerupMechanicEnabled)
 			yield break;
 		
-		originalBarFill = awarenessManaFillImage.fillAmount;
-		logoScale = powerupReadyImage.transform.localScale.x;
+		originalBarFill = healthScript.awarenessSlider.value;
+		//logoScale = powerupReadyImage.transform.localScale.x;
 
 		healthScript.awareness -= howMany;
 		if(healthScript.awareness < 0)
@@ -218,18 +231,21 @@ public class Dodge : MonoBehaviour
 
 		_battleEventManager.instance.playerHasOneHitKills = false;
 
-		while(awarenessManaFillImage.fillAmount > (float)healthScript.awareness/healthScript.maxAwareness)
+		while(healthScript.awarenessSlider.value > (float)healthScript.awareness/healthScript.maxAwareness * 100/1)
 		{
-			awarenessManaFillImage.fillAmount -= originalBarFill * Time.deltaTime;
-			if(logoScale > 0)
+			healthScript.awarenessSlider.value -= originalBarFill * Time.deltaTime;
+
+			sliderFillImage.color = Color.Lerp(Color.yellow, originalSliderColour, Time.time/startTime);
+
+			/*if(logoScale > 0)
 			{
 				logoScale -= Time.deltaTime;
 				powerupReadyImage.transform.localScale = new Vector3 (logoScale, logoScale, 1);
-			}
+			}*/
 			yield return new WaitForEndOfFrame();
 		}
-		awarenessManaFillImage.fillAmount = (float)healthScript.awareness/healthScript.maxAwareness;
-		powerupReadyImage.transform.localScale = Vector3.zero;
+		healthScript.awarenessSlider.value = (float)healthScript.awareness/healthScript.maxAwareness * 100/1;
+		//powerupReadyImage.transform.localScale = Vector3.zero;
 	}
 
 
@@ -237,7 +253,10 @@ public class Dodge : MonoBehaviour
 	{
 		if(!powerupMechanicEnabled)
 			yield break;
-		
+
+		originalBarFill = 100/healthScript.maxAwareness;
+
+		//set new awareness and play sound
 		if(healthScript.awareness < healthScript.maxAwareness)
 		{
 			healthScript.awareness++;
@@ -252,28 +271,35 @@ public class Dodge : MonoBehaviour
 			awarenessMeterAudioSource.Play();
 		}
 
-		while(awarenessManaFillImage.fillAmount < (float)healthScript.awareness/healthScript.maxAwareness)
+		//grow the slider to the right size
+		while(healthScript.awarenessSlider.value < (float)healthScript.awareness/healthScript.maxAwareness * 100)
 		{
-			awarenessManaFillImage.fillAmount += Time.deltaTime;
-			if(logoScale > 0)
+			healthScript.awarenessSlider.value += originalBarFill * Time.deltaTime;
+			/*if(logoScale > 0)
 			{
 				logoScale -= Time.deltaTime;
 				powerupReadyImage.transform.localScale = new Vector3 (logoScale, logoScale, healthScript.maxAwareness);
-			}
+			}*/
 			yield return new WaitForEndOfFrame();
 		}
-		awarenessManaFillImage.fillAmount = (float)healthScript.awareness/healthScript.maxAwareness;
+		healthScript.awarenessSlider.value = (float)healthScript.awareness/healthScript.maxAwareness * 100/1;
 
+		startTime = Time.time;
+
+		//Get the powerup
 		if(healthScript.awareness >= healthScript.maxAwareness)
 		{
-			logoScale = powerupReadyImage.transform.localScale.x;
+			sliderFillImage.color = Color.Lerp(originalSliderColour, Color.yellow, Time.time/startTime);
+			/* = powerupReadyImage.transform.localScale.x;
 
 			while(logoScale < 1)
 			{
 				logoScale += Time.deltaTime;
 				powerupReadyImage.transform.localScale = new Vector3 (logoScale, logoScale, 1);
 			}
-			powerupReadyImage.transform.localScale = Vector3.one;
+			powerupReadyImage.transform.localScale = Vector3.one;*/
+
+
 			yield return new WaitForEndOfFrame();
 		}
 	}

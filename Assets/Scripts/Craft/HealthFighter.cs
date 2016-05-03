@@ -18,8 +18,6 @@ public class HealthFighter : Health {
 	[Tooltip("If you don't always dodge asteroids, this number comes into play")]
 	[Range(0, 100)]
 	public float asteroidDodgeSkill = 80f;
-	[Tooltip("If they take a hit, they'll automatically get back this much mana.")]
-	public int manaToRestoreOnAHit = 1;
 	[Range(0,100)]
 	public float missileDodgeSkill = 10;
 	Sprite startSprite;
@@ -167,7 +165,7 @@ public class HealthFighter : Health {
 		{
 			//1. see if Player is already rolling. Increase Awareness mana if it was deliberate, and break out.
 
-			if(dodgeScript.dodging)
+			if(dodgeScript.dodging || temporarilyInvincible)
 			{
 				if(dodgeScript.playerActivatedManualDodge && !lastDamageWasFromAsteroid)
 				{
@@ -264,9 +262,11 @@ public class HealthFighter : Health {
 			StartCoroutine (Tools.instance.WhiteScreenFlash(0.1f));
 
 			//9. Restore a mana if alive and not docking
-			if(!dead && manaToRestoreOnAHit > 0)
-				for(int i = 0; i < manaToRestoreOnAHit; i++)
+			if(!dead && snapFocusAmount > 0)
+				for(int i = 0; i < snapFocusAmount; i++)
+				{
 					StartCoroutine(dodgeScript.IncreasePlayerAwarenessMana());
+				}
 		}
 		//end of Player Has Been Hit
 		#endregion
@@ -370,6 +370,12 @@ public class HealthFighter : Health {
 
 			health -= (int)damage;
 
+			if(awarenessRechargeTime > 0)
+			{
+				CancelInvoke("AwarenessRecharge");
+				InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
+			}
+
 			Tools.instance.SpawnExplosionMini (this.gameObject, 0.35f);
 
 			if (theBullet.tag != "Asteroid" && theBullet.tag != "Bomb") 
@@ -384,7 +390,7 @@ public class HealthFighter : Health {
 			//this returns at start of function if this ship doesn't display bars (i.e. if updateAvatarBars == false)
 			UpdateAvatarHealthBars (); 
 
-
+			//restore a mana if not dead
 			if(health > 0 && snapFocusAmount > 0)
 			{
 				awareness += snapFocusAmount;

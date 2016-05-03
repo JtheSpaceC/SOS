@@ -42,6 +42,7 @@ public class DemoLevel : MonoBehaviour {
 	public Button buttonToStartOn;
 	public Text instructionsText;
 	public Canvas playerUICanvas;
+	public Canvas playerWorldspaceUI;
 	public GameObject missionCompleteMenu;
 
 	[Header("Craft Equip Stuff")]
@@ -96,6 +97,7 @@ public class DemoLevel : MonoBehaviour {
 			return;
 		}
 
+		TogglePlayerUI();
 		player = GameObject.FindGameObjectWithTag ("PlayerFighter");
 		player.GetComponentInChildren<WeaponsPrimaryFighter> ().allowedToFire = false;
 
@@ -217,6 +219,7 @@ public class DemoLevel : MonoBehaviour {
 
 		if(AITrans != null && AITrans.currentState == AITransport.StateMachine.holdingPosition && timer >5 && !setWingmanOrders)
 		{
+			TogglePlayerUI();
 			mate2AIScript.ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
 			mate3AIScript.ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
 			setWingmanOrders = true;
@@ -507,10 +510,16 @@ public class DemoLevel : MonoBehaviour {
 	{
 		timePlayerStartedLeaving = timer;
 
+		TogglePlayerUI();
 		missionComplete = true;
 		Invoke("PostMissionCompleteMessage", 6);
 		playerLogicScript.orders = PlayerAILogic.Orders.NA;
 		Invoke("MissionCompleteScreen", 10.5f);
+	}
+
+	void TogglePlayerUI()
+	{
+		playerWorldspaceUI.enabled = !playerWorldspaceUI.enabled;
 	}
 
 	public void LeaveFeedback()
