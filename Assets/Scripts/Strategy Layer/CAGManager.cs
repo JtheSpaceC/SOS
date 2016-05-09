@@ -85,6 +85,7 @@ public class CAGManager : MonoBehaviour {
 	{
 		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
 		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
+		CAGDirector.instance.EnableLeaveSquadronHQ(false);
 	}
 	public void LeaveBar()
 	{
@@ -106,6 +107,11 @@ public class CAGManager : MonoBehaviour {
 
 		//fade in
 		CallFadeToClear(callingSpriteHightlerScript.blinkTime);
+	}
+
+	public void StartMission()
+	{
+		ClickToPlay.instance.LoadScene("Demo");
 	}
 
 	#region Fade/Blackout Functions

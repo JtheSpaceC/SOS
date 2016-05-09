@@ -218,8 +218,10 @@ public class ClickToPlay : MonoBehaviour
 		ChangeControlsImage ();
 	}
 
-	void ChangeControlsImage ()
+	void ChangeControlsImage () //TODO: This is used in Demo level but is irrelevant in other scenes. Remove when done with Demo level
 	{
+		if(controlsImage == null)
+			return;
 		Sprite imageToShow = PlayerPrefsManager.GetControllerStickBehaviourKey () == "StickPoints" ? controls2 : controls1;
 		controlsImage.sprite = imageToShow;
 	}

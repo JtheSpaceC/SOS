@@ -11,6 +11,8 @@ public class CAGDirector : MonoBehaviour {
 	public int currentRoom = 0;
 	public Room[] rooms;
 	public GameObject jumpsuit;
+	public GameObject pilotAssignment;
+	public GameObject squadronHQExit;
 
 
 	public void Awake()
@@ -46,6 +48,15 @@ public class CAGDirector : MonoBehaviour {
 		jumpsuit.GetComponent<AudioSource>().Play();
 	}
 
+	public void PilotAssignmentScreen()
+	{
+		pilotAssignment.SetActive(true);
+	}
+	public void EnableLeaveSquadronHQ(bool trueOrFalse)
+	{
+		squadronHQExit.GetComponent<SpriteRenderer>().enabled = trueOrFalse;
+		squadronHQExit.GetComponent<BoxCollider2D>().enabled = trueOrFalse;
+	}
 
 	public void ActivateNextRoom()
 	{
