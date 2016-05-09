@@ -44,6 +44,11 @@ public class CAGManager : MonoBehaviour {
 		}
 	}
 
+	void Start()
+	{
+		LoadStatus();
+	}
+
 	public void SetCallingSpriteHightlerScript(SpriteHighlighter spriteHighlighter)
 	{
 		callingSpriteHightlerScript = spriteHighlighter;
@@ -111,7 +116,7 @@ public class CAGManager : MonoBehaviour {
 
 	public void StartMission()
 	{
-		ClickToPlay.instance.LoadScene("Demo");
+		ClickToPlay.instance.LoadScene("test");
 	}
 
 	#region Fade/Blackout Functions
@@ -190,6 +195,61 @@ public class CAGManager : MonoBehaviour {
 		{
 			brigPerson.myCollider.enabled = trueOrFalse;
 		}
+	}
+
+	public void SaveStatus()
+	{
+		//ES2.Save(CAGDirector.instance.gameDay, "Day");
+		//ES2.Save(CAGDirector.instance.currentRoom, "Room");
+		PlayerPrefs.SetInt("Day", CAGDirector.instance.gameDay);
+		PlayerPrefs.SetInt("Room", CAGDirector.instance.currentRoom);
+		PlayerPrefs.Save();
+	}
+
+	public void LoadStatus()
+	{
+		print("Loading");
+
+		if(PlayerPrefs.GetInt("Day") != 0)
+		{
+			CAGDirector.instance.gameDay = PlayerPrefs.GetInt("Day");
+		}
+		else Debug.Log("Day not saved.");
+
+		if(PlayerPrefs.GetInt("Room") != 0)
+		{
+			CAGDirector.instance.currentRoom = PlayerPrefs.GetInt("Room") - 1;
+		}
+		else Debug.Log("Room not saved.");
+		/*if(ES2.Exists("Day"))
+		{
+			Debug.Log("Day Exists");
+			CAGDirector.instance.gameDay = ES2.Load<int>("Day");;
+		}
+		else Debug.Log("Day Doesn't Exist");
+
+		if(ES2.Exists("Room"))
+		{
+			Debug.Log("Room Exists");
+			CAGDirector.instance.currentRoom = ES2.Load<int>("Room");
+		}
+		else Debug.Log("Room Doesn't Exist");*/
+	}
+
+	[ContextMenu("Delete Saves")]
+	public void DeleteSaves()
+	{
+		PlayerPrefs.DeleteKey("Day");
+		PlayerPrefs.DeleteKey("Room");
+
+		//ES2.Delete("Day.txt");
+		//ES2.Delete("Room.txt");
+		Debug.Log("Deleting Default Folder");
+	}
+
+	void OnDisable()
+	{
+		SaveStatus();
 	}
 }
 

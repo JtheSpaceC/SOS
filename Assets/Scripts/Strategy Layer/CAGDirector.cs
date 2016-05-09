@@ -11,6 +11,7 @@ public class CAGDirector : MonoBehaviour {
 	public int currentRoom = 0;
 	public Room[] rooms;
 	public GameObject jumpsuit;
+	public GameObject podium;
 	public GameObject pilotAssignment;
 	public GameObject squadronHQExit;
 
@@ -25,6 +26,10 @@ public class CAGDirector : MonoBehaviour {
 			Destroy(gameObject);
 		}
 
+	}
+
+	void Start()
+	{
 		ActivateNextRoom();
 	}
 		
@@ -56,6 +61,7 @@ public class CAGDirector : MonoBehaviour {
 	{
 		squadronHQExit.GetComponent<SpriteRenderer>().enabled = trueOrFalse;
 		squadronHQExit.GetComponent<BoxCollider2D>().enabled = trueOrFalse;
+		podium.SetActive(!trueOrFalse);
 	}
 
 	public void ActivateNextRoom()
@@ -76,6 +82,8 @@ public class CAGDirector : MonoBehaviour {
 			room.myHeaderIcon.color = Color.white;
 		}
 		CAGManager.instance.contextualText.text = "";
+
+		//ES2.DeleteDefaultFolder();
 	}
 
 }
