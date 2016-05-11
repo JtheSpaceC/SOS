@@ -1,12 +1,13 @@
 fileFormatVersion: 2
-guid: 82e26a7f0fcf71e4c9c023b237bc292f
+guid: 7cc636d679d157747bf338791a306ebb
+timeCreated: 1462980127
+licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: Buoy_0
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -22,11 +23,11 @@ TextureImporter:
   grayScaleToAlpha: 0
   generateCubemap: 0
   cubemapConvolution: 0
-  cubemapConvolutionSteps: 8
+  cubemapConvolutionSteps: 7
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 1024
+  maxTextureSize: 8192
   textureSettings:
     filterMode: -1
     aniso: 16
@@ -37,7 +38,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -45,29 +46,11 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 128
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: Buoy_0
-      rect:
-        serializedVersion: 2
-        x: 45
-        y: 18
-        width: 146
-        height: 212
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -17, y: 106}
-        - {x: -73, y: 42}
-        - {x: -73, y: -41}
-        - {x: -12, y: -106}
-        - {x: 5, y: -106}
-        - {x: 73, y: -50}
-        - {x: 73, y: 49}
-        - {x: 8, y: 106}
+    sprites: []
     outline: []
   spritePackingTag: 
   userData: 
