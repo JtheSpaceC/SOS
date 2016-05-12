@@ -19,6 +19,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 	public Transform shotSpawn1;
 	public Transform shotSpawn2;
+	public Transform shotSpawn3;
+	public Transform shotSpawn4;
 
 	public bool automaticWeapon = true;
 	public float fireRate = 0.33f;
@@ -142,6 +144,30 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj2.transform.rotation = shotSpawn2.rotation;
 			obj2.SetActive(true);
 			obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
+
+			ammo--;
+		}
+
+		if(shotSpawn3 != null && ammo > 0)
+		{
+			GameObject obj3 = cannonShotPoolerScript.current.GetPooledObject();
+
+			obj3.transform.position = shotSpawn3.position;
+			obj3.transform.rotation = shotSpawn3.rotation;
+			obj3.SetActive(true);
+			obj3.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
+
+			ammo--;
+		}
+
+		if(shotSpawn4 != null && ammo > 0)
+		{
+			GameObject obj4 = cannonShotPoolerScript.current.GetPooledObject();
+
+			obj4.transform.position = shotSpawn4.position;
+			obj4.transform.rotation = shotSpawn4.rotation;
+			obj4.SetActive(true);
+			obj4.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
 			ammo--;
 		}
