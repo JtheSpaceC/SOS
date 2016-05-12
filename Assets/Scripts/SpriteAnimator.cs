@@ -2,11 +2,11 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class AnimateScript : MonoBehaviour {
+public class SpriteAnimator : MonoBehaviour {
 
 	public Sprite[] frames;
 	public bool startImmediately = true;
-	Image myRenderer;
+	SpriteRenderer myRenderer;
 	public float framesPerSecond = 4f;
 
 	int currentFrame = 0;
@@ -14,16 +14,15 @@ public class AnimateScript : MonoBehaviour {
 
 	void Start () 
 	{
-		myRenderer = GetComponent<Image> ();
+		myRenderer = GetComponent<SpriteRenderer> ();
 		currentFrame = 0;
-
 
 		if(startImmediately)
 			StartAnimating();
 	}
 
 
-	public IEnumerator Animate()
+	public void Animate()
 	{
 		if (currentFrame >= frames.Length)
 		{
@@ -32,21 +31,17 @@ public class AnimateScript : MonoBehaviour {
 
 		myRenderer.sprite = frames [currentFrame];
 		currentFrame++;
-
-		yield return new WaitForSeconds (1/framesPerSecond);
-
-
 	}
 
 	public void StartAnimating()
 	{
-		StartCoroutine (Animate ());
+		InvokeRepeating("Animate", 0, 1/framesPerSecond);
 	}
 
 	public void StopAnimating()
 	{
 		currentFrame = 0;
 		myRenderer.sprite = frames [currentFrame];
-		StopAllCoroutines ();
+		CancelInvoke("Animate");
 	}
 }//Mono
