@@ -526,7 +526,7 @@ public class HealthFighter : Health {
 			PlayerAILogic myAIScript = GetComponent<PlayerAILogic>();
 
 			myAIScript.engineScript.engineNoise.gameObject.SetActive(false);
-			myAIScript.shootScript.enabled = false;
+			myAIScript.shootScript.transform.parent.gameObject.SetActive(false);
 			myAIScript.engineScript.enabled = false;
 			RadioCommands.instance.gameObject.SetActive(false);
 			//dodgeScript.dodgeCooldownImage.gameObject.SetActive(false);
