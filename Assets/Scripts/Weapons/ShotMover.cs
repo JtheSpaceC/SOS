@@ -11,19 +11,29 @@ public class ShotMover : MonoBehaviour {
 	public Color orangeLaserColour;
 	public Color greenLaserColour;
 	SpriteRenderer myRenderer;
-	
-	
+	AudioSource myAudioSource;
+	Rigidbody2D myRigidbody;
+	Collider2D myCollider;
+	ParticleSystem myParticleSystem;
+
 	void Awake()
 	{
 		shotHit = GetComponent<ShotHit> ();
 		myRenderer = GetComponent<SpriteRenderer> ();
 		defaultShotSpeed = shotSpeed;
+		myAudioSource = GetComponentInChildren<AudioSource>();
+		myRigidbody = GetComponent<Rigidbody2D>();
+		myCollider = GetComponent<Collider2D>();
+		myParticleSystem = GetComponentInChildren<ParticleSystem>();
 	}
 	
 	
 	public void OkayGo (GameObject theFirer, float projectileDamage, float projectileCritChance, float projectileSpeed)
 	{
+		myCollider.enabled = true;
+		myRenderer.enabled = true;
 		shotHit.theFirer = theFirer;
+		myParticleSystem.Play();
 
 		if(theFirer.layer == LayerMask.NameToLayer("PMCFighters"))
 		{
@@ -60,25 +70,39 @@ public class ShotMover : MonoBehaviour {
 		shotHit.averageDamage = projectileDamage;
 		shotHit.chanceToCrit = projectileCritChance;
 
-		GetComponent<AudioSource>().Play ();
+		myAudioSource.Play ();
 		
 		if(!theFirer.GetComponent<Rigidbody2D>())
 		{
-			GetComponent<Rigidbody2D>().velocity = theFirer.transform.root.GetComponent<Rigidbody2D>().velocity;
-			GetComponent<Rigidbody2D>().AddForce (transform.up * shotSpeed);
+			myRigidbody.velocity = theFirer.transform.root.GetComponent<Rigidbody2D>().velocity;
+			myRigidbody.AddForce (transform.up * shotSpeed);
 		}
 		
 		else
 		{
 			//FORMER (CORRECT WAY)
-			GetComponent<Rigidbody2D>().velocity = theFirer.GetComponent<Rigidbody2D>().velocity;
-			GetComponent<Rigidbody2D>().AddForce (transform.up * shotSpeed);
+			myRigidbody.velocity = theFirer.GetComponent<Rigidbody2D>().velocity;
+			myRigidbody.AddForce (transform.up * shotSpeed);
 			
 			//NEW (allows for more accuracy with simplistic target lead equations
 			//float platformSpeed = Mathf.Sqrt (theFirer.rigidbody2D.velocity.magnitude); //this is pretty meaningless without direction
 			//rigidbody2D.AddForce (transform.up * shotSpeed);
 			//rigidbody2D.AddForce (transform.up * platformSpeed);
 		}
+	}
+
+	void HitAndStop()
+	{
+		myRigidbody.velocity = Vector2.zero;
+		myCollider.enabled = false;
+		myRenderer.enabled = false;
+		myParticleSystem.Stop();
+		Invoke("SetInactive", 1);
+	}
+
+	void SetInactive()
+	{
+		gameObject.SetActive(false);
 	}
 
 	void OnDisable()

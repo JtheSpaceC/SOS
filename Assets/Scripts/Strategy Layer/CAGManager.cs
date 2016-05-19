@@ -16,20 +16,6 @@ public class CAGManager : MonoBehaviour {
 
 	bool fadeToClearAfterBlack = false;
 
-	public UnityEvent leaveQuartersEvents;
-
-	[Header("Rooms")]
-	public GameObject quarters;
-	public Image quartersHeaderSprite;
-	public GameObject brig;
-	public Image brigHeaderSprite;
-	public GameObject squadronHQ;
-	public Image squadronHQHeaderSprite;
-	public GameObject quartermaster;
-	public Image quartermasterHeaderSprite;
-	public GameObject bar;
-	public Image barHeaderSprite;
-
 	Vector3 cameraRestorePosition;
 
 
@@ -62,7 +48,7 @@ public class CAGManager : MonoBehaviour {
 		}
 		else
 		{
-			callingSpriteHightlerScript.textToDisplay = "Start Your Rounds";
+			callingSpriteHightlerScript.textToDisplay = "Head To Bridge";
 		}
 	}
 
@@ -75,6 +61,11 @@ public class CAGManager : MonoBehaviour {
 			CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
 			Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
 		}
+	}
+	public void LeaveBridge()
+	{
+		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
+		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime );
 	}
 	public void LeaveBrig()
 	{

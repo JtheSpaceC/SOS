@@ -28,6 +28,10 @@ public class Dodge : MonoBehaviour
 	public bool canDodge = true;
 
 	private Animator animator;
+	public Transform animationChild;
+	Vector3 rotation;
+	float rotY;
+	float t; //time
 
 
 	//public Image awarenessManaFillImage;
@@ -143,6 +147,10 @@ public class Dodge : MonoBehaviour
 		rollCooldown = cooldownAmount; 
 		animator.SetTrigger ("Dodging");
 
+		if(!animator.enabled)
+			StartCoroutine("RollAnimation");
+
+
 		if(!playerControlled)
 		{
 			if(hasAvatar)
@@ -159,8 +167,35 @@ public class Dodge : MonoBehaviour
 		}
 	}
 
+	IEnumerator RollAnimation()
+	{
+		startTime = Time.time;
+
+		while(Time.time < startTime + rollDuration)
+		{
+			//forumula to smooth in & out
+			/*t = (Time.time - startTime)/ rollDuration;
+			t = t * t * (3 - (2 * t));*/
+
+			//formula to ease out of animation
+			t = (Time.time - startTime)/ rollDuration;
+			t = Mathf.Sin(t * Mathf.PI * 0.5f);
+
+			//linear formula
+			//t = (Time.time - startTime)/ rollDuration;
+
+			rotY = Mathf.Lerp(0, 360f, t);
+			Vector3 newRot = new Vector3 (0, rotY, 0);
+			animationChild.localRotation = Quaternion.Euler(newRot);
+			yield return new WaitForEndOfFrame();
+		}
+
+		rotY = 0;
+	}
+
 	public void CancelRollForDeath()
 	{
+		StopAllCoroutines();
 		animator.SetTrigger("Death");
 	}
 

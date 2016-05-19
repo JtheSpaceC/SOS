@@ -38,7 +38,7 @@ public class PointerHUDElement : MonoBehaviour {
 
 		transform.rotation = Quaternion.Euler (Vector3.zero);
 
-		centreScreen = new Vector3 (0.5f, 0.5f, 50);
+		centreScreen = new Vector3 (0.5f, 0.5f, -Camera.main.transform.position.z);
 	}
 
 	void ChooseImage(string name)

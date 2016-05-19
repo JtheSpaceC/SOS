@@ -182,7 +182,7 @@ public class Asteroid : MonoBehaviour {
 
 		health -= damageAmount;
 		if(theProjectile.tag != "Bomb")
-			theProjectile.SetActive (false);
+			theProjectile.SendMessage("HitAndStop");
 		else
 		{
 			Tools.instance.SpawnExplosion(theProjectile, theProjectile.transform.position + theProjectile.transform.up * 0.5f, false);
