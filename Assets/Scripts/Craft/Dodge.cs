@@ -29,6 +29,7 @@ public class Dodge : MonoBehaviour
 
 	private Animator animator;
 	public Transform animationChild;
+	[Tooltip ("If there's an extra item you want to rotate.")] public Transform alsoRotate;
 	Vector3 rotation;
 	float rotY;
 	float t; //time
@@ -187,6 +188,8 @@ public class Dodge : MonoBehaviour
 			rotY = Mathf.Lerp(0, 360f, t);
 			Vector3 newRot = new Vector3 (0, rotY, 0);
 			animationChild.localRotation = Quaternion.Euler(newRot);
+			if(alsoRotate)
+				alsoRotate.localRotation = Quaternion.Euler(newRot);
 			yield return new WaitForEndOfFrame();
 		}
 
@@ -298,7 +301,7 @@ public class Dodge : MonoBehaviour
 			if(healthScript.awareness == healthScript.maxAwareness)
 			{
 				awarenessMeterAudioSource.clip = manaFullSound;
-				_battleEventManager.instance.playerHasOneHitKills = true;
+				//_battleEventManager.instance.playerHasOneHitKills = true;
 			}
 			else
 				awarenessMeterAudioSource.clip = manaIncreaseSound;

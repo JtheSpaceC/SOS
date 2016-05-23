@@ -18,6 +18,18 @@ public class CAGManager : MonoBehaviour {
 
 	Vector3 cameraRestorePosition;
 
+	[Header("Room specific stuff")]
+	public int gameDay = 1;
+	[HideInInspector] public bool wearingClothes = false;
+
+	public int currentRoom = 0;
+	public Room[] rooms;
+	public GameObject jumpsuit;
+	public GameObject laptop;
+	public GameObject podium;
+	public GameObject pilotAssignment;
+	public GameObject squadronHQExit;
+
 
 	void Awake()
 	{
@@ -33,6 +45,62 @@ public class CAGManager : MonoBehaviour {
 	void Start()
 	{
 		LoadStatus();
+		ActivateNextRoom();
+	}
+
+
+	public void NewDay()
+	{
+		gameDay++;
+		ResetQuarters();
+		currentRoom = 0;
+	}
+	void ResetQuarters()
+	{
+		jumpsuit.GetComponent<SpriteRenderer>().enabled = true;
+		jumpsuit.GetComponent<BoxCollider2D>().enabled = true;
+		wearingClothes = false;
+		laptop.SetActive(true);
+	}
+	public void PutOnJumpsuit()
+	{
+		wearingClothes = true;
+		jumpsuit.GetComponent<SpriteRenderer>().enabled = false;
+		jumpsuit.GetComponent<BoxCollider2D>().enabled = false;
+		jumpsuit.GetComponent<AudioSource>().Play();
+	}
+
+	public void PilotAssignmentScreen()
+	{
+		pilotAssignment.SetActive(true);
+	}
+	public void EnableLeaveSquadronHQ(bool trueOrFalse)
+	{
+		squadronHQExit.GetComponent<SpriteRenderer>().enabled = trueOrFalse;
+		squadronHQExit.GetComponent<BoxCollider2D>().enabled = trueOrFalse;
+		podium.SetActive(!trueOrFalse);
+	}
+
+	public void ActivateNextRoom()
+	{
+		DeactivateRooms();
+		rooms[currentRoom].gameObject.SetActive(true);
+		rooms[currentRoom].myHeaderIcon.color = Color.green;
+
+		currentRoom++;
+
+		CAGManager.instance.dayText.text = "Day " + gameDay;
+	}
+	void DeactivateRooms()
+	{
+		foreach(Room room in rooms)
+		{
+			room.gameObject.SetActive(false);
+			room.myHeaderIcon.color = Color.white;
+		}
+		CAGManager.instance.contextualText.text = "";
+
+		//ES2.DeleteDefaultFolder();
 	}
 
 	public void SetCallingSpriteHightlerScript(SpriteHighlighter spriteHighlighter)
@@ -42,7 +110,7 @@ public class CAGManager : MonoBehaviour {
 		
 	public void CheckQuartersDoor()
 	{
-		if(!CAGDirector.instance.wearingClothes)
+		if(!wearingClothes)
 		{
 			callingSpriteHightlerScript.textToDisplay = "Woah, sir! You're Naked!";
 		}
@@ -56,7 +124,7 @@ public class CAGManager : MonoBehaviour {
 
 	public void LeaveQuarters()
 	{
-		if(CAGDirector.instance.wearingClothes)
+		if(wearingClothes)
 		{
 			CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
 			Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
@@ -81,11 +149,11 @@ public class CAGManager : MonoBehaviour {
 	{
 		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
 		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
-		CAGDirector.instance.EnableLeaveSquadronHQ(false);
+		EnableLeaveSquadronHQ(false);
 	}
 	public void LeaveBar()
 	{
-		CAGDirector.instance.NewDay();
+		NewDay();
 		CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
 		Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
 
@@ -99,7 +167,7 @@ public class CAGManager : MonoBehaviour {
 		callingSpriteHightlerScript.ResetMovingParts();
 
 		//set an active room
-		CAGDirector.instance.ActivateNextRoom();
+		ActivateNextRoom();
 
 		//fade in
 		CallFadeToClear(callingSpriteHightlerScript.blinkTime);
@@ -190,10 +258,10 @@ public class CAGManager : MonoBehaviour {
 
 	public void SaveStatus()
 	{
-		//ES2.Save(CAGDirector.instance.gameDay, "Day");
-		//ES2.Save(CAGDirector.instance.currentRoom, "Room");
-		PlayerPrefs.SetInt("Day", CAGDirector.instance.gameDay);
-		PlayerPrefs.SetInt("Room", CAGDirector.instance.currentRoom);
+		//ES2.Save(gameDay, "Day");
+		//ES2.Save(currentRoom, "Room");
+		PlayerPrefs.SetInt("Day", gameDay);
+		PlayerPrefs.SetInt("Room", currentRoom);
 		PlayerPrefs.Save();
 	}
 
@@ -203,26 +271,26 @@ public class CAGManager : MonoBehaviour {
 
 		if(PlayerPrefs.GetInt("Day") != 0)
 		{
-			CAGDirector.instance.gameDay = PlayerPrefs.GetInt("Day");
+			gameDay = PlayerPrefs.GetInt("Day");
 		}
 		else Debug.Log("Day not saved.");
 
 		if(PlayerPrefs.GetInt("Room") != 0)
 		{
-			CAGDirector.instance.currentRoom = PlayerPrefs.GetInt("Room") - 1;
+			currentRoom = PlayerPrefs.GetInt("Room") - 1;
 		}
 		else Debug.Log("Room not saved.");
 		/*if(ES2.Exists("Day"))
 		{
 			Debug.Log("Day Exists");
-			CAGDirector.instance.gameDay = ES2.Load<int>("Day");;
+			gameDay = ES2.Load<int>("Day");;
 		}
 		else Debug.Log("Day Doesn't Exist");
 
 		if(ES2.Exists("Room"))
 		{
 			Debug.Log("Room Exists");
-			CAGDirector.instance.currentRoom = ES2.Load<int>("Room");
+			currentRoom = ES2.Load<int>("Room");
 		}
 		else Debug.Log("Room Doesn't Exist");*/
 	}
@@ -242,7 +310,8 @@ public class CAGManager : MonoBehaviour {
 	{
 		SaveStatus();
 	}
-}
+}//end of CAGManager
+
 
 public class FadeTimes
 {

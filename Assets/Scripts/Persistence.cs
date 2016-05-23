@@ -19,9 +19,9 @@ public class Persistence : MonoBehaviour {
 
 	void OnLevelWasLoaded()
 	{
-		if(CAGDirector.instance != null)
+		if(CAGManager.instance != null)
 		{
-			CAGDirector.instance.EnableLeaveSquadronHQ(true);
+			CAGManager.instance.EnableLeaveSquadronHQ(true);
 			Destroy(gameObject);
 		}
 	}

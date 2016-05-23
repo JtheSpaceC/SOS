@@ -47,7 +47,7 @@ public class EnginesFighter : MonoBehaviour {
 	//for FIRING SOLUTION
 	float shooterToTargetDistance;
 	float bulletToTargetTime;
-	float shotSpeedAvg = 19f;
+	[Tooltip("How fast does my ammo normally travel? For firing solution.")] public float shotSpeedAvg = 19f;
 
 	//for DOCKING MANOEUVRES
 	[HideInInspector] public bool linedUpToDock = false;
