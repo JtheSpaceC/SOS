@@ -178,7 +178,7 @@ public class HealthFighter : Health {
 			//otherwise we're not already dodging
 
 			//2. If fire is by Player's own team, don't take damage, and break out.
-			if(theAttacker != null && Tools.instance.IsInLayerMask(theAttacker, friendlyFire))
+			if(theAttacker != null && StaticTools.IsInLayerMask(theAttacker, friendlyFire))
 			{
 				return;
 			}
@@ -285,7 +285,7 @@ public class HealthFighter : Health {
 
 			//1. If fire is by this fighter's own team, roll to not take damage
 
-			if(theAttacker != null && Tools.instance.IsInLayerMask(theAttacker, friendlyFire))
+			if(theAttacker != null && StaticTools.IsInLayerMask(theAttacker, friendlyFire))
 			{
 				print(theAttacker);
 

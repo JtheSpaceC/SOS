@@ -32,6 +32,7 @@ public class SpriteHighlighter : MonoBehaviour {
 	public bool playAudioOnOver = false;
 	public bool playAudioOnExit = false;
 	public UnityEvent myMouseOverEvents;
+	public UnityEvent myMouseExitEvents;
 
 
 	[Header("Do On Click")]
@@ -116,6 +117,8 @@ public class SpriteHighlighter : MonoBehaviour {
 
 	void OnMouseExit()
 	{
+		myMouseExitEvents.Invoke();
+
 		if(mouseOverBehaviour == MouseOverBehaviour.ColourChange)
 		{
 			NormalizeSprite();
@@ -205,5 +208,10 @@ public class SpriteHighlighter : MonoBehaviour {
 	{
 		myRenderer.material.shader = shaderSpritesDefault;
 		myRenderer.color = startColor;
+	}
+
+	void OnDisable()
+	{
+		objectInQuestion.localScale = normalScale;
 	}
 }

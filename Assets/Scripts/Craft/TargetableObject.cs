@@ -59,7 +59,7 @@ public class TargetableObject : MonoBehaviour {
 		RaycastHit2D hit = Physics2D.CircleCast((transform.position+(forwardOfThisObject.up*1.35f)),
 		                                        0.75f, forwardOfThisObject.up, range, potshotsPlusFriendliesMask);
 		
-		if(hit.collider != null && Tools.instance.IsInLayerMask(hit.collider.gameObject, potshotAtEnemiesMask))
+		if(hit.collider != null && StaticTools.IsInLayerMask(hit.collider.gameObject, potshotAtEnemiesMask))
 		{
 			return true;
 		}		

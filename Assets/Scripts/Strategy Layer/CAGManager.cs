@@ -2,6 +2,7 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 public class CAGManager : MonoBehaviour {
 
@@ -38,7 +39,7 @@ public class CAGManager : MonoBehaviour {
 		else
 		{
 			Debug.Log("There were two CAGManagers. Destroying one.");
-			Destroy(this.gameObject);
+			DestroyImmediate(this.gameObject);
 		}
 	}
 
@@ -310,6 +311,9 @@ public class CAGManager : MonoBehaviour {
 	{
 		SaveStatus();
 	}
+
+
+
 }//end of CAGManager
 
 
@@ -318,3 +322,4 @@ public class FadeTimes
 	public float startTime;
 	public float fadeTime;
 }
+

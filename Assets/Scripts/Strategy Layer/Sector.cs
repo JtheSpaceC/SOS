@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Sector:MonoBehaviour{
+public class Sector: HoloMapObject{
 
-	SpriteRenderer myRenderer;
 
 	public enum MySectorGroup {Capital, Alpha, Beta, Gamma, Delta};
 	public MySectorGroup mySectorGroup;
@@ -12,20 +11,26 @@ public class Sector:MonoBehaviour{
 	public BaseType baseType;
 
 	public bool enemyFleetPresent = false;
-	public int dayExplored = -1;
+	public int dayScouted = -1;
+
 
 	void Awake()
 	{
-		myRenderer = GetComponent<SpriteRenderer>();
+		AwakeBaseClass();
 
 		if(baseType == BaseType.Civilian)
 			myRenderer.color = Color.blue;
-		else if(baseType == BaseType.Enemy)
+		else if(baseType == BaseType.Enemy || enemyFleetPresent)
 			myRenderer.color = Color.red;
 	}
 
 	public string OutPutMyStats()
 	{
 		return "";	
+	}
+
+	public void OnMouseDown()
+	{
+		CampaignManager.instance.activeSector = this;
 	}
 }

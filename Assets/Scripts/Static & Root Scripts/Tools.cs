@@ -238,11 +238,7 @@ public class Tools: MonoBehaviour
 		yield return new WaitForSeconds(givenTime);
 		givenText.color = returnColour;
 	}
-	
-	public bool IsInLayerMask(GameObject obj, LayerMask mask)
-	{
-		return ((mask.value & (1 << obj.layer)) > 0);
-	}
+
 
 	public IEnumerator HitCamSlowdown()
 	{

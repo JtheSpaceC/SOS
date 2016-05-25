@@ -669,7 +669,7 @@ public class AIFighter : FighterFunctions {
 		if(currentState != StateMachine.Retreat && currentState != StateMachine.Evade && currentState != StateMachine.FormUp 
 		   && target != theAttacker)
 		{
-			if(!Tools.instance.IsInLayerMask(theAttacker, LayerMask.GetMask("PMCCapital", "EnemyCapital")))
+			if(!StaticTools.IsInLayerMask(theAttacker, LayerMask.GetMask("PMCCapital", "EnemyCapital")))
 				target = theAttacker;
 		}
 	}
