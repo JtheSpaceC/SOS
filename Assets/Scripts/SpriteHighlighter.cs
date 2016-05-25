@@ -27,6 +27,7 @@ public class SpriteHighlighter : MonoBehaviour {
 	public Vector3 growthAddition = new Vector3 (0.2f, 0.2f, 0);
 	public float growTime = 0.1f;
 	public Text popupText;
+	public bool displayNameOnly = false;
 	public string textToDisplay = "";
 	public bool playAudioOnOver = false;
 	public bool playAudioOnExit = false;
@@ -106,8 +107,10 @@ public class SpriteHighlighter : MonoBehaviour {
 		{
 			myAudioSource.Play();
 		}
-			
-		if(popupText != null && textToDisplay != "")
+
+		if(popupText != null && displayNameOnly)
+			popupText.text = objectInQuestion.name;
+		else if(popupText != null && textToDisplay != "")
 			popupText.text = textToDisplay;
 	}
 
