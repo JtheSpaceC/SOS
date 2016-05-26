@@ -171,7 +171,7 @@ public class DemoLevel : MonoBehaviour {
 		transport.transform.position = startPos;
 		AITrans = transport.GetComponent<AITransport> ();
 		AITrans.theCaller = GameObject.FindGameObjectWithTag ("AIManager");
-		AITrans.ChangeToNewState (AITransport.StateMachine.warpIn);
+		AITrans.ChangeToNewState (AITransport.StateMachine.WarpIn);
 		AITrans.thisWasInitialInsertionJump = true;
 		AITrans.waypoint = Vector2.zero;
 		AITrans.warpInTime = 3;
@@ -217,7 +217,7 @@ public class DemoLevel : MonoBehaviour {
 			
 		//for mission insertion
 
-		if(AITrans != null && AITrans.currentState == AITransport.StateMachine.holdingPosition && timer >5 && !setWingmanOrders)
+		if(AITrans != null && AITrans.currentState == AITransport.StateMachine.HoldingPosition && timer >5 && !setWingmanOrders)
 		{
 			TogglePlayerUI();
 			mate2AIScript.ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
@@ -225,9 +225,9 @@ public class DemoLevel : MonoBehaviour {
 			setWingmanOrders = true;
 		}
 
-		if(AITrans != null && AITrans.currentState == AITransport.StateMachine.holdingPosition && timer > 8)
+		if(AITrans != null && AITrans.currentState == AITransport.StateMachine.HoldingPosition && timer > 8)
 		{
-			AITrans.currentState = AITransport.StateMachine.warpOut;
+			AITrans.currentState = AITransport.StateMachine.WarpOut;
 		}
 
 

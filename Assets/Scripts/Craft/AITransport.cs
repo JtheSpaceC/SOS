@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AITransport : SupportShipFunctions {
 	
-	public enum StateMachine {awaitingPickup, reelingInPassengers, allAboard, holdingPosition, warpIn, warpOut, NA};
+	public enum StateMachine {AwaitingPickup, ReelingInPassengers, AllAboard, HoldingPosition, WarpIn, WarpOut, NA};
 	public StateMachine currentState;
 	public StateMachine previousState;
 
@@ -110,7 +110,7 @@ public class AITransport : SupportShipFunctions {
 			this.SendMessage("Death");
 		#endif
 
-		if(previousState == StateMachine.warpIn && switchingState)
+		if(previousState == StateMachine.WarpIn && switchingState)
 		{
 			engineAudioSource.Stop();
 			engineAudioSource.loop = false;
@@ -118,16 +118,16 @@ public class AITransport : SupportShipFunctions {
 			engineAudioSource.Play();
 		}
 
-		if(currentState == StateMachine.awaitingPickup)
+		if(currentState == StateMachine.AwaitingPickup)
 		{
 			AwaitingPickup();
 			HoldPosition();
 		}
-		else if(currentState == StateMachine.holdingPosition)
+		else if(currentState == StateMachine.HoldingPosition)
 		{
 			HoldPosition();
 		}
-		else if(currentState == StateMachine.reelingInPassengers)
+		else if(currentState == StateMachine.ReelingInPassengers)
 		{
 			ReelInPassengers();
 			if(reelingInPlayerGroup) //for breaking out of the dock menoeuvre
@@ -143,15 +143,15 @@ public class AITransport : SupportShipFunctions {
 					gaveAccelerateInput = false;
 			}
 		}
-		else if(currentState == StateMachine.allAboard)
+		else if(currentState == StateMachine.AllAboard)
 		{
 			AllAboard();
 		}
-		else if(currentState == StateMachine.warpIn)
+		else if(currentState == StateMachine.WarpIn)
 		{
 			WarpIn();
 		}
-		else if(currentState == StateMachine.warpOut)
+		else if(currentState == StateMachine.WarpOut)
 		{
 			WarpOut();
 		}
@@ -182,7 +182,7 @@ public class AITransport : SupportShipFunctions {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (currentState != StateMachine.awaitingPickup)
+		if (currentState != StateMachine.AwaitingPickup)
 			return;
 
 		if(other.tag == "PlayerFighter")
@@ -294,7 +294,7 @@ public class AITransport : SupportShipFunctions {
 					}
 					//if it was, change states
 					if(allAboard)
-						ChangeToNewState(StateMachine.allAboard);
+						ChangeToNewState(StateMachine.AllAboard);
 				}
 			}
 		}//end or for loop
@@ -397,7 +397,7 @@ public class AITransport : SupportShipFunctions {
 			else
 			{
 				reelingInPlayerGroup = false;
-				ChangeToNewState(StateMachine.warpOut);
+				ChangeToNewState(StateMachine.WarpOut);
 				return;
 			}
 
@@ -411,7 +411,7 @@ public class AITransport : SupportShipFunctions {
 		if(reelingInPlayerGroup && carryFighter1.GetComponent<HealthFighter>().dead)		
 		{
 			reelingInPlayerGroup = false;
-			ChangeToNewState(StateMachine.warpOut);
+			ChangeToNewState(StateMachine.WarpOut);
 			Subtitles.instance.PostSubtitle(new string[] {carryFighter1.name + " is down! We're bugging out! Send recovery!!"});
 		}
 	}
@@ -515,12 +515,12 @@ public class AITransport : SupportShipFunctions {
 			{
 				Invoke("ReleaseFightersAfterInsertion", 1.5f);
 				Subtitles.instance.PostSubtitle(new string[] {this.name + " has arrived. Releasing Fighters.."});
-				ChangeToNewState(StateMachine.holdingPosition);
+				ChangeToNewState(StateMachine.HoldingPosition);
 			}
 			else if(whichSide == WhichSide.Ally && !thisWasInitialInsertionJump)
 			{
 				Subtitles.instance.PostSubtitle(new string[] {this.name + " entering combat zone. Ready for extraction."});
-				ChangeToNewState(StateMachine.awaitingPickup);
+				ChangeToNewState(StateMachine.AwaitingPickup);
 			}
 			if (reelingInPlayerGroup) //turn off the speed particles for a moment
 			{
@@ -640,7 +640,7 @@ public class AITransport : SupportShipFunctions {
 		if(isThisACancelledPickup)
 		{
 			Subtitles.instance.PostSubtitle (new string[]{"Cancelling Docking Procedure.", "Roger, aborting pickup."});
-			ChangeToNewState(StateMachine.awaitingPickup);
+			ChangeToNewState(StateMachine.AwaitingPickup);
 		}
 		
 		if(reelingInPlayerGroup)
@@ -689,16 +689,20 @@ public class AITransport : SupportShipFunctions {
 
 	void ReportActivity()
 	{
-		PlayerPrefs.SetString ("craftName", this.name);
-		
-		PlayerPrefs.SetString("craftOrders", this.currentState.ToString());
-		
-		if (healthScript.health / healthScript.maxHealth < (1 / 3))
-			PlayerPrefs.SetString ("craftHealth", "Heavily Damaged");
-		else if (healthScript.health / healthScript.maxHealth < (2 / 3))
-			PlayerPrefs.SetString ("craftHealth", "Damaged");
+		CameraTactical.reportedInfo = this.name + "\n";
+
+		CameraTactical.reportedInfo += StaticTools.SplitCamelCase(currentState.ToString());
+
+		CameraTactical.reportedInfo += "\n";
+
+		if (healthScript.health / healthScript.maxHealth < (0.33f)) {
+			CameraTactical.reportedInfo += "Heavily Damaged";
+		}
+		else if (healthScript.health / healthScript.maxHealth < (0.66f)) {
+			CameraTactical.reportedInfo += "Damaged";
+		}
 		else
-			PlayerPrefs.SetString ("craftHealth", "Fully Functional");
+			CameraTactical.reportedInfo += "Fully Functional";
 	}
 
 	void PlayerCommencedDocking()

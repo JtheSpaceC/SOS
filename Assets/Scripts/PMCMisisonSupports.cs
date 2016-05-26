@@ -104,7 +104,7 @@ public class PMCMisisonSupports : MonoBehaviour {
 		//TODO: naming system
 		transport.name = "Transport " + availableFighterTransports;
 		availableFighterTransports --;
-		transport.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.warpIn);
+		transport.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.WarpIn);
 		transport.GetComponent<AITransport>().theCaller = theCaller;
 		transport.GetComponent<AITransport>().insertionPoint = insertionPoint;
 	}

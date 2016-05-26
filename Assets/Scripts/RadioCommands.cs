@@ -350,7 +350,7 @@ public class RadioCommands : MonoBehaviour {
 
 			communicatingGameObject.GetComponent<AITransport>().reelingInPlayerGroup = true;
 			communicatingGameObject.GetComponent<AITransport>().sentRadioMessageToPlayerGroup = false;
-			communicatingGameObject.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.reelingInPassengers);
+			communicatingGameObject.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.ReelingInPassengers);
 			break;
 
 		case "CANCEL DOCK? YES":
@@ -379,7 +379,7 @@ public class RadioCommands : MonoBehaviour {
 			remainingButton = button3;
 			Invoke("FadeOutRemainingButtons", 1);
 
-			communicatingGameObject.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.warpOut);
+			communicatingGameObject.GetComponent<AITransport>().ChangeToNewState(AITransport.StateMachine.WarpOut);
 			break;
 
 		case "LEAVE? CANCEL":

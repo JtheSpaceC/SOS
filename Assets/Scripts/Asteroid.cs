@@ -308,9 +308,9 @@ public class Asteroid : MonoBehaviour {
 
 	void ReportActivity()
 	{
-		PlayerPrefs.SetString ("craftName", this.name);
-		PlayerPrefs.SetString ("craftOrders", "");
-		PlayerPrefs.SetString ("craftHealth", "");
+		CameraTactical.reportedInfo = "Asteroid.\n" +
+			"Size: " + asteroidSize;
 	}
+	
 
 } //Mono

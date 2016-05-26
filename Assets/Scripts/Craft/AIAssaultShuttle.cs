@@ -233,4 +233,22 @@ public class AIAssaultShuttle : SupportShipFunctions {
 			healthScript.Invoke("Deactivate", 8);
 		}
 	}//end of WarpOut
+
+	void ReportActivity()
+	{
+		CameraTactical.reportedInfo = this.name + "\n";
+
+		CameraTactical.reportedInfo += StaticTools.SplitCamelCase(currentState.ToString());
+
+		CameraTactical.reportedInfo += "\n";
+
+		if (healthScript.health / healthScript.maxHealth < (0.33f)) {
+			CameraTactical.reportedInfo += "Heavily Damaged";
+		}
+		else if (healthScript.health / healthScript.maxHealth < (0.66f)) {
+			CameraTactical.reportedInfo += "Damaged";
+		}
+		else
+			CameraTactical.reportedInfo += "Fully Functional";
+	}
 }

@@ -687,9 +687,9 @@ public class AIFighter : FighterFunctions {
 		CameraTactical.reportedInfo = this.name + "\n";
 
 		if(target != null)
-			CameraTactical.reportedInfo += this.currentState.ToString() + " " + target.name;
+			CameraTactical.reportedInfo += StaticTools.SplitCamelCase(currentState.ToString()) + " " + target.name;
 		else 
-			CameraTactical.reportedInfo += this.currentState.ToString();
+			CameraTactical.reportedInfo += StaticTools.SplitCamelCase(currentState.ToString());
 
 		CameraTactical.reportedInfo += "\n";
 
