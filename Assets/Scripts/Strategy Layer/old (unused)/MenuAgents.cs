@@ -40,7 +40,6 @@ public class MenuAgents : MonoBehaviour {
 
 	void Start () 
 	{
-		//TODO: Remove these
 		CreateAgent ();
 		CreateAgent ();
 		CreateAgent ();

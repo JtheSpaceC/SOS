@@ -24,7 +24,6 @@ public class Nemesis : Personnel {
 
 	void GetNemesisDescription()
 	{
-		//TODO: get actual info
 		MenuNemesis.instance.descriptionText.text = bio;
 	//	StartCoroutine (CheckScrollbarSize (MenuNemesis.instance.myTextScrollbar, MenuNemesis.instance.textScrollBarHandle));
 	}

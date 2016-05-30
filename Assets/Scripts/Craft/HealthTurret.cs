@@ -30,7 +30,7 @@ public class HealthTurret : Health {
 	
 	
 	
-	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, float baseDamage, float critChance)
+	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, int baseDamage, float critChance)
 	{
 		health -= (int)baseDamage;
 		Tools.instance.SpawnExplosionMini (this.gameObject, 0.3f);
@@ -43,6 +43,15 @@ public class HealthTurret : Health {
 			{
 				theAttacker.SendMessage("DestroyAsteroid");
 			}
+		}
+
+		if (theBullet.tag != "Asteroid" && theBullet.tag != "Bomb") 
+		{
+			theBullet.SendMessage("HitAndStop");
+		}
+		else if(theBullet.tag == "Bomb")
+		{
+			theBullet.GetComponent<Missile>().Explode();
 		}
 	}
 

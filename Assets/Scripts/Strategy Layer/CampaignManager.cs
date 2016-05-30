@@ -12,11 +12,6 @@ public class CampaignManager : MonoBehaviour {
 
 	public List<Mission> availableMissions;
 
-	public GameObject map;
-	public GameObject mapInfoPanel;
-	public Text mapInfoHeaderText;
-	public Text mapInfoBodyText;
-	public Button reconButton;
 	string infoString;
 
 	public Text missionsListText;
@@ -40,22 +35,22 @@ public class CampaignManager : MonoBehaviour {
 	{
 		CAGManager.instance.contextualText.text = "";
 
-		if(!map.activeSelf)
+		if(!CAGManager.instance.map.activeSelf)
 		{
-			map.SetActive(true);
-			mapInfoPanel.SetActive(false);
+			CAGManager.instance.map.SetActive(true);
+			CAGManager.instance.mapInfoPanel.SetActive(false);
 		}
 		else
 		{
-			map.SetActive(false);
-			mapInfoPanel.SetActive(true);
+			CAGManager.instance.map.SetActive(false);
+			CAGManager.instance.mapInfoPanel.SetActive(true);
 		}
 	}
 
 	public void PopulateMapInfoPanelForSector()
 	{
-		reconButton.gameObject.SetActive(true);
-		reconButton.interactable = true;
+		CAGManager.instance.reconButton.gameObject.SetActive(true);
+		CAGManager.instance.reconButton.interactable = true;
 
 		infoString = "";
 
@@ -77,23 +72,23 @@ public class CampaignManager : MonoBehaviour {
 	
 		CheckForExistingMissions();
 
-		mapInfoHeaderText.text = activeSector.name;
-		mapInfoBodyText.text = infoString;
+		CAGManager.instance.mapInfoHeaderText.text = activeSector.name;
+		CAGManager.instance.mapInfoBodyText.text = infoString;
 	}
 
-	public void PopulateMapInfoPanelForSatellite(Transform satellite)
+	public void PopulateMapInfoPanelForSpyDrone(Transform satellite)
 	{
-		reconButton.gameObject.SetActive(false);
+		CAGManager.instance.reconButton.gameObject.SetActive(false);
 
 		infoString = "This stealthed spy drone sits in empty space near " + satellite.transform.parent.parent.name + " passively monitoring " +
 			"the entire sector.\n" +
 			"Obstruction from planetary bodies and from asteroids, as well as the need not to use active sensors, prevents this drone " +
 			"from gathering detailed information about the sub-sectors that it monitors.\n" +
-			"It will, however, detect any large ships entering or leaving the Sector at large. " +
+			"It will, however, detect any large ships entering or leaving the Sector. " +
 			"Apart from providing valuable intelligence, the presence of these drones is reassuring for the civilian population.";
 
-		mapInfoHeaderText.text = "Spy Satellite";
-		mapInfoBodyText.text = infoString;
+		CAGManager.instance.mapInfoHeaderText.text = "Spy Drone";
+		CAGManager.instance.mapInfoBodyText.text = infoString;
 	}
 
 	void CheckForExistingMissions()
@@ -109,7 +104,7 @@ public class CampaignManager : MonoBehaviour {
 					StaticTools.SplitCamelCase(availableMissions[i].missionType.ToString()) + "\n";
 				
 				if(availableMissions[i].missionType == Mission.MissionType.Recon)
-					reconButton.interactable = false;
+					CAGManager.instance.reconButton.interactable = false;
 			}
 		}
 	}
@@ -119,7 +114,7 @@ public class CampaignManager : MonoBehaviour {
 		//TODO: CheckForCraftAvailabilityEtc()
 
 		ScheduleReconMission();
-		reconButton.interactable = false;
+		CAGManager.instance.reconButton.interactable = false;
 	}
 	void ScheduleReconMission()
 	{
@@ -141,5 +136,7 @@ public class Mission{
 	public enum MissionType{Recon, StealthRecon, BaseAssault, CivilianDefence, SearchAndDestroy, Capture, Rescue};
 	public MissionType missionType;
 	public int dayCalled;
+	public int dayDue;
+	public bool dueDateKnown = false;
 }
 

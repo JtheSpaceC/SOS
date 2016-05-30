@@ -14,22 +14,33 @@ public class CAGManager : MonoBehaviour {
 	public Text contextualText;
 	public Text dayText;
 	public Transform cameraBackButton;
+	public Text objectivesText;
+	public Text missionsText;
 
 	bool fadeToClearAfterBlack = false;
 
 	Vector3 cameraRestorePosition;
 
-	[Header("Room specific stuff")]
 	public int gameDay = 1;
-	[HideInInspector] public bool wearingClothes = false;
-
 	public int currentRoom = 0;
+
+	[Header("Room specific stuff")]
+
 	public Room[] rooms;
+	[HideInInspector] public bool wearingClothes = false;
+	[HideInInspector] public bool tookLaptop = false;
 	public GameObject jumpsuit;
 	public GameObject laptop;
+	public GameObject map;
+	public GameObject mapInfoPanel;
+	public Text mapInfoHeaderText;
+	public Text mapInfoBodyText;
+	public Button reconButton;
 	public GameObject podium;
 	public GameObject pilotAssignment;
 	public GameObject squadronHQExit;
+
+
 
 
 	void Awake()
@@ -60,8 +71,11 @@ public class CAGManager : MonoBehaviour {
 	{
 		jumpsuit.GetComponent<SpriteRenderer>().enabled = true;
 		jumpsuit.GetComponent<BoxCollider2D>().enabled = true;
+		laptop.GetComponent<SpriteRenderer>().enabled = true;
+		laptop.GetComponent<Collider2D>().enabled = true;
 		wearingClothes = false;
 		laptop.SetActive(true);
+		tookLaptop = false;
 	}
 	public void PutOnJumpsuit()
 	{
@@ -69,6 +83,16 @@ public class CAGManager : MonoBehaviour {
 		jumpsuit.GetComponent<SpriteRenderer>().enabled = false;
 		jumpsuit.GetComponent<BoxCollider2D>().enabled = false;
 		jumpsuit.GetComponent<AudioSource>().Play();
+	}
+	public void PickUpLaptop()
+	{
+		laptop.GetComponent<SpriteRenderer>().enabled = false;
+		laptop.GetComponent<Collider2D>().enabled = false;
+		laptop.GetComponent<AudioSource>().Play();
+		//TODO: PopulateMissionsAndObjectives()
+		objectivesText.enabled = true;
+		missionsText.enabled = true;
+		tookLaptop = true;
 	}
 
 	public void PilotAssignmentScreen()
@@ -115,6 +139,10 @@ public class CAGManager : MonoBehaviour {
 		{
 			callingSpriteHightlerScript.textToDisplay = "Woah, sir! You're Naked!";
 		}
+		else if(!tookLaptop)
+		{
+			callingSpriteHightlerScript.textToDisplay = "I think you should check the morning intel, Sir.";
+		}
 		else
 		{
 			callingSpriteHightlerScript.textToDisplay = "Head To Bridge";
@@ -125,7 +153,7 @@ public class CAGManager : MonoBehaviour {
 
 	public void LeaveQuarters()
 	{
-		if(wearingClothes)
+		if(wearingClothes && tookLaptop)
 		{
 			CallFadeToBlack(callingSpriteHightlerScript.blinkTime);
 			Invoke("CallLoadNextRoom", callingSpriteHightlerScript.blinkTime);
@@ -164,9 +192,6 @@ public class CAGManager : MonoBehaviour {
 
 	void CallLoadNextRoom()
 	{
-		//reset moving sprites like open doors
-		callingSpriteHightlerScript.ResetMovingParts();
-
 		//set an active room
 		ActivateNextRoom();
 
@@ -278,7 +303,7 @@ public class CAGManager : MonoBehaviour {
 
 		if(PlayerPrefs.GetInt("Room") != 0)
 		{
-			currentRoom = PlayerPrefs.GetInt("Room") - 1;
+			currentRoom = PlayerPrefs.GetInt("Room") - 1; 
 		}
 		else Debug.Log("Room not saved.");
 		/*if(ES2.Exists("Day"))

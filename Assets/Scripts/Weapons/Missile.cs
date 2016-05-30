@@ -14,7 +14,7 @@ public class Missile : MonoBehaviour {
 	public GameObject target;
 	public GameObject theFirer;
 
-	public float damage = 150;
+	public int damage = 5;
 	public float kickOffTime = 0.5f;
 	public float fuelLifetime = 2f;
 	public float fuseLifetime = 2.5f;

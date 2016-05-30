@@ -66,7 +66,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		if(target != null)
 		{
 			followCamText.text = "Following: " + target.name + "\n" +
-				"Orders: " + target.GetComponent<AIFighter> ().currentState;
+				"Orders: " + StaticTools.SplitCamelCase(target.GetComponent<AIFighter> ().currentState.ToString());
 
 			if(target.GetComponent<AIFighter>().target != null)
 			{

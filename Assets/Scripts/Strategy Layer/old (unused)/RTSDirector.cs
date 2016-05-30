@@ -126,7 +126,6 @@ public class RTSDirector : MonoBehaviour {
 
 	public void UpdateCurrencyDisplay()
 	{
-		//TODO: Draw currency info from save file
 		currencyText.text = "c" + Mathf.FloorToInt (creditsOwned) + "\n" +
 			"+c" + Mathf.FloorToInt (newCreditsPerPeriod) + "/per";
 	}

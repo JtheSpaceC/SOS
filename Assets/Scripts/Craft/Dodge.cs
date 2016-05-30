@@ -26,6 +26,7 @@ public class Dodge : MonoBehaviour
 	float rollCooldown = 0f; 
 	public float cooldownAmount = 1.11f; 
 	public bool canDodge = true;
+	[HideInInspector] public bool dodgeCoroutineStarted;
 
 	private Animator animator;
 	public Transform animationChild;
@@ -116,7 +117,7 @@ public class Dodge : MonoBehaviour
 					{
 						Director.instance.numberOfManualDodges++;
 						playerActivatedManualDodge = true;
-						Roll ();
+						Roll (0);
 					}
 				}		
 			}
@@ -132,9 +133,23 @@ public class Dodge : MonoBehaviour
 		RollCooldown ();
 
 	}//end of UPDATE
+
+	IEnumerator SetDodgingToTrue(int frameDelay)
+	{
+		dodgeCoroutineStarted = true;
+
+		while (frameDelay > 0)
+		{
+			frameDelay--;
+			yield return new WaitForEndOfFrame();
+		}
+		dodging = true;
+
+		dodgeCoroutineStarted = false;
+	}
 	
 	
-	public void Roll()
+	public void Roll(int frameDelay)
 	{
 		if (ClickToPlay.instance.paused || !canDodge)
 			return;
@@ -142,7 +157,8 @@ public class Dodge : MonoBehaviour
 		if(playerControlled && playerMovementScript.nitroRemaining/playerMovementScript.nitroBurnRate < rollDuration)
 			return;
 
-		dodging = true;
+		StartCoroutine(SetDodgingToTrue(frameDelay));
+
 		canDodge = false;
 		myAudioSource.Play();
 		rollCooldown = cooldownAmount; 

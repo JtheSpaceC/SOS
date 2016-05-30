@@ -26,7 +26,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 	public float fireRate = 0.33f;
 	[HideInInspector] public float nextFire;
 	public float weaponsRange = 17;
-	public float shotDamage = 25f;
+	public int shotDamage = 1;
 	public float shotCritChance = 10f;
 	public float projectileSpeed = 7f;
 

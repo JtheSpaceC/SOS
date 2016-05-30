@@ -103,7 +103,7 @@ public class PlayerFighterMovement : EnginesFighter {
 		{
 			ForwardOrBackwardThrust(Input.GetAxis("Accelerate"), true);
 		}
-		else if(Input.GetButton("Afterburners")) //UNDONE: added afterburners here to allow them on without RT
+		else if(Input.GetButton("Afterburners")) // added afterburners here to allow them on without accelerator button
 		{
 			ForwardOrBackwardThrust(1, true);
 		}

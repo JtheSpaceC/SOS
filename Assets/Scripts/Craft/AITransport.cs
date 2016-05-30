@@ -186,7 +186,7 @@ public class AITransport : SupportShipFunctions {
 			return;
 
 		if(other.tag == "PlayerFighter")
-		{ //TODO: Change this to be easier
+		{
 			if(!RadioCommands.instance.buttonsShown)
 			{
 				RadioCommands.instance.communicatingGameObject = this.gameObject;
@@ -255,8 +255,7 @@ public class AITransport : SupportShipFunctions {
 			{
 				fighterEngineScripts[i].linedUpToDock = true;
 				fighterEngineScripts[i].myRigidBody.velocity = Vector2.zero;
-				SetSortingLayersBeneathTheTransport(fightersToCarry[i]); //TODO: This seems to sometimes not work, 
-				//at least I assume this is the problem
+				SetSortingLayersBeneathTheTransport(fightersToCarry[i]);
 			}
 			else if(fighterHealthScripts[i].dead)
 			{

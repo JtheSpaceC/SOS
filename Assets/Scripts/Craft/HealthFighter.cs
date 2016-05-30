@@ -38,18 +38,12 @@ public class HealthFighter : Health {
 	[HideInInspector] public Transform avatarHealthBars;
 	bool updateAvatarBars = false;
 
-	//TODO:REMOVE THESE
-	[HideInInspector]public float rollSkill;
-	[HideInInspector]public float normalRollSkill;
-
 
 	void Awake()
 	{
 		AwakeBaseClass ();
 
 		myAIScript = GetComponent<AIFighter> ();
-
-		rollSkill = normalRollSkill;
 
 		dodgeScript = GetComponentInChildren<Dodge>();
 
@@ -141,10 +135,10 @@ public class HealthFighter : Health {
 	}
 
 
-	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, float baseDamage, float critChance)
+	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, int baseDamage, float critChance)
 	{
 		int diceRoll = 0;
-		float damage = baseDamage;
+		int damage = baseDamage;
 
 		if(theAttacker == previousAttacker && theAttacker == previousPreviousAttacker)
 		{
@@ -191,13 +185,13 @@ public class HealthFighter : Health {
 				{/*do nothing*/}
 				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0)
 				{					
-					dodgeScript.Roll();
+					dodgeScript.Roll(0);
 					Director.instance.numberOfAutomatedDodges++;
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 				}
 				else
 				{
-					dodgeScript.Roll();
+					dodgeScript.Roll(0);
 					Director.instance.numberOfAutomatedDodges++;
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 					return;
@@ -256,7 +250,7 @@ public class HealthFighter : Health {
 
 			//7. Flash collider off to reduce repeat hits all at once
 			if (!dead)
-				StartCoroutine (FlashOnInvincibility ());
+				StartCoroutine (FlashOnInvincibility (0));
 
 			//8. flash screen white and vibrate for pain
 			StartCoroutine (Tools.instance.WhiteScreenFlash(0.1f));
@@ -309,24 +303,30 @@ public class HealthFighter : Health {
 
 			//3. see if you can dodge out of trouble (player must not be on cooldown)
 
-			if(hasDodge && dodgeScript.canDodge)
+			if(hasDodge && (dodgeScript.canDodge || dodgeScript.dodgeCoroutineStarted))
 			{
-				if(theBullet.tag == "Bomb" && missileDodgeSkill <= 0)
+				if(theBullet.tag == "Bomb" && missileDodgeSkill <= 0) //if it's a missile and you CAN'T dodge missiles
 				{/*do nothing*/}
-				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0)
+				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0) //if it's a missile and you CAN dodge missiles
 				{
 					diceRoll = Random.Range(0, 101);
 					if(diceRoll <= missileDodgeSkill)
 					{
-						dodgeScript.Roll();
+						if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+							dodgeScript.Roll(2);
+						else
+							dodgeScript.Roll(0);						
 						return;
 					}
 				}
-				else if(theBullet.tag == "Asteroid")
+				else if(theBullet.tag == "Asteroid") //if it's an Asteroid
 				{
 					if(alwaysDodgesAsteroids)
 					{
-						dodgeScript.Roll();
+						if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+							dodgeScript.Roll(2);
+						else
+							dodgeScript.Roll(0);						
 						return;
 					}
 					else
@@ -334,30 +334,40 @@ public class HealthFighter : Health {
 						diceRoll = Random.Range(0, 101);
 						if(diceRoll <= asteroidDodgeSkill) //if skill is high enough, take a free roll
 						{
-							dodgeScript.Roll();
+							if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+								dodgeScript.Roll(2);
+							else
+								dodgeScript.Roll(0);						
 							return;
 						}
 						else if(awareness > 0) // if it's not, the roll will cost 1 awareness, or proceed to damage
 						{
-							awareness--;
+							awareness = Mathf.Clamp(awareness - damage, 0, maxAwareness);
 							UpdateAvatarAwarenessBars();
-							dodgeScript.Roll();
+
+							if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+								dodgeScript.Roll(2);
+							else
+								dodgeScript.Roll(0);						
 
 							if(awarenessRechargeTime > 0)
 							{
 								CancelInvoke("AwarenessRecharge");
 								InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
 							}
-
 							return;
 						}
 					}
 				}
 				else if(awareness > 0) //otherwise, dodge a bullet
-				{	
-					awareness--;
+				{
+					awareness = Mathf.Clamp(awareness - damage, 0, maxAwareness);
 					UpdateAvatarAwarenessBars();
-					dodgeScript.Roll();
+
+					if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+						dodgeScript.Roll(2);
+					else
+						dodgeScript.Roll(0);
 
 					if(awarenessRechargeTime > 0)
 					{
@@ -370,7 +380,7 @@ public class HealthFighter : Health {
 
 			//4. If we get here, the shot will hit. apply damage
 
-			health -= (int)damage;
+			health -= damage;
 
 			if(awarenessRechargeTime > 0)
 			{
@@ -382,7 +392,7 @@ public class HealthFighter : Health {
 
 			if (theBullet.tag != "Asteroid" && theBullet.tag != "Bomb") 
 			{
-				theBullet.SetActive (false);
+				theBullet.SendMessage("HitAndStop");
 			}
 			else if(theBullet.tag == "Bomb")
 			{
@@ -419,9 +429,15 @@ public class HealthFighter : Health {
 				Tools.instance.SpawnExplosion(this.gameObject, pos, true);
 			}
 
-			//5. Flash collider off to reduce repeat hits all at once
+			//5. Flash collider off to reduce repeat hits all at once (delay if enemy)
 			if (!dead)
-				StartCoroutine (FlashOnInvincibility ());
+			{
+				if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+					StartCoroutine (FlashOnInvincibility (2));
+				else
+					StartCoroutine (FlashOnInvincibility (0));
+
+			}
 
 			if(theAttacker.tag == "PlayerFighter")
 			{
@@ -489,7 +505,7 @@ public class HealthFighter : Health {
 			GetComponent<SpriteRenderer>().sprite = startSprite;
 		}
 
-		//TODO: collider seems to be turned off by Sprite Slicer. Must investigate to confirm
+		// collider is turned off by SpriteExploder
 
 		dead = true;
 

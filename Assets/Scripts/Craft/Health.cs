@@ -140,9 +140,13 @@ public class Health : MonoBehaviour {
 	}
 
 
-	protected IEnumerator FlashOnInvincibility()
+	protected IEnumerator FlashOnInvincibility(int frameDelay)
 	{
-		//yield return new WaitForEndOfFrame();
+		while(frameDelay > 0) //a wait for 1 or 2 frames allows basically accurate shots to all hit instead of the 2nd bullet missing
+		{
+			frameDelay --;
+			yield return new WaitForEndOfFrame(); yield return new WaitForEndOfFrame();
+		}
 		temporarilyInvincible = true;
 		yield return new WaitForSeconds (0.25f);
 		temporarilyInvincible = false;

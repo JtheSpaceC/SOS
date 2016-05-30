@@ -28,7 +28,7 @@ public class ShotMover : MonoBehaviour {
 	}
 	
 	
-	public void OkayGo (GameObject theFirer, float projectileDamage, float projectileCritChance, float projectileSpeed)
+	public void OkayGo (GameObject theFirer, int projectileDamage, float projectileCritChance, float projectileSpeed)
 	{
 		myCollider.enabled = true;
 		myRenderer.enabled = true;
@@ -67,7 +67,7 @@ public class ShotMover : MonoBehaviour {
 		}
 
 		shotSpeed = projectileSpeed;
-		shotHit.averageDamage = projectileDamage;
+		shotHit.normalDamage = projectileDamage;
 		shotHit.chanceToCrit = projectileCritChance;
 
 		myAudioSource.Play ();
@@ -91,7 +91,7 @@ public class ShotMover : MonoBehaviour {
 		}
 	}
 
-	void HitAndStop()
+	protected void HitAndStop()
 	{
 		myRigidbody.velocity = Vector2.zero;
 		myCollider.enabled = false;

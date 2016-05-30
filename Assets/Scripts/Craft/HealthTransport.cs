@@ -69,7 +69,7 @@ public class HealthTransport : Health {
 		
 		if (theBullet.tag != "Asteroid" && theBullet.tag != "Bomb") 
 		{
-			theBullet.SetActive (false);
+			theBullet.SendMessage("HitAndStop");
 		}
 		else if(theBullet.tag == "Bomb")
 		{
@@ -99,7 +99,10 @@ public class HealthTransport : Health {
 		}
 		
 		//2. Flah collider off to reduce repeat hits all at once
-		StartCoroutine (FlashOnInvincibility ());
+		if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+			StartCoroutine (FlashOnInvincibility (2));
+		else
+			StartCoroutine (FlashOnInvincibility (0));
 		
 	}//end of YouveBeenHit
 

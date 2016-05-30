@@ -25,7 +25,7 @@ public class WeaponsTurret : TargetableObject {
 	public float fireRate = 0.33f;
 	private float nextFire;
 	public float weaponsRange = 17f;
-	public float shotDamage = 1;
+	public int shotDamage = 1;
 	public float shotCritChance = 0;
 	public float projectileSpeed = 9f;
 	public LayerMask targetsMask;

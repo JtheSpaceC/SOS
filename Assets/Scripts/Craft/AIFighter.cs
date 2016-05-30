@@ -232,7 +232,6 @@ public class AIFighter : FighterFunctions {
 		nextTime = 0;
 		inRetreatState = false;
 		CancelInvoke ("LeaveThemAlone");
-		healthScript.rollSkill = healthScript.normalRollSkill;
 		engineScript.currentMaxVelocityAllowed = engineScript.maxNormalVelocity;
 		engineScript.currentAccelerationRate = engineScript.normalAccelerationRate;
 		shootScript.enabled = true;
@@ -535,7 +534,6 @@ public class AIFighter : FighterFunctions {
 		{
 			shootScript.enabled = true;
 
-			healthScript.rollSkill = healthScript.normalRollSkill * 1.5f;
 			timer = 1;
 			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
 			
@@ -576,7 +574,6 @@ public class AIFighter : FighterFunctions {
 		{
 			shootScript.enabled = true;
 			
-			healthScript.rollSkill = healthScript.normalRollSkill * 1.5f;
 			timer = 1.5f;
 			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
 			

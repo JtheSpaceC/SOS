@@ -33,6 +33,8 @@ public class SpriteHighlighter : MonoBehaviour {
 	public bool playAudioOnExit = false;
 	public UnityEvent myMouseOverEvents;
 	public UnityEvent myMouseExitEvents;
+	public UnityEvent myOnEnableEvents;
+	public UnityEvent myOnDisableEvents;
 
 
 	[Header("Do On Click")]
@@ -69,6 +71,11 @@ public class SpriteHighlighter : MonoBehaviour {
 
 		shaderGUItext = Shader.Find("GUI/Text Shader");
 		shaderSpritesDefault = Shader.Find("Sprites/Default"); // or whatever sprite shader is being used
+	}
+
+	void OnEnable()
+	{
+		myOnEnableEvents.Invoke();
 	}
 
 
@@ -193,11 +200,6 @@ public class SpriteHighlighter : MonoBehaviour {
 		}
 	}
 
-	public void ResetMovingParts()
-	{
-		objectInQuestion.transform.position = startPos;
-	}
-
 	public void WhitenSprite() 
 	{
 		myRenderer.material.shader = shaderGUItext;
@@ -212,6 +214,9 @@ public class SpriteHighlighter : MonoBehaviour {
 
 	void OnDisable()
 	{
+		myOnDisableEvents.Invoke();
+
 		objectInQuestion.localScale = normalScale;
+		objectInQuestion.transform.position = startPos;
 	}
 }

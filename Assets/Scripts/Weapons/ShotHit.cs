@@ -6,8 +6,8 @@ public class ShotHit : MonoBehaviour {
 	public GameObject theFirer;
 
 	private float diceRoll;
-	public float averageDamage = 25f;
-	[HideInInspector] public float defaultAvgDamage;
+	public int normalDamage = 1;
+	[HideInInspector] public int defaultAvgDamage;
 	public float chanceToCrit = 25;
 	[HideInInspector] public float defaultChanceToCrit;
 
@@ -18,7 +18,7 @@ public class ShotHit : MonoBehaviour {
 
 	void Awake()
 	{
-		defaultAvgDamage = averageDamage;
+		defaultAvgDamage = normalDamage;
 		defaultChanceToCrit = chanceToCrit;
 	}
 
@@ -26,19 +26,19 @@ public class ShotHit : MonoBehaviour {
 	{
 		if(other.tag == "Fighter" || other.tag == "PlayerFighter")
 		{
-			other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, averageDamage, chanceToCrit);
+			other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, normalDamage, chanceToCrit);
 		}
 		else if(other.tag == "Turret")
 		{
-			other.GetComponent<HealthTurret>().YouveBeenHit(theFirer, this.gameObject, averageDamage, chanceToCrit);
+			other.GetComponent<HealthTurret>().YouveBeenHit(theFirer, this.gameObject, normalDamage, chanceToCrit);
 		}
 		else if(other.tag == "Transport")
 		{
-			other.GetComponent<HealthTransport>().YouveBeenHit(theFirer, this.gameObject, averageDamage, chanceToCrit);
+			other.GetComponent<HealthTransport>().YouveBeenHit(theFirer, this.gameObject, normalDamage, chanceToCrit);
 		}
 		else if(other.tag == "Asteroid")
 		{
-			other.GetComponent<Asteroid>().YouveBeenHit(averageDamage, this.gameObject);
+			other.GetComponent<Asteroid>().YouveBeenHit(normalDamage, this.gameObject);
 		}
 	}
 
@@ -51,7 +51,7 @@ public class ShotHit : MonoBehaviour {
 
 	void OnDisable()
 	{
-		averageDamage = defaultAvgDamage;
+		normalDamage = defaultAvgDamage;
 		chanceToCrit = defaultChanceToCrit;
 	}
 	

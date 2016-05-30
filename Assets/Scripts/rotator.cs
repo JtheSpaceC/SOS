@@ -3,7 +3,7 @@ using System.Collections;
 
 public class rotator : MonoBehaviour {
 
-	public enum AxisMovement {Z_only, Three_D};
+	public enum AxisMovement {Z_only};
 	public AxisMovement axisMovement;
 
 	public enum myMode {Constant, RandomizedAtStart, BasedOnStellarTime};
@@ -50,22 +50,6 @@ public class rotator : MonoBehaviour {
 				Vector3 rot = new Vector3 (0, 0, z);
 				transform.rotation = Quaternion.Euler (rot);
 			}
-		}
-		else if(axisMovement == AxisMovement.Three_D) //TODO: Tidy this up and let it rotate at 3 different random speeds
-		{
-			if(Mode == myMode.Constant || Mode == myMode.RandomizedAtStart)
-			{
-				z += Time.deltaTime * rotSpeed;
-				Vector3 rot = new Vector3 (z, z, z);
-				transform.rotation = Quaternion.Euler (rot);
-			}
-			else if(Mode == myMode.BasedOnStellarTime)
-			{
-				z += Time.deltaTime * rotSpeed * RTSDirector.instance.gameSpeed;
-				Vector3 rot = new Vector3 (z, z, z);
-				transform.rotation = Quaternion.Euler (rot);
-			}
-		}
-			
+		}			
 	}
 }
