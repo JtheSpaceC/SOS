@@ -27,7 +27,7 @@ public class SpriteAnimator : MonoBehaviour {
 
 
 
-	void Start () 
+	void OnEnable () 
 	{
 		myRenderer = GetComponent<SpriteRenderer> ();
 		originalColour = myRenderer.color;
@@ -39,6 +39,11 @@ public class SpriteAnimator : MonoBehaviour {
 		}
 
 		timePerColour = colourCycleTime/myColors.Length;
+	}
+
+	void OnDisable()
+	{
+		StopAnimatingSpriteSwap();
 	}
 
 	void Update()
@@ -106,5 +111,6 @@ public class SpriteAnimator : MonoBehaviour {
 
 		myRenderer.color = Color.Lerp(originalColour, newColour, newColourBalance);
 	}
+
 
 }//Mono

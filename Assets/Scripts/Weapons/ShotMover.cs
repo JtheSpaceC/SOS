@@ -108,6 +108,8 @@ public class ShotMover : MonoBehaviour {
 	void OnDisable()
 	{
 		shotSpeed = defaultShotSpeed;
+		transform.rotation = Quaternion.Euler(Vector3.zero);
+		CancelInvoke("SetInactive");
 	}
 	
 	/*
