@@ -5,6 +5,7 @@ using System.Collections;
 public class SpriteAnimator : MonoBehaviour {
 
 	public bool startImmediately = true;
+	public bool disableAfterOneCycle = false;
 
 	[Header ("For Sprite Swap")]
 	public Sprite[] frames;
@@ -56,6 +57,8 @@ public class SpriteAnimator : MonoBehaviour {
 
 		if (currentFrame >= frames.Length)
 		{
+			if(disableAfterOneCycle)
+				this.gameObject.SetActive(false);
 			currentFrame = 0;
 		}
 

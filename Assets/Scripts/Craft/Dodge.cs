@@ -165,7 +165,7 @@ public class Dodge : MonoBehaviour
 		animator.SetTrigger ("Dodging");
 
 		if(!animator.enabled)
-			StartCoroutine("RollAnimation");
+			StartCoroutine("RollAnimation"); //used to roll a model with code instead of using the animator
 
 
 		if(!playerControlled)
