@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
+using UnityEngine.Events;
 
 public class SpriteAnimator : MonoBehaviour {
 
@@ -25,6 +24,9 @@ public class SpriteAnimator : MonoBehaviour {
 	float colourReachedTime;
 	int currentColourInt;
 
+	public UnityEvent myOnEnableEvents;
+	public UnityEvent myOnDisableEvents;
+
 
 
 	void OnEnable () 
@@ -39,10 +41,13 @@ public class SpriteAnimator : MonoBehaviour {
 		}
 
 		timePerColour = colourCycleTime/myColors.Length;
+
+		myOnEnableEvents.Invoke();
 	}
 
 	void OnDisable()
 	{
+		myOnDisableEvents.Invoke();
 		StopAnimatingSpriteSwap();
 	}
 
