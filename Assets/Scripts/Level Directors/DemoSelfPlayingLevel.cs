@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public GameObject levelCamera;
+	float cameraZPos;
 	public GameObject target;
 	public bool changeTargetsAtIntervals = true;
 	public Text followCamText;
@@ -58,6 +59,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			obj.SetActive(false);
 
 		radarCamera.transform.SetParent(Camera.main.transform);
+
+		cameraZPos = levelCamera.transform.position.z;
+
+		Camera.main.GetComponent<ClickToPlay>().escGivesQuitMenu = false;
 	}
 
 
@@ -102,7 +107,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	void ChangeFlashyText()
 	{
-		pressStartText.text = pressStartText.text == "PRESS START" ? "DEMO MODE" : "PRESS START";
+		if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+			pressStartText.text = pressStartText.text == "PRESS START" ? "DEMO MODE" : "PRESS START";
+		else if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+			pressStartText.text = pressStartText.text == "PRESS 'ESC'" ? "DEMO MODE" : "PRESS 'ESC'";		
 	}
 	void LoadMainLevel()
 	{
@@ -232,7 +240,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			return;
 
 		Vector3 pos = target.transform.position;
-		pos.z = -50;
+		pos.z = cameraZPos;
 		levelCamera.transform.position = Vector3.SmoothDamp (levelCamera.transform.position, pos, ref velocity, 0.3f);
 	}
 
