@@ -103,7 +103,7 @@ public class Dodge : MonoBehaviour
 	}
 	
 	void Update ()
-	{
+	{	
 		if(playerControlled)
 		{
 			if(rollCooldown <= 0)

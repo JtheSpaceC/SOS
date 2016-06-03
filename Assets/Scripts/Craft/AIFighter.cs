@@ -112,6 +112,7 @@ public class AIFighter : FighterFunctions {
 		{
 			healthScript.avatarAwarenessBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("Awareness Panel");
 			healthScript.avatarHealthBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("HP Panel");
+			healthScript.avatarFlashImage = myCharacterAvatarScript.avatarOutput.transform.FindChild("Flash Image").GetComponent<Image>();
 			healthScript.SetUpAvatarBars();
 		}
 	}

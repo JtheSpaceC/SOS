@@ -106,8 +106,7 @@ public class Character : MonoBehaviour {
 		avatarOutput.transform.SetParent (Tools.instance.avatarsPanelUI.transform);
 		avatarOutput.GetComponent<RawImage> ().texture = myRenderTexture;
 		avatarOutput.transform.localScale = Vector3.one;
-		avatarOutput.GetComponentInChildren<Image>().sprite 
-		= appearances.unitNumbers[mySquadUnitNumber];
+		avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
 	}
 
 	#if UNITY_EDITOR

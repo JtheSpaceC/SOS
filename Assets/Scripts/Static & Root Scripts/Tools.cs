@@ -49,6 +49,9 @@ public class Tools: MonoBehaviour
 	[Header("Waypoint Prefabs")]
 	public GameObject waypointPrefab;
 
+	public Color avatarAwarenessFlashColour;
+	public Color avatarHitFlashColour;
+
 
 	void Awake()
 	{
@@ -266,6 +269,18 @@ public class Tools: MonoBehaviour
 		while(blackoutPanel.color != Color.clear)
 		{
 			blackoutPanel.color = Color.Lerp(whiteOutColour, Color.clear, (Time.time - flashStartTime)/flashDuration);
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
+	public IEnumerator ImageFlashToClear(Image flashImage, Color flashColour, float flashTime)
+	{
+		flashImage.color = flashColour;
+		float startTime = Time.time;
+
+		while(flashImage.color != Color.clear)
+		{
+			flashImage.color = Color.Lerp(flashColour, Color.clear, (Time.time - startTime)/flashTime);
 			yield return new WaitForEndOfFrame();
 		}
 	}

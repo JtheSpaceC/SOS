@@ -36,6 +36,7 @@ public class HealthFighter : Health {
 
 	[HideInInspector] public Transform avatarAwarenessBars;
 	[HideInInspector] public Transform avatarHealthBars;
+	[HideInInspector] public Image avatarFlashImage;
 	bool updateAvatarBars = false;
 
 
@@ -315,7 +316,12 @@ public class HealthFighter : Health {
 						if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
 							dodgeScript.Roll(2);
 						else
-							dodgeScript.Roll(0);						
+						{
+							dodgeScript.Roll(0);
+
+							if(updateAvatarBars)
+							StartCoroutine(Tools.instance.ImageFlashToClear(avatarFlashImage, Tools.instance.avatarAwarenessFlashColour, 1f));
+						}
 						return;
 					}
 				}
@@ -348,7 +354,12 @@ public class HealthFighter : Health {
 							if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
 								dodgeScript.Roll(2);
 							else
-								dodgeScript.Roll(0);						
+							{
+								dodgeScript.Roll(0);
+
+								if(updateAvatarBars)
+									StartCoroutine(Tools.instance.ImageFlashToClear(avatarFlashImage, Tools.instance.avatarAwarenessFlashColour, 1f));
+							}						
 
 							if(awarenessRechargeTime > 0)
 							{
@@ -367,7 +378,12 @@ public class HealthFighter : Health {
 					if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
 						dodgeScript.Roll(2);
 					else
+					{
 						dodgeScript.Roll(0);
+
+						if(updateAvatarBars)
+							StartCoroutine(Tools.instance.ImageFlashToClear(avatarFlashImage, Tools.instance.avatarAwarenessFlashColour, 1f));
+					}
 
 					if(awarenessRechargeTime > 0)
 					{
@@ -402,11 +418,14 @@ public class HealthFighter : Health {
 			//this returns at start of function if this ship doesn't display bars (i.e. if updateAvatarBars == false)
 			UpdateAvatarHealthBars (); 
 
-			//restore a mana if not dead
+			//restore a mana if not dead and Snap Focus isn't zero (which it often is for low level enemies)
 			if(health > 0 && snapFocusAmount > 0)
 			{
 				awareness += snapFocusAmount;
 				UpdateAvatarAwarenessBars();
+
+				if(updateAvatarBars)
+					StartCoroutine(Tools.instance.ImageFlashToClear(avatarFlashImage, Tools.instance.avatarHitFlashColour, 1f));
 			}
 
 			if(health <= 0 && !dead)
