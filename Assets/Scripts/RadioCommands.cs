@@ -47,14 +47,17 @@ public class RadioCommands : MonoBehaviour {
 	public Image helperImage2;
 	public Image helperImage3;
 	public Image helperImage4;
+	public Image helperImage5;
 	public Sprite helperImageKeyboard1;
 	public Sprite helperImageKeyboard2;
 	public Sprite helperImageKeyboard3;
 	public Sprite helperImageKeyboard4;
+	public Sprite helperImageKeyboard5;
 	public Sprite helperImageGamepad1;
 	public Sprite helperImageGamepad2;
 	public Sprite helperImageGamepad3;
 	public Sprite helperImageGamepad4;
+	public Sprite helperImageGamepad5;
 	Color helperImageStartColour;
 	string channelTextString;
 
@@ -488,10 +491,12 @@ public class RadioCommands : MonoBehaviour {
 			helperImage2.sprite = helperImageGamepad2;
 			helperImage3.sprite = helperImageGamepad3;
 			helperImage4.sprite = helperImageGamepad4;
+			helperImage5.sprite = helperImageGamepad5;
 			helperImage1.color = Color.white;
 			helperImage2.color = Color.white;
 			helperImage3.color = Color.white;
 			helperImage4.color = Color.white;
+			helperImage5.color = Color.white;
 		}
 		else if(inputMethod == "keyboard")
 		{
@@ -499,10 +504,12 @@ public class RadioCommands : MonoBehaviour {
 			helperImage2.sprite = helperImageKeyboard2;
 			helperImage3.sprite = helperImageKeyboard3;
 			helperImage4.sprite = helperImageKeyboard4;
+			helperImage5.sprite = helperImageKeyboard5;
 			helperImage1.color = helperImageStartColour;
 			helperImage2.color = helperImageStartColour;
 			helperImage3.color = helperImageStartColour;
 			helperImage4.color = helperImageStartColour;
+			helperImage5.color = helperImageStartColour;
 		}
 		else 
 			Debug.LogError("Wrong String for Radio Commands Switching Helper Buttons");

@@ -282,8 +282,6 @@ public class HealthFighter : Health {
 
 			if(theAttacker != null && StaticTools.IsInLayerMask(theAttacker, friendlyFire))
 			{
-				print(theAttacker);
-
 				diceRoll = Random.Range(0, 101);
 				if(diceRoll > 10)
 				{

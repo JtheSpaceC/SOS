@@ -41,7 +41,8 @@ public class AIFighter : FighterFunctions {
 	public Vector2 patrolPoint;
 	public Vector2 guardPoint;
 	public bool movingGuardPoint = false;
-	public float guardDistance = 20;
+	public float guardDistance = 20; //when Patrolling, how close an enemy has to get to break up the patrol
+	public float coveringDistance = 15; //how close to stay to leader when Covering them
 	public float mySensorRadius = 45;
 	public LayerMask enemyTargets;
 	[Tooltip("Any layers that could do this fighter harm. Fighter will stay away if retreating.")] 
@@ -466,7 +467,7 @@ public class AIFighter : FighterFunctions {
 				else
 					targetCheck = myCommander.ClosestTarget(flightLeader.GetComponent<AIFighter>().myAttackers, transform.position);
 
-				if(targetCheck != null)
+				if(targetCheck != null) //if someone's attacking my Leader
 				{
 					if(!CheckTargetIsLegit(targetCheck) || CheckTargetIsRetreating(targetCheck))
 					{
@@ -474,15 +475,15 @@ public class AIFighter : FighterFunctions {
 						RemoveBadTargetFromLeadersAttackers(flightLeader, targetCheck);
 						return;
 					}
-					if(Vector2.Distance(flightLeader.transform.position, targetCheck.transform.position) < guardDistance)
+					if(Vector2.Distance(flightLeader.transform.position, targetCheck.transform.position) < coveringDistance)
 					{
 						target = targetCheck;
 						target.SendMessage("AddSomeoneAttackingMe", this.gameObject);
 					}
 				}
-				else //targetCheck is null
+				else // if targetCheck is null
 				{
-					GameObject localTarget = CheckLocaleForTargets(transform.position, guardDistance, enemyTargets);
+					GameObject localTarget = CheckLocaleForTargets(transform.position, coveringDistance, enemyTargets);
 					if(localTarget != null)
 					{
 						if(!CheckTargetIsLegit(localTarget))
