@@ -45,6 +45,18 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 	}
 
+	void OnEnable()
+	{
+		shotSpawn1.gameObject.SetActive(true);
+		shotSpawn2.gameObject.SetActive(true);
+	}
+
+	void OnDisable()
+	{
+		shotSpawn1.gameObject.SetActive(false);
+		shotSpawn2.gameObject.SetActive(false);
+	}
+
 	void Start()
 	{
 		ammo = Mathf.Clamp(ammo, 0, maxAmmo);

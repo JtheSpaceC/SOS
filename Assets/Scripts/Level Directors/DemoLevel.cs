@@ -12,6 +12,7 @@ public class DemoLevel : MonoBehaviour {
 	AITransport AITrans;
 	Spawner spawnerScript;
 	AICommander enemyCommander;
+	WeaponsPrimaryFighter playerWeapons;
 
 	public AIFighter mate2AIScript;
 	public AIFighter mate3AIScript;
@@ -99,7 +100,8 @@ public class DemoLevel : MonoBehaviour {
 
 		TogglePlayerUI();
 		player = GameObject.FindGameObjectWithTag ("PlayerFighter");
-		player.GetComponentInChildren<WeaponsPrimaryFighter> ().allowedToFire = false;
+		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
+		playerWeapons.allowedToFire = false;
 
 		playerHealth = player.GetComponent<HealthFighter> ();
 
@@ -186,7 +188,7 @@ public class DemoLevel : MonoBehaviour {
 		instructionsPanel.SetActive (false);
 		Time.timeScale = 1;
 		ClickToPlay.instance.paused = false;
-		player.GetComponentInChildren<WeaponsPrimaryFighter> ().InvokeAllowedToFire ();
+		playerWeapons.InvokeAllowedToFire ();
 		objectiveText.enabled = true;
 
 		playerUICanvas.sortingOrder = 0;
@@ -273,11 +275,11 @@ public class DemoLevel : MonoBehaviour {
 
 			return;
 		}
-
+			
 		//for HINTS
 		if (!playerKnowsHowToMove && Input.GetAxis ("Accelerate") != 0)
 			playerKnowsHowToMove = true;
-		if (!playerKnowsHowToShoot && player.GetComponentInChildren<WeaponsPrimaryFighter> ().allowedToFire && player.GetComponentInChildren<WeaponsPrimaryFighter> ().enabled && Input.GetButtonDown ("FirePrimary"))
+		if (!playerKnowsHowToShoot && playerWeapons.enabled && playerWeapons.allowedToFire &&  Input.GetButtonDown ("FirePrimary"))
 			playerKnowsHowToShoot = true;
 		if (!playerKnowsHowToDodge && Input.GetButton ("Dodge"))
 			playerKnowsHowToDodge = true;
@@ -330,8 +332,7 @@ public class DemoLevel : MonoBehaviour {
 					Subtitles.instance.CoolDownHintNoise ();
 					Subtitles.instance.CoolDownHintHighlight ();
 				}
-				else
-					if (!missionComplete && !playerKnowsMenu && timer > 30 && Subtitles.instance.hintsPanel.color == Color.clear) {
+				/*else if (!missionComplete && !playerKnowsMenu && timer > 30 && Subtitles.instance.hintsPanel.color == Color.clear) {
 						if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 							Subtitles.instance.PostHint (new string[] {
 								"View controls and more on the START MENU. Press ESC"
@@ -343,7 +344,7 @@ public class DemoLevel : MonoBehaviour {
 								});
 						Subtitles.instance.CoolDownHintNoise ();
 						Subtitles.instance.CoolDownHintHighlight ();
-					}
+					}*/
 					/*else if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge && !playerKnowsHowToAfterburn && timer > 27)
 			{
 				if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)

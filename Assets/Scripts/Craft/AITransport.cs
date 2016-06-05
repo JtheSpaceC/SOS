@@ -426,7 +426,6 @@ public class AITransport : SupportShipFunctions {
 				fighter1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 				fighter1.GetComponent<Rigidbody2D> ().isKinematic = true;
 				fighter1.transform.rotation = carry1.transform.rotation;
-				//fighter1.GetComponent<HealthFighter>().trailRenderer.enabled = false; //not using anymore
 				fighter1.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
 				SetSortingLayersBeneathTheTransport (fighter1);
 			}
@@ -441,7 +440,6 @@ public class AITransport : SupportShipFunctions {
 				fighter2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 				fighter2.GetComponent<Rigidbody2D> ().isKinematic = true;
 				fighter2.transform.rotation = carry2.transform.rotation;
-				//fighter2.GetComponent<HealthFighter>().trailRenderer.enabled = false;
 				fighter2.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
 				SetSortingLayersBeneathTheTransport (fighter2);
 			}
@@ -456,7 +454,6 @@ public class AITransport : SupportShipFunctions {
 				fighter3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 				fighter3.GetComponent<Rigidbody2D> ().isKinematic = true;
 				fighter3.transform.rotation = carry3.transform.rotation;
-				//fighter3.GetComponent<HealthFighter>().trailRenderer.enabled = false;
 				fighter3.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
 				SetSortingLayersBeneathTheTransport (fighter3);
 			}
@@ -491,7 +488,7 @@ public class AITransport : SupportShipFunctions {
 				}
 			}
 
-			camOffset = new Vector3(0, 0, -50);
+			camOffset = new Vector3(0, 0, Camera.main.transform.position.z);
 			warpDrive.warpBubble.enabled = true;
 
 			engineAudioSource.clip = warpLoop;
