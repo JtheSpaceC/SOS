@@ -478,6 +478,8 @@ public class HealthFighter : Health {
 		for (int j = 0; j < maxHealth; j++) 
 		{
 			avatarHealthBars.GetChild (j).gameObject.SetActive (true);
+			avatarHealthBars.GetChild (j).GetComponent<Image>().color = Color.Lerp(Color.red, Color.green, (float)health/maxHealth);
+
 			if (j < maxHealth - health) 
 			{
 				Color inactiveColour = avatarHealthBars.GetChild (j).GetComponent<Image> ().color;
@@ -514,7 +516,44 @@ public class HealthFighter : Health {
 		}
 	}
 
-	void Death()
+	public void RetreatAndRetrieval()
+	{
+		if(updateAvatarBars)
+		{
+			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
+			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().text = "R.T.B.";
+			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isRTB", true);
+			myAIScript.myCharacterAvatarScript.gameObject.SetActive(false);
+		}
+		gameObject.SendMessage("HUDPointerOff");
+
+		if(myAIScript.enemyCommander.knownEnemyFighters.Contains(gameObject))
+		{
+			myAIScript.enemyCommander.knownEnemyFighters.Remove(gameObject);
+		}
+		myAIScript.enemyCommander.RemoveFromMyAttackersWhenDead(gameObject); //removes this from whoever it was attacking
+		myAIScript.myCommander.myFighters.Remove(gameObject);
+
+		foreach(GameObject go in myAIScript.myAttackers)
+		{
+			//this should never return null ref because myAttackers is adjusted at death time of the attacker, but it does sometimes, hence
+			//don't require receiver
+			go.SendMessage("TargetDestroyed", SendMessageOptions.DontRequireReceiver);
+		}
+
+		if(myAIScript.whichSide == TargetableObject.WhichSide.Ally)
+			Subtitles.instance.PostSubtitle(new string[]{this.name + " has Returned To Base."});
+
+		try{
+			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(gameObject);
+			myAIScript.flightLeadSquadronScript.retrievedWingmen.Add(gameObject);
+			myAIScript.flightLeadSquadronScript.CheckActiveMateStatus();
+		}catch{} 
+
+		Destroy(gameObject);
+	}
+
+	public void Death()
 	{
 		//this first part fixes the Sprite Exploder issues that comes with dying near the end of roll animation
 		if(GetComponent<SpriteRenderer>().sprite == null)

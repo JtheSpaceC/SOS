@@ -101,7 +101,7 @@ public class CameraTactical : MonoBehaviour {
 		}
 
 		if(tacticalCamera.enabled)
-		{		
+		{	
 			hit = Physics2D.Raycast(tacticalCursor.transform.position, Vector2.zero, 100, raycastMask);
 			
 			if (hit.collider != null && hit.collider != lastHit) 

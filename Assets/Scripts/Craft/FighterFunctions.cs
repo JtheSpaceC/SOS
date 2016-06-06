@@ -96,10 +96,6 @@ public class FighterFunctions : TargetableObject {
 
 	protected Vector2 ChooseEvadePos(Rigidbody2D myRigidbody, LayerMask mask, AICommander myCommanderScript)
 	{
-		/*GameObject closestEnemy = myCommanderScript.ClosestTarget (myCommanderScript.knownEnemyFighters, transform.position);
-		Vector2 dir = ((Vector2)transform.position + myRigidbody.velocity) - 
-			((Vector2)closestEnemy.transform.position + closestEnemy.GetComponent<Rigidbody2D>().velocity);
-*/
 		Vector3 forward = myRigidbody.velocity.magnitude == 0? transform.up : (Vector3)myRigidbody.velocity.normalized;
 		Vector3 targetDir = Quaternion.AngleAxis(90*(Mathf.Pow(-1, Random.Range(1,3))) , Vector3.forward)*forward;
 		return (Vector2)(transform.position + (targetDir * 2000));
@@ -114,8 +110,7 @@ public class FighterFunctions : TargetableObject {
 		{
 			Vector2 dir = ((Vector2)transform.position - enemyCommanderScript.AverageForcesPosition()).normalized*20;
 			return  ((Vector2)transform.position + myRigidbody.velocity) + dir;
-		}
-		
+		}		
 		else
 		{
 			foreach(Collider2D col in enemies)

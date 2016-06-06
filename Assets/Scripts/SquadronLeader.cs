@@ -13,6 +13,7 @@ public class SquadronLeader : MonoBehaviour {
 	[Tooltip("Put wingmen here to handle the group setup. NB: put in order 0 - 11")]
 	public List<GameObject> activeWingmen;
 	public List<GameObject> deadWingmen;
+	public List<GameObject> retrievedWingmen;
 	public List<GameObject> EVWingmen;
 	public List<GameObject> capturedWingmen;
 	

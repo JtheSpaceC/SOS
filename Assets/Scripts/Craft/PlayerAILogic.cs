@@ -36,6 +36,9 @@ public class PlayerAILogic : FighterFunctions {
 		shootScript = GetComponentInChildren<WeaponsPrimaryFighter> ();
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
 		dodgeScript = GetComponentInChildren<Dodge>();
+
+		//Friendly Commander script automatically adds player to known craft
+		enemyCommander.knownEnemyFighters.Add (this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
 	}
 
 

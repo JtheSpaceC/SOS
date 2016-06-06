@@ -138,6 +138,7 @@ public class EnginesFighter : MonoBehaviour {
 		else if(target.tag == "Debris")
 		{
 			GetComponent<AIFighter>().target = null;
+			targetMove = Vector2.zero;
 		}
 		else //like for formations
 		{
@@ -157,6 +158,8 @@ public class EnginesFighter : MonoBehaviour {
 	{
 		if (ClickToPlay.instance.paused)
 			return;
+
+		targetMove = waypoint;
 		
 		GetMovementSolution (null, waypoint, false, stopAtWaypoint); //this sets a newMovementPosition vector
 

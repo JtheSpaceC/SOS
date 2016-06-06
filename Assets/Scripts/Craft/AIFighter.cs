@@ -27,6 +27,8 @@ public class AIFighter : FighterFunctions {
 	bool switchingStates = true;
 
 	public GameObject target;
+	GameObject targetCheck;
+	GameObject localTarget;
 	public GameObject formerTarget;
 	public GameObject flightLeader;
 	[HideInInspector] public SquadronLeader flightLeadSquadronScript;
@@ -53,8 +55,8 @@ public class AIFighter : FighterFunctions {
 	float timer = 0;
 	float nextTime = 0;
 
-	//[Tooltip("If health is below this proportion of maxHealth, they'll evade & retreat. Is randomised away from this base number at Start")]
-	//public float cowardice = 50;
+	[Tooltip("If health is below this proportion of maxHealth, they'll evade & retreat. Is randomised away from this base number at Start")]
+	public float cowardice = 30;
 	public bool inRetreatState = false;
 
 	public GameObject HUDPointer;
@@ -81,6 +83,7 @@ public class AIFighter : FighterFunctions {
 			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
 		}
 		myCommander.myFighters.Add (this.gameObject);
+		enemyCommander.knownEnemyFighters.Add (this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
 
 		normalStates = new StateMachine[]{StateMachine.Patroling};
 		combatStates = new StateMachine[]{StateMachine.Dogfight};
@@ -99,7 +102,10 @@ public class AIFighter : FighterFunctions {
 
 	void Start () 
 	{
-		//cowardice = Mathf.Clamp(cowardice *= Random.Range (0.25f, 1.5f), 0, 99); //TODO: based on character stats for PMC?
+		if(whichSide == WhichSide.Enemy)
+			cowardice = Mathf.Clamp(cowardice *= Random.Range (0.25f, 1.5f), 0, 99); //TODO: based on character stats for PMC?
+		else
+			cowardice = 100/healthScript.maxHealth;
 
 		StartCoroutine(SetUpAvatarBars());
 	}
@@ -139,9 +145,10 @@ public class AIFighter : FighterFunctions {
 	void Update () 
 	{	
 		#region To Manage Retreating	
-		/*
+
 		//if we get hit, go evasive if health is lower than cowardice rating
-		if(currentState != StateMachine.Docking && !inRetreatState && !healthScript.dead && (healthScript.health/ healthScript.maxHealth * 100) <= cowardice)
+		if(currentState != StateMachine.Docking && !inRetreatState && !healthScript.dead &&
+			((float)healthScript.health/healthScript.maxHealth * 100) <= cowardice)
 		{
 			if(healthScript.lastDamageWasFromAsteroid)
 			{ 
@@ -150,12 +157,13 @@ public class AIFighter : FighterFunctions {
 			else
 			{
 				ChangeToNewState(retreatStates, new float[]{2,1});
+				healthScript.awareness = healthScript.maxAwareness *3/2;
 				inRetreatState = true;
 
 				if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")
 				{
 					Subtitles.instance.PostSubtitle(new string[]{"This is " +this.name + ". I'm hit! Breaking off!", 
-						"This is " +this.name + ". I could use some cover!"});
+						"This is " +this.name + ". I've taken critical damage! Bugging out!"});
 					HUDPointerOn(4);
 					_battleEventManager.instance.CallWingmanInTrouble();
 
@@ -164,27 +172,26 @@ public class AIFighter : FighterFunctions {
 			}
 		}
 		//if we were retreating and health goes up, return to battle
-		else if(inRetreatState && orders != Orders.FullRetreat && (healthScript.health * 100 / healthScript.maxHealth) > cowardice
-		        &&(healthScript.health  > healthScript.maxHealth * 3/4))
-		{
-			//return to last state (and re-establish initial parameters for it)
-			switchingStates = true;
-			inRetreatState = false;
-			healthScript.rollSkill = healthScript.normalRollSkill;
-			currentState = formerState;
-			target = (CheckTargetIsLegit(formerTarget) == true)? formerTarget: null; //check if old target is still alive
-
-			if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")
-			{
-				Subtitles.instance.PostSubtitle(new string[]{"This is " +this.name + ", returning to the fight!",
-				this.name + " back on-station!",
-				"This is " + this.name + ", damage under control. I'm good to go!"});
-				HUDPointerOn(4);
-				_battleEventManager.instance.CallWingmanBack();
-
-				myCharacterAvatarScript.StartCoroutine("Speaking");
-			}
-		}*/
+//		else if(inRetreatState && orders != Orders.FullRetreat && (healthScript.health * 100 / healthScript.maxHealth) > cowardice
+//		        &&(healthScript.health  > healthScript.maxHealth * 3/4))
+//		{
+//			//return to last state (and re-establish initial parameters for it)
+//			switchingStates = true;
+//			inRetreatState = false;
+//			currentState = formerState;
+//			target = (CheckTargetIsLegit(formerTarget) == true)? formerTarget: null; //check if old target is still alive
+//
+//			if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")
+//			{
+//				Subtitles.instance.PostSubtitle(new string[]{"This is " +this.name + ", returning to the fight!",
+//				this.name + " back on-station!",
+//				"This is " + this.name + ", damage under control. I'm good to go!"});
+//				HUDPointerOn(4);
+//				_battleEventManager.instance.CallWingmanBack();
+//
+//				myCharacterAvatarScript.StartCoroutine("Speaking");
+//			}
+//		}
 		#endregion
 
 		if(currentState == StateMachine.Dogfight)
@@ -351,7 +358,8 @@ public class AIFighter : FighterFunctions {
 		if(timer >= 1)
 		{
 			timer = 0;
-			GameObject targetCheck = CheckLocaleForTargets(transform.position, mySensorRadius, enemyTargets);
+			targetCheck = myCommander.ClosestTarget(myCommander.knownEnemyFighters, transform.position);
+
 			if(targetCheck != null)
 			{
 				CheckAndAddTargetToCommanderList(myCommander, targetCheck);
@@ -483,7 +491,7 @@ public class AIFighter : FighterFunctions {
 				}
 				else // if targetCheck is null
 				{
-					GameObject localTarget = CheckLocaleForTargets(transform.position, coveringDistance, enemyTargets);
+					localTarget = CheckLocaleForTargets(transform.position, coveringDistance, enemyTargets);
 					if(localTarget != null)
 					{
 						if(!CheckTargetIsLegit(localTarget))
@@ -550,7 +558,8 @@ public class AIFighter : FighterFunctions {
 
 			if(CheckLocaleForTargets(transform.position, mySensorRadius, dangerSources) == null)
 			{
-				evadePosition = PatrolPoint(transform.position, guardDistance);
+				ChangeToNewState(new StateMachine[]{StateMachine.Retreat}, new float[] {1});
+				return;
 			}
 			else
 				evadePosition = ChooseEvadePos(myRigidbody, dangerSources, myCommander);
@@ -588,12 +597,10 @@ public class AIFighter : FighterFunctions {
 			timer = 0;
 			nextTime = Random.Range (0.5f, 1.5f);
 
-			if(CheckLocaleForTargets(transform.position, mySensorRadius, dangerSources) == null)
-			{
-				evadePosition = PatrolPoint(transform.position, guardDistance);
-			}
-			else
-				evadePosition = ChooseRetreatPosition(myRigidbody, potshotAtEnemiesMask, enemyCommander);
+			evadePosition = ChooseRetreatPosition(myRigidbody, potshotAtEnemiesMask, enemyCommander);
+
+			if(Vector2.Distance(transform.position, Camera.main.transform.position) > 250)
+				healthScript.RetreatAndRetrieval();
 		}
 
 		engineScript.LookAtTarget (evadePosition);
