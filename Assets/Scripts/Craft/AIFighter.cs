@@ -72,18 +72,10 @@ public class AIFighter : FighterFunctions {
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
 
-		if (whichSide == WhichSide.Ally)
-		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-		}
-		else if (whichSide == WhichSide.Enemy)
-		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
-		}
+		SetUpAICommander();
+
 		myCommander.myFighters.Add (this.gameObject);
-		enemyCommander.knownEnemyFighters.Add (this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
+		enemyCommander.AddEnemyFighters(this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
 
 		normalStates = new StateMachine[]{StateMachine.Patroling};
 		combatStates = new StateMachine[]{StateMachine.Dogfight};
@@ -504,7 +496,6 @@ public class AIFighter : FighterFunctions {
 							return;
 						}
 						CheckAndAddTargetToCommanderList(myCommander, localTarget);
-
 
 						target = localTarget;
 						target.SendMessage("AddSomeoneAttackingMe", this.gameObject);

@@ -65,6 +65,8 @@ public class WeaponsTurret : TargetableObject {
 			manualCrosshairs = GameObject.FindGameObjectWithTag("CrosshairCursor");
 			manualCrosshairs.GetComponent<SpriteRenderer>().enabled = true;
 		}		
+
+		SetUpAICommander();
 	}
 	
 		

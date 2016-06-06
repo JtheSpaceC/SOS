@@ -53,7 +53,6 @@ public class InputManager : MonoBehaviour {
 				restartTimer = 0;
 
 			restartTimer += Time.fixedDeltaTime;
-			print(restartTimer);
 
 			if(restartTimer >= restartTime)
 			{

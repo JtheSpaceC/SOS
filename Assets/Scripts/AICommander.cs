@@ -108,6 +108,19 @@ public class AICommander : MonoBehaviour {
 		}
 	}
 
+	public void AddEnemyFighters(GameObject fighter)
+	{
+		if(!knownEnemyFighters.Contains(fighter))
+		{
+			if(whichSide == WhichSide.Ally && knownEnemyFighters.Count == 0)
+			{
+				_battleEventManager.instance.firstClashCalled = false;
+				_battleEventManager.instance.CallFirstWingmanClash();
+			}			
+			knownEnemyFighters.Add(fighter);
+		}
+	}
+
 	public void CallFullRetreat()
 	{
 		foreach(GameObject fighter in myFighters)

@@ -33,7 +33,8 @@ public class TargetableObject : MonoBehaviour {
 
 	
 
-	void Start () {	
+	protected void SetUpAICommander () {
+
 		if (whichSide == WhichSide.Ally)
 		{
 			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
@@ -137,7 +138,10 @@ public class TargetableObject : MonoBehaviour {
 	protected void CheckAndAddTargetToCommanderList(AICommander myCommander, GameObject target)
 	{
 		if (whichSide == WhichSide.Ally && myCommander.knownEnemyFighters.Count == 0)
+		{
 			_battleEventManager.instance.firstClashCalled = false;
+			Debug.Log("Is This Used Any more?"); //delete?
+		}
 
 		if((target.tag == "Fighter" ||  target.tag == "PlayerFighter")
 			&& !myCommander.knownEnemyFighters.Contains(target))
@@ -148,7 +152,10 @@ public class TargetableObject : MonoBehaviour {
 				return;
 			}
 			
+			//TODO: Remove once I'm sure I haven't seen this in a while - Kevin 6/6/16
+			Debug.LogError("This Should Never Be Called Anymore");
 			myCommander.knownEnemyFighters.Add(target);
+
 			if(whichSide == WhichSide.Ally)
 				_battleEventManager.instance.CallFirstWingmanClash();
 		}
