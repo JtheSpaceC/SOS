@@ -25,6 +25,8 @@ public class _logoScene : MonoBehaviour {
 		newColour = blackoutImage.color;
 
 		StartCoroutine(CommenceFadeIn());
+
+		Application.runInBackground = true;
 	}
 
 	void Update () 

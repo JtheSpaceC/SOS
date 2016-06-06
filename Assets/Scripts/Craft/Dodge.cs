@@ -15,17 +15,18 @@ public class Dodge : MonoBehaviour
 	public bool playerControlled = false;
 	public static bool playerIsDodging = false;
 
-	public bool powerupMechanicEnabled = true;
+	[Tooltip("Set true unless you want player to have no auto-dodge")] public bool awarenessMechanicEnabled = true;
+	[Tooltip("Set true if you want the one hit kills to happen on full mana")] public bool oneHitKillsMechanicEnabled = false;
 	[HideInInspector] public bool playerActivatedManualDodge = false;
 	[HideInInspector] public Image dodgeCooldownImage;
 	[HideInInspector] public Text dodgeCooldownImageText;
 
-	public bool dodging = false;
+	[HideInInspector] public bool dodging = false;
 	public float rollDuration = 1.11f;
 	float rollTime;
 	float rollCooldown = 0f; 
 	public float cooldownAmount = 1.11f; 
-	public bool canDodge = true;
+	[HideInInspector] public bool canDodge = true;
 	[HideInInspector] public bool dodgeCoroutineStarted;
 
 	private Animator animator;
@@ -73,7 +74,7 @@ public class Dodge : MonoBehaviour
 			awarenessMeterAudioSource = healthScript.awarenessSlider.GetComponent<AudioSource>();
 			//powerupReadyImage = GameObject.Find("Powerup Image").GetComponent<Image>();
 
-			if(powerupMechanicEnabled)
+			if(awarenessMechanicEnabled)
 			{
 				healthScript.awarenessSlider.value = (float)healthScript.awareness/healthScript.maxAwareness * 100/1;
 
@@ -87,10 +88,14 @@ public class Dodge : MonoBehaviour
 				else
 				{*/
 					//powerupReadyImage.transform.localScale = Vector3.one;
-				if(healthScript.awareness >= healthScript.maxAwareness)
+
+				if(oneHitKillsMechanicEnabled)
 				{
-					sliderFillImage.color = Color.yellow;
-					_battleEventManager.instance.playerHasOneHitKills = true;
+					if(healthScript.awareness >= healthScript.maxAwareness)
+					{
+						sliderFillImage.color = Color.yellow;
+						_battleEventManager.instance.playerHasOneHitKills = true;
+					}
 				}
 				//}
 			}
@@ -264,7 +269,7 @@ public class Dodge : MonoBehaviour
 	
 	public IEnumerator DumpPlayerAwarenessMana(int howMany)
 	{
-		if(!powerupMechanicEnabled)
+		if(!awarenessMechanicEnabled)
 			yield break;
 		
 		originalBarFill = healthScript.awarenessSlider.value;
@@ -305,7 +310,7 @@ public class Dodge : MonoBehaviour
 
 	public IEnumerator IncreasePlayerAwarenessMana()
 	{
-		if(!powerupMechanicEnabled)
+		if(!awarenessMechanicEnabled)
 			yield break;
 
 		originalBarFill = 100/healthScript.maxAwareness;
@@ -314,10 +319,15 @@ public class Dodge : MonoBehaviour
 		if(healthScript.awareness < healthScript.maxAwareness)
 		{
 			healthScript.awareness++;
-			if(healthScript.awareness == healthScript.maxAwareness)
+
+			if(oneHitKillsMechanicEnabled)
 			{
-				awarenessMeterAudioSource.clip = manaFullSound;
-				//_battleEventManager.instance.playerHasOneHitKills = true;
+				if(healthScript.awareness >= healthScript.maxAwareness)
+				{
+					sliderFillImage.color = Color.yellow;
+					awarenessMeterAudioSource.clip = manaFullSound;
+					_battleEventManager.instance.playerHasOneHitKills = true;
+				}
 			}
 			else
 				awarenessMeterAudioSource.clip = manaIncreaseSound;
@@ -341,7 +351,7 @@ public class Dodge : MonoBehaviour
 		startTime = Time.time;
 
 		//Get the powerup
-		if(healthScript.awareness >= healthScript.maxAwareness)
+		if(oneHitKillsMechanicEnabled && healthScript.awareness >= healthScript.maxAwareness)
 		{
 			sliderFillImage.color = Color.Lerp(originalSliderColour, Color.yellow, Time.time/startTime);
 			/* = powerupReadyImage.transform.localScale.x;

@@ -62,6 +62,8 @@ public class Tools: MonoBehaviour
 		else 
 			Destroy(gameObject);
 
+		Application.runInBackground = true;
+
 		explosionPoolerScript = GameObject.FindGameObjectWithTag ("ObjectPooler").transform.FindChild ("Explosion Pooler").GetComponent<ObjectPoolerScript> ();
 		explosionMiniPoolerScript = GameObject.FindGameObjectWithTag ("ObjectPooler").transform.FindChild ("ExplosionMini Pooler").GetComponent<ObjectPoolerScript> ();
 

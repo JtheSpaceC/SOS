@@ -237,31 +237,30 @@ public class EnginesFighter : MonoBehaviour {
 	
 	void GetMovementSolution(GameObject target, Vector2 moveToWhere, bool hasRigidbody2D, bool stopAtWaypoint)
 	{	
-		if(hasRigidbody2D)
+		if(hasRigidbody2D) //dogfighting mostly
 		{
-			newMovementPosition = moveToWhere + (target.GetComponent<Rigidbody2D>().velocity *1) 
-				- (myRigidBody.velocity *1);
+			newMovementPosition = moveToWhere + (target.GetComponent<Rigidbody2D>().velocity *1.5f) 
+				- (myRigidBody.velocity *1.5f);
 			//AdjustForAfterburner(myRigidBody,target.GetComponent<Rigidbody2D>()); 
 		}
 		else if(target != null && target.tag == "FormationPosition")
 		{
-			newMovementPosition = moveToWhere + (target.transform.parent.parent.parent.GetComponent<Rigidbody2D>().velocity *1) 
-				- (myRigidBody.velocity *1);
+			newMovementPosition = moveToWhere + (target.transform.parent.parent.parent.GetComponent<Rigidbody2D>().velocity *1.5f) 
+				- (myRigidBody.velocity *1.5f);
 			//AdjustForAfterburner(myRigidBody,target.transform.parent.parent.parent.GetComponent<Rigidbody2D>()); 
 		}
 		else if(target != null && target.tag == "Turret")
 		{
-			newMovementPosition = moveToWhere + (target.transform.parent.parent.GetComponent<Rigidbody2D>().velocity *1) 
-				- (myRigidBody.velocity *1);
+			newMovementPosition = moveToWhere + (target.transform.parent.parent.GetComponent<Rigidbody2D>().velocity *1.5f) 
+				- (myRigidBody.velocity *1.5f);
 			//AdjustForAfterburner(myRigidBody,target.transform.parent.parent.parent.GetComponent<Rigidbody2D>()); 
 		}
-		else if(target == null)
+		else if(target == null) //i.e. waypoints
 		{
 			if(stopAtWaypoint)
 				newMovementPosition = moveToWhere - (myRigidBody.velocity * myRigidBody.velocity.magnitude);
 			else
-				newMovementPosition = moveToWhere - myRigidBody.velocity;
-			
+				newMovementPosition = moveToWhere - myRigidBody.velocity;			
 		}
 		else
 		{ 

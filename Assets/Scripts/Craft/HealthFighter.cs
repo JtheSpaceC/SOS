@@ -289,7 +289,7 @@ public class HealthFighter : Health {
 				}				
 			}
 
-			//2. If player hit with OneHitKills, kill immediately (no dodge chance)
+			//2. If player hits with OneHitKills, kill immediately (no dodge chance)
 
 			if(theAttacker.tag == "PlayerFighter" && _battleEventManager.instance.playerHasOneHitKills && theBullet.tag != "Bomb")
 			{

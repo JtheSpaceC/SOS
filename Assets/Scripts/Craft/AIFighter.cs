@@ -122,7 +122,6 @@ public class AIFighter : FighterFunctions {
 	{
 		flightLeadSquadronScript = flightLeader.GetComponentInChildren<SquadronLeader> ();
 		flightLeaderRigidbody = flightLeader.GetComponent<Rigidbody2D>();
-		print(flightLeadSquadronScript);
 
 		if(squadronMembership == SquadronMembership.two)
 		{
