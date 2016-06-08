@@ -577,7 +577,7 @@ public class AITransport : SupportShipFunctions {
 			}
 			camOffset = Camera.main.transform.position - transform.position;
 
-			warpOutLookAtPoint = literalSpawnPoint;
+			warpOutLookAtPoint = (literalSpawnPoint - (Vector2)transform.position).normalized * 10000;
 
 			if(whichSide == WhichSide.Ally)
 			{

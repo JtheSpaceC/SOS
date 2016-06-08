@@ -218,7 +218,7 @@ public class AIAssaultShuttle : SupportShipFunctions {
 			engineAudioSource.loop = true;
 			engineAudioSource.Play();
 			if(pickingUpPlayer)
-				StartCoroutine(Camera.main.GetComponent<CameraControllerFighter>().CameraZoomToSize(10, 0, 6));			
+				StartCoroutine(Camera.main.GetComponent<CameraControllerFighter>().OrthoCameraZoomToSize(10, 0, 6));			
 		}
 
 		if (pickingUpPlayer)

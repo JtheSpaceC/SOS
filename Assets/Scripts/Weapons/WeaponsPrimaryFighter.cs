@@ -8,7 +8,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 	GameObject player;
 
-	[HideInInspector] public int maxAmmo = 900;
+	int maxAmmo = 1200;
 	public int ammo = 900;
 
 	public bool playerControlled = false;

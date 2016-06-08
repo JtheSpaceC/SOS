@@ -44,7 +44,7 @@ public class Tools: MonoBehaviour
 	public Toggle useHintsToggleSwitch;
 	[HideInInspector] public bool useHintsThisSession = true;
 
-	[HideInInspector] public enum WaypointTypes {Extraction, Move, SearchAndDestroy, Follow, Support};
+	[HideInInspector] public enum WaypointTypes {Extraction, Move, Escort, SearchAndDestroy, Follow, Support};
 
 	[Header("Waypoint Prefabs")]
 	public GameObject waypointPrefab;
@@ -224,6 +224,11 @@ public class Tools: MonoBehaviour
 		if(wpType == WaypointTypes.Follow)
 		{
 			
+		}
+		else if(wpType == WaypointTypes.Escort)
+		{
+			GameObject wp = Instantiate(waypointPrefab, target.position, Quaternion.identity) as GameObject;
+			wp.GetComponent<PointerHUDElement>().target = target;
 		}
 	}
 

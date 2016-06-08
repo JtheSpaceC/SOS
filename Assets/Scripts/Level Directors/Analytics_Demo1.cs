@@ -38,10 +38,10 @@ public class Analytics_Demo1 : MonoBehaviour {
 	{
 		Debug.Log("Player Called Transport Analytic");
 
-		if(DemoLevel.instance.clearedKillLimitAtThisTime == Mathf.Infinity)
+		if(DemoLevel.instance.clearedMissionObjectiveAtThisTime == Mathf.Infinity)
 			return;
 		
-		timeTakenToCallTransport = Time.time - DemoLevel.instance.clearedKillLimitAtThisTime;
+		timeTakenToCallTransport = Time.time - DemoLevel.instance.clearedMissionObjectiveAtThisTime;
 
 		Analytics.CustomEvent("Called Transport AFter Complete", new Dictionary<string, object>
 			{
@@ -53,10 +53,10 @@ public class Analytics_Demo1 : MonoBehaviour {
 	{
 		Debug.Log("Player Commenced Docking Analytic");
 
-		if(DemoLevel.instance.clearedKillLimitAtThisTime == Mathf.Infinity)
+		if(DemoLevel.instance.clearedMissionObjectiveAtThisTime == Mathf.Infinity)
 			return;
 
-		float timeToDock = Time.time - (DemoLevel.instance.clearedKillLimitAtThisTime + timeTakenToCallTransport);
+		float timeToDock = Time.time - (DemoLevel.instance.clearedMissionObjectiveAtThisTime + timeTakenToCallTransport);
 
 		Analytics.CustomEvent("Docked With Transport AFter Complete", new Dictionary<string, object>
 			{

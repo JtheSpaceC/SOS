@@ -77,7 +77,7 @@ public class CameraControllerFighter : MonoBehaviour {
 		}		
 	}
 
-	public IEnumerator CameraZoomToSize(float newSize, float delayTime, float zoomTime)
+	public IEnumerator OrthoCameraZoomToSize(float newSize, float delayTime, float zoomTime)
 	{
 		yield return new WaitForSeconds(delayTime);
 
@@ -87,6 +87,21 @@ public class CameraControllerFighter : MonoBehaviour {
 		while(Camera.main.orthographicSize != newSize)
 		{
 			Camera.main.orthographicSize = Mathf.Lerp(startSize, newSize, (Time.time - startTime)/zoomTime);
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
+	public IEnumerator PerspectiveCamZoom(float newDistance, float delayTime, float zoomTime)
+	{
+		float startTime = Time.time;
+		float startDistance = Camera.main.transform.position.z;
+
+
+		while(Camera.main.transform.position.z != newDistance)
+		{
+			Vector3 position = Camera.main.transform.position;
+			position.z = Mathf.Lerp(startDistance, newDistance, (Time.time - startTime)/zoomTime);
+			Camera.main.transform.position = position;
 			yield return new WaitForEndOfFrame();
 		}
 	}

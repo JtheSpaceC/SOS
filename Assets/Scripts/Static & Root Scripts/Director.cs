@@ -74,6 +74,9 @@ public class Director : MonoBehaviour {
 	{
 		if(!ClickToPlay.instance.paused)
 		{
+			if(Input.GetKeyDown(KeyCode.O))
+				GameObject.FindGameObjectWithTag("PlayerFighter").SendMessage("Death");
+			
 			if(gameTimeText && playerKillsText)
 			{
 				//Mission Clock Stuff
@@ -133,7 +136,8 @@ public class Director : MonoBehaviour {
 			pilot.tag = "PlayerEVA";
 			pilot.name = "EVA Pilot";
 			PMCMisisonSupports.instance.AutoRetrievePlayer();
-			StartCoroutine(Camera.main.GetComponent<CameraControllerFighter>().CameraZoomToSize(3, 1.5f, 6));
+			//StartCoroutine(Camera.main.GetComponent<CameraControllerFighter>().OrthoCameraZoomToSize(3, 1.5f, 6));
+			StartCoroutine(Camera.main.GetComponent<CameraControllerFighter>().PerspectiveCamZoom(-5, 1.5f, 6));
 		}
 	}
 

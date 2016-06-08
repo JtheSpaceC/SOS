@@ -83,7 +83,7 @@ public class PMCMisisonSupports : MonoBehaviour {
 				return;*/
 
 				insertionPoint = wEvent.transform.position + ((theCaller.transform.position - wEvent.transform.position).normalized 
-					* wEvent.GetComponent<CircleCollider2D>().radius * 1.05f);
+					* wEvent.GetComponent<CircleCollider2D>().radius * wEvent.transform.localScale.y * 1.05f);
 			}
 		}
 

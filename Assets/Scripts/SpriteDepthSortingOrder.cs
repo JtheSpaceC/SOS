@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-[ExecuteInEditMode]
 public class SpriteDepthSortingOrder : MonoBehaviour {
 
 	SpriteRenderer myRenderer;
@@ -19,6 +18,12 @@ public class SpriteDepthSortingOrder : MonoBehaviour {
 	{
 		myRenderer.sortingOrder = -Mathf.RoundToInt(100 * transform.position.z) + startingOrderInLayer;
 		if(darkenWithDepth)
-			myRenderer.color = Color.Lerp(Color.white, Color.black, transform.position.z / blackDistance);
+			DepthDarkening();			
+	}
+
+	[ContextMenu("Darken With Depth")]
+	void DepthDarkening()
+	{
+		myRenderer.color = Color.Lerp(Color.white, Color.black, transform.position.z / blackDistance);
 	}
 }

@@ -18,6 +18,11 @@ public class DemoLevel : MonoBehaviour {
 	public AIFighter mate3AIScript;
 
 	public int killLimitForDemo = 4;
+	public float convoyGuardDistance = 100f;
+	public GameObject convoyPointerArrow;
+	public Transform convoy;
+	public CircleCollider2D asteroidField;
+	float asteroidFieldRadius;
 
 	public Text missileAmmoText;
 	public Text objectiveText;
@@ -78,8 +83,9 @@ public class DemoLevel : MonoBehaviour {
 	public List<GameObject> playerGroup;
 	[HideInInspector] public Vector2 startPos;
 
-	[HideInInspector] public bool missionComplete = false;
-	[HideInInspector] public float clearedKillLimitAtThisTime = Mathf.Infinity;
+	[HideInInspector] public bool objectivesComplete = false;
+	[HideInInspector] public bool missionIsOver = false;
+	[HideInInspector] public float clearedMissionObjectiveAtThisTime = Mathf.Infinity;
 
 	[Header("End of level stuff")]
 	public string levelToLoad = "";
@@ -129,6 +135,8 @@ public class DemoLevel : MonoBehaviour {
 		spawnerScript = GetComponent<Spawner> ();
 
 		InvokeRepeating("CheckPlayerHasSeenTransport", 17, 1);
+		InvokeRepeating("CheckPlayerAndConvoyLocation", 10, 4);
+		asteroidFieldRadius = asteroidField.radius;
 	}
 
 	void OnEnable()
@@ -207,6 +215,40 @@ public class DemoLevel : MonoBehaviour {
 		tutorialBodyText.text = dodgeTutorialString;
 	}
 
+	void CheckPlayerAndConvoyLocation()
+	{
+		if(objectivesComplete)
+		{
+			CancelInvoke("CheckPlayerLocation");
+			return;
+		}
+
+		//tell player to turn around if too far from convoy
+		if(Vector2.Distance(player.transform.position, convoy.position) > convoyGuardDistance)
+		{
+			Subtitles.instance.PostHint(new string[] {"Return to the Convoy!"});
+			convoyPointerArrow.SetActive(true);
+		}
+		else
+		{
+			convoyPointerArrow.SetActive(false);
+		}
+
+		//mark objectives complete if convoy is out of asteroid field
+		if(!asteroidField.bounds.Contains(convoy.position))
+		{
+			objectivesComplete = true;
+			clearedMissionObjectiveAtThisTime = timer;
+
+			PlayEndAudio();
+			Subtitles.instance.PostSubtitle(new string[] {"Convoy: \"Thanks for the escort, Arrow Squadron. We should be alright from here\"."});
+
+			spawnerScript.CancelInvoke("Spawn");
+			enemyCommander.CallFullRetreat();
+			spawnerScript.enabled = false;
+		}
+	}
+
 	void Update () 
 	{
 		if(!playerHealth.dead)
@@ -234,14 +276,14 @@ public class DemoLevel : MonoBehaviour {
 
 
 		//for ending the demo with kill limit
-		if(playerLogicScript.kills >= killLimitForDemo && clearedKillLimitAtThisTime == Mathf.Infinity)
+	/*	if(playerLogicScript.kills >= killLimitForDemo && clearedKillLimitAtThisTime == Mathf.Infinity)
 		{
 			clearedKillLimitAtThisTime = timer;
 			spawnerScript.CancelInvoke("Spawn");
 			enemyCommander.CallFullRetreat();
 			Invoke("PlayEndAudio", 2);
 		}
-		else if(!postedEndMessage && !missionComplete && playerLogicScript.kills >= killLimitForDemo && timer > clearedKillLimitAtThisTime + 5)
+		else if(!postedEndMessage && !missionIsOver && playerLogicScript.kills >= killLimitForDemo && timer > clearedKillLimitAtThisTime + 5)
 		{
 			Subtitles.instance.PostHint(new string[] {"You've taken out enough pirates to make them think twice. Call for EXTRACTION with the RADIO, " +
 				"then dock to complete the mission."});
@@ -252,6 +294,19 @@ public class DemoLevel : MonoBehaviour {
 		{
 			postedEndMessage = false;
 			clearedKillLimitAtThisTime = timer;
+		}*/
+
+		//for ending Demo by convoy location
+		if(!postedEndMessage && !missionIsOver && objectivesComplete && timer > clearedMissionObjectiveAtThisTime + 5)
+		{
+			Subtitles.instance.PostHint(new string[] {"The convoy is safe. Call for EXTRACTION with the RADIO, " +
+				"then dock to complete the mission."});
+			postedEndMessage = true;
+		}
+		if(timer > clearedMissionObjectiveAtThisTime + 25)
+		{
+			postedEndMessage = false;
+			clearedMissionObjectiveAtThisTime = timer;
 		}
 
 		if(timePlayerStartedLeaving != 0)
@@ -263,7 +318,7 @@ public class DemoLevel : MonoBehaviour {
 	void PlayEndAudio()
 	{
 		GetComponent<AudioSource>().Play();
-		Subtitles.instance.PostSubtitle (new string[]{"Convoy: \"They're retreating! Thanks for the help!\""});
+		//Subtitles.instance.PostSubtitle (new string[]{"Convoy: \"They're retreating! Thanks for the help!\""});
 	}
 
 	void DoHints ()
@@ -291,7 +346,7 @@ public class DemoLevel : MonoBehaviour {
 			playerKnowsMap = true;
 		if (!playerKnowsMenu && ClickToPlay.instance.escMenuIsShown)
 			playerKnowsMenu = true;
-		if (!missionComplete && !playerKnowsHowToMove && timer > 9) {
+		if (!missionIsOver && !playerKnowsHowToMove && timer > 9) {
 			if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 				Subtitles.instance.PostHint (new string[] {
 					"Press UP ARROW to ACCELERATE"
@@ -305,7 +360,7 @@ public class DemoLevel : MonoBehaviour {
 			Subtitles.instance.CoolDownHintHighlight ();
 		}
 		else
-			if (!missionComplete && playerKnowsHowToMove && !playerKnowsHowToShoot && timer > 14) {
+			if (!missionIsOver && playerKnowsHowToMove && !playerKnowsHowToShoot && timer > 14) {
 				if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 					Subtitles.instance.PostHint (new string[] {
 						"Press SPACEBAR to SHOOT"
@@ -319,7 +374,7 @@ public class DemoLevel : MonoBehaviour {
 				Subtitles.instance.CoolDownHintHighlight ();
 			}
 			else
-				if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && !playerKnowsHowToDodge && timer > 21) {
+				if (!missionIsOver && playerKnowsHowToMove && playerKnowsHowToShoot && !playerKnowsHowToDodge && timer > 21) {
 					if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 						Subtitles.instance.PostHint (new string[] {
 							"Press LEFT CTRL to DODGE"
@@ -373,15 +428,16 @@ public class DemoLevel : MonoBehaviour {
 					Subtitles.instance.PostHint(new string[] {"Press BACK to view the TACTICAL MAP"});				
 				Subtitles.instance.CoolDownHintNoise();
 				Subtitles.instance.CoolDownHintHighlight();
-			}*/else
-						if (!missionComplete && !playerKnowsDocking && timeWhenFirstSawFighterTransportPickup > 0 && timer > timeWhenFirstSawFighterTransportPickup + 7) {
-							Subtitles.instance.PostHint (new string[] {
-								"To DOCK, fly over the Transport and then respond to the new RADIO command." + " This is timed. Try again if you miss."
-							});
+			}*/
+		else if (!missionIsOver && !playerKnowsDocking && 
+			timeWhenFirstSawFighterTransportPickup > 0 && timer > timeWhenFirstSawFighterTransportPickup + 7) 
+		{
+			Subtitles.instance.PostHint (new string[]
+				{"To DOCK, fly over the Transport and then respond to the new RADIO command." + " This is timed. Try again if you miss."});
 							Subtitles.instance.CoolDownHintNoise ();
 							Subtitles.instance.CoolDownHintHighlight ();
-						}
-		if (!spawnerScript.enabled && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge) {
+		}
+		if (!spawnerScript.enabled && !objectivesComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge) {
 			spawnerScript.enabled = true;
 		}
 	}
@@ -439,11 +495,6 @@ public class DemoLevel : MonoBehaviour {
 		controlsAtStartImage.enabled = false;
 	}
 
-	public void Survey()
-	{
-		Application.OpenURL("https://docs.google.com/forms/d/1ZDuBgmUohSbOX_ytS6N0cHFdVfRdNzQwjH7PsJhGpj4/viewform");
-	}
-
 	void ActivateDeathButtons()
 	{
 		Button[] buttons = deathPanel.transform.GetComponentsInChildren<Button> ();
@@ -478,7 +529,7 @@ public class DemoLevel : MonoBehaviour {
 	{
 		deathPanel.SetActive(true);
 		deathPanel.GetComponentInParent<Canvas>().sortingOrder += 10;
-		missionComplete = true;
+		missionIsOver = true;
 
 		Invoke("ActivateDeathButtons", 1f);
 		//Invoke("CommenceFadeout", waitTimeAfterDeath - 4);
@@ -512,7 +563,7 @@ public class DemoLevel : MonoBehaviour {
 		timePlayerStartedLeaving = timer;
 
 		TogglePlayerUI();
-		missionComplete = true;
+		missionIsOver = true;
 		Invoke("PostMissionCompleteMessage", 6);
 		playerLogicScript.orders = PlayerAILogic.Orders.NA;
 		Invoke("MissionCompleteScreen", 10.5f);
