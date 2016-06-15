@@ -16,6 +16,7 @@ public class ClickToPlay : MonoBehaviour
 	public bool rCanRestart = true;
 	public bool paused = false;
 	public GameObject escScreen;
+	public GameObject escMenuPanel;
 	public GameObject pauseScreen;
 	public Image theSlidesCanvasImage;
 
@@ -123,6 +124,7 @@ public class ClickToPlay : MonoBehaviour
 		Tools.instance.VibrationStop();
 		AudioMasterScript.instance.MuteSFX();
 		escScreen.SetActive(true);
+		escMenuPanel.SetActive(true);
 		Time.timeScale = 0;
 		paused = true;
 

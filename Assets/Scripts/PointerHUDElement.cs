@@ -140,7 +140,7 @@ public class PointerHUDElement : MonoBehaviour {
 			//keep the arrow on screen
 			directionToTarget.x = (targetWP.x - sourceObject.position.x);
 			directionToTarget.y = (targetWP.y - sourceObject.position.y);
-			directionToTarget = directionToTarget.normalized * 0.4f;
+			directionToTarget = directionToTarget.normalized * 0.3f;
 
 			transform.position = Camera.main.ViewportToWorldPoint(centreScreen + (Vector3)directionToTarget);
 		}

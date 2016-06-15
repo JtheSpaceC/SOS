@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 
 public class DemoLevel : MonoBehaviour {
@@ -168,6 +167,8 @@ public class DemoLevel : MonoBehaviour {
 			missileAmmoText.gameObject.SetActive(false);
 		}
 
+		convoyPointerArrow.SetActive(false);
+
 		Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = -1;
 		Tools.instance.CommenceFadeIn ();
 	}
@@ -217,9 +218,10 @@ public class DemoLevel : MonoBehaviour {
 
 	void CheckPlayerAndConvoyLocation()
 	{
-		if(objectivesComplete)
+		if(objectivesComplete || missionIsOver)
 		{
 			CancelInvoke("CheckPlayerLocation");
+			convoyPointerArrow.SetActive(false);
 			return;
 		}
 
@@ -332,6 +334,8 @@ public class DemoLevel : MonoBehaviour {
 		}
 			
 		//for HINTS
+
+		//these set the hints to KNOWN
 		if (!playerKnowsHowToMove && Input.GetAxis ("Accelerate") != 0)
 			playerKnowsHowToMove = true;
 		if (!playerKnowsHowToShoot && playerWeapons.enabled && playerWeapons.allowedToFire &&  Input.GetButtonDown ("FirePrimary"))
@@ -346,7 +350,10 @@ public class DemoLevel : MonoBehaviour {
 			playerKnowsMap = true;
 		if (!playerKnowsMenu && ClickToPlay.instance.escMenuIsShown)
 			playerKnowsMenu = true;
-		if (!missionIsOver && !playerKnowsHowToMove && timer > 9) {
+
+		//this checks and activates the next relevant hint
+		if (!missionIsOver && !objectivesComplete && !playerKnowsHowToMove && timer > 9) 
+		{
 			if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 				Subtitles.instance.PostHint (new string[] {
 					"Press UP ARROW to ACCELERATE"
@@ -359,8 +366,8 @@ public class DemoLevel : MonoBehaviour {
 			Subtitles.instance.CoolDownHintNoise ();
 			Subtitles.instance.CoolDownHintHighlight ();
 		}
-		else
-			if (!missionIsOver && playerKnowsHowToMove && !playerKnowsHowToShoot && timer > 14) {
+		else if (!missionIsOver && !objectivesComplete  && playerKnowsHowToMove && !playerKnowsHowToShoot && timer > 14) 
+		{
 				if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 					Subtitles.instance.PostHint (new string[] {
 						"Press SPACEBAR to SHOOT"
@@ -372,21 +379,21 @@ public class DemoLevel : MonoBehaviour {
 						});
 				Subtitles.instance.CoolDownHintNoise ();
 				Subtitles.instance.CoolDownHintHighlight ();
-			}
-			else
-				if (!missionIsOver && playerKnowsHowToMove && playerKnowsHowToShoot && !playerKnowsHowToDodge && timer > 21) {
-					if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+		}
+		else if (!missionIsOver && !objectivesComplete  && playerKnowsHowToMove && playerKnowsHowToShoot && !playerKnowsHowToDodge && timer > 21) 
+		{
+				if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+					Subtitles.instance.PostHint (new string[] {
+						"Press LEFT CTRL to DODGE"
+					});
+				else
+					if (InputManager.instance.inputFrom == InputManager.InputFrom.controller)
 						Subtitles.instance.PostHint (new string[] {
-							"Press LEFT CTRL to DODGE"
+							"Press B to DODGE"
 						});
-					else
-						if (InputManager.instance.inputFrom == InputManager.InputFrom.controller)
-							Subtitles.instance.PostHint (new string[] {
-								"Press B to DODGE"
-							});
-					Subtitles.instance.CoolDownHintNoise ();
-					Subtitles.instance.CoolDownHintHighlight ();
-				}
+				Subtitles.instance.CoolDownHintNoise ();
+				Subtitles.instance.CoolDownHintHighlight ();
+		}
 				/*else if (!missionComplete && !playerKnowsMenu && timer > 30 && Subtitles.instance.hintsPanel.color == Color.clear) {
 						if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 							Subtitles.instance.PostHint (new string[] {
@@ -437,6 +444,8 @@ public class DemoLevel : MonoBehaviour {
 							Subtitles.instance.CoolDownHintNoise ();
 							Subtitles.instance.CoolDownHintHighlight ();
 		}
+
+		//to start the enemies spawning once you know how to move
 		if (!spawnerScript.enabled && !objectivesComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge) {
 			spawnerScript.enabled = true;
 		}
@@ -451,7 +460,7 @@ public class DemoLevel : MonoBehaviour {
 
 	void PostMissionCompleteMessage()
 	{
-		if(player.GetComponent<PlayerAILogic>().kills >= killLimitForDemo)
+		if(objectivesComplete || player.GetComponent<PlayerAILogic>().kills >= killLimitForDemo)
 		{
 			Subtitles.instance.PostHint (new string[]{"---MISSION COMPLETE---"});
 		}

@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 
 public class AITransport : SupportShipFunctions {
 	
@@ -321,28 +319,31 @@ public class AITransport : SupportShipFunctions {
 			//TODO: let the AI groups do this too somehow
 		}
 		
-		//change the squad's orders behaviour
-		carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.Extraction;
-		//TODO: check if it's actually the first flight, or if 2nd - 4th
-		
-		//get the wingmen and create arrays of engine and fighter references
-		if(carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen.Count >= 1)
+		//change the squad's orders behaviour if the wingmen aren't retreating
+		if(carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders != SquadronLeader.Orders.Disengage)
 		{
-			carryFighter2 = carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen[0];
-			carryFighter2Engines = carryFighter2.GetComponent<EnginesFighter>();
-			fighterEngineScripts = new EnginesFighter[]{carryFighter1Engines, carryFighter2Engines};
-			carryFighter2Health = carryFighter2.GetComponent<HealthFighter>();
-			fighterHealthScripts = new HealthFighter[] {carryFighter1Health, carryFighter2Health};
-			fightersToCarry = new GameObject[]{carryFighter1, carryFighter2};
+			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.Extraction;
+			//TODO: check if it's actually the first flight, or if 2nd - 4th		
 			
-			if(carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen.Count >= 2)
+			//get the wingmen and create arrays of engine and fighter references
+			if(carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen.Count >= 1)
 			{
-				carryFighter3 = carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen[1];
-				carryFighter3Engines = carryFighter3.GetComponent<EnginesFighter>();
-				fighterEngineScripts = new EnginesFighter[]{carryFighter1Engines, carryFighter2Engines, carryFighter3Engines};
-				carryFighter3Health = carryFighter3.GetComponent<HealthFighter>();
-				fighterHealthScripts = new HealthFighter[] {carryFighter1Health, carryFighter2Health, carryFighter3Health};
-				fightersToCarry = new GameObject[]{carryFighter1, carryFighter2, carryFighter3};
+				carryFighter2 = carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen[0];
+				carryFighter2Engines = carryFighter2.GetComponent<EnginesFighter>();
+				fighterEngineScripts = new EnginesFighter[]{carryFighter1Engines, carryFighter2Engines};
+				carryFighter2Health = carryFighter2.GetComponent<HealthFighter>();
+				fighterHealthScripts = new HealthFighter[] {carryFighter1Health, carryFighter2Health};
+				fightersToCarry = new GameObject[]{carryFighter1, carryFighter2};
+				
+				if(carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen.Count >= 2)
+				{
+					carryFighter3 = carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen[1];
+					carryFighter3Engines = carryFighter3.GetComponent<EnginesFighter>();
+					fighterEngineScripts = new EnginesFighter[]{carryFighter1Engines, carryFighter2Engines, carryFighter3Engines};
+					carryFighter3Health = carryFighter3.GetComponent<HealthFighter>();
+					fighterHealthScripts = new HealthFighter[] {carryFighter1Health, carryFighter2Health, carryFighter3Health};
+					fightersToCarry = new GameObject[]{carryFighter1, carryFighter2, carryFighter3};
+				}
 			}
 		}
 		else
