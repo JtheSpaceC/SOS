@@ -4,7 +4,6 @@ using System.Collections;
 public class Asteroid : MonoBehaviour {
 
 	ObjectPoolerScript asteroidPoolerScript;
-	ObjectPoolerScript asteroidPoofPoolerScript;
 
 	public AsteroidSpawner myAsteroidSpawner;
 
@@ -60,7 +59,6 @@ public class Asteroid : MonoBehaviour {
 	void Awake () 
 	{
 		asteroidPoolerScript = GameObject.Find ("asteroid Pooler").GetComponent<ObjectPoolerScript> ();
-		asteroidPoofPoolerScript = GameObject.Find ("asteroidPoof Pooler").GetComponent<ObjectPoolerScript> ();
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
 		myCollider = GetComponent<Collider2D>();
@@ -176,9 +174,7 @@ public class Asteroid : MonoBehaviour {
 	
 	public void YouveBeenHit(float damageAmount, GameObject theProjectile)
 	{
-		GameObject obj =  asteroidPoofPoolerScript.current.GetPooledObject();
-		obj.transform.position = transform.position;
-		obj.SetActive (true);
+		Tools.instance.SpawnAsteroidPoof(transform.position);
 
 		health -= damageAmount;
 		if(theProjectile.tag != "Bomb")

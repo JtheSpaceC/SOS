@@ -89,22 +89,30 @@ public class SpriteExploder : MonoBehaviour {
 
 		foreach(Collider2D gib in gibs)
 		{
+			gib.isTrigger = false;
+
 			if(gib.GetComponent<Rigidbody2D>() != null)
 			{
 				if(createShadows)
 				{
 					CreateShadows(gib.gameObject, explodeObj.transform.position);
 				}
-				gib.transform.parent = explodeObj.transform;
+				gib.gameObject.AddComponent<DebrisLogic>();
+				//gib.transform.parent = explodeObj.transform;
+				gib.transform.SetParent(dontDestroyBin);
 
-				gib.GetComponent<Collider2D>().enabled = false; //I just want them to float instead of bounce off anything
+				//gib.GetComponent<Collider2D>().enabled = false; //I just want them to float instead of bounce off anything
 
 				Rigidbody2D gibRB = gib.GetComponent<Rigidbody2D>();
 				gibRB.velocity = parentVelocity;
 
 				gibRB.AddForce(Random.insideUnitCircle.normalized * force, forceMode); 
 				gibRB.AddTorque(Random.Range(-force*8, force*8)); 
-				gib.gameObject.AddComponent<FadeAndDestroyMesh>();
+				//gib.gameObject.AddComponent<FadeAndDestroyMesh>();
+				//gib.gameObject.AddComponent<DeleteAfterInvisible>();
+				gib.gameObject.AddComponent<rotator>();
+				gib.GetComponent<rotator>().Mode = rotator.myMode.RandomizedAtStart;
+				gib.GetComponent<rotator>().randomizeDirection = true;
 
 			}
 		}

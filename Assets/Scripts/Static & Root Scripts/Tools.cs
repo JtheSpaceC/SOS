@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 using XInputDotNetPure;
 
-
 public class Tools: MonoBehaviour
 {
 	public static Tools instance;
@@ -13,6 +12,7 @@ public class Tools: MonoBehaviour
 
 	public ObjectPoolerScript explosionPoolerScript;
 	public ObjectPoolerScript explosionMiniPoolerScript;
+	public ObjectPoolerScript asteroidPoofPoolerScript;
 
 	public Text killsText;
 
@@ -66,6 +66,7 @@ public class Tools: MonoBehaviour
 
 		explosionPoolerScript = GameObject.FindGameObjectWithTag ("ObjectPooler").transform.FindChild ("Explosion Pooler").GetComponent<ObjectPoolerScript> ();
 		explosionMiniPoolerScript = GameObject.FindGameObjectWithTag ("ObjectPooler").transform.FindChild ("ExplosionMini Pooler").GetComponent<ObjectPoolerScript> ();
+		asteroidPoofPoolerScript = GameObject.Find ("asteroidPoof Pooler").GetComponent<ObjectPoolerScript> ();
 
 		if(GameObject.FindGameObjectWithTag("PlayerFighter") == null)
 		{
@@ -207,6 +208,13 @@ public class Tools: MonoBehaviour
 		
 		obj.transform.position = go.transform.position + ((Vector3)Random.insideUnitCircle * radius);
 		obj.transform.rotation = go.transform.rotation;
+		obj.SetActive (true);
+	}
+
+	public void SpawnAsteroidPoof(Vector2 where)
+	{
+		GameObject obj =  asteroidPoofPoolerScript.current.GetPooledObject();
+		obj.transform.position = where;
 		obj.SetActive (true);
 	}
 
