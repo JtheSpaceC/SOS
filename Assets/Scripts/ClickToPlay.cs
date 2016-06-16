@@ -7,18 +7,19 @@ public class ClickToPlay : MonoBehaviour
 {
 	public static ClickToPlay instance;
 
-	public bool pCanPause = true;
-	public bool escCanQuit = true;
-	public bool escGivesQuitMenu = true;
+	public bool pCanPause = false;
+	public bool escCanQuit = false;
+	public bool escGivesQuitMenu = false;
 	[HideInInspector]public bool escMenuIsShown = false;
-	public bool disablePlayerSelectButtonForMenu = true;
+	public bool disablePlayerSelectButtonForMenu = false;
 	public WeaponsPrimaryFighter playerShootScript; 
-	public bool rCanRestart = true;
+	public bool rCanRestart = false;
 	public bool paused = false;
 	public GameObject escScreen;
 	public GameObject escMenuPanel;
 	public GameObject pauseScreen;
 	public Image theSlidesCanvasImage;
+	public GameObject quitConfirmationWindow;
 
 	[Tooltip("Screens to turn off when going back to game from Esc menu, like options")] 
 	public GameObject[] screensToDisableOnResume;
@@ -162,7 +163,8 @@ public class ClickToPlay : MonoBehaviour
 
 	public void QuitGame()
 	{
-		Tools.instance.VibrationStop();
+		if(Tools.instance)
+			Tools.instance.VibrationStop();
 
 		#if UNITY_STANDALONE
 		//Quit the application
@@ -179,6 +181,14 @@ public class ClickToPlay : MonoBehaviour
 		//Stop playing the scene
 		UnityEditor.EditorApplication.isPlaying = false;
 		#endif		
+	}
+
+	public void QuitGameWithWarning()
+	{
+		if(Tools.instance)
+			Tools.instance.VibrationStop();
+
+		quitConfirmationWindow.SetActive(true);
 	}
 
 	public void NextSlide(int fwdOrBackInt)
@@ -227,4 +237,10 @@ public class ClickToPlay : MonoBehaviour
 		Sprite imageToShow = PlayerPrefsManager.GetControllerStickBehaviourKey () == "StickPoints" ? controls2 : controls1;
 		controlsImage.sprite = imageToShow;
 	}
+
+	public void GoToWebsite(string website)
+	{
+		Application.OpenURL("http://"+ website);
+	}
+
 }
