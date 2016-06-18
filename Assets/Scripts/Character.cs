@@ -6,9 +6,11 @@ public class Character : MonoBehaviour {
 
 	[HideInInspector] public Heartbeat heartbeatScript;
 	[HideInInspector] public BGScroller bgScrollerScript;
-	[HideInInspector] public GameObject avatarOutput;
+	[Tooltip("Okay to leave blank. Gets set by SquadronLeader script normally.")] public GameObject avatarOutput;
 
-	public enum Gender{Male, Female};
+	[Tooltip("For Character Pool screen")] public bool selected = false;
+
+	public enum Gender {Male, Female};
 	public Gender gender;
 
 	public bool inSpace = true;
@@ -20,7 +22,7 @@ public class Character : MonoBehaviour {
 	[Header("Appearance")]
 	public SpriteRenderer body;
 	public SpriteRenderer eyes;
-	public SpriteRenderer glasses;
+	public SpriteRenderer eyesProp;
 	public SpriteRenderer nose;
 	public SpriteRenderer mouth;
 	public Transform eyeballs;
@@ -77,7 +79,7 @@ public class Character : MonoBehaviour {
 		heartbeatScript = FindObjectOfType<Heartbeat>();
 		eyePositions = new Vector2[] {neutral, up, upperRight, right, lowerRight, down, lowerLeft, left, upperLeft};
 
-		GenerateNewAppearance();
+		GenerateRandomNewAppearance();
 
 		originalEyes = eyes.sprite;
 		originalMouth = mouth.sprite;
@@ -118,7 +120,7 @@ public class Character : MonoBehaviour {
 	#endif
 
 	[ContextMenu("Generate Appearance")]
-	void GenerateNewAppearance()
+	public void GenerateRandomNewAppearance()
 	{ 
 		if(Random.Range(0f, 2f) > 1)
 		{
@@ -133,6 +135,7 @@ public class Character : MonoBehaviour {
 		body.color = appearances.skinTones[Random.Range(0, appearances.skinTones.Length)];
 		nose.sprite = GetASprite(appearances.noses);
 		eyes.sprite = gender == Gender.Male? GetASprite(appearances.eyesMale) : GetASprite(appearances.eyesFemale);
+		originalEyes = eyes.sprite;
 		mouth.sprite = GetASprite(appearances.mouths);
 		clothes.sprite = GetASprite(appearances.clothes);
 		helmet.sprite = GetASprite(appearances.helmets);
@@ -150,15 +153,17 @@ public class Character : MonoBehaviour {
 
 		if(Random.Range(0f, 2f) > 1.33f)
 		{
-			glasses.sprite = GetASprite(appearances.glasses);
+			eyesProp.sprite = GetASprite(appearances.eyesProp);
 		}
-		else glasses.sprite = null;
+		else eyesProp.sprite = null;
 	}
 
 	public Sprite GetASprite(Sprite[] whatArray)
 	{
 		return whatArray[Random.Range(0, whatArray.Length)];
 	}
+
+	#region Animations
 
 	public IEnumerator GuiltyEyes()
 	{
@@ -247,6 +252,7 @@ public class Character : MonoBehaviour {
 	{
 		heartbeatScript.bpm = newBpm;
 	}
+	#endregion
 
 	void OnDisable()
 	{

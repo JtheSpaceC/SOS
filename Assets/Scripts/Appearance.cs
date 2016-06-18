@@ -18,7 +18,7 @@ public class Appearance : ScriptableObject {
 	public Sprite[] hairMale;
 	public Sprite[] hairFemale;
 	public Color[] hairColours;
-	public Sprite[] glasses;
+	public Sprite[] eyesProp;
 	public Sprite[] clothes;
 	public Sprite[] helmets;
 	public Sprite[] spaceSuits;
