@@ -125,7 +125,7 @@ public class CAGManager : MonoBehaviour {
 		}
 		CAGManager.instance.contextualText.text = "";
 
-		//ES2.DeleteDefaultFolder();
+		ES2.DeleteDefaultFolder();
 	}
 
 	public void SetCallingSpriteHightlerScript(SpriteHighlighter spriteHighlighter)
@@ -284,18 +284,23 @@ public class CAGManager : MonoBehaviour {
 
 	public void SaveStatus()
 	{
-		//ES2.Save(gameDay, "Day");
-		//ES2.Save(currentRoom, "Room");
-		PlayerPrefs.SetInt("Day", gameDay);
+		ES2.Save(gameDay, "Day");
+		ES2.Save(currentRoom, "Room");
+
+		//If Easy Save stops functioning, comment this back in and comment out ES2
+
+		/*PlayerPrefs.SetInt("Day", gameDay);
 		PlayerPrefs.SetInt("Room", currentRoom);
-		PlayerPrefs.Save();
+		PlayerPrefs.Save();*/
 	}
 
 	public void LoadStatus()
 	{
 		print("Loading");
 
-		if(PlayerPrefs.GetInt("Day") != 0)
+		//If Easy Save stops functioning, comment this back in and comment out ES2
+
+		/*if(PlayerPrefs.GetInt("Day") != 0)
 		{
 			gameDay = PlayerPrefs.GetInt("Day");
 		}
@@ -305,8 +310,8 @@ public class CAGManager : MonoBehaviour {
 		{
 			currentRoom = PlayerPrefs.GetInt("Room") - 1; 
 		}
-		else Debug.Log("Room not saved.");
-		/*if(ES2.Exists("Day"))
+		else Debug.Log("Room not saved.");*/
+		if(ES2.Exists("Day"))
 		{
 			Debug.Log("Day Exists");
 			gameDay = ES2.Load<int>("Day");;
@@ -316,20 +321,29 @@ public class CAGManager : MonoBehaviour {
 		if(ES2.Exists("Room"))
 		{
 			Debug.Log("Room Exists");
-			currentRoom = ES2.Load<int>("Room");
+			currentRoom = ES2.Load<int>("Room") - 1;
 		}
-		else Debug.Log("Room Doesn't Exist");*/
+		else Debug.Log("Room Doesn't Exist");
 	}
 
 	[ContextMenu("Delete Saves")]
 	public void DeleteSaves()
 	{
-		PlayerPrefs.DeleteKey("Day");
-		PlayerPrefs.DeleteKey("Room");
+		//If Easy Save stops functioning, comment this back in and comment out ES2
 
-		//ES2.Delete("Day.txt");
-		//ES2.Delete("Room.txt");
-		Debug.Log("Deleting Default Folder");
+		//PlayerPrefs.DeleteKey("Day");
+		//PlayerPrefs.DeleteKey("Room");
+
+		if(ES2.Exists("Day"))
+		{
+			ES2.Delete("Day");
+			ES2.Delete("Room");
+
+			ES2.DeleteDefaultFolder();
+			Debug.Log("Deleting Default Folder");
+		}
+		else print("Saves didn't exist");
+
 	}
 
 	void OnDisable()
