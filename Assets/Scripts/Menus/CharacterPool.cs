@@ -30,10 +30,13 @@ public class CharacterPool : MonoBehaviour {
 	public Button deselectAllButton;
 
 	public GameObject poolEntryPrefab;
+	public Transform parentForNewEntries;
 
-	public string[] saveDataOutput;
+	public string[] saveDataOutput; //for debugging in Inspector
 	public string allIDs;
 	public string [] allIDsArray;
+
+
 
 
 	Character avatar;
@@ -53,21 +56,37 @@ public class CharacterPool : MonoBehaviour {
 		avatar = FindObjectOfType<Character>();
 		ng = NameGenerator.Instance;
 
-
-		PopulateCharactersList();
+		DestroyChildEntries ();
 	}
+		
 
-	void OnEnable()
+	public void PopulateCharacterPoolList ()
 	{
+		//this gets rid of the old character entries on the list as it populates new ones based on the save file each time. Prevents duplicates
+		DestroyChildEntries ();
+
 		//Load All Characters. Get from a list of saved, active characters. Create a list
-		//For each in the list, go through and..
-		LoadCharacterToPoolList();
-	}
+		if (ES2.Exists ("allCharacterIDs.es?encrypt=true&password=asswordp")) 
+		{
+			allIDs = ES2.Load<string> ("allCharacterIDs.es?encrypt=true&password=asswordp");
+		}
+		else 
+		{
+			Debug.Log ("allCharacterIDs file did NOT exist. NO characters to load.");
+		}
 
-	public void PopulateCharactersList()
-	{
+		//to see in Inspector (for debugging)
+		allIDsArray = allIDs.Split (new char[] {','}, System.StringSplitOptions.RemoveEmptyEntries);
+
+		//For each in the list, go through and..
+		for (int i = 0; i < allIDsArray.Length; i++) 
+		{
+			LoadCharacterToPoolList (allIDsArray [i]);
+		}
+
 		allCharacters = FindObjectsOfType<CharacterPoolEntry>();
 	}
+
 
 	public void UpdateSelection()
 	{
@@ -85,6 +104,7 @@ public class CharacterPool : MonoBehaviour {
 			deselectAllButton.interactable = false;
 	}
 
+
 	public void SelectAllCharacters(bool trueOrFalse)
 	{
 		selectedCharacters.Clear();
@@ -96,21 +116,29 @@ public class CharacterPool : MonoBehaviour {
 			if(trueOrFalse)
 				selectedCharacters.Add(allCharacters[i]);
 		}
+
+		UpdateSelection();
 	}
+
 		
+	public void CreateNewCharacter()
+	{
+		selectedCharacter = new CharacterPoolEntry();
+
+		avatar.GenerateRandomNewAppearance();
+
+		selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
+		selectedCharacter.lastName = ng.getRandomLastName();
+		selectedCharacter.callsign = ng.getRandomCallsign();
+		//TODO: Generate the whole new appearance
+
+		ActivateCharacterEditScreen(selectedCharacter);
+	}
+
+
 	public void ActivateCharacterEditScreen(CharacterPoolEntry selected)
 	{
 		selectedCharacter = selected;
-
-		if(selectedCharacter.firstName == "<blank>")
-		{
-			//TODO: generate a whole new character
-			avatar.GenerateRandomNewAppearance();
-
-			selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
-			selectedCharacter.lastName = ng.getRandomLastName();
-			selectedCharacter.callsign = ng.getRandomCallsign();
-		}
 
 		avatar.avatarOutput.SetActive(true);
 
@@ -127,6 +155,7 @@ public class CharacterPool : MonoBehaviour {
 		//set up Back Button
 	}
 
+
 	public void ActivateBioEditPanel(InputField input)
 	{
 		characterBioEditPanel.SetActive(true);
@@ -136,19 +165,20 @@ public class CharacterPool : MonoBehaviour {
 			input.text = selectedCharacter.characterBio;
 		}
 			
-		selectedCharacter.startingBioText = input.text;	
+		selectedCharacter.startingBioText = input.text;
+		characterBioEditPanel.GetComponentInChildren<InputField>().ActivateInputField();
 	}
 
-	public void SetNewBio(InputField input)
-	{
-		selectedCharacter.characterBio = input.text;
-	}
 
-	void ActivateNameEditPanel(string whichName)
+
+	public void ActivateNameEditPanel(string whichName)
 	{
 		nameHeaderText.text = whichName;
 		characterNameEditPanel.SetActive(true);
+		characterNameEditPanel.GetComponentInChildren<InputField>().text = "";
+		characterNameEditPanel.GetComponentInChildren<InputField>().ActivateInputField();
 	}
+
 
 	public void SetNewName(InputField input)
 	{
@@ -178,10 +208,19 @@ public class CharacterPool : MonoBehaviour {
 		ActivateCharacterEditScreen(selectedCharacter);
 	}
 
+
+	public void SetNewBio(InputField input)
+	{
+		selectedCharacter.characterBio = input.text;
+		characterBioEditPanel.SetActive(false);
+	}
+
 	public void CancelNewBio(InputField input)
 	{
 		input.text = selectedCharacter.startingBioText;
+		characterBioEditPanel.SetActive(false);
 	}
+
 
 	public void CloseAllCharacterRelatedWindows()
 	{
@@ -190,13 +229,8 @@ public class CharacterPool : MonoBehaviour {
 		characterNameEditPanel.SetActive(false);
 		characterBioEditPanel.SetActive(false);
 		avatar.avatarOutput.SetActive(false);
-	}
+  	}
 
-	public void SetSelectedCharacterToNull()
-	{
-		if(selectedCharacter != null)
-			selectedCharacter.firstName = "<blank>";
-	}
 
 	public void SaveCharacter()
 	{
@@ -214,6 +248,7 @@ public class CharacterPool : MonoBehaviour {
 			"BIO:" + selectedCharacter.characterBio;
 		//TODO: More here and below
 
+		//for debugging in Inspector
 		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:"};
 		saveDataOutput = saveData.Split(parameters, System.StringSplitOptions.None);
 			
@@ -222,12 +257,10 @@ public class CharacterPool : MonoBehaviour {
 
 		//save a new list of all character IDs
 
-		allIDs = selectedCharacter.characterID + ","; //TODO: Prevent duplicates if the string is already in there
+		allIDs = selectedCharacter.characterID + ",";
 
 		if(ES2.Exists("allCharacterIDs.es?encrypt=true&password=asswordp"))
 		{
-			Debug.Log("allCharacterIDs file did exist");
-
 			string oldSaves = ES2.Load<string>("allCharacterIDs.es?encrypt=true&password=asswordp");
 
 			if(oldSaves.Contains(selectedCharacter.characterID))
@@ -266,9 +299,44 @@ public class CharacterPool : MonoBehaviour {
 		return toReturn;
 	}
 
-	void LoadCharacterToPoolList()
+	void LoadCharacterToPoolList(string charID)
 	{
-		
+		if(charID == "")
+		{
+			Debug.Log("Character ID was empty. Returning.");
+			return;
+		}
+		else if(!ES2.Exists(charID + ".es?encrypt=true&password=asswordp"))
+		{
+			Debug.Log("No character info found to Load. Returning.");
+			return;
+		}
+
+		GameObject newPoolEntry = Instantiate(poolEntryPrefab) as GameObject;
+		CharacterPoolEntry characterScript = newPoolEntry.GetComponent<CharacterPoolEntry>();
+		newPoolEntry.transform.SetParent(parentForNewEntries);
+
+
+		string characterInfo = ES2.Load<string>(charID + ".es?encrypt=true&password=asswordp");
+		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:"}; //TODO: more params
+		characterScript.savedData = characterInfo.Split(parameters, System.StringSplitOptions.None);
+
+		characterScript.characterID = characterScript.savedData[1];
+		characterScript.firstName = characterScript.savedData[2];
+		characterScript.lastName = characterScript.savedData[3];
+		characterScript.callsign = characterScript.savedData[4];
+		characterScript.characterBio = characterScript.savedData[5];
+
+		newPoolEntry.GetComponentInChildren<Text>().text = 
+			characterScript.firstName + " \""+ characterScript.callsign + "\" " + characterScript.lastName;
+	}
+
+	void DestroyChildEntries ()
+	{
+		while (parentForNewEntries.childCount > 0) 
+		{
+			DestroyImmediate (parentForNewEntries.GetChild (0).gameObject);
+		}
 	}
 
 }

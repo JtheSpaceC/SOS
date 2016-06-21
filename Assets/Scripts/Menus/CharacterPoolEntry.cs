@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class CharacterPoolEntry : MonoBehaviour {
 
@@ -11,11 +10,17 @@ public class CharacterPoolEntry : MonoBehaviour {
 	public string characterBio;
 	[HideInInspector] public string startingBioText;
 
+	public string[] savedData;
+
 
 	public void EditCharacter()
 	{
 		CharacterPool.instance.ActivateCharacterEditScreen(this);
 	}
 
+	public void UpdatePoolListSelection()
+	{
+		CharacterPool.instance.UpdateSelection();
+	}
 
 }
