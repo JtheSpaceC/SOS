@@ -10,6 +10,8 @@ public class ButtonSelectAuto : MonoBehaviour {
 	public Button myButton;
 	[Tooltip("Should work better with this on, but delays the visual selection.")] public bool waitOneFrame = true;
 
+	[Tooltip("Choose a key to activate this button.")] public KeyCode selectButtonWith;
+
 
 	void Awake()
 	{
@@ -30,6 +32,18 @@ public class ButtonSelectAuto : MonoBehaviour {
 	{
 		yield return new WaitForEndOfFrame();
 
-		myButton.Select();
+		if(myButton != null)
+			myButton.Select();
+	}
+
+	void Update()
+	{
+		if(Input.GetKeyDown(selectButtonWith))
+		{
+			if(myButton == null)
+				GetComponent<Button>().onClick.Invoke();
+			else
+				myButton.onClick.Invoke();
+		}
 	}
 }

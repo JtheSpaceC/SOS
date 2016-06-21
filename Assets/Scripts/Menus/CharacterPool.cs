@@ -28,6 +28,7 @@ public class CharacterPool : MonoBehaviour {
 	public List<CharacterPoolEntry> selectedCharacters;
 
 	public Button deselectAllButton;
+	public Button deleteSelectedButton;
 
 	public GameObject poolEntryPrefab;
 	public Transform parentForNewEntries;
@@ -99,9 +100,15 @@ public class CharacterPool : MonoBehaviour {
 		}
 
 		if(selectedCharacters.Count != 0)
+		{
 			deselectAllButton.interactable = true;
+			deleteSelectedButton.interactable = true;
+		}
 		else
+		{
 			deselectAllButton.interactable = false;
+			deleteSelectedButton.interactable = false;
+		}
 	}
 
 
@@ -132,6 +139,7 @@ public class CharacterPool : MonoBehaviour {
 		selectedCharacter.callsign = ng.getRandomCallsign();
 		//TODO: Generate the whole new appearance
 
+
 		ActivateCharacterEditScreen(selectedCharacter);
 	}
 
@@ -160,7 +168,7 @@ public class CharacterPool : MonoBehaviour {
 	{
 		characterBioEditPanel.SetActive(true);
 		//replace placeholder text with existing bio if any
-		if(selectedCharacter.characterBio != "")
+		if(selectedCharacter != null && selectedCharacter.characterBio != "")
 		{
 			input.text = selectedCharacter.characterBio;
 		}
@@ -217,7 +225,8 @@ public class CharacterPool : MonoBehaviour {
 
 	public void CancelNewBio(InputField input)
 	{
-		input.text = selectedCharacter.startingBioText;
+		if(selectedCharacter != null)
+			input.text = selectedCharacter.startingBioText;
 		characterBioEditPanel.SetActive(false);
 	}
 
@@ -257,7 +266,7 @@ public class CharacterPool : MonoBehaviour {
 
 		//save a new list of all character IDs
 
-		allIDs = selectedCharacter.characterID + ",";
+		allIDs = selectedCharacter.characterID + ',';
 
 		if(ES2.Exists("allCharacterIDs.es?encrypt=true&password=asswordp"))
 		{
@@ -330,6 +339,57 @@ public class CharacterPool : MonoBehaviour {
 		newPoolEntry.GetComponentInChildren<Text>().text = 
 			characterScript.firstName + " \""+ characterScript.callsign + "\" " + characterScript.lastName;
 	}
+
+
+	public void DeleteSelected()
+	{
+		string removedIDs = "";
+
+		for(int i = 0; i < selectedCharacters.Count; i++)
+		{
+			if(ES2.Exists(selectedCharacters[i].characterID + ".es?encrypt=true&password=asswordp"))
+			{
+				ES2.Delete(selectedCharacters[i].characterID + ".es?encrypt=true&password=asswordp");
+				print("Deleting");
+				removedIDs += selectedCharacters[i].characterID +',';
+			}
+			else
+				print("Couldn't find");
+		}
+
+		//SAVE NEW LIST OF ALL IDs
+		//first, get the original list
+
+		if (ES2.Exists ("allCharacterIDs.es?encrypt=true&password=asswordp")) 
+		{
+			allIDs = ES2.Load<string> ("allCharacterIDs.es?encrypt=true&password=asswordp");
+		}
+		else 
+		{
+			Debug.Log ("allCharacterIDs file did NOT exist. NO characters to load.");
+			allIDs = "";
+		}
+
+		//to see in Inspector (for debugging)
+		allIDsArray = allIDs.Split(new char[]{','}, System.StringSplitOptions.RemoveEmptyEntries);
+
+		//next make a new string to save, without any of the IDs we just deleted
+		string newAllIDs = "";
+
+		for(int i = 0; i < allIDsArray.Length; i++)
+		{
+			if(!removedIDs.Contains(allIDsArray[i]))
+			{
+				newAllIDs += allIDsArray[i] + ',';
+			}
+		}
+		ES2.Save(newAllIDs, "allCharacterIDs.es?encrypt=true&password=asswordp");
+
+		//repopulate the list so we can see who's left
+		PopulateCharacterPoolList();
+
+	}//end of DeleteSelected()
+
 
 	void DestroyChildEntries ()
 	{

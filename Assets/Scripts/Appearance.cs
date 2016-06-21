@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [System.Serializable]
 public class Appearance : ScriptableObject {
@@ -11,7 +10,7 @@ public class Appearance : ScriptableObject {
 	public Sprite[] speakingMouthShapes;
 	public Sprite[] shoutingMouthShapes;
 	public Sprite[] tenseMouthSahpes;
-	public Sprite [] eyesMale;
+	public Sprite[] eyesMale;
 	public Sprite[] eyesFemale;
 	public Sprite[] eyesBlinking;
 	public Sprite[] facialHair;
