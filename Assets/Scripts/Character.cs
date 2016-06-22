@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class Character : MonoBehaviour {
 
@@ -51,11 +52,13 @@ public class Character : MonoBehaviour {
 	float startTime = 0;
 	float timeToMove = 0.1f;
 	public Vector2 nextPosition;
-	Sprite originalEyes;
+	[HideInInspector] public Sprite originalEyes;
 
 	//for speaking & mouth behaviour
 	Sprite originalMouth;
 	bool speaking = false;
+
+	public string appearanceSeed; //NB!! Do in this order: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
 
 
 
@@ -79,6 +82,7 @@ public class Character : MonoBehaviour {
 		heartbeatScript = FindObjectOfType<Heartbeat>();
 		eyePositions = new Vector2[] {neutral, up, upperRight, right, lowerRight, down, lowerLeft, left, upperLeft};
 
+		//if we're not loading in an appearance
 		GenerateRandomNewAppearance();
 
 		originalEyes = eyes.sprite;
@@ -119,49 +123,120 @@ public class Character : MonoBehaviour {
 	}
 	#endif
 
-	[ContextMenu("Generate Appearance")]
+	[ContextMenu("Generate Random Appearance")]
 	public void GenerateRandomNewAppearance()
-	{ 
-		if(Random.Range(0f, 2f) > 1)
+	{
+		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+
+		if(UnityEngine.Random.Range(0f, 2f) > 1)
 		{
 			gender = Gender.Male;
+			appearanceSeed = "0";
 		}
 		else 
 		{
 			gender = Gender.Female;
+			appearanceSeed = "1";
 		}
 
-		body.sprite = GetASprite(appearances.baseBody);
-		body.color = appearances.skinTones[Random.Range(0, appearances.skinTones.Length)];
-		nose.sprite = GetASprite(appearances.noses);
-		eyes.sprite = gender == Gender.Male? GetASprite(appearances.eyesMale) : GetASprite(appearances.eyesFemale);
+		body.sprite = appearances.baseBody[NewSeed(appearances.baseBody.Length)];
+		body.color = appearances.skinTones[NewSeed(appearances.skinTones.Length)];
+		nose.sprite = appearances.noses[NewSeed(appearances.noses.Length)];
+		eyes.sprite = gender == Gender.Male? appearances.eyesMale[NewSeed(appearances.eyesMale.Length)] : 
+			appearances.eyesFemale[NewSeed(appearances.eyesFemale.Length)];
 		originalEyes = eyes.sprite;
-		mouth.sprite = GetASprite(appearances.mouths);
-		clothes.sprite = GetASprite(appearances.clothes);
-		helmet.sprite = GetASprite(appearances.helmets);
-		spaceSuit.sprite = GetASprite(appearances.spaceSuits);
+		hair.sprite = gender == Gender.Male? appearances.hairMale[NewSeed(appearances.hairMale.Length)] : 
+			appearances.hairFemale[NewSeed(appearances.hairFemale.Length)];
 
+		//facial hair
 		if(gender == Gender.Male)
 		{
-			facialHair.sprite = Random.Range(0,10) >=5? GetASprite(appearances.facialHair): null; //50:50 chance to be a clean shaven male
+			//50:50 chance to be a clean shaven male
+			if(UnityEngine.Random.Range(0,10) >=5)
+			{
+				facialHair.sprite = appearances.facialHair[NewSeed(appearances.facialHair.Length)]; 
+			}
+			else
+				NewSeed(0);
 		}
-		else facialHair.sprite = null;
+		else 
+		{
+			facialHair.sprite = null;
+			NewSeed(0);
+		}
 
-		hair.sprite = gender == Gender.Male? GetASprite(appearances.hairMale) : GetASprite(appearances.hairFemale);
-		hair.color = appearances.hairColours[Random.Range(0, appearances.hairColours.Length)];
+		hair.color = appearances.hairColours[NewSeed(appearances.hairColours.Length)];
 		facialHair.color = hair.color;
 
-		if(Random.Range(0f, 2f) > 1.33f)
+		//chance of having a prop for the eyes
+		if(UnityEngine.Random.Range(0f, 2f) > 1.33f)
 		{
-			eyesProp.sprite = GetASprite(appearances.eyesProp);
+			eyesProp.sprite = appearances.eyesProp[NewSeed(appearances.eyesProp.Length)];
 		}
-		else eyesProp.sprite = null;
+		else
+		{
+			eyesProp.sprite = null;
+			NewSeed(0);
+		}
+
+		//SEED OVER. REST IS IRRELEVANT FOR SEED AT THE MOMENT
+		//currently only one mouth. Ignore for seed
+		mouth.sprite = GetARandomSprite(appearances.mouths);
+
+		clothes.sprite = GetARandomSprite(appearances.clothes);
+		helmet.sprite = GetARandomSprite(appearances.helmets);
+		spaceSuit.sprite = GetARandomSprite(appearances.spaceSuits);
+
+	}//end of GenerateRandomNewAppearance
+
+	int NewSeed(int arrayLength) //this function adds its result to the string recording the seed of this appearance
+	{
+		int choice = UnityEngine.Random.Range(0, arrayLength);
+		appearanceSeed += choice.ToString();
+		return choice;
 	}
 
-	public Sprite GetASprite(Sprite[] whatArray)
+	public Sprite GetARandomSprite(Sprite[] whatArray)
 	{
-		return whatArray[Random.Range(0, whatArray.Length)];
+		return whatArray[UnityEngine.Random.Range(0, whatArray.Length)];
 	}
+
+	public void GenerateAppearanceBySeed(char[] seed)
+	{
+		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+
+		if(seed[0] == '0') //male
+			gender = Gender.Male;
+		else if(seed[0] == '1') //female
+			gender = Gender.Female;
+		else
+			Debug.Log("Something Went Wrong");
+
+		body.sprite = appearances.baseBody[Int32.Parse(seed[1].ToString())];
+		body.color = appearances.skinTones[Int32.Parse(seed[2].ToString())];
+		nose.sprite = appearances.noses[Int32.Parse(seed[3].ToString())];
+		eyes.sprite = gender == Gender.Male? appearances.eyesMale[Int32.Parse(seed[4].ToString())] : 
+			appearances.eyesFemale[Int32.Parse(seed[4].ToString())];
+		originalEyes = eyes.sprite;
+		hair.sprite = gender == Gender.Male? appearances.hairMale[Int32.Parse(seed[5].ToString())] : 
+			appearances.hairFemale[Int32.Parse(seed[5].ToString())];
+
+		//facial hair
+		if(gender == Gender.Male)
+		{
+			facialHair.sprite = appearances.facialHair[Int32.Parse(seed[6].ToString())];
+		}
+		else 
+		{
+			facialHair.sprite = null;
+		}
+
+		hair.color = appearances.hairColours[Int32.Parse(seed[7].ToString())];
+		facialHair.color = hair.color;
+
+		eyesProp.sprite = appearances.eyesProp[Int32.Parse(seed[8].ToString())];
+	}
+
 
 	#region Animations
 
@@ -177,7 +252,7 @@ public class Character : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 		}
 
-		yield return new WaitForSeconds(Random.Range(0.01f, 2f));
+		yield return new WaitForSeconds(UnityEngine.Random.Range(0.01f, 2f));
 		StartCoroutine("GuiltyEyes");
 	}
 
@@ -186,7 +261,7 @@ public class Character : MonoBehaviour {
 		startPos = eyeballs.localPosition;
 		startTime = Time.time;
 
-		if(nextPosition != neutral || Random.Range(0f, 10f) > 2.5f) //if we were not previously in neutral, go there, or if we roll, go there
+		if(nextPosition != neutral || UnityEngine.Random.Range(0f, 10f) > 2.5f) //if we were not previously in neutral, go there, or if we roll, go there
 			nextPosition = neutral;
 		else
 			RandomNewEyesPosition();
@@ -197,15 +272,15 @@ public class Character : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 		}
 
-		yield return new WaitForSeconds(Random.Range(0.01f, 1f));
+		yield return new WaitForSeconds(UnityEngine.Random.Range(0.01f, 1f));
 		StartCoroutine("AlertEyes");
 	}
 
 	public IEnumerator Blinking()
 	{		
-		yield return new WaitForSeconds(Random.Range(0.5f, 5f));
+		yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 5f));
 
-		eyes.sprite = GetASprite(appearances.eyesBlinking);
+		eyes.sprite = GetARandomSprite(appearances.eyesBlinking);
 		eyeballs.gameObject.SetActive(false);
 		yield return new WaitForSeconds(0.15f);
 
@@ -218,7 +293,7 @@ public class Character : MonoBehaviour {
 	{
 		speaking = true;
 		Invoke ("StopSpeaking", 1);
-		mouth.sprite = GetASprite(appearances.speakingMouthShapes);
+		mouth.sprite = GetARandomSprite(appearances.speakingMouthShapes);
 
 		yield return new WaitForSeconds(0.1f);
 
@@ -238,13 +313,13 @@ public class Character : MonoBehaviour {
 
 	void RandomNewEyesPosition()
 	{
-		nextPosition = eyePositions[Random.Range(0, eyePositions.Length)];
+		nextPosition = eyePositions[UnityEngine.Random.Range(0, eyePositions.Length)];
 	}
 
 	public IEnumerator TenseMouth()
 	{
-		mouth.sprite = GetASprite(appearances.tenseMouthSahpes);
-		yield return new WaitForSeconds(Random.Range(0.3f, 1f));
+		mouth.sprite = GetARandomSprite(appearances.tenseMouthSahpes);
+		yield return new WaitForSeconds(UnityEngine.Random.Range(0.3f, 1f));
 		mouth.sprite = originalMouth;
 	}
 

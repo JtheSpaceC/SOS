@@ -9,23 +9,15 @@ public class CharacterPoolEntry : MonoBehaviour {
 
 	public string characterBio;
 	[HideInInspector] public string startingBioText;
+	public string appearanceSeed;
 
 	public string[] savedData;
 
-	public int gender;
-	public int body;
-	public int skinColour;
-	public int nose;
-	public int eyes;
-	public int hair;
-	public int facialHair;
-	public int hairColour;
-	public int eyesProp;
 
 
 	public void EditCharacter()
 	{
-		CharacterPool.instance.ActivateCharacterEditScreen(this);
+		CharacterPool.instance.ActivateCharacterEditScreen(this, true);
 	}
 
 	public void UpdatePoolListSelection()

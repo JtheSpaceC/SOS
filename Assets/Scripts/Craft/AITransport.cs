@@ -91,6 +91,7 @@ public class AITransport : SupportShipFunctions {
 
 	void Update()
 	{
+		//TODO: Remove this?
 		#if UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.Keypad2))
 		{
