@@ -14,6 +14,7 @@ public class CharacterPool : MonoBehaviour {
 	public GameObject characterPoolPanel;
 	public GameObject characterCreationPanel;
 	public GameObject characterBioEditPanel;
+	public GameObject poolExportEditPanel;
 
 	public GameObject characterNameEditPanel;
 	public Text nameHeaderText;
@@ -30,6 +31,7 @@ public class CharacterPool : MonoBehaviour {
 
 	public Button deselectAllButton;
 	public Button deleteSelectedButton;
+	public Button exportSelectedButton;
 
 	public GameObject poolEntryPrefab;
 	public Transform parentForNewEntries;
@@ -115,11 +117,13 @@ public class CharacterPool : MonoBehaviour {
 		{
 			deselectAllButton.interactable = true;
 			deleteSelectedButton.interactable = true;
+			exportSelectedButton.interactable = true;
 		}
 		else
 		{
 			deselectAllButton.interactable = false;
 			deleteSelectedButton.interactable = false;
+			exportSelectedButton.interactable = false;
 		}
 	}
 
@@ -224,6 +228,13 @@ public class CharacterPool : MonoBehaviour {
 		characterNameEditPanel.GetComponentInChildren<InputField>().ActivateInputField();
 	}
 
+	public void ActivateExportEditPanel()
+	{
+		poolExportEditPanel.gameObject.SetActive(true);
+		poolExportEditPanel.GetComponentInChildren<InputField>().text = "";
+		poolExportEditPanel.GetComponentInChildren<InputField>().ActivateInputField();
+	}
+
 
 	public void SetNewName(InputField input)
 	{
@@ -274,6 +285,7 @@ public class CharacterPool : MonoBehaviour {
 		characterCreationPanel.SetActive(false);
 		characterNameEditPanel.SetActive(false);
 		characterBioEditPanel.SetActive(false);
+		poolExportEditPanel.SetActive(false);
 		avatar.avatarOutput.SetActive(false);
   	}
 	#endregion
@@ -333,6 +345,11 @@ public class CharacterPool : MonoBehaviour {
 		allIDsArray = allIDs.Split(new char[]{','}, System.StringSplitOptions.RemoveEmptyEntries);
 
 	}	//end of SaveCharacter()
+
+	public void ExportSelection()
+	{
+		print("test");
+	}
 
 	public string GenerateCharacterID()
 	{
