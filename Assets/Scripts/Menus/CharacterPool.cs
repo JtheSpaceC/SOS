@@ -50,6 +50,9 @@ public class CharacterPool : MonoBehaviour {
 	public Text selectedFacialHairText;
 	public Text selectedHairText;
 	public Text selectedHairColourText;
+	public Text selectedFacialFeatureText;
+	public Text selectedHelmetText;
+	public Text selectedSpacesuitColourText;
 
 	Character avatar;
 
@@ -191,7 +194,7 @@ public class CharacterPool : MonoBehaviour {
 		callsignEntryText.text = "Callsign: " + selectedCharacter.callsign;
 		genderEntryText.text = avatar.gender == Character.Gender.Male? "0" : "1";
 
-		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour
 		seedCharArray = selectedCharacter.appearanceSeed.ToCharArray();
 
 		selectedGenderText.text = seedCharArray[0].ToString();
@@ -203,6 +206,26 @@ public class CharacterPool : MonoBehaviour {
 		selectedFacialHairText.text = seedCharArray[6].ToString();
 		selectedHairColourText.text = seedCharArray[7].ToString();
 		selectedEyesPropText.text = seedCharArray[8].ToString();
+		selectedFacialFeatureText.text = seedCharArray[9].ToString();
+		selectedHelmetText.text = seedCharArray[10].ToString();
+		selectedSpacesuitColourText.text = seedCharArray[11].ToString();
+	}
+
+	void SpaceSuitShouldBeOn(bool shouldBeOn)
+	{
+		if(shouldBeOn && !avatar.inSpace)
+			ToggleSpaceSuit();
+		else if(!shouldBeOn && avatar.inSpace)
+			ToggleSpaceSuit();
+	}
+
+	public void ToggleSpaceSuit()
+	{
+		avatar.inSpace = !avatar.inSpace;
+		avatar.spaceSuit.enabled = avatar.inSpace;
+		avatar.helmet.enabled = avatar.inSpace;
+		avatar.hair.enabled = !avatar.inSpace;
+		avatar.clothes.enabled = !avatar.inSpace;
 	}
 
 	#region Name & Bio Editing
@@ -457,7 +480,7 @@ public class CharacterPool : MonoBehaviour {
 
 	#region Avatar Characteristics
 
-	//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+	//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour
 
 	public void NextGender() //changing this is touger as it requires changing possible eyes, hair, facial hair, etc
 	{
@@ -501,6 +524,7 @@ public class CharacterPool : MonoBehaviour {
 
 		//then set
 		avatar.body.sprite = avatar.appearances.baseBody[arrayPosition];
+
 		selectedBodyText.text = arrayPosition.ToString();
 
 		seedCharArray[1] = selectedBodyText.text[0];
@@ -518,6 +542,7 @@ public class CharacterPool : MonoBehaviour {
 
 		//then set
 		avatar.body.color = avatar.appearances.skinTones[arrayPosition];
+		avatar.AdjustFacialFeatureColour();
 		selectedSkinColourText.text = arrayPosition.ToString();
 
 		seedCharArray[2] = selectedSkinColourText.text[0];
@@ -575,6 +600,8 @@ public class CharacterPool : MonoBehaviour {
 
 	public void NextHair(int i)
 	{
+		SpaceSuitShouldBeOn(false);
+
 		int arrayPosition = Int32.Parse(selectedHairText.text);
 		arrayPosition += i;
 
@@ -607,6 +634,8 @@ public class CharacterPool : MonoBehaviour {
 
 	public void NextFacialHair(int i)
 	{
+		SpaceSuitShouldBeOn(false);
+
 		int arrayPosition = Int32.Parse(selectedFacialHairText.text);
 		arrayPosition += i;
 
@@ -624,6 +653,8 @@ public class CharacterPool : MonoBehaviour {
 
 	public void NextHairColour(int i)
 	{
+		SpaceSuitShouldBeOn(false);
+
 		int arrayPosition = Int32.Parse(selectedHairColourText.text);
 		arrayPosition += i;
 
@@ -655,6 +686,63 @@ public class CharacterPool : MonoBehaviour {
 		selectedEyesPropText.text = arrayPosition.ToString();
 
 		seedCharArray[8] = selectedEyesPropText.text[0];
+	}
+
+	public void NextFacialFeature(int i)
+	{
+		int arrayPosition = Int32.Parse(selectedFacialFeatureText.text);
+		arrayPosition += i;
+
+		if(arrayPosition < 0) //check if it's less than 0
+			arrayPosition = avatar.appearances.facialFeatures.Length -1;
+		else if(arrayPosition >= avatar.appearances.facialFeatures.Length) //check if it's greater than length
+			arrayPosition = 0;
+
+		//then set
+		avatar.facialFeature.sprite = avatar.appearances.facialFeatures[arrayPosition];
+		avatar.AdjustFacialFeatureColour();
+		selectedFacialFeatureText.text = arrayPosition.ToString();
+
+		seedCharArray[9] = selectedFacialFeatureText.text[0];
+	}
+
+	public void NextHelemt(int i)
+	{
+		SpaceSuitShouldBeOn(true);
+
+		int arrayPosition = Int32.Parse(selectedHelmetText.text);
+		arrayPosition += i;
+
+		if(arrayPosition < 0) //check if it's less than 0
+			arrayPosition = avatar.appearances.helmets.Length -1;
+		else if(arrayPosition >= avatar.appearances.helmets.Length) //check if it's greater than length
+			arrayPosition = 0;
+
+		//then set
+		avatar.helmet.sprite = avatar.appearances.helmets[arrayPosition];
+		selectedHelmetText.text = arrayPosition.ToString();
+
+		seedCharArray[10] = selectedHelmetText.text[0];
+	}
+
+	public void NextSpacesuitColour(int i)
+	{
+		SpaceSuitShouldBeOn(true);
+
+		int arrayPosition = Int32.Parse(selectedSpacesuitColourText.text);
+		arrayPosition += i;
+
+		if(arrayPosition < 0) //check if it's less than 0
+			arrayPosition = avatar.appearances.spaceSuitColours.Length -1;
+		else if(arrayPosition >= avatar.appearances.spaceSuitColours.Length) //check if it's greater than length
+			arrayPosition = 0;
+
+		//then set
+		avatar.spaceSuit.color = avatar.appearances.spaceSuitColours[arrayPosition];
+		avatar.helmet.color = avatar.appearances.spaceSuitColours[arrayPosition];
+		selectedSpacesuitColourText.text = arrayPosition.ToString();
+
+		seedCharArray[11] = selectedSpacesuitColourText.text[0];
 	}
 
 	#endregion

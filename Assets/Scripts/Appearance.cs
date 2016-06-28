@@ -18,9 +18,11 @@ public class Appearance : ScriptableObject {
 	public Sprite[] hairFemale;
 	public Color[] hairColours;
 	public Sprite[] eyesProp;
+	public Sprite[] facialFeatures; 
 	public Sprite[] clothes;
 	public Sprite[] helmets;
 	public Sprite[] spaceSuits;
+	public Color[] spaceSuitColours; 
 	public Sprite[] unitNumbers;
 
 	[HideInInspector] public int avatarWorldPositionModifier = 0; //used at start so avatars aren't on top of each other

@@ -24,6 +24,7 @@ public class Character : MonoBehaviour {
 	public SpriteRenderer body;
 	public SpriteRenderer eyes;
 	public SpriteRenderer eyesProp;
+	public SpriteRenderer facialFeature;
 	public SpriteRenderer nose;
 	public SpriteRenderer mouth;
 	public Transform eyeballs;
@@ -126,7 +127,7 @@ public class Character : MonoBehaviour {
 	[ContextMenu("Generate Random Appearance")]
 	public void GenerateRandomNewAppearance()
 	{
-		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, HelmetColour
 
 		if(UnityEngine.Random.Range(0f, 2f) > 1)
 		{
@@ -179,6 +180,22 @@ public class Character : MonoBehaviour {
 			NewSeed(0);
 		}
 
+		//chance of having a facial feature like a scar
+		if(UnityEngine.Random.Range(0f, 2f) > 1.33f)
+		{
+			facialFeature.sprite = appearances.facialFeatures[NewSeed(appearances.facialFeatures.Length)];
+			AdjustFacialFeatureColour();
+		}
+		else
+		{
+			facialFeature.sprite = null;
+			NewSeed(0);
+		}
+
+		helmet.sprite = appearances.helmets[NewSeed(appearances.helmets.Length)];
+		helmet.color = appearances.spaceSuitColours[NewSeed(appearances.spaceSuitColours.Length)];
+		spaceSuit.color = helmet.color;
+
 		//SEED OVER. REST IS IRRELEVANT FOR SEED AT THE MOMENT
 		//currently only one mouth. Ignore for seed
 		mouth.sprite = GetARandomSprite(appearances.mouths);
@@ -203,7 +220,7 @@ public class Character : MonoBehaviour {
 
 	public void GenerateAppearanceBySeed(char[] seed)
 	{
-		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature
 
 		if(seed[0] == '0') //male
 			gender = Gender.Male;
@@ -235,6 +252,18 @@ public class Character : MonoBehaviour {
 		facialHair.color = hair.color;
 
 		eyesProp.sprite = appearances.eyesProp[Int32.Parse(seed[8].ToString())];
+
+		facialFeature.sprite = appearances.facialFeatures[Int32.Parse(seed[9].ToString())];
+		AdjustFacialFeatureColour();
+
+		helmet.sprite = appearances.helmets[Int32.Parse(seed[10].ToString())];
+		helmet.color = appearances.spaceSuitColours[Int32.Parse(seed[11].ToString())];
+		spaceSuit.color = helmet.color;
+	}
+
+	public void AdjustFacialFeatureColour() //mostly for scar colour matching skin tone
+	{
+		facialFeature.color = Color.Lerp(body.color, Color.black, 0.4f);
 	}
 
 
