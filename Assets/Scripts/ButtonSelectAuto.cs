@@ -40,10 +40,15 @@ public class ButtonSelectAuto : MonoBehaviour {
 	{
 		if(Input.GetKeyDown(selectButtonWith))
 		{
-			if(myButton == null)
-				GetComponent<Button>().onClick.Invoke();
-			else
-				myButton.onClick.Invoke();
+			DoTheClick();
 		}
+	}
+
+	public void DoTheClick()
+	{
+		if(myButton == null)
+			GetComponent<Button>().onClick.Invoke();
+		else
+			myButton.onClick.Invoke();
 	}
 }

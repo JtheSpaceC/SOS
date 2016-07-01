@@ -6,15 +6,27 @@ using System.Collections.Generic;
 
 public class CharacterPool : MonoBehaviour {
 
+	string encryption = ".es?encrypt=true&password=asswordp"; //for EasySave2. If changing, also change '.es' in PopulateExportPoolList()
+
 	public static CharacterPool instance;
 
 	NameGenerator ng;
 
 	[HideInInspector] public CharacterPoolEntry selectedCharacter;
+	[HideInInspector] public CharacterPoolGroupEntry selectedCharacterGroup;
 	public GameObject characterPoolPanel;
 	public GameObject characterCreationPanel;
 	public GameObject characterBioEditPanel;
-	public GameObject poolExportEditPanel;
+	public GameObject poolImportExportEditPanel;
+	public GameObject poolExportConfirmationPanel;
+	public GameObject poolDeleteConfirmationPanel;
+	public GameObject addToGroupConfirmationPanel;
+	public GameObject cpcCreateNewPoolButton;
+	public GameObject cpcImportEntireCollectionButton;
+	public Text cpcSubHeaderText;
+
+	public enum ImportOrExport {Import, Export};
+	public ImportOrExport importOrExport;
 
 	public GameObject characterNameEditPanel;
 	public Text nameHeaderText;
@@ -34,7 +46,9 @@ public class CharacterPool : MonoBehaviour {
 	public Button exportSelectedButton;
 
 	public GameObject poolEntryPrefab;
+	public GameObject poolGroupEntryPrefab;
 	public Transform parentForNewEntries;
+	public Transform parentForNewGroupEntries;
 
 	public string[] saveDataOutput; //for debugging in Inspector
 	public string allIDs;
@@ -58,6 +72,9 @@ public class CharacterPool : MonoBehaviour {
 
 	public char[] seedCharArray;
 
+	[TextArea()]
+	public string[] testBox;
+
 
 	void Awake()
 	{
@@ -78,15 +95,22 @@ public class CharacterPool : MonoBehaviour {
 	}
 		
 
-	public void PopulateCharacterPoolList ()
+	public void ActivateCharacterPoolPanel()
+	{
+		CloseAllCharacterRelatedWindows();
+		characterPoolPanel.SetActive(true);
+		PopulateCharacterPoolList();
+	}
+
+	void PopulateCharacterPoolList ()
 	{
 		//this gets rid of the old character entries on the list as it populates new ones based on the save file each time. Prevents duplicates
 		DestroyChildEntries ();
 
 		//Load All Characters. Get from a list of saved, active characters. Create a list
-		if (ES2.Exists ("allCharacterIDs.es?encrypt=true&password=asswordp")) 
+		if (ES2.Exists ("allCharacterIDs" + encryption)) 
 		{
-			allIDs = ES2.Load<string> ("allCharacterIDs.es?encrypt=true&password=asswordp");
+			allIDs = ES2.Load<string> ("allCharacterIDs" + encryption);
 		}
 		else 
 		{
@@ -103,6 +127,49 @@ public class CharacterPool : MonoBehaviour {
 		}
 
 		allCharacters = FindObjectsOfType<CharacterPoolEntry>();
+
+		UpdateSelection();
+	}
+
+
+	void PopulateImportOrExportPoolList()
+	{
+		//this gets rid of the old  entries on the list as it populates new ones based on the save file each time. Prevents duplicates
+		DestroyChildEntries ();
+
+		if(importOrExport == ImportOrExport.Import)
+		{
+			cpcCreateNewPoolButton.SetActive(false);
+			cpcSubHeaderText.text = "Import a Character from an existing Collection";
+		}
+
+		if(System.IO.Directory.Exists(Application.persistentDataPath + "/CharacterPool"))
+		{
+			foreach(string file in System.IO.Directory.GetFiles(Application.persistentDataPath + "/CharacterPool"))
+			{
+				string[] info = file.Split(new String[]{"\\", ".es"}, StringSplitOptions.None);
+				testBox = info;
+
+				//Load All Character Lists.
+				if (ES2.Exists ("CharacterPool/" + info[1] + encryption)) 
+				{
+					string[] groupInfo =
+						ES2.Load<string> ("CharacterPool/" + info[1] + encryption).Split(new string[]{"\n"}, StringSplitOptions.RemoveEmptyEntries);
+					testBox = groupInfo;
+
+					GameObject newEntry = Instantiate(poolGroupEntryPrefab) as GameObject;
+					newEntry.transform.parent = parentForNewGroupEntries;
+					CharacterPoolGroupEntry newEntryScript = newEntry.GetComponent<CharacterPoolGroupEntry>();
+					newEntryScript.savedData = groupInfo;
+					newEntryScript.collectionName = groupInfo[0];
+					newEntryScript.nameText.text = groupInfo[0];
+				}
+				else 
+				{
+					Debug.Log ("File DOESN'T exist. " + file);
+				}
+			}
+		}
 	}
 
 
@@ -183,8 +250,6 @@ public class CharacterPool : MonoBehaviour {
 		characterCreationPanel.SetActive(true);
 
 		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
-
-		//set up Back Button
 	}
 
 	void SetCorrectNumbersOnEditButtons()
@@ -251,11 +316,28 @@ public class CharacterPool : MonoBehaviour {
 		characterNameEditPanel.GetComponentInChildren<InputField>().ActivateInputField();
 	}
 
+	public void ActivateImportPanel()
+	{
+		CloseAllCharacterRelatedWindows();
+		selectedCharacters.Clear();
+		poolImportExportEditPanel.SetActive(true);
+		importOrExport = ImportOrExport.Import;
+		PopulateImportOrExportPoolList();
+	}
+
 	public void ActivateExportEditPanel()
 	{
-		poolExportEditPanel.gameObject.SetActive(true);
-		poolExportEditPanel.GetComponentInChildren<InputField>().text = "";
-		poolExportEditPanel.GetComponentInChildren<InputField>().ActivateInputField();
+		CloseAllCharacterRelatedWindows();
+		importOrExport = ImportOrExport.Export;
+		poolImportExportEditPanel.SetActive(true);
+		PopulateImportOrExportPoolList();
+	}
+
+	public void ActivateExportConfirmationPanel()
+	{
+		poolExportConfirmationPanel.gameObject.SetActive(true);
+		poolExportConfirmationPanel.GetComponentInChildren<InputField>().text = "";
+		poolExportConfirmationPanel.GetComponentInChildren<InputField>().ActivateInputField();
 	}
 
 
@@ -308,10 +390,29 @@ public class CharacterPool : MonoBehaviour {
 		characterCreationPanel.SetActive(false);
 		characterNameEditPanel.SetActive(false);
 		characterBioEditPanel.SetActive(false);
-		poolExportEditPanel.SetActive(false);
+		poolImportExportEditPanel.SetActive(false);
+		poolExportConfirmationPanel.SetActive(false);
+		poolDeleteConfirmationPanel.SetActive(false);
+		addToGroupConfirmationPanel.SetActive(false);
+		cpcCreateNewPoolButton.SetActive(true);
+		cpcImportEntireCollectionButton.SetActive(false);
+		cpcSubHeaderText.text = "Character Collections";
 		avatar.avatarOutput.SetActive(false);
+		selectedCharacter = null;
+		selectedCharacterGroup = null;
   	}
 	#endregion
+
+	string CollectInfo()
+	{
+		string stringToReturn = 
+		"ID:" + selectedCharacter.characterID + "FN:" + selectedCharacter.firstName +
+		"LN:" + selectedCharacter.lastName + "CS:" + selectedCharacter.callsign +
+		"BIO:" + selectedCharacter.characterBio +
+		"APP:" + selectedCharacter.appearanceSeed;
+
+		return stringToReturn;
+	}
 
 	public void SaveCharacter()
 	{
@@ -326,25 +427,22 @@ public class CharacterPool : MonoBehaviour {
 		selectedCharacter.appearanceSeed = new string(seedCharArray); //converts the char array into a single string
 
 		//collect info
-		string saveData = "ID:" + selectedCharacter.characterID + "FN:" + selectedCharacter.firstName +
-			"LN:" + selectedCharacter.lastName + "CS:" + selectedCharacter.callsign +
-			"BIO:" + selectedCharacter.characterBio +
-			"APP:" + selectedCharacter.appearanceSeed;
+		string saveData = CollectInfo();
 
 		//for debugging in Inspector
 		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:"};
 		saveDataOutput = saveData.Split(parameters, System.StringSplitOptions.None);
 			
 		//save it with all character info
-		ES2.Save(saveData, selectedCharacter.characterID + ".es?encrypt=true&password=asswordp");
+		ES2.Save(saveData, selectedCharacter.characterID + encryption);
 
 		//save a new list of all character IDs
 
 		allIDs = selectedCharacter.characterID + ',';
 
-		if(ES2.Exists("allCharacterIDs.es?encrypt=true&password=asswordp"))
+		if(ES2.Exists("allCharacterIDs" + encryption))
 		{
-			string oldSaves = ES2.Load<string>("allCharacterIDs.es?encrypt=true&password=asswordp");
+			string oldSaves = ES2.Load<string>("allCharacterIDs" + encryption);
 
 			if(oldSaves.Contains(selectedCharacter.characterID))
 			{
@@ -362,17 +460,54 @@ public class CharacterPool : MonoBehaviour {
 			Debug.Log("allCharacterIDs file did NOT exist");
 		}
 
-		ES2.Save(allIDs, "allCharacterIDs.es?encrypt=true&password=asswordp");
+		ES2.Save(allIDs, "allCharacterIDs" + encryption);
 
 		//to see in Inspector (for debugging)
 		allIDsArray = allIDs.Split(new char[]{','}, System.StringSplitOptions.RemoveEmptyEntries);
 
 	}	//end of SaveCharacter()
 
-	public void ExportSelection()
+
+	public void ImportEntirePool()
 	{
-		print("test");
+		
 	}
+
+	public void ExportSelection(bool isNew)
+	{
+		string exportSelectionName = "";
+		string exportField = "";
+
+		if(isNew)
+		{
+			exportSelectionName = poolExportConfirmationPanel.transform.FindChild("InputField/Text").GetComponent<Text>().text;
+			exportField = exportSelectionName + "\n";
+		}
+		else
+		{
+			exportSelectionName = selectedCharacterGroup.collectionName;
+			exportField = exportSelectionName + "\n";
+			for(int i = 1; i < selectedCharacterGroup.savedData.Length; i++)
+			{
+				exportField += selectedCharacterGroup.savedData[i] + "\n";
+			}
+		}
+
+		foreach(CharacterPoolEntry character in selectedCharacters)
+		{
+			selectedCharacter = character;
+			string exportCharacterString = CollectInfo();
+
+			exportField += exportCharacterString + "\n";
+		}
+
+		ES2.Save(exportField, "CharacterPool/" + exportSelectionName + encryption);
+
+		selectedCharacters.Clear();
+		CloseAllCharacterRelatedWindows();
+		ActivateCharacterPoolPanel();
+	}
+
 
 	public string GenerateCharacterID()
 	{
@@ -386,6 +521,7 @@ public class CharacterPool : MonoBehaviour {
 		return toReturn;
 	}
 
+
 	void LoadCharacterToPoolList(string charID)
 	{
 		if(charID == "")
@@ -393,7 +529,7 @@ public class CharacterPool : MonoBehaviour {
 			Debug.Log("Character ID was empty. Returning.");
 			return;
 		}
-		else if(!ES2.Exists(charID + ".es?encrypt=true&password=asswordp"))
+		else if(!ES2.Exists(charID + encryption))
 		{
 			Debug.Log("No character info found to Load. Returning.");
 			return;
@@ -403,7 +539,7 @@ public class CharacterPool : MonoBehaviour {
 		CharacterPoolEntry characterScript = newPoolEntry.GetComponent<CharacterPoolEntry>();
 		newPoolEntry.transform.SetParent(parentForNewEntries);
 
-		string characterInfo = ES2.Load<string>(charID + ".es?encrypt=true&password=asswordp");
+		string characterInfo = ES2.Load<string>(charID + encryption);
 		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:"};
 		characterScript.savedData = characterInfo.Split(parameters, System.StringSplitOptions.None);
 
@@ -425,10 +561,10 @@ public class CharacterPool : MonoBehaviour {
 
 		for(int i = 0; i < selectedCharacters.Count; i++)
 		{
-			if(ES2.Exists(selectedCharacters[i].characterID + ".es?encrypt=true&password=asswordp"))
+			if(ES2.Exists(selectedCharacters[i].characterID + encryption))
 			{
-				ES2.Delete(selectedCharacters[i].characterID + ".es?encrypt=true&password=asswordp");
-				print("Deleting");
+				ES2.Delete(selectedCharacters[i].characterID + encryption);
+				print("Removing");
 				removedIDs += selectedCharacters[i].characterID +',';
 			}
 			else
@@ -438,9 +574,9 @@ public class CharacterPool : MonoBehaviour {
 		//SAVE NEW LIST OF ALL IDs
 		//first, get the original list
 
-		if (ES2.Exists ("allCharacterIDs.es?encrypt=true&password=asswordp")) 
+		if (ES2.Exists ("allCharacterIDs" + encryption)) 
 		{
-			allIDs = ES2.Load<string> ("allCharacterIDs.es?encrypt=true&password=asswordp");
+			allIDs = ES2.Load<string> ("allCharacterIDs" + encryption);
 		}
 		else 
 		{
@@ -461,7 +597,7 @@ public class CharacterPool : MonoBehaviour {
 				newAllIDs += allIDsArray[i] + ',';
 			}
 		}
-		ES2.Save(newAllIDs, "allCharacterIDs.es?encrypt=true&password=asswordp");
+		ES2.Save(newAllIDs, "allCharacterIDs" + encryption);
 
 		//repopulate the list so we can see who's left
 		PopulateCharacterPoolList();
@@ -469,11 +605,45 @@ public class CharacterPool : MonoBehaviour {
 	}//end of DeleteSelected()
 
 
+	public void DeleteSelectedGroup()
+	{
+		if(ES2.Exists("CharacterPool/" + selectedCharacterGroup.nameText.text + encryption))
+		{
+			ES2.Delete("CharacterPool/" + selectedCharacterGroup.nameText.text + encryption);
+		}
+		else
+		{
+			Debug.LogError("Couldn't find selected Character Group.");
+		}
+
+		poolDeleteConfirmationPanel.SetActive(false);
+
+		ActivateCharacterPoolPanel();
+	}
+
+
+	public void OpenCharacterPoolFolder()
+	{
+		try{
+		System.Diagnostics.Process.Start(Application.persistentDataPath + "/CharacterPool");
+		}
+		catch{
+			System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/CharacterPool");
+			System.Diagnostics.Process.Start(Application.persistentDataPath + "/CharacterPool");
+		}
+	}
+
+
 	void DestroyChildEntries ()
 	{
 		while (parentForNewEntries.childCount > 0) 
 		{
 			DestroyImmediate (parentForNewEntries.GetChild (0).gameObject);
+		}
+
+		while (parentForNewGroupEntries.childCount > 0) 
+		{
+			DestroyImmediate (parentForNewGroupEntries.GetChild (0).gameObject);
 		}
 	}
 
@@ -499,6 +669,7 @@ public class CharacterPool : MonoBehaviour {
 		else 
 		{
 			avatar.gender = Character.Gender.Male;
+			selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
 			selectedGenderText.text = "0";
 			avatar.eyes.sprite = avatar.appearances.eyesMale[0];
 			selectedEyesText.text = "0";
@@ -508,6 +679,9 @@ public class CharacterPool : MonoBehaviour {
 			avatar.hair.sprite = avatar.appearances.hairMale[0];
 			avatar.body.sprite = avatar.appearances.baseBody[Int32.Parse(selectedBodyText.text)];
 		}
+		selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
+		firstNameEntryText.text = "First Name: " + selectedCharacter.firstName;
+		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
 		avatar.originalEyes = avatar.eyes.sprite;
 		seedCharArray[0] = selectedGenderText.text[0];
 	}
@@ -744,6 +918,7 @@ public class CharacterPool : MonoBehaviour {
 
 		seedCharArray[11] = selectedSpacesuitColourText.text[0];
 	}
+
 
 	#endregion
 }
