@@ -26,7 +26,7 @@ public class CharacterPoolGroupEntry : MonoBehaviour {
 		else if(CharacterPool.instance.importOrExport == CharacterPool.ImportOrExport.Import)
 		{
 			CharacterPool.instance.cpcImportEntireCollectionButton.SetActive(true);
-			//populate with names from that collection
+			CharacterPool.instance.PopulateCharactersInImportList(this);
 		}
 			
 	}

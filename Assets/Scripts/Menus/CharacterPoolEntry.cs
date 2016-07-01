@@ -25,4 +25,10 @@ public class CharacterPoolEntry : MonoBehaviour {
 		CharacterPool.instance.UpdateSelection();
 	}
 
+	public void ImportThisCharacter(bool returnToMain)
+	{
+		CharacterPool.instance.currentTask = CharacterPool.CurrentTask.ImportExport;
+		CharacterPool.instance.selectedCharacter = this;
+		CharacterPool.instance.SaveCharacter(returnToMain);
+	}
 }

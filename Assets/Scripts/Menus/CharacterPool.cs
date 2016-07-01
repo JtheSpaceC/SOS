@@ -26,7 +26,9 @@ public class CharacterPool : MonoBehaviour {
 	public Text cpcSubHeaderText;
 
 	public enum ImportOrExport {Import, Export};
-	public ImportOrExport importOrExport;
+	[HideInInspector] public ImportOrExport importOrExport;
+	public enum CurrentTask {EditingCharacter, ImportExport};
+	[HideInInspector] public CurrentTask currentTask;
 
 	public GameObject characterNameEditPanel;
 	public Text nameHeaderText;
@@ -47,6 +49,7 @@ public class CharacterPool : MonoBehaviour {
 
 	public GameObject poolEntryPrefab;
 	public GameObject poolGroupEntryPrefab;
+	public GameObject poolCharacterImportEntryPrefab;
 	public Transform parentForNewEntries;
 	public Transform parentForNewGroupEntries;
 
@@ -99,10 +102,10 @@ public class CharacterPool : MonoBehaviour {
 	{
 		CloseAllCharacterRelatedWindows();
 		characterPoolPanel.SetActive(true);
-		PopulateCharacterPoolList();
+		PopulateActiveCharacterPoolList();
 	}
 
-	void PopulateCharacterPoolList ()
+	void PopulateActiveCharacterPoolList ()
 	{
 		//this gets rid of the old character entries on the list as it populates new ones based on the save file each time. Prevents duplicates
 		DestroyChildEntries ();
@@ -129,6 +132,31 @@ public class CharacterPool : MonoBehaviour {
 		allCharacters = FindObjectsOfType<CharacterPoolEntry>();
 
 		UpdateSelection();
+	}
+
+	public void PopulateCharactersInImportList(CharacterPoolGroupEntry cpge) //these are characters on a potential import list, not the Active List
+	{
+		//this gets rid of the old character entries on the list as it populates new ones based on the save file each time. Prevents duplicates
+		DestroyChildEntries ();
+
+		//Load a representative list of character names from the saved data of each line in the Group
+
+		for(int i = 1; i < cpge.savedData.Length; i++) //skip the first one, which is just the name
+		{
+			allIDs = cpge.savedData[i];
+
+			//next line is just for viewing in Inspector
+			allIDsArray = allIDs.Split (new char[] {','}, System.StringSplitOptions.RemoveEmptyEntries);
+
+			GameObject newImportPoolEntry = Instantiate(poolCharacterImportEntryPrefab) as GameObject;
+			CharacterPoolEntry characterScript = newImportPoolEntry.GetComponent<CharacterPoolEntry>();
+			newImportPoolEntry.transform.SetParent(parentForNewGroupEntries);
+
+			GiveCharacterPoolEntryScriptItsInfo(allIDs, characterScript);
+
+			newImportPoolEntry.GetComponentInChildren<Text>().text = 
+				characterScript.firstName + " \""+ characterScript.callsign + "\" " + characterScript.lastName;
+		}
 	}
 
 
@@ -235,6 +263,8 @@ public class CharacterPool : MonoBehaviour {
 
 	public void ActivateCharacterEditScreen(CharacterPoolEntry selected, bool thisIsASavedCharacter)
 	{
+		currentTask = CurrentTask.EditingCharacter;
+
 		selectedCharacter = selected;
 		SetCorrectNumbersOnEditButtons();
 
@@ -414,7 +444,7 @@ public class CharacterPool : MonoBehaviour {
 		return stringToReturn;
 	}
 
-	public void SaveCharacter()
+	public void SaveCharacter(bool returnToMain)
 	{
 		//check if character exists already (if they have an ID) and generate an ID if it's blank
 
@@ -424,7 +454,16 @@ public class CharacterPool : MonoBehaviour {
 			Debug.Log("Generating new CharacterID: " + selectedCharacter.characterID);
 		}
 
-		selectedCharacter.appearanceSeed = new string(seedCharArray); //converts the char array into a single string
+		if(currentTask == CurrentTask.EditingCharacter) //if we're editing a new character
+		{
+			//converts the char array from the on-screen avatar into a single string
+			selectedCharacter.appearanceSeed = new string(seedCharArray); 
+		}
+		else if(currentTask == CurrentTask.ImportExport)
+		{
+			//don't edit the appearance seed.
+		}
+		else Debug.LogError("Unforseen Circumstance");
 
 		//collect info
 		string saveData = CollectInfo();
@@ -465,12 +504,22 @@ public class CharacterPool : MonoBehaviour {
 		//to see in Inspector (for debugging)
 		allIDsArray = allIDs.Split(new char[]{','}, System.StringSplitOptions.RemoveEmptyEntries);
 
+		if(returnToMain)
+			ActivateCharacterPoolPanel();
+
 	}	//end of SaveCharacter()
 
 
 	public void ImportEntirePool()
 	{
-		
+		allCharacters = FindObjectsOfType<CharacterPoolEntry>();
+
+		for(int i = 0; i < allCharacters.Length; i++)
+		{
+			allCharacters[i].ImportThisCharacter(false);
+		}
+
+		ActivateCharacterPoolPanel();
 	}
 
 	public void ExportSelection(bool isNew)
@@ -504,7 +553,6 @@ public class CharacterPool : MonoBehaviour {
 		ES2.Save(exportField, "CharacterPool/" + exportSelectionName + encryption);
 
 		selectedCharacters.Clear();
-		CloseAllCharacterRelatedWindows();
 		ActivateCharacterPoolPanel();
 	}
 
@@ -540,18 +588,23 @@ public class CharacterPool : MonoBehaviour {
 		newPoolEntry.transform.SetParent(parentForNewEntries);
 
 		string characterInfo = ES2.Load<string>(charID + encryption);
-		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:"};
-		characterScript.savedData = characterInfo.Split(parameters, System.StringSplitOptions.None);
-
-		characterScript.characterID = characterScript.savedData[1];
-		characterScript.firstName = characterScript.savedData[2];
-		characterScript.lastName = characterScript.savedData[3];
-		characterScript.callsign = characterScript.savedData[4];
-		characterScript.characterBio = characterScript.savedData[5];
-		characterScript.appearanceSeed = characterScript.savedData[6];
+		GiveCharacterPoolEntryScriptItsInfo(characterInfo, characterScript);
 
 		newPoolEntry.GetComponentInChildren<Text>().text = 
 			characterScript.firstName + " \""+ characterScript.callsign + "\" " + characterScript.lastName;
+	}
+
+	void GiveCharacterPoolEntryScriptItsInfo(string characterInfo, CharacterPoolEntry cpeScript)
+	{
+		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:"};
+		cpeScript.savedData = characterInfo.Split(parameters, System.StringSplitOptions.None);
+
+		cpeScript.characterID = cpeScript.savedData[1];
+		cpeScript.firstName = cpeScript.savedData[2];
+		cpeScript.lastName = cpeScript.savedData[3];
+		cpeScript.callsign = cpeScript.savedData[4];
+		cpeScript.characterBio = cpeScript.savedData[5];
+		cpeScript.appearanceSeed = cpeScript.savedData[6];
 	}
 
 
@@ -600,7 +653,7 @@ public class CharacterPool : MonoBehaviour {
 		ES2.Save(newAllIDs, "allCharacterIDs" + encryption);
 
 		//repopulate the list so we can see who's left
-		PopulateCharacterPoolList();
+		PopulateActiveCharacterPoolList();
 
 	}//end of DeleteSelected()
 
