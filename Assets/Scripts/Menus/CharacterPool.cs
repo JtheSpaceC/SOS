@@ -46,6 +46,7 @@ public class CharacterPool : MonoBehaviour {
 	public Button deselectAllButton;
 	public Button deleteSelectedButton;
 	public Button exportSelectedButton;
+	public Dropdown charPoolUsageDropdown;
 
 	public GameObject poolEntryPrefab;
 	public GameObject poolGroupEntryPrefab;
@@ -90,6 +91,8 @@ public class CharacterPool : MonoBehaviour {
 			Debug.LogError("There were two Character Pools. Deleting one");
 			DestroyImmediate(this.gameObject);
 		}
+
+		SetUpCharacterPoolUsageDropdown();
 
 		avatar = FindObjectOfType<Character>();
 		ng = NameGenerator.Instance;
@@ -698,6 +701,23 @@ public class CharacterPool : MonoBehaviour {
 		{
 			DestroyImmediate (parentForNewGroupEntries.GetChild (0).gameObject);
 		}
+	}
+
+	void SetUpCharacterPoolUsageDropdown()
+	{
+		string setting = PlayerPrefsManager.GetCharacterPoolUsageKey();
+		if(setting == "Random & Character Pool")
+			charPoolUsageDropdown.value = 0;
+		else if(setting == "Character Pool Only")
+			charPoolUsageDropdown.value = 1;
+		else if(setting == "Random Only")
+			charPoolUsageDropdown.value = 2;
+		else
+			Debug.LogError("Player Prefs Error");
+	}
+	public void SetCharacterPoolUsageSettings()
+	{
+		PlayerPrefsManager.SetCharacterPoolUsageKey(charPoolUsageDropdown.transform.FindChild("Label").GetComponent<Text>().text);
 	}
 
 

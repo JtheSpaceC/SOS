@@ -7,6 +7,7 @@ public class PlayerPrefsManager: MonoBehaviour {
 	const string CONTROLLER_VIBRATE_KEY = "Controller_Vibrate_Key";
 	const string CONTROLLER_STICK_BEHAVIOUR_KEY = "Controller_Stick_Behaviour_Key";
 	const string HINTS_ON_OFF_KEY = "Hints_On_Off_Key";
+	const string CHARACTER_POOL_USAGE_KEY = "Character_Pool_Usage_Key";
 
 	public enum LeftGamepadStickBehaviour {stickRotates, stickPoints};
 	public static LeftGamepadStickBehaviour leftGamepadStickBehaviour;
@@ -45,6 +46,8 @@ public class PlayerPrefsManager: MonoBehaviour {
 			leftGamepadStickBehaviour = LeftGamepadStickBehaviour.stickRotates;
 			PlayerPrefs.SetString(CONTROLLER_STICK_BEHAVIOUR_KEY, "StickRotates");
 		}
+		else
+			Debug.LogError("Player Prefs Error");
 
 		PlayerPrefs.Save ();
 	}
@@ -67,5 +70,20 @@ public class PlayerPrefsManager: MonoBehaviour {
 			Debug.LogError("Player Prefs Error");
 
 		PlayerPrefs.Save();
+	}
+
+
+	public static string GetCharacterPoolUsageKey()
+	{
+		return PlayerPrefs.GetString(CHARACTER_POOL_USAGE_KEY);
+	}
+	public static void SetCharacterPoolUsageKey(string whichMode)
+	{
+		if(whichMode == "Random & Character Pool" || whichMode == "Character Pool Only" || whichMode == "Random Only")
+		{
+			PlayerPrefs.SetString(CHARACTER_POOL_USAGE_KEY, whichMode);
+		}
+		else
+			Debug.LogError("Player Prefs Error");
 	}
 }
