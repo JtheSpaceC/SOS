@@ -34,6 +34,9 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public GameObject radarCamera;
 
+	bool haveLoadedMenu = false;
+	GameObject mainMenu;
+
 
 	void Start () 
 	{
@@ -85,11 +88,38 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 		if (Input.GetKeyDown (KeyCode.R))
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
+		/*
 		if (Input.GetButtonDown ("Start"))
 		{
 			Tools.instance.CommenceFadeout(blackoutTime);
 			Invoke("LoadMainLevel", 1.6f);
+		}*/
+
+		if(Input.GetButtonDown ("Start"))
+		{
+			if(FindObjectOfType<MainMenu>())
+				mainMenu = FindObjectOfType<MainMenu>().gameObject;			
+
+			if(!haveLoadedMenu && FindObjectOfType<MainMenu>() == null)
+			{
+				SceneManager.LoadScene("Main Menu", LoadSceneMode.Additive);
+				haveLoadedMenu = true;
+
+				sceneResetTime = Mathf.Infinity;
+				AudioMasterScript.instance.FadeChannel("Master vol", -10, 0, 0.3f);
+			}
+			else if(haveLoadedMenu && mainMenu.activeSelf)
+			{
+				mainMenu.SetActive(false);
+				AudioMasterScript.instance.FadeChannel("Master vol", 0, 0, 0.3f);
+			}
+			else if(haveLoadedMenu && !mainMenu.activeSelf)
+			{
+				mainMenu.SetActive(true);
+				AudioMasterScript.instance.FadeChannel("Master vol", -10, 0, 0.3f);
+			}
+
+
 		}
 
 		if(Director.instance.timer > sceneResetTime)
@@ -260,4 +290,11 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		return numFighters;
 	}
 
+
+	public void LoadDemo()
+	{
+		Tools.instance.CommenceFadeout(blackoutTime);
+		Invoke("LoadMainLevel", 1.6f);
+	}
+		
 }//Mono

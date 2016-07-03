@@ -157,7 +157,9 @@ public class SquadronLeader : MonoBehaviour {
 				AIFighter aiScript = activeWingmen[i].GetComponent<AIFighter>();
 				aiScript.SetSquadReferences();
 				if(isPlayerSquad)
+				{
 					aiScript.myCharacterAvatarScript.SetUpAvatar(aiScript.mySquadUnitNumber);
+				}
 			}
 		}
 	}

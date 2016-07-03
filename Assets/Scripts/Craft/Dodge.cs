@@ -63,7 +63,7 @@ public class Dodge : MonoBehaviour
 		aiFighterScript = enginesFighterScript.GetComponent<AIFighter>();
 		healthScript = transform.parent.transform.parent.GetComponent<HealthFighter>();
 
-		if(aiFighterScript && aiFighterScript.myCharacterAvatarScript)
+		if(aiFighterScript && aiFighterScript.myCharacterAvatarScript != null)
 			hasAvatar = true;
 
 		if(playerControlled)

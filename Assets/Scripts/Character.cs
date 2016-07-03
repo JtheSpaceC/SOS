@@ -97,11 +97,16 @@ public class Character : MonoBehaviour {
 			helmet.enabled = false;
 			spaceSuit.enabled = false;
 			cockpit.enabled = false;
+			bgScrollerScript.gameObject.SetActive(false);
 		}
 		else
 		{
 			hair.enabled = false;
 			clothes.enabled = false;
+			helmet.enabled = true;
+			spaceSuit.enabled = true;
+			cockpit.enabled = true;
+			bgScrollerScript.gameObject.SetActive(true);
 		}
 
 	}
