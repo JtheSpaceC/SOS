@@ -191,6 +191,20 @@ public class ClickToPlay : MonoBehaviour
 		quitConfirmationWindow.SetActive(true);
 	}
 
+	public void QuitToMainMenu()
+	{
+		if(Tools.instance)
+			Tools.instance.VibrationStop();
+
+		#if UNITY_EDITOR //if in the editor and we haven't added all the right scenes to the Build queue, this will just exit
+		if(SceneManager.sceneCount < 2)
+			UnityEditor.EditorApplication.isPlaying = false;		
+		#endif
+
+		Time.timeScale = 1;
+		SceneManager.LoadScene(1);
+	}
+
 	public void NextSlide(int fwdOrBackInt)
 	{
 		whichSlideToShow += fwdOrBackInt;

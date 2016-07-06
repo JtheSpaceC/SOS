@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AssemblyCSharp;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System;
@@ -7,12 +8,20 @@ public class Character : MonoBehaviour {
 
 	[HideInInspector] public Heartbeat heartbeatScript;
 	[HideInInspector] public BGScroller bgScrollerScript;
+	[HideInInspector] public AIFighter myAIFighterScript;
 	[Tooltip("Okay to leave blank. Gets set by SquadronLeader script normally.")] public GameObject avatarOutput;
 
 	[Tooltip("For Character Pool screen")] public bool selected = false;
 
 	public enum Gender {Male, Female};
 	public Gender gender;
+
+	public string characterID;
+	public string firstName;
+	public string lastName;
+	public string callsign;
+	public string characterBio;
+	public string appearanceSeed; //NB!! Do in this order: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
 
 	public bool inSpace = true;
 
@@ -59,7 +68,6 @@ public class Character : MonoBehaviour {
 	Sprite originalMouth;
 	bool speaking = false;
 
-	public string appearanceSeed; //NB!! Do in this order: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
 
 
 
@@ -69,7 +77,7 @@ public class Character : MonoBehaviour {
 		myRenderTexture.name = "Avatar RT "+ transform.root.gameObject.name;
 		bgScrollerScript = GetComponentInChildren<BGScroller>();
 
-		appearances.avatarWorldPositionModifier = 0;
+		//appearances.avatarWorldPositionModifier = 0;
 	}
 
 	void Start () 
@@ -83,8 +91,9 @@ public class Character : MonoBehaviour {
 		heartbeatScript = FindObjectOfType<Heartbeat>();
 		eyePositions = new Vector2[] {neutral, up, upperRight, right, lowerRight, down, lowerLeft, left, upperLeft};
 
-		//if we're not loading in an appearance
+		//if we're not loading in an appearance (if we are this happens but is overridden, currently)
 		GenerateRandomNewAppearance();
+		GenerateName();
 
 		originalEyes = eyes.sprite;
 		originalMouth = mouth.sprite;
@@ -113,6 +122,7 @@ public class Character : MonoBehaviour {
 
 	public void SetUpAvatar (int mySquadUnitNumber)
 	{
+		GetComponentInChildren<Camera>().enabled = true;
 		GetComponentInChildren<Camera>().targetTexture = myRenderTexture;
 		avatarOutput = Instantiate (avatarOutputPrefab) as GameObject;
 		avatarOutput.transform.SetParent (Tools.instance.avatarsPanelUI.transform);
@@ -210,6 +220,15 @@ public class Character : MonoBehaviour {
 		spaceSuit.sprite = GetARandomSprite(appearances.spaceSuits);
 
 	}//end of GenerateRandomNewAppearance
+
+	public void GenerateName()
+	{
+		firstName = NameGenerator.Instance.getRandomFirstName(gender.ToString().ToCharArray()[0]);
+		lastName = NameGenerator.Instance.getRandomLastName();
+		callsign = NameGenerator.Instance.getRandomCallsign();
+		if(myAIFighterScript != null)
+			myAIFighterScript.nameHUDText.text = callsign;
+	}
 
 	int NewSeed(int arrayLength) //this function adds its result to the string recording the seed of this appearance
 	{

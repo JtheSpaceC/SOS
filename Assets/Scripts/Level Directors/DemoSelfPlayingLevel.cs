@@ -14,6 +14,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public Text pressStartText;
 
 	public float sceneResetTime = 90;
+	float originalSceneResetTime;
 	public float maxPMCFighters = 3;
 	public float maxStormwallFighters = 6;
 
@@ -64,8 +65,9 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		radarCamera.transform.SetParent(Camera.main.transform);
 
 		cameraZPos = levelCamera.transform.position.z;
-
 		Camera.main.GetComponent<ClickToPlay>().escGivesQuitMenu = false;
+
+		originalSceneResetTime = sceneResetTime;
 	}
 
 
@@ -108,18 +110,21 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 				sceneResetTime = Mathf.Infinity;
 				AudioMasterScript.instance.FadeChannel("Master vol", -10, 0, 0.3f);
 			}
-			else if(haveLoadedMenu && mainMenu.activeSelf)
+			else if(haveLoadedMenu && mainMenu.activeSelf && 
+				!CharacterPool.instance.characterPoolPanel.activeInHierarchy &&
+				!CharacterPool.instance.characterCreationPanel.activeInHierarchy && 
+				!CharacterPool.instance.poolImportExportEditPanel.activeInHierarchy)
 			{
 				mainMenu.SetActive(false);
+				sceneResetTime = Director.instance.timer + originalSceneResetTime;
 				AudioMasterScript.instance.FadeChannel("Master vol", 0, 0, 0.3f);
 			}
 			else if(haveLoadedMenu && !mainMenu.activeSelf)
 			{
 				mainMenu.SetActive(true);
+				sceneResetTime = Mathf.Infinity;
 				AudioMasterScript.instance.FadeChannel("Master vol", -10, 0, 0.3f);
 			}
-
-
 		}
 
 		if(Director.instance.timer > sceneResetTime)
@@ -253,7 +258,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		{
 			if (fighter.whichSide == TargetableObject.WhichSide.Ally)
 			{
-				fighter.healthScript.maxAwareness = 3;
+				fighter.healthScript.maxAwareness = 2 ; //formerly 3
 			}
 			else
 			{

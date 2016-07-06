@@ -69,15 +69,12 @@ public class PlayerAILogic : FighterFunctions {
 	{
 		CameraTactical.reportedInfo = this.name + "\n" + "(You)\n";
 
-
-		if (healthScript.health / healthScript.maxHealth < (0.33f)) {
-			CameraTactical.reportedInfo += "Heavily Damaged";
-		}
-		else if (healthScript.health / healthScript.maxHealth < (0.66f)) {
-			CameraTactical.reportedInfo += "Damaged";
-		}
+		if ((float)healthScript.health / healthScript.maxHealth < (0.33f)) 
+			CameraTactical.reportedInfo += "Heavily Damaged";		
+		else if (healthScript.health == healthScript.maxHealth) 
+			CameraTactical.reportedInfo += "Fully Functional";		
 		else
-			CameraTactical.reportedInfo += "Fully Functional";
+			CameraTactical.reportedInfo += "Damaged";
 	}
 
 	public void CallDumpAwarenessMana(int howMany)

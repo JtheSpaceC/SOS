@@ -48,6 +48,8 @@ public class DemoLevel : MonoBehaviour {
 	public Text instructionsText;
 	public Canvas playerUICanvas;
 	public Canvas playerWorldspaceUI;
+	public Canvas arrow2WorldspaceUI;
+	public Canvas arrow3WorldspaceUI;
 	public GameObject missionCompleteMenu;
 
 	[Header("Craft Equip Stuff")]
@@ -103,7 +105,7 @@ public class DemoLevel : MonoBehaviour {
 			return;
 		}
 
-		TogglePlayerUI();
+		ToggleSquadUI();
 		player = GameObject.FindGameObjectWithTag ("PlayerFighter");
 		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
 		playerWeapons.allowedToFire = false;
@@ -199,8 +201,97 @@ public class DemoLevel : MonoBehaviour {
 		ClickToPlay.instance.paused = false;
 		playerWeapons.InvokeAllowedToFire ();
 		objectiveText.enabled = true;
+		CharacterPoolAvatarsForDemo();
 
 		playerUICanvas.sortingOrder = 0;
+	}
+
+
+	public void CharacterPoolAvatarsForDemo()
+	{
+		bool changeAvatar1 = false;
+		bool changeAvatar2 = false;
+
+		if(PlayerPrefsManager.GetCharacterPoolUsageKey() == "Random & Character Pool")
+		{
+			if(Random.Range(0, 2) == 1) //50:50 chance to bring in a character from the pool
+				changeAvatar1 = true;
+			if(Random.Range(0, 2) == 1)
+				changeAvatar2 = true;
+		}
+		else if(PlayerPrefsManager.GetCharacterPoolUsageKey() == "Character Pool Only")
+		{
+			changeAvatar1 = true;
+			changeAvatar2 = true;
+		}
+		else if(PlayerPrefsManager.GetCharacterPoolUsageKey() == "Random Only")
+		{
+			//do nothing. leave as they are
+			return;
+		}
+		else
+		{
+			Debug.LogError("Something went wrong with PlayerPrefsManager - CharacterPoolBehaviour");
+			return;
+		}
+
+		//get the two avatars
+		Character[] allWingmenCharacterScripts = FindObjectsOfType<Character>();
+
+		//get all possible characters in the pool
+
+		string[] allIDs = new string[] {};
+		if (ES2.Exists ("allCharacterIDs" + CharacterPool.encryption)) 
+		{
+			allIDs = ES2.Load<string> ("allCharacterIDs" + CharacterPool.encryption)
+				.Split (new char[] {','}, System.StringSplitOptions.RemoveEmptyEntries);
+		}
+		else 
+		{
+			Debug.Log ("allCharacterIDs file did NOT exist. NO characters to load.");
+		}
+
+		//put two random ones in
+		int choice1 = Random.Range(0, allIDs.Length);
+		int choice2 = choice1;
+
+		if(allIDs.Length > 1)
+		{
+			while(choice2 == choice1)
+			{
+				choice2 = Random.Range(0, allIDs.Length);
+			}
+		}
+
+		if(changeAvatar1 && allIDs.Length != 0)
+		{
+			string characterInfo = ES2.Load<string>(allIDs[choice1] + CharacterPool.encryption);
+			SetUpSpecificAvatar(characterInfo, allWingmenCharacterScripts[0]);
+		}
+		if(changeAvatar2 && choice2 != choice1)
+		{
+			string characterInfo = ES2.Load<string>(allIDs[choice2] + CharacterPool.encryption);
+			SetUpSpecificAvatar(characterInfo, allWingmenCharacterScripts[1]);
+		}
+
+		//put their callsigns over their heads
+
+	}
+
+	public void SetUpSpecificAvatar(string characterInfo, Character character)
+	{
+		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:"};
+		string[] savedData = characterInfo.Split(parameters, System.StringSplitOptions.None);
+
+		character.characterID = savedData[1];
+		character.firstName = savedData[2];
+		character.lastName = savedData[3];
+		character.callsign = savedData[4];
+		character.characterBio = savedData[5];
+		character.appearanceSeed = savedData[6];
+		character.myAIFighterScript.nameHUDText.text = character.callsign;
+
+		character.GenerateAppearanceBySeed(character.appearanceSeed.ToCharArray());
 	}
 
 
@@ -265,7 +356,7 @@ public class DemoLevel : MonoBehaviour {
 
 		if(AITrans != null && AITrans.currentState == AITransport.StateMachine.HoldingPosition && timer >5 && !setWingmanOrders)
 		{
-			TogglePlayerUI();
+			ToggleSquadUI();
 			mate2AIScript.ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
 			mate3AIScript.ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
 			setWingmanOrders = true;
@@ -571,16 +662,18 @@ public class DemoLevel : MonoBehaviour {
 	{
 		timePlayerStartedLeaving = timer;
 
-		TogglePlayerUI();
+		ToggleSquadUI();
 		missionIsOver = true;
 		Invoke("PostMissionCompleteMessage", 6);
 		playerLogicScript.orders = PlayerAILogic.Orders.NA;
 		Invoke("MissionCompleteScreen", 10.5f);
 	}
 
-	void TogglePlayerUI()
+	void ToggleSquadUI()
 	{
 		playerWorldspaceUI.enabled = !playerWorldspaceUI.enabled;
+		arrow2WorldspaceUI.enabled = !arrow2WorldspaceUI.enabled;
+		arrow3WorldspaceUI.enabled = !arrow3WorldspaceUI.enabled;
 	}
 
 	public void LeaveFeedback()

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using System.Collections.Generic;
 
 public class AIFighter : FighterFunctions {
 
@@ -61,6 +60,7 @@ public class AIFighter : FighterFunctions {
 
 	public GameObject HUDPointer;
 	[HideInInspector] public GameObject dockingWith;
+	public Text nameHUDText;
 	
 
 	void Awake()
@@ -87,6 +87,7 @@ public class AIFighter : FighterFunctions {
 		if(GetComponentInChildren<Character>())
 		{
 			myCharacterAvatarScript = GetComponentInChildren<Character>();
+			myCharacterAvatarScript.myAIFighterScript = this;
 			myCharacterAvatarScript.name += " " + this.gameObject.name;
 			myCharacterAvatarScript.transform.SetParent(null); //detach from this so it's not always doing position updates with movement
 		}
@@ -690,14 +691,13 @@ public class AIFighter : FighterFunctions {
 
 		CameraTactical.reportedInfo += "\n";
 
-		if (healthScript.health / healthScript.maxHealth < (0.33f)) {
-			CameraTactical.reportedInfo += "Heavily Damaged";
-		}
-		else if (healthScript.health / healthScript.maxHealth < (0.66f)) {
-			CameraTactical.reportedInfo += "Damaged";
-		}
+		if ((float)healthScript.health / healthScript.maxHealth < (0.33f)) 
+			CameraTactical.reportedInfo += "Heavily Damaged";		
+		else if (healthScript.health == healthScript.maxHealth) 
+			CameraTactical.reportedInfo += "Fully Functional";		
 		else
-			CameraTactical.reportedInfo += "Fully Functional";
+			CameraTactical.reportedInfo += "Damaged";
 	}
+
 	#endregion
 }//Mono

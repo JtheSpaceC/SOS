@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class CharacterPool : MonoBehaviour {
 
-	string encryption = ".es?encrypt=true&password=asswordp"; //for EasySave2. If changing, also change '.es' in PopulateExportPoolList()
+	public static string encryption = ".es?encrypt=true&password=asswordp"; //for EasySave2. If changing, also change '.es' in PopulateExportPoolList()
 
 	public static CharacterPool instance;
 
@@ -16,11 +16,13 @@ public class CharacterPool : MonoBehaviour {
 	[HideInInspector] public CharacterPoolGroupEntry selectedCharacterGroup;
 	public GameObject characterPoolPanel;
 	public GameObject characterCreationPanel;
+	public ButtonSelectAuto backOutOfCharacterPoolScreenButton;
 	public GameObject characterBioEditPanel;
 	public GameObject poolImportExportEditPanel;
 	public GameObject poolExportConfirmationPanel;
 	public GameObject poolDeleteConfirmationPanel;
 	public GameObject addToGroupConfirmationPanel;
+	public GameObject characterRemoveConfirmationPanel;
 	public GameObject cpcCreateNewPoolButton;
 	public GameObject cpcImportEntireCollectionButton;
 	public Text cpcSubHeaderText;
@@ -107,7 +109,13 @@ public class CharacterPool : MonoBehaviour {
 	{
 		CloseAllCharacterRelatedWindows();
 		characterPoolPanel.SetActive(true);
+		backOutOfCharacterPoolScreenButton.enabled = true;
 		PopulateActiveCharacterPoolList();
+	}
+
+	public static void GetAllCharactersFromActivePool()
+	{
+		
 	}
 
 	void PopulateActiveCharacterPoolList ()
@@ -283,6 +291,7 @@ public class CharacterPool : MonoBehaviour {
 			avatar.GenerateAppearanceBySeed(avatar.appearanceSeed.ToCharArray());
 
 		characterPoolPanel.SetActive(false);
+		backOutOfCharacterPoolScreenButton.enabled = false;
 		characterCreationPanel.SetActive(true);
 
 		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
@@ -430,6 +439,7 @@ public class CharacterPool : MonoBehaviour {
 	public void CloseAllCharacterRelatedWindows()
 	{
 		characterPoolPanel.SetActive(false);
+		backOutOfCharacterPoolScreenButton.enabled = false;
 		characterCreationPanel.SetActive(false);
 		characterNameEditPanel.SetActive(false);
 		characterBioEditPanel.SetActive(false);
@@ -437,6 +447,7 @@ public class CharacterPool : MonoBehaviour {
 		poolExportConfirmationPanel.SetActive(false);
 		poolDeleteConfirmationPanel.SetActive(false);
 		addToGroupConfirmationPanel.SetActive(false);
+		characterRemoveConfirmationPanel.SetActive(false);
 		cpcCreateNewPoolButton.SetActive(true);
 		cpcImportEntireCollectionButton.SetActive(false);
 		cpcSubHeaderText.text = "Character Collections";
