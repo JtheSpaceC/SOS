@@ -79,6 +79,8 @@ public class CharacterPool : MonoBehaviour {
 	[TextArea()]
 	public string[] testBox;
 
+	string currentBio = "";
+
 
 	void Awake()
 	{
@@ -259,6 +261,7 @@ public class CharacterPool : MonoBehaviour {
 		selectedCharacter.lastName = ng.getRandomLastName();
 		selectedCharacter.callsign = ng.getRandomCallsign();
 		selectedCharacter.appearanceSeed = avatar.appearanceSeed;
+		currentBio = "";
 
 		ActivateCharacterEditScreen(selectedCharacter, false);
 	}
@@ -334,6 +337,7 @@ public class CharacterPool : MonoBehaviour {
 		if(selectedCharacter != null && selectedCharacter.characterBio != "")
 		{
 			input.text = selectedCharacter.characterBio;
+			currentBio = selectedCharacter.characterBio;
 		}
 			
 		selectedCharacter.startingBioText = input.text;
@@ -406,13 +410,19 @@ public class CharacterPool : MonoBehaviour {
 	public void SetNewBio(InputField input)
 	{
 		selectedCharacter.characterBio = input.text;
+		currentBio = input.text;
 		characterBioEditPanel.SetActive(false);
 	}
 
 	public void CancelNewBio(InputField input)
 	{
 		if(selectedCharacter != null)
+		{
 			input.text = selectedCharacter.startingBioText;
+		}
+		else 
+			input.text = currentBio;
+		
 		characterBioEditPanel.SetActive(false);
 	}
 
