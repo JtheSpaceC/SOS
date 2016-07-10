@@ -100,7 +100,9 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		if(Input.GetButtonDown ("Start"))
 		{
 			if(FindObjectOfType<MainMenu>())
-				mainMenu = FindObjectOfType<MainMenu>().gameObject;			
+			{
+				mainMenu = FindObjectOfType<MainMenu>().gameObject;	
+			}
 
 			if(!haveLoadedMenu && FindObjectOfType<MainMenu>() == null)
 			{

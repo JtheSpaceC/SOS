@@ -9,7 +9,9 @@ public class Character : MonoBehaviour {
 	[HideInInspector] public Heartbeat heartbeatScript;
 	[HideInInspector] public BGScroller bgScrollerScript;
 	[HideInInspector] public AIFighter myAIFighterScript;
-	[Tooltip("Okay to leave blank. Gets set by SquadronLeader script normally.")] public GameObject avatarOutput;
+
+	[Tooltip("Usually okay to leave blank if on a Fighter. Gets set by SquadronLeader script normally.")] 
+	public GameObject avatarOutput;
 
 	[Tooltip("For Character Pool screen")] public bool selected = false;
 
@@ -128,16 +130,11 @@ public class Character : MonoBehaviour {
 		avatarOutput.transform.SetParent (Tools.instance.avatarsPanelUI.transform);
 		avatarOutput.GetComponent<RawImage> ().texture = myRenderTexture;
 		avatarOutput.transform.localScale = Vector3.one;
-		avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
-	}
+		if(mySquadUnitNumber != 0)
+			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
 
-	#if UNITY_EDITOR
-	void Update()
-	{
-		if(Input.GetKeyDown(KeyCode.O))
-			StartCoroutine("TenseMouth");
 	}
-	#endif
+		
 
 	[ContextMenu("Generate Random Appearance")]
 	public void GenerateRandomNewAppearance()

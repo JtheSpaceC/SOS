@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 public class CharacterPool : MonoBehaviour {
@@ -12,7 +13,7 @@ public class CharacterPool : MonoBehaviour {
 
 	NameGenerator ng;
 
-	[HideInInspector] public CharacterPoolEntry selectedCharacter;
+	/*[HideInInspector] */ public CharacterPoolEntry selectedCharacter;
 	[HideInInspector] public CharacterPoolGroupEntry selectedCharacterGroup;
 	public GameObject characterPoolPanel;
 	public GameObject characterCreationPanel;
@@ -75,6 +76,7 @@ public class CharacterPool : MonoBehaviour {
 	public Text selectedSpacesuitColourText;
 
 	Character avatar;
+	public GameObject avatarOutputForCharacterCreationScreen;
 
 	public char[] seedCharArray;
 
@@ -82,6 +84,34 @@ public class CharacterPool : MonoBehaviour {
 	public string[] testBox;
 
 	string currentBio = "";
+
+
+	IEnumerator PlayAudio(int howMany)
+	{
+		int i = 0;
+		while(i < howMany)
+		{
+			GetComponent<AudioSource>().Play();
+			i++;
+			yield return new WaitForSeconds(0.2f);
+		}
+	}
+	void CheckAvatarOutput()
+	{
+		if(avatar.avatarOutput != null)
+		{
+			StartCoroutine(PlayAudio(2));
+		}
+		else
+		{
+			avatar.avatarOutput = avatarOutputForCharacterCreationScreen;
+
+			StartCoroutine("PlayAudio", 6);
+
+			Subtitles.instance.PostHint(new string[] {avatar.avatarOutput.name});
+		}
+
+	}
 
 
 	void Awake()
@@ -99,6 +129,9 @@ public class CharacterPool : MonoBehaviour {
 		SetUpCharacterPoolUsageDropdown();
 
 		avatar = FindObjectOfType<Character>();
+
+		CheckAvatarOutput();
+
 		ng = NameGenerator.Instance;
 
 		DestroyChildEntries ();
@@ -113,10 +146,6 @@ public class CharacterPool : MonoBehaviour {
 		PopulateActiveCharacterPoolList();
 	}
 
-	public static void GetAllCharactersFromActivePool()
-	{
-		
-	}
 
 	void PopulateActiveCharacterPoolList ()
 	{
@@ -264,6 +293,11 @@ public class CharacterPool : MonoBehaviour {
 			selectedFacialHairText.transform.parent.gameObject.SetActive(false);
 		else
 			selectedFacialHairText.transform.parent.gameObject.SetActive(true);		
+
+		if(ng == null)
+			print("Test");
+		if(selectedCharacter == null)
+			print("Fuck");
 
 		selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
 		selectedCharacter.lastName = ng.getRandomLastName();
@@ -451,9 +485,15 @@ public class CharacterPool : MonoBehaviour {
 		cpcCreateNewPoolButton.SetActive(true);
 		cpcImportEntireCollectionButton.SetActive(false);
 		cpcSubHeaderText.text = "Character Collections";
-		avatar.avatarOutput.SetActive(false);
-		selectedCharacter = null;
-		selectedCharacterGroup = null;
+
+		try{
+			avatar.avatarOutput.SetActive(false);
+			selectedCharacter = null;
+			selectedCharacterGroup = null;		
+		}
+		catch{
+			CheckAvatarOutput();
+		}
   	}
 	#endregion
 
@@ -800,6 +840,11 @@ public class CharacterPool : MonoBehaviour {
 
 	public void NextSkinColour(int i)
 	{
+		if(avatar.body == null)
+		{
+			StartCoroutine("PlayAudio", 4);
+		}
+
 		int arrayPosition = Int32.Parse(selectedSkinColourText.text);
 		arrayPosition += i;
 
