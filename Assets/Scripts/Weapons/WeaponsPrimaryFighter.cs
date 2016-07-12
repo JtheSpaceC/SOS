@@ -140,7 +140,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			//if (obj1 == null) return;			
 			
 			obj1.transform.position = shotSpawn1.position;
-			obj1.transform.rotation = shotSpawn1.rotation;
+			obj1.transform.rotation = Quaternion.identity;
 			obj1.SetActive(true);
 			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
@@ -153,7 +153,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			GameObject obj2 = cannonShotPoolerScript.current.GetPooledObject();
 			
 			obj2.transform.position = shotSpawn2.position;
-			obj2.transform.rotation = shotSpawn2.rotation;
+			obj2.transform.rotation = Quaternion.identity;
 			obj2.SetActive(true);
 			obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
@@ -165,7 +165,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			GameObject obj3 = cannonShotPoolerScript.current.GetPooledObject();
 
 			obj3.transform.position = shotSpawn3.position;
-			obj3.transform.rotation = shotSpawn3.rotation;
+			obj3.transform.rotation = Quaternion.identity;
 			obj3.SetActive(true);
 			obj3.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
@@ -177,7 +177,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			GameObject obj4 = cannonShotPoolerScript.current.GetPooledObject();
 
 			obj4.transform.position = shotSpawn4.position;
-			obj4.transform.rotation = shotSpawn4.rotation;
+			obj4.transform.rotation = Quaternion.identity;
 			obj4.SetActive(true);
 			obj4.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
