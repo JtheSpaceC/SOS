@@ -119,9 +119,6 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 		if (Time.time < nextFire || ClickToPlay.instance.paused || ammo <= 0)
 			return;
 
-		//if(playerControlled && Dodge.playerIsDodging)
-		//	return;
-
 		nextFire = Time.time + fireRate;
 
 		if (!playerControlled && !ploughTheRoad)
@@ -140,7 +137,12 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			//if (obj1 == null) return;			
 			
 			obj1.transform.position = shotSpawn1.position;
-			obj1.transform.rotation = Quaternion.identity;
+
+			Quaternion rot = shotSpawn1.rotation;
+			rot.x = 0;
+			rot.y = 0;
+			obj1.transform.rotation = rot;
+
 			obj1.SetActive(true);
 			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
@@ -153,7 +155,12 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			GameObject obj2 = cannonShotPoolerScript.current.GetPooledObject();
 			
 			obj2.transform.position = shotSpawn2.position;
-			obj2.transform.rotation = Quaternion.identity;
+
+			Quaternion rot = shotSpawn2.rotation;
+			rot.x = 0;
+			rot.y = 0;
+			obj2.transform.rotation = rot;
+
 			obj2.SetActive(true);
 			obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
@@ -165,7 +172,12 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			GameObject obj3 = cannonShotPoolerScript.current.GetPooledObject();
 
 			obj3.transform.position = shotSpawn3.position;
-			obj3.transform.rotation = Quaternion.identity;
+
+			Quaternion rot = shotSpawn3.rotation;
+			rot.x = 0;
+			rot.y = 0;
+			obj3.transform.rotation = rot;
+
 			obj3.SetActive(true);
 			obj3.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
@@ -177,7 +189,12 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			GameObject obj4 = cannonShotPoolerScript.current.GetPooledObject();
 
 			obj4.transform.position = shotSpawn4.position;
-			obj4.transform.rotation = Quaternion.identity;
+
+			Quaternion rot = shotSpawn4.rotation;
+			rot.x = 0;
+			rot.y = 0;
+			obj4.transform.rotation = rot;
+
 			obj4.SetActive(true);
 			obj4.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
