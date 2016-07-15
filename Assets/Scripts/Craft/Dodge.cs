@@ -36,6 +36,8 @@ public class Dodge : MonoBehaviour
 	float rotY;
 	float t; //time
 
+	public bool dodgingCostsNitro = false;
+
 
 	//public Image awarenessManaFillImage;
 	//[HideInInspector] public Image powerupReadyImage; //TODO: delete this?
@@ -159,7 +161,7 @@ public class Dodge : MonoBehaviour
 		if (ClickToPlay.instance.paused || !canDodge)
 			return;
 
-		if(playerControlled && playerMovementScript.nitroRemaining/playerMovementScript.nitroBurnRate < rollDuration)
+		if(dodgingCostsNitro && playerControlled && playerMovementScript.nitroRemaining/playerMovementScript.nitroBurnRate < rollDuration)
 			return;
 
 		StartCoroutine(SetDodgingToTrue(frameDelay));
@@ -184,8 +186,11 @@ public class Dodge : MonoBehaviour
 		else
 		{
 			playerIsDodging = true;
-			playerMovementScript.nitroRemaining -= playerMovementScript.nitroBurnRate * rollDuration;
-			playerMovementScript.UpdateNitroHUDElements();
+			if(dodgingCostsNitro)
+			{
+				playerMovementScript.nitroRemaining -= playerMovementScript.nitroBurnRate * rollDuration;
+				playerMovementScript.UpdateNitroHUDElements();
+			}
 		}
 	}
 

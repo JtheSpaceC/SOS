@@ -195,6 +195,20 @@ public class Asteroid : MonoBehaviour {
 		
 		myAsteroidSpawner.asteroidCount --;
 
+		if(asteroidSize == AsteroidSize.Large)
+		{
+			Tools.instance.SpawnAsteroidPoofBig(transform.position, 3, myRigidbody.velocity);
+		}
+		else if(asteroidSize == AsteroidSize.Medium)
+		{
+			Tools.instance.SpawnAsteroidPoofBig(transform.position, 2, myRigidbody.velocity);
+		}
+		else if(asteroidSize == AsteroidSize.Small)
+		{
+			Tools.instance.SpawnAsteroidPoofBig(transform.position, 1, myRigidbody.velocity);
+		}	
+
+
 		if (asteroidSize == AsteroidSize.Medium) 
 		{
 			SpawnGibs(AsteroidSize.Small, 2);

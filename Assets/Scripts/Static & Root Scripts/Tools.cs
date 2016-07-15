@@ -13,6 +13,7 @@ public class Tools: MonoBehaviour
 	public ObjectPoolerScript explosionPoolerScript;
 	public ObjectPoolerScript explosionMiniPoolerScript;
 	public ObjectPoolerScript asteroidPoofPoolerScript;
+	public ObjectPoolerScript asteroidPoofBigPoolerScript;
 
 	public Text killsText;
 
@@ -67,6 +68,7 @@ public class Tools: MonoBehaviour
 		explosionPoolerScript = GameObject.FindGameObjectWithTag ("ObjectPooler").transform.FindChild ("Explosion Pooler").GetComponent<ObjectPoolerScript> ();
 		explosionMiniPoolerScript = GameObject.FindGameObjectWithTag ("ObjectPooler").transform.FindChild ("ExplosionMini Pooler").GetComponent<ObjectPoolerScript> ();
 		asteroidPoofPoolerScript = GameObject.Find ("asteroidPoof Pooler").GetComponent<ObjectPoolerScript> ();
+		asteroidPoofBigPoolerScript = GameObject.Find ("asteroidPoofBig Pooler").GetComponent<ObjectPoolerScript> ();
 
 		if(GameObject.FindGameObjectWithTag("PlayerFighter") == null)
 		{
@@ -216,6 +218,16 @@ public class Tools: MonoBehaviour
 		GameObject obj =  asteroidPoofPoolerScript.current.GetPooledObject();
 		obj.transform.position = where;
 		obj.SetActive (true);
+	}
+
+	public void SpawnAsteroidPoofBig(Vector2 where, float scale, Vector2 velocity)
+	{
+		GameObject obj =  asteroidPoofBigPoolerScript.current.GetPooledObject();
+		obj.transform.position = where;
+		obj.transform.localScale = new Vector3(scale/3, scale/3, scale/3);
+		obj.SetActive (true);
+
+		obj.GetComponent<Rigidbody2D>().velocity = velocity;
 	}
 
 	public void CreateWaypoint(WaypointTypes wpType, Vector2 position)
