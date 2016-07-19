@@ -12,9 +12,9 @@ public class TargetableObject : MonoBehaviour {
 
 	public enum WhichSide {Enemy, Ally};
 	public WhichSide whichSide;
-	public LayerMask friendlyFireMask;
-	public LayerMask potshotAtEnemiesMask;
-	public LayerMask potshotsPlusFriendliesMask;
+	protected LayerMask friendlyFireMask;
+	protected LayerMask potshotAtEnemiesMask;
+	LayerMask potshotsPlusFriendliesMask;
 
 	protected bool switchingState = true;
 	protected bool completedState = false;
@@ -33,18 +33,23 @@ public class TargetableObject : MonoBehaviour {
 
 	
 
-	protected void SetUpAICommander () {
+	protected void SetUpSideInfo () {
 
 		if (whichSide == WhichSide.Ally)
 		{
 			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
 			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
+
 		}
 		else if (whichSide == WhichSide.Enemy)
 		{
 			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
 			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
 		}
+
+		friendlyFireMask = myCommander.fighterFriendlyFireMask;
+		potshotAtEnemiesMask = myCommander.fighterPotshotMask;
+		potshotsPlusFriendliesMask = friendlyFireMask + potshotAtEnemiesMask;
 	}
 
 

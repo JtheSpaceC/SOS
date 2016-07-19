@@ -7,6 +7,11 @@ public class AICommander : MonoBehaviour {
 	public enum WhichSide {Enemy, Ally};
 	public WhichSide whichSide;
 
+	public LayerMask fighterFriendlyFireMask;
+	public LayerMask fighterPotshotMask;
+	public LayerMask fighterEnemyTargets;
+	public LayerMask fighterEnemyDangerSources;
+
 	public List<GameObject> myFighters;
 	public List<GameObject> myBombers;
 	public List<GameObject> myTransports;

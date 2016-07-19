@@ -66,7 +66,7 @@ public class WeaponsTurret : TargetableObject {
 			manualCrosshairs.GetComponent<SpriteRenderer>().enabled = true;
 		}		
 
-		SetUpAICommander();
+		SetUpSideInfo();
 	}
 	
 		

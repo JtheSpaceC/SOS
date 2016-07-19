@@ -45,9 +45,8 @@ public class AIFighter : FighterFunctions {
 	public float guardDistance = 20; //when Patrolling, how close an enemy has to get to break up the patrol
 	public float coveringDistance = 15; //how close to stay to leader when Covering them
 	public float mySensorRadius = 45;
-	public LayerMask enemyTargets;
-	[Tooltip("Any layers that could do this fighter harm. Fighter will stay away if retreating.")] 
-	public LayerMask dangerSources;
+	LayerMask enemyTargets;
+	LayerMask dangerSources; //Any layers that could do this fighter harm. Fighter will stay away if retreating
 	public Vector2 evadePosition;
 	public Vector2 retreatPosition;
 
@@ -72,7 +71,9 @@ public class AIFighter : FighterFunctions {
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
 
-		SetUpAICommander();
+		SetUpSideInfo();
+		enemyTargets = myCommander.fighterEnemyTargets;
+		dangerSources = myCommander.fighterEnemyDangerSources;
 
 		myCommander.myFighters.Add (this.gameObject);
 		enemyCommander.AddEnemyFighters(this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
