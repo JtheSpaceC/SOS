@@ -666,7 +666,7 @@ public class AIFighter : FighterFunctions {
 	void DefendYourself(GameObject theAttacker)
 	{
 		if(currentState != StateMachine.Retreat && currentState != StateMachine.Evade && currentState != StateMachine.FormUp 
-		   && target != theAttacker)
+			&& target != theAttacker && theAttacker != gameObject)
 		{
 			if(!StaticTools.IsInLayerMask(theAttacker, LayerMask.GetMask("PMCCapital", "EnemyCapital")))
 				target = theAttacker;

@@ -74,14 +74,22 @@ public class Asteroid : MonoBehaviour {
 
 	void OnEnable()
 	{
+		CancelInvoke("EnableCollider");
 		asteroidDestroyed = false;
 		SetCharacteristics (true);
 		StartCoroutine (CheckDespawn());
 	}
+
+	void EnableCollider()
+	{
+		myCollider.enabled = true;
+	}
 	
 	void SetCharacteristics(bool setRandomNewSize)
 	{
-		myCollider.enabled =true;
+		myCollider.enabled =false;
+		Invoke("EnableCollider", 1f);
+
 		myRenderer.enabled =true;
 		myRenderer.color = startColor;
 		coloringSpeed = Mathf.Abs (coloringSpeed);

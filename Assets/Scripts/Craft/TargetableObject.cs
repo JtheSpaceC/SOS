@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class TargetableObject : MonoBehaviour {
@@ -12,7 +11,7 @@ public class TargetableObject : MonoBehaviour {
 
 	public enum WhichSide {Enemy, Ally};
 	public WhichSide whichSide;
-	protected LayerMask friendlyFireMask;
+	[HideInInspector] public LayerMask friendlyFireMask;
 	protected LayerMask potshotAtEnemiesMask;
 	LayerMask potshotsPlusFriendliesMask;
 

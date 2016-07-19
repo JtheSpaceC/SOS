@@ -32,32 +32,32 @@ public class SpawnerGroup : MonoBehaviour {
 		}
 		squadName = myCommander.RequestSquadronName ();
 
+		SpawnTrio ();
 
+
+		Destroy (gameObject);
+	}
+
+	void SpawnTrio ()
+	{
 		//spawn the required number of craft
-		for(int i = 0; i < numberToSpawn; i++)
-		{
-			GameObject obj = Instantiate(objectPrefab, (Vector2)transform.position + Random.insideUnitCircle, Quaternion.identity) as GameObject;
-			obj.name = squadName + " " + (i+1);
-			craft.Add(obj);
+		for (int i = 0; i < numberToSpawn; i++) {
+			GameObject obj = Instantiate (objectPrefab, (Vector2)transform.position + Random.insideUnitCircle, Quaternion.identity) as GameObject;
+			obj.name = squadName + " " + (i + 1);
+			craft.Add (obj);
 		}
-
 		//create SquadLeader object and put it on the leader
 		squadLeaderPrefab = Instantiate (squadLeaderPrefab, transform.position, Quaternion.identity) as GameObject;
 		squadLeaderPrefab.transform.SetParent (craft [0].transform.FindChild ("Abilities"));
 		squadLeaderPrefab.transform.localPosition = Vector3.zero;
-		squadLeaderPrefab.GetComponent<SquadronLeader> ().whichSide = (whichSide == WhichSide.Ally) ? 
-			SquadronLeader.WhichSide.Ally : SquadronLeader.WhichSide.Enemy;
-
-
+		squadLeaderPrefab.GetComponent<SquadronLeader> ().whichSide = (whichSide == WhichSide.Ally) ? SquadronLeader.WhichSide.Ally : SquadronLeader.WhichSide.Enemy;
 		//set up the wingmen to know who their leader is and cover him
-		for(int i = 1; i < craft.Count; i++)
-		{
-			squadLeaderPrefab.GetComponent<SquadronLeader>().activeWingmen.Add(craft[i]);
-			craft[i].GetComponent<AIFighter>().flightLeader = craft[0];
-			craft[i].GetComponent<AIFighter>().flightLeadSquadronScript = craft[0].GetComponentInChildren<SquadronLeader>();
-			craft[i].GetComponent<AIFighter>().currentState = AIFighter.StateMachine.Covering;
+		for (int i = 1; i < craft.Count; i++) {
+			squadLeaderPrefab.GetComponent<SquadronLeader> ().activeWingmen.Add (craft [i]);
+			craft [i].GetComponent<AIFighter> ().flightLeader = craft [0];
+			craft [i].GetComponent<AIFighter> ().flightLeadSquadronScript = craft [0].GetComponentInChildren<SquadronLeader> ();
+			craft [i].GetComponent<AIFighter> ().currentState = AIFighter.StateMachine.Covering;
 		}
-
-		Destroy (gameObject);
 	}
+
 }

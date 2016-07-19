@@ -47,14 +47,26 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 	void OnEnable()
 	{
-		shotSpawn1.gameObject.SetActive(true);
-		shotSpawn2.gameObject.SetActive(true);
+		if(shotSpawn1)
+			shotSpawn1.gameObject.SetActive(true);
+		if(shotSpawn2)
+			shotSpawn2.gameObject.SetActive(true);
+		if(shotSpawn3)
+			shotSpawn3.gameObject.SetActive(true);
+		if(shotSpawn4)
+			shotSpawn4.gameObject.SetActive(true);
 	}
 
 	void OnDisable()
 	{
-		shotSpawn1.gameObject.SetActive(false);
-		shotSpawn2.gameObject.SetActive(false);
+		if(shotSpawn1)
+			shotSpawn1.gameObject.SetActive(false);
+		if(shotSpawn2)
+			shotSpawn2.gameObject.SetActive(false);
+		if(shotSpawn3)
+			shotSpawn3.gameObject.SetActive(false);
+		if(shotSpawn4)
+			shotSpawn4.gameObject.SetActive(false);
 	}
 
 	void Start()

@@ -14,8 +14,6 @@ public class HealthFighter : Health {
 	[Header("For dodging shots")]
 	public bool hasDodge = true;
 	public bool playerHasAutoDodge = false;
-	public bool alwaysDodgesAsteroids = false;
-	[Tooltip("If you don't always dodge asteroids, this number comes into play")]
 	[Range(0, 100)]
 	public float asteroidDodgeSkill = 80f;
 	[Range(0,100)]
@@ -173,7 +171,7 @@ public class HealthFighter : Health {
 			//otherwise we're not already dodging
 
 			//2. If fire is by Player's own team, don't take damage, and break out.
-			if(theAttacker != null && StaticTools.IsInLayerMask(theAttacker, friendlyFire))
+			if(theAttacker != null && StaticTools.IsInLayerMask(theAttacker, GetComponent<PlayerAILogic>().friendlyFireMask))
 			{
 				return;
 			}
@@ -273,15 +271,17 @@ public class HealthFighter : Health {
 		{
 			//0. If already dodging, break out
 
-			if(dodgeScript.dodging || temporarilyInvincible)
+			if((dodgeScript != null && dodgeScript.dodging) || temporarilyInvincible)
 			{
 				return;
 			}
 
 			//1. If fire is by this fighter's own team, roll to not take damage
 
-			if(theAttacker != null && StaticTools.IsInLayerMask(theAttacker, friendlyFire))
+			if(theAttacker != null && StaticTools.IsInLayerMask(theAttacker, myAIScript.friendlyFireMask))
 			{
+				if(theAttacker == gameObject) //can't shoot yourself
+					return;
 				diceRoll = Random.Range(0, 101);
 				if(diceRoll > 10)
 				{
@@ -302,7 +302,8 @@ public class HealthFighter : Health {
 
 			//3. see if you can dodge out of trouble (player must not be on cooldown)
 
-			if(hasDodge && (dodgeScript.canDodge || dodgeScript.dodgeCoroutineStarted))
+			if((hasDodge && (dodgeScript.canDodge || dodgeScript.dodgeCoroutineStarted))
+				|| theBullet.tag == "Asteroid")
 			{
 				if(theBullet.tag == "Bomb" && missileDodgeSkill <= 0) //if it's a missile and you CAN'T dodge missiles
 				{/*do nothing*/}
@@ -325,7 +326,7 @@ public class HealthFighter : Health {
 				}
 				else if(theBullet.tag == "Asteroid") //if it's an Asteroid
 				{
-					if(alwaysDodgesAsteroids)
+					if(!GetComponent<SpriteRenderer>().isVisible) //will never hit asteroids when off screen
 					{
 						if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
 							dodgeScript.Roll(2);
@@ -391,6 +392,7 @@ public class HealthFighter : Health {
 					return;
 				}
 			}
+
 
 			//4. If we get here, the shot will hit. apply damage
 

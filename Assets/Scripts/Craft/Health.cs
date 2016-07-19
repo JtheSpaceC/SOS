@@ -22,8 +22,6 @@ public class Health : MonoBehaviour {
 
 	public Vector3 sixOclockPos = new Vector3(0, -6, 0);
 
-	public LayerMask friendlyFire;
-
 	public bool temporarilyInvincible = false; //used instead of flashing the collider on and off. Prevents two shots close together both hitting													
 
 	[Header("For Effects")]
