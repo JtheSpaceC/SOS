@@ -3,6 +3,26 @@ using System.Collections;
 
 public class DebrisLogic : MonoBehaviour {
 
+	public bool destroyAfterTime = true;
+	public float time = 12;
+
+	void OnBecameInvisible()
+	{
+		if(destroyAfterTime)
+			Invoke("DestroyThis", time);	
+	}
+
+	void OnBecameVisible()
+	{
+		if(destroyAfterTime)
+			CancelInvoke("DestroyThis");
+	}
+
+	void DestroyThis()
+	{
+		Destroy(gameObject);
+	}
+
 	void OnCollisionEnter2D(Collision2D other)
 	{
 		if(other.gameObject.tag == "Asteroid")
