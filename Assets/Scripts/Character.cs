@@ -124,6 +124,8 @@ public class Character : MonoBehaviour {
 
 	public void SetUpAvatar (int mySquadUnitNumber)
 	{
+		if(mySquadUnitNumber > 3)
+			return;
 		GetComponentInChildren<Camera>().enabled = true;
 		GetComponentInChildren<Camera>().targetTexture = myRenderTexture;
 		avatarOutput = Instantiate (avatarOutputPrefab) as GameObject;
@@ -132,7 +134,6 @@ public class Character : MonoBehaviour {
 		avatarOutput.transform.localScale = Vector3.one;
 		if(mySquadUnitNumber != 0)
 			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
-
 	}
 		
 

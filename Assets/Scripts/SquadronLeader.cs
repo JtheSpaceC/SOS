@@ -43,8 +43,17 @@ public class SquadronLeader : MonoBehaviour {
 	[HideInInspector] public Animator mate11RadarAnimator;
 	[HideInInspector] public Animator mate12RadarAnimator;
 
-	public GameObject wingmanPosLeft;
-	public GameObject wingmanPosRight;
+	public GameObject wingmanPos2;
+	public GameObject wingmanPos3;
+	public GameObject wingmanPos4;
+	public GameObject wingmanPos5;
+	public GameObject wingmanPos6;
+	public GameObject wingmanPos7;
+	public GameObject wingmanPos8;
+	public GameObject wingmanPos9;
+	public GameObject wingmanPos10;
+	public GameObject wingmanPos11;
+	public GameObject wingmanPos12;
 	[HideInInspector] public GameObject SecondFlightPos;
 	[HideInInspector] public GameObject ThirdFlightPos;
 	[HideInInspector] public GameObject FourthFlightPos;
@@ -92,46 +101,64 @@ public class SquadronLeader : MonoBehaviour {
 			GetComponentInParent<AIFighter>().flightLeader = transform.parent.parent.gameObject;
 
 		GenerateWingmanFormationPositions ();
-		ReAssignWingmen ();
+		ReassignWingmen ();
 
 		//Invoke(firstFlightSquadOrders.ToString(), 0.01f);
 	}
 
-	public void ReAssignWingmen()
+	public void ReassignWingmen()
 	{
 		try{
-		mate01 = transform.parent.parent.gameObject;
-		if(transform.parent.parent.tag != "PlayerFighter")
-		{
-			mate01.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.one;
-		}
+			mate01 = transform.parent.parent.gameObject;
+			if(transform.parent.parent.tag != "PlayerFighter")
+			{
+				mate01.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.one;
+			}
 
-		mate02 = activeWingmen [0];
-		mate02.GetComponent<AIFighter>().flightLeader = mate01;
-		mate02.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.two;
+			mate02 = activeWingmen [0];
+			mate02.GetComponent<AIFighter>().flightLeader = mate01;
+			mate02.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.two;
 
-		mate03 = activeWingmen [1];
-		mate03.GetComponent<AIFighter>().flightLeader = mate01;
-		mate03.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.three;
+			mate03 = activeWingmen [1];
+			mate03.GetComponent<AIFighter>().flightLeader = mate01;
+			mate03.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.three;
 
-		mate04 = activeWingmen [2];
-		mate04.GetComponent<AIFighter>().flightLeader = mate01;
-		mate05 = activeWingmen [3];
-		mate05.GetComponent<AIFighter>().flightLeader = mate01;
-		mate06 = activeWingmen [4];
-		mate06.GetComponent<AIFighter>().flightLeader = mate01;
-		mate07 = activeWingmen [5];
-		mate07.GetComponent<AIFighter>().flightLeader = mate01;
-		mate08 = activeWingmen [6];
-		mate08.GetComponent<AIFighter>().flightLeader = mate01;
-		mate09 = activeWingmen [7];
-		mate09.GetComponent<AIFighter>().flightLeader = mate01;
-		mate10 = activeWingmen [8];
-		mate10.GetComponent<AIFighter>().flightLeader = mate01;
-		mate11 = activeWingmen [9];
-		mate11.GetComponent<AIFighter>().flightLeader = mate01;
-		mate12 = activeWingmen [10];
-		mate12.GetComponent<AIFighter>().flightLeader = mate01;
+			mate04 = activeWingmen [2];
+			mate04.GetComponent<AIFighter>().flightLeader = mate01;
+			mate04.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.four;
+
+			mate05 = activeWingmen [3];
+			mate05.GetComponent<AIFighter>().flightLeader = mate01;
+			mate05.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.five;
+
+			mate06 = activeWingmen [4];
+			mate06.GetComponent<AIFighter>().flightLeader = mate01;
+			mate06.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.six;
+
+			mate07 = activeWingmen [5];
+			mate07.GetComponent<AIFighter>().flightLeader = mate01;
+			mate07.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.seven;
+
+			mate08 = activeWingmen [6];
+			mate08.GetComponent<AIFighter>().flightLeader = mate01;
+			mate08.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.eight;
+
+			mate09 = activeWingmen [7];
+			mate09.GetComponent<AIFighter>().flightLeader = mate01;
+			mate09.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.nine;
+
+			mate10 = activeWingmen [8];
+			mate10.GetComponent<AIFighter>().flightLeader = mate01;
+			mate10.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.ten;
+
+			mate11 = activeWingmen [9];
+			mate11.GetComponent<AIFighter>().flightLeader = mate01;
+			mate11.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.eleven;
+
+			mate12 = activeWingmen [10];
+			mate12.GetComponent<AIFighter>().flightLeader = mate01;
+			mate12.GetComponent<AIFighter>().squadronMembership = AIFighter.SquadronMembership.twelve;
+
 		}catch{};
 
 		try{
@@ -165,17 +192,73 @@ public class SquadronLeader : MonoBehaviour {
 	}
 	public void GenerateWingmanFormationPositions()
 	{
-		wingmanPosLeft = new GameObject();
-		wingmanPosLeft.transform.parent = this.transform;
-		wingmanPosLeft.transform.position = this.transform.position + (transform.up * -1) + (transform.right * -2.5f);
-		wingmanPosLeft.tag = "FormationPosition";
-		wingmanPosLeft.name = "Wingman Pos Left";
+		//there is no Pos 1
 
-		wingmanPosRight = new GameObject();
-		wingmanPosRight.transform.parent = this.transform;
-		wingmanPosRight.transform.position = this.transform.position + (transform.up * -1) + (transform.right * 2.5f);
-		wingmanPosRight.tag = "FormationPosition";
-		wingmanPosRight.name = "Wingman Pos Right";
+		wingmanPos2 = new GameObject();
+		wingmanPos2.transform.parent = this.transform;
+		wingmanPos2.transform.position = this.transform.position + (transform.up * -1) + (transform.right * -2.5f);
+		wingmanPos2.tag = "FormationPosition";
+		wingmanPos2.name = "Wingman Pos 2";
+
+		wingmanPos3 = new GameObject();
+		wingmanPos3.transform.parent = this.transform;
+		wingmanPos3.transform.position = this.transform.position + (transform.up * -1) + (transform.right * 2.5f);
+		wingmanPos3.tag = "FormationPosition";
+		wingmanPos3.name = "Wingman Pos 3";
+
+		wingmanPos4 = new GameObject();
+		wingmanPos4.transform.parent = this.transform;
+		wingmanPos4.transform.position = this.transform.position + (transform.up * -2) + (transform.right * -5f);
+		wingmanPos4.tag = "FormationPosition";
+		wingmanPos4.name = "Wingman Pos 4";
+
+		wingmanPos5 = new GameObject();
+		wingmanPos5.transform.parent = this.transform;
+		wingmanPos5.transform.position = this.transform.position + (transform.up * -2) + (transform.right * 5f);
+		wingmanPos5.tag = "FormationPosition";
+		wingmanPos5.name = "Wingman Pos 5";
+
+		wingmanPos6 = new GameObject();
+		wingmanPos6.transform.parent = this.transform;
+		wingmanPos6.transform.position = this.transform.position + (transform.up * -2.5f) + (transform.right * 0);
+		wingmanPos6.tag = "FormationPosition";
+		wingmanPos6.name = "Wingman Pos 6";
+
+		wingmanPos7 = new GameObject();
+		wingmanPos7.transform.parent = this.transform;
+		wingmanPos7.transform.position = this.transform.position + (transform.up * -3.5f) + (transform.right * -3.75f);
+		wingmanPos7.tag = "FormationPosition";
+		wingmanPos7.name = "Wingman Pos 7";
+
+		wingmanPos8 = new GameObject();
+		wingmanPos8.transform.parent = this.transform;
+		wingmanPos8.transform.position = this.transform.position + (transform.up * -3.5f) + (transform.right * 3.75f);
+		wingmanPos8.tag = "FormationPosition";
+		wingmanPos8.name = "Wingman Pos 8";
+
+		wingmanPos9 = new GameObject();
+		wingmanPos9.transform.parent = this.transform;
+		wingmanPos9.transform.position = this.transform.position + (transform.up * -4) + (transform.right * -6.25f);
+		wingmanPos9.tag = "FormationPosition";
+		wingmanPos9.name = "Wingman Pos 9";
+
+		wingmanPos10 = new GameObject();
+		wingmanPos10.transform.parent = this.transform;
+		wingmanPos10.transform.position = this.transform.position + (transform.up * -4) + (transform.right * 6.25f);
+		wingmanPos10.tag = "FormationPosition";
+		wingmanPos10.name = "Wingman Pos 10";
+
+		wingmanPos11 = new GameObject();
+		wingmanPos11.transform.parent = this.transform;
+		wingmanPos11.transform.position = this.transform.position + (transform.up * -5) + (transform.right * -2.5f);
+		wingmanPos11.tag = "FormationPosition";
+		wingmanPos11.name = "Wingman Pos 11";
+
+		wingmanPos12 = new GameObject();
+		wingmanPos12.transform.parent = this.transform;
+		wingmanPos12.transform.position = this.transform.position + (transform.up * -5) + (transform.right * 2.5f);
+		wingmanPos12.tag = "FormationPosition";
+		wingmanPos12.name = "Wingman Pos 12";
 
 		SecondFlightPos = new GameObject();
 		SecondFlightPos.transform.parent = this.transform;

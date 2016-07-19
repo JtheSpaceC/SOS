@@ -33,7 +33,8 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector] public SquadronLeader flightLeadSquadronScript;
 	[HideInInspector] public Rigidbody2D flightLeaderRigidbody;
 
-	public enum SquadronMembership {one, two, three}; //these are set by Squadron Leader script
+	//these are set by Squadron Leader script
+	public enum SquadronMembership {one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve};
 	[HideInInspector] public SquadronMembership squadronMembership;
 
 	[HideInInspector] public GameObject myFormationPosition;
@@ -54,6 +55,7 @@ public class AIFighter : FighterFunctions {
 	float nextTime = 0;
 
 	[Tooltip("If health is below this proportion of maxHealth, they'll evade & retreat. Is randomised away from this base number at Start")]
+	[Range(0, 100f)]
 	public float cowardice = 30;
 	public bool inRetreatState = false;
 
@@ -109,7 +111,7 @@ public class AIFighter : FighterFunctions {
 		while(flightLeader == null)
 			yield return new WaitForEndOfFrame();
 		
-		if(flightLeader != null && flightLeader.tag == "PlayerFighter")
+		if(flightLeader != null && flightLeader.tag == "PlayerFighter" && mySquadUnitNumber <= 3)
 		{
 			healthScript.avatarAwarenessBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("Awareness Panel");
 			healthScript.avatarHealthBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("HP Panel");
@@ -125,13 +127,58 @@ public class AIFighter : FighterFunctions {
 
 		if(squadronMembership == SquadronMembership.two)
 		{
-			myFormationPosition = flightLeadSquadronScript.wingmanPosLeft;
+			myFormationPosition = flightLeadSquadronScript.wingmanPos2;
 			mySquadUnitNumber = 2;
 		}
 		else if(squadronMembership == SquadronMembership.three)
 		{
-			myFormationPosition = flightLeadSquadronScript.wingmanPosRight;
+			myFormationPosition = flightLeadSquadronScript.wingmanPos3;
 			mySquadUnitNumber = 3;
+		}
+		else if(squadronMembership == SquadronMembership.four)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos4;
+			mySquadUnitNumber = 4;
+		}
+		else if(squadronMembership == SquadronMembership.five)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos5;
+			mySquadUnitNumber = 5;
+		}
+		else if(squadronMembership == SquadronMembership.six)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos6;
+			mySquadUnitNumber = 6;
+		}
+		else if(squadronMembership == SquadronMembership.seven)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos7;
+			mySquadUnitNumber = 7;
+		}
+		else if(squadronMembership == SquadronMembership.eight)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos8;
+			mySquadUnitNumber = 8;
+		}
+		else if(squadronMembership == SquadronMembership.nine)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos9;
+			mySquadUnitNumber = 9;
+		}
+		else if(squadronMembership == SquadronMembership.ten)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos10;
+			mySquadUnitNumber = 10;
+		}
+		else if(squadronMembership == SquadronMembership.eleven)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos11;
+			mySquadUnitNumber = 11;
+		}
+		else if(squadronMembership == SquadronMembership.twelve)
+		{
+			myFormationPosition = flightLeadSquadronScript.wingmanPos12;
+			mySquadUnitNumber = 12;
 		}
 	}
 	

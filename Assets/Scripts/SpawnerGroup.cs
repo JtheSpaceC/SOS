@@ -54,9 +54,9 @@ public class SpawnerGroup : MonoBehaviour {
 		//set up the wingmen to know who their leader is and cover him
 		for (int i = 1; i < craft.Count; i++) {
 			squadLeaderPrefab.GetComponent<SquadronLeader> ().activeWingmen.Add (craft [i]);
-			craft [i].GetComponent<AIFighter> ().flightLeader = craft [0];
-			craft [i].GetComponent<AIFighter> ().flightLeadSquadronScript = craft [0].GetComponentInChildren<SquadronLeader> ();
-			craft [i].GetComponent<AIFighter> ().currentState = AIFighter.StateMachine.Covering;
+			craft [i].GetComponent<AIFighter>().flightLeader = craft [0];
+			craft [i].GetComponent<AIFighter>().flightLeadSquadronScript = craft [0].GetComponentInChildren<SquadronLeader> ();
+			craft [i].GetComponent<AIFighter>().currentState = AIFighter.StateMachine.Covering;
 		}
 	}
 
