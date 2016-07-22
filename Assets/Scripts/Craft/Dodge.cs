@@ -25,7 +25,7 @@ public class Dodge : MonoBehaviour
 	public float rollDuration = 1.11f;
 	float rollTime;
 	float rollCooldown = 0f; 
-	public float cooldownAmount = 1.11f; 
+	public float cooldownAmount = 1.11f; //used in Inspector to set how long the cooldown is. Stays constant. Player only
 	[HideInInspector] public bool canDodge = true;
 	[HideInInspector] public bool dodgeCoroutineStarted;
 

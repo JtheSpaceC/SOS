@@ -5,6 +5,8 @@ public class Director : MonoBehaviour {
 
 	public static Director instance;
 
+	MissionSetup missionSetupScript;
+
 	public float timer;
 	float mins;
 	float seconds;
@@ -58,6 +60,12 @@ public class Director : MonoBehaviour {
 		}catch{}
 	}
 
+	void Start()
+	{
+		if(FindObjectOfType<MissionSetup>())
+			missionSetupScript = FindObjectOfType<MissionSetup>();
+	}
+
 	void OnEnable()
 	{
 		_battleEventManager.playerRescued += WarpPlayerToSafety;
@@ -70,13 +78,43 @@ public class Director : MonoBehaviour {
 		_battleEventManager.playerGotKill -= PlayerGotAKill;
 	}
 
+	void SetUpMission()
+	{
+		//first make sure there's no conflicting info in the MissionSetup script, like no transport to warp in, but WarpIn selected
+		missionSetupScript.ValidateChoices(); 
+
+		//set a background
+
+		//set a player craft
+
+		//set player squadmates
+
+		//set starting positions for craft
+
+		//set mission type
+
+		//set any waypoints, asteroids, and mines
+
+		//set any discover-ables
+
+		//set bases, cap ships, or transports
+
+		//maybe generate any RandomNumberGenerator results and save them
+
+		//set screen black and prepare to fade it in
+	}
+
 	void Update () 
 	{
 		if(!ClickToPlay.instance.paused)
 		{
+			#if UNITY_EDITOR
+
 			if(Input.GetKeyDown(KeyCode.O))
 				GameObject.FindGameObjectWithTag("PlayerFighter").SendMessage("Death");
 			
+			#endif
+
 			if(gameTimeText && playerKillsText)
 			{
 				//Mission Clock Stuff
