@@ -27,7 +27,7 @@ public class AITransport : SupportShipFunctions {
 	GameObject carryFighter3;
 	EnginesFighter carryFighter3Engines;
 	HealthFighter carryFighter3Health;
-	GameObject[] fightersToCarry;
+	public GameObject[] fightersToCarry;
 	EnginesFighter[] fighterEngineScripts;
 	HealthFighter[] fighterHealthScripts;
 
@@ -321,7 +321,14 @@ public class AITransport : SupportShipFunctions {
 		}
 		
 		//change the squad's orders behaviour if the wingmen aren't retreating
-		if(carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders != SquadronLeader.Orders.Disengage)
+
+		if(carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen.Count == 0)
+		{
+			fightersToCarry = new GameObject[]{carryFighter1};
+			fighterEngineScripts = new EnginesFighter[]{carryFighter1Engines};
+			fighterHealthScripts = new HealthFighter[] {carryFighter1Health};
+		}
+		else if(carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders != SquadronLeader.Orders.Disengage)
 		{
 			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.Extraction;
 			//TODO: check if it's actually the first flight, or if 2nd - 4th		
@@ -349,9 +356,7 @@ public class AITransport : SupportShipFunctions {
 		}
 		else
 		{
-			fightersToCarry = new GameObject[]{carryFighter1};
-			fighterEngineScripts = new EnginesFighter[]{carryFighter1Engines};
-			fighterHealthScripts = new HealthFighter[] {carryFighter1Health};
+			Debug.LogError("This shouldn't happen");
 		}
 		
 		//change states and disable components
@@ -553,7 +558,7 @@ public class AITransport : SupportShipFunctions {
 				RadioCommands.instance.canAccessRadio = false;
 				Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
 				_battleEventManager.instance.CallPlayerLeaving();
-				Invoke("CommenceFadeout", 6);
+				Tools.instance.CommenceFadeout(6, 3);
 				carryFighter1.GetComponent<PlayerAILogic>().orders = PlayerAILogic.Orders.RTB;
 				Tools.instance.ClearWaypoints();
 

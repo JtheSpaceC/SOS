@@ -164,15 +164,15 @@ public class AIAssaultShuttle : SupportShipFunctions {
 	{
 		if(switchingState)
 		{
-				Subtitles.instance.PostSubtitle(new string[]{name + ", Engaging Warp Drive"});
-				Camera.main.GetComponent<CameraControllerFighter>().target = null;
-				Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
+			Subtitles.instance.PostSubtitle(new string[]{name + ", Engaging Warp Drive"});
+			Camera.main.GetComponent<CameraControllerFighter>().target = null;
+			Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
 
-				if(!_battleEventManager.instance.playerHasBeenRescued)
-					_battleEventManager.instance.CallPlayerLeaving();
-			
-				Invoke("CommenceFadeout", 6);
-				Tools.instance.ClearWaypoints();
+			if(!_battleEventManager.instance.playerHasBeenRescued)
+				_battleEventManager.instance.CallPlayerLeaving();
+		
+			Tools.instance.CommenceFadeout(6, 3);
+			Tools.instance.ClearWaypoints();
 
 			foreach(GameObject turret in myTurrets)
 			{

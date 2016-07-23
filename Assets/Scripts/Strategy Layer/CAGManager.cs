@@ -356,9 +356,5 @@ public class CAGManager : MonoBehaviour {
 }//end of CAGManager
 
 
-public class FadeTimes
-{
-	public float startTime;
-	public float fadeTime;
-}
+
 

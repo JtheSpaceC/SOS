@@ -13,3 +13,9 @@ public class StaticTools: MonoBehaviour {
 		return ((mask.value & (1 << obj.layer)) > 0);
 	}
 }
+
+public class FadeTimes
+{
+	public float startTime;
+	public float fadeTime;
+}

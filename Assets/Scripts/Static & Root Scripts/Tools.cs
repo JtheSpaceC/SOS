@@ -28,12 +28,12 @@ public class Tools: MonoBehaviour
 	public GameObject debugCircle2;
 
 	public Image blackoutPanel;
-	public bool commenceFadeIn = false;
-	public bool commenceFadeout = false;
+	bool commenceFadeIn = false;
+	bool commenceFadeout = false;
 	float fadeInStartTime = 0;
 	float fadeoutStartTime = 0;
-	public float fadeInTime = 2f;
-	public float fadeOutTime = 3f;
+	float fadeInDuration = 2f;
+	float fadeOutDuration = 3f;
 
 	bool camCurrentlyOnHitSlowdown = false;
 
@@ -137,48 +137,46 @@ public class Tools: MonoBehaviour
 	void Update()
 	{
 		//for screen FADEIN
-		if(commenceFadeIn == true)
-		{
-			if(fadeInStartTime == 0)
-				fadeInStartTime = Time.time;
-			
-			blackoutPanel.color = Color.Lerp(Color.black, Color.clear, ((Time.time - fadeInStartTime)/fadeInTime));
+		if(commenceFadeIn)
+		{			
+			blackoutPanel.color = Color.Lerp(Color.black, Color.clear, ((Time.time - fadeInStartTime)/fadeInDuration));
 			if(blackoutPanel.color == Color.black)
 			{
 				commenceFadeout = false;
-				fadeoutStartTime = 0;
 			}
 		}
 
 		//for screen FADEOUT
 		if(commenceFadeout == true)
-		{
-			if(fadeoutStartTime == 0)
-				fadeoutStartTime = Time.time;
-			
-			blackoutPanel.color = Color.Lerp(Color.clear, Color.black, ((Time.time - fadeoutStartTime)/fadeOutTime));
+		{			
+			blackoutPanel.color = Color.Lerp(Color.clear, Color.black, ((Time.time - fadeoutStartTime)/fadeOutDuration));
 			if(blackoutPanel.color == Color.black)
 			{
 				commenceFadeout = false;
-				fadeoutStartTime = 0;
 			}
 		}
 	}
 
-	public void CommenceFadeIn()
+	public void CommenceFadeIn(float delay, float dur)
 	{
+		fadeInStartTime = Time.time + delay;
+
 		commenceFadeIn = true;
 		commenceFadeout = false;
+
+		fadeInDuration = dur;
 	}
 
-	public void CommenceFadeout(float newTime)
+	public void CommenceFadeout(float delay, float dur)
 	{
 		Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
+
+		fadeoutStartTime = Time.time + delay;
 
 		commenceFadeIn = false;
 		commenceFadeout = true;
 
-		fadeOutTime = newTime;
+		fadeOutDuration = dur;
 	}
 
 

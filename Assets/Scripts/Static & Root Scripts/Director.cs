@@ -63,7 +63,10 @@ public class Director : MonoBehaviour {
 	void Start()
 	{
 		if(FindObjectOfType<MissionSetup>())
+		{
 			missionSetupScript = FindObjectOfType<MissionSetup>();
+			SetUpMission();
+		}
 	}
 
 	void OnEnable()
@@ -85,9 +88,9 @@ public class Director : MonoBehaviour {
 
 		//set a background
 
-		//set a player craft
+		//set a player craft, their weapons, avatar, etc
 
-		//set player squadmates
+		//set player squadmates, avatars, names, skills etc
 
 		//set starting positions for craft
 
@@ -102,19 +105,13 @@ public class Director : MonoBehaviour {
 		//maybe generate any RandomNumberGenerator results and save them
 
 		//set screen black and prepare to fade it in
+		Tools.instance.CommenceFadeIn(0, 2);
 	}
 
 	void Update () 
 	{
 		if(!ClickToPlay.instance.paused)
 		{
-			#if UNITY_EDITOR
-
-			if(Input.GetKeyDown(KeyCode.O))
-				GameObject.FindGameObjectWithTag("PlayerFighter").SendMessage("Death");
-			
-			#endif
-
 			if(gameTimeText && playerKillsText)
 			{
 				//Mission Clock Stuff

@@ -172,7 +172,7 @@ public class DemoLevel : MonoBehaviour {
 		convoyPointerArrow.SetActive(false);
 
 		Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = -1;
-		Tools.instance.CommenceFadeIn ();
+		Tools.instance.CommenceFadeIn (0, 2);
 	}
 
 
@@ -545,8 +545,7 @@ public class DemoLevel : MonoBehaviour {
 	void CommenceFadeout()
 	{
 		AudioMasterScript.instance.MuteMusic ();
-
-		Tools.instance.CommenceFadeout (3);
+		Tools.instance.CommenceFadeout (0, 3);
 	}
 
 	void PostMissionCompleteMessage()
