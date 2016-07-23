@@ -6,6 +6,9 @@ public class MissionSetup : MonoBehaviour {
 
 	public static MissionSetup instance;
 
+	public enum MissionType {Patrol, Raid, Battle}
+	public MissionType missionType;
+
 	public enum InsertionType {AlreadyPresent, WarpIn, LeaveHangar, RestInPosition, NotPresent} //not present might be used for cutscenes or MainMenu
 	public InsertionType insertionType;
 
@@ -15,10 +18,18 @@ public class MissionSetup : MonoBehaviour {
 	[Tooltip("The ship/station whose hangar the player will exit at mission start.")]
 	public MissionUnitInfo hangarCraft; //if flying out of a hangar, we'll need this
 	public List<MissionUnitInfo> playerSquad;
+	public List<MissionUnitInfo> pmcCraft;
 	public List<MissionUnitInfo> enemyCraft;
 	public List<MissionUnitInfo> civilianCraft;
 
 	public GameObject backgroundForArea;
+
+	[Header("Prefabs for every ship")]
+	public GameObject arrowPlayer;
+	public GameObject arrowAI;
+	public GameObject transportAI;
+	public GameObject shuttleAI;
+	public GameObject stormwallAI;
 
 
 	void Awake()
@@ -76,10 +87,10 @@ public class MissionUnitInfo{
 	public enum WhichSide {PMC, Enemy, Civilian}
 	public WhichSide whichSide;
 
-	public enum ShipType {Arrow, Stormwall}
-	public ShipType shipType;
+	public GameObject shipType;
 
 	public bool activeAtStart = true;
+	public bool isPlayer = false;
 
 	public enum PrimaryWeapon{DualCannon}
 	public PrimaryWeapon primaryWeapon;

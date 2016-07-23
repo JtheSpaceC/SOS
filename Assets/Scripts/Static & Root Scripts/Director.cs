@@ -90,9 +90,19 @@ public class Director : MonoBehaviour {
 
 		//set a player craft, their weapons, avatar, etc
 
+		GameObject player = Instantiate (missionSetupScript.playerCraft.shipType) as GameObject;
+		player.name = "1 - " + missionSetupScript.playerCraft.callSign;
+
 		//set player squadmates, avatars, names, skills etc
 
-		//set starting positions for craft
+		for(int i = 0; i < missionSetupScript.playerSquad.Count; i++)
+		{
+			GameObject squadmate = Instantiate(missionSetupScript.playerSquad[i].shipType) as GameObject;
+			squadmate.name = (i+1) + " - " + missionSetupScript.playerSquad[i].callSign;
+			player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(squadmate);
+		}
+
+		//set starting positions for all craft
 
 		//set mission type
 
