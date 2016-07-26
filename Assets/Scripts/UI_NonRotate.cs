@@ -4,6 +4,7 @@ using System.Collections;
 public class UI_NonRotate : MonoBehaviour {
 	
 	public bool keepRotation = true;
+	public bool rotationShouldBeZero = false;
 	public bool keepRelativePosition = false;
 
 	private Quaternion rotation;
@@ -11,7 +12,11 @@ public class UI_NonRotate : MonoBehaviour {
 
 	void Start ()
 	{
-		rotation = transform.rotation;
+		if(rotationShouldBeZero)
+			rotation = Quaternion.identity;
+		else
+			rotation = transform.rotation;
+
 		position = transform.localPosition;
 	}
 	

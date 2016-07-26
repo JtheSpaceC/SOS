@@ -26,7 +26,8 @@ public class ShotHit : MonoBehaviour {
 	{
 		if(other.tag == "Fighter" || other.tag == "PlayerFighter")
 		{
-			other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, normalDamage, chanceToCrit);
+			if(other.GetComponent<HealthFighter>().enabled)
+				other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, normalDamage, chanceToCrit);
 		}
 		else if(other.tag == "Turret")
 		{

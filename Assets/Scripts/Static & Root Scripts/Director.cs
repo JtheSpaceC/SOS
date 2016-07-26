@@ -41,6 +41,9 @@ public class Director : MonoBehaviour {
 	public GameObject toggleableObject2;
 	public GameObject toggleableObject1;
 
+	GameObject player;
+	GameObject hangarToExit;
+
 
 	void Awake()
 	{
@@ -58,15 +61,17 @@ public class Director : MonoBehaviour {
 		gameTimeText = GameObject.Find("GUI Mission Time").GetComponent<Text>();
 		playerKillsText = GameObject.Find("GUI Kills").GetComponent<Text>();
 		}catch{}
-	}
 
-	void Start()
-	{
 		if(FindObjectOfType<MissionSetup>())
 		{
 			missionSetupScript = FindObjectOfType<MissionSetup>();
 			SetUpMission();
 		}
+	}
+
+	void Start()
+	{
+		Tools.instance.CommenceFadeIn(0, 2);
 	}
 
 	void OnEnable()
@@ -90,21 +95,80 @@ public class Director : MonoBehaviour {
 
 		//set a player craft, their weapons, avatar, etc
 
-		GameObject player = Instantiate (missionSetupScript.playerCraft.shipType) as GameObject;
-		player.name = "1 - " + missionSetupScript.playerCraft.callSign;
-
-		//set player squadmates, avatars, names, skills etc
-
-		for(int i = 0; i < missionSetupScript.playerSquad.Count; i++)
+		if(missionSetupScript.playerCraft != null)
 		{
-			GameObject squadmate = Instantiate(missionSetupScript.playerSquad[i].shipType) as GameObject;
-			squadmate.name = (i+1) + " - " + missionSetupScript.playerSquad[i].callSign;
-			player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(squadmate);
+			player = Instantiate (missionSetupScript.playerCraft.shipType) as GameObject;
+			player.name = "1 - " + missionSetupScript.playerCraft.callSign;		
+
+			//set player squadmates, avatars, names, skills etc
+
+			if(missionSetupScript.playerSquad.Count != 0 )
+			{
+				for(int i = 0; i < missionSetupScript.playerSquad.Count; i++)
+				{
+					GameObject squadmate = Instantiate(missionSetupScript.playerSquad[i].shipType) as GameObject;
+					squadmate.transform.position += (Vector3)Random.insideUnitCircle.normalized * 2;
+					squadmate.name = (i+2) + " - " + missionSetupScript.playerSquad[i].callSign;
+					player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(squadmate);
+					squadmate.GetComponent<AIFighter>().ChangeToNewState(
+						new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[] {1});
+				}
+			}
 		}
 
-		//set starting positions for all craft
+		//set starting positions for all craft, don't worry about insertion points for craft about to attach to a warp or hangar ship
+
+		for(int i = 0; i < missionSetupScript.pmcCraft.Count; i++)
+		{
+			GameObject pmcCraft = Instantiate(missionSetupScript.pmcCraft[i].shipType) as GameObject;
+
+			//make a record of which hangar we've to exit (in case that's the chosen insertion method)
+			if(missionSetupScript.hangarCraft == missionSetupScript.pmcCraft[i]) 
+			{
+				hangarToExit = pmcCraft;
+			}
+		}
+
+		for(int i = 0; i < missionSetupScript.enemyCraft.Count; i++)
+		{
+			GameObject enemy = Instantiate(missionSetupScript.enemyCraft[i].shipType) as GameObject;
+		}
+
+		for(int i = 0; i < missionSetupScript.civilianCraft.Count; i++)
+		{
+
+		}
 
 		//set mission type
+
+		//set insertion type
+
+		if(missionSetupScript.insertionType == MissionSetup.InsertionType.AlreadyPresent)
+		{//do nothing
+		}
+		else if(missionSetupScript.insertionType == MissionSetup.InsertionType.LeaveHangar)
+		{
+			player.transform.position = hangarToExit.GetComponent<SupportShipFunctions>().hangars[0].transform.position;
+			player.transform.rotation = hangarToExit.GetComponent<SupportShipFunctions>().hangars[0].transform.rotation;
+			player.GetComponent<PlayerAILogic>().TogglePlayerControl(false, false, false, false);
+
+			for(int i = 0; i < missionSetupScript.playerSquad.Count; i++)
+			{
+				player.GetComponentInChildren<SquadronLeader>().activeWingmen[i].transform.position = 
+					hangarToExit.GetComponent<SupportShipFunctions>().hangars[i+1].transform.position;
+				player.GetComponentInChildren<SquadronLeader>().activeWingmen[i].transform.rotation = 
+					hangarToExit.GetComponent<SupportShipFunctions>().hangars[i+1].transform.rotation;
+			}
+		}
+
+		//set Camera starting position
+
+		if(missionSetupScript.playerCraft != null)
+		{
+			Vector3 camPos = Camera.main.transform.position;
+			Camera.main.transform.position = GameObject.FindGameObjectWithTag("PlayerFighter").transform.position;
+			Camera.main.transform.position += new Vector3 (0, 0, camPos.z);
+		}
 
 		//set any waypoints, asteroids, and mines
 
@@ -115,13 +179,24 @@ public class Director : MonoBehaviour {
 		//maybe generate any RandomNumberGenerator results and save them
 
 		//set screen black and prepare to fade it in
-		Tools.instance.CommenceFadeIn(0, 2);
+		//(happens in Start())
 	}
 
 	void Update () 
 	{
 		if(!ClickToPlay.instance.paused)
 		{
+			if(timer > 2 && timer < 4)
+			{
+				player.GetComponent<EnginesFighter>().MoveToTarget(player.transform.position + (player.transform.up * 10), false);
+			}
+			else if(timer > 4)
+			{
+				player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true);
+			}
+
+			print(player.GetComponent<Rigidbody2D>().velocity.magnitude);
+				
 			if(gameTimeText && playerKillsText)
 			{
 				//Mission Clock Stuff

@@ -44,11 +44,12 @@ public class PlayerAILogic : FighterFunctions {
 	}
 
 
-	public void RemovePlayerControl(bool disableHealthScript, bool disableEngineScript, bool disableShootScript)
+	public void TogglePlayerControl(bool healthScriptenabled, bool engineScriptEnabled, bool dodgeScriptEnabled, bool shootScriptEnabled)
 	{
-		healthScript.enabled = !disableHealthScript;
-		engineScript.enabled = !disableEngineScript;
-		shootScript.enabled = !disableShootScript;
+		healthScript.enabled = healthScriptenabled;
+		engineScript.enabled = engineScriptEnabled;
+		dodgeScript.enabled = dodgeScriptEnabled;
+		shootScript.enabled = shootScriptEnabled;
 	}
 
 

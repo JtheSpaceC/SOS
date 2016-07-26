@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class PlayerFighterMovement : EnginesFighter {
 
@@ -27,7 +26,16 @@ public class PlayerFighterMovement : EnginesFighter {
 	void Start()
 	{
 		PlayerPrefsManager.SetControllerStickBehaviourKey (PlayerPrefsManager.GetControllerStickBehaviourKey());
-		myRigidBody.velocity = transform.up * startSpeed;
+
+		if(Time.time < 1) //if it's after a second the speed will have been set by a cutscene or hangar launch or something else
+		{
+			myRigidBody.velocity = transform.up * startSpeed;	
+		}
+		else
+		{
+			currentMaxVelocityAllowed = myRigidBody.velocity.magnitude;
+		}
+
 		nitroRemaining = maxNitro;
 
 		Tools.instance.nitroRemainingSlider.maxValue = maxNitro;

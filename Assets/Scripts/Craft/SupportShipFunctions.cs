@@ -18,6 +18,9 @@ public class SupportShipFunctions : TargetableObject {
 
 	[HideInInspector] public Vector2 waypoint;
 
+	[Header ("Hangars or Docking ports (both named \"Hangars\"")]
+	public Transform[] hangars;
+
 
 
 	protected void HoldPosition()

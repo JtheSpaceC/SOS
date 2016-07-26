@@ -201,7 +201,40 @@ public class CAGManager : MonoBehaviour {
 
 	public void StartMission()
 	{
-		ClickToPlay.instance.LoadScene("test");
+		#region Clearing before load to prevent duplicates
+		MissionSetup.instance.playerSquad.Clear();
+		MissionSetup.instance.pmcCraft.Clear();
+		MissionSetup.instance.civilianCraft.Clear();
+		MissionSetup.instance.enemyCraft.Clear();
+		#endregion
+
+		MissionSetup.instance.playerCraft = new MissionUnitInfo();
+		MissionSetup.instance.playerCraft.shipType = MissionSetup.instance.arrowPlayer;
+
+		MissionUnitInfo wingman1 = new MissionUnitInfo();
+		wingman1.shipType = MissionSetup.instance.arrowAI;
+
+		MissionUnitInfo wingman2 = new MissionUnitInfo();
+		wingman2.shipType = MissionSetup.instance.arrowAI;
+
+		MissionSetup.instance.playerSquad.Add(wingman1);
+		MissionSetup.instance.playerSquad.Add(wingman2);
+
+		MissionUnitInfo enemy1 = new MissionUnitInfo();
+		enemy1.whichSide = MissionUnitInfo.WhichSide.Enemy;
+		enemy1.shipType = MissionSetup.instance.stormwallAI;
+		MissionSetup.instance.enemyCraft.Add(enemy1);
+
+		MissionUnitInfo home1 = new MissionUnitInfo();
+		home1.shipType = MissionSetup.instance.pmcHomeShip;
+		MissionSetup.instance.pmcCraft.Add(home1);
+		MissionSetup.instance.hangarCraft = home1;
+
+
+
+		MissionSetup.instance.insertionType = MissionSetup.InsertionType.LeaveHangar;
+
+		ClickToPlay.instance.LoadScene("_empty");
 	}
 
 	#region Fade/Blackout Functions

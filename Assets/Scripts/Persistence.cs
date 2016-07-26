@@ -23,7 +23,6 @@ public class Persistence : MonoBehaviour {
 		{
 			CAGManager.instance.EnableLeaveSquadronHQ(true);
 			Destroy(gameObject);
-
 		}
 	}
 }

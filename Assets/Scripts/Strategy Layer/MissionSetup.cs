@@ -6,6 +6,8 @@ public class MissionSetup : MonoBehaviour {
 
 	public static MissionSetup instance;
 
+	[HideInInspector] public bool inMission = false;
+
 	public enum MissionType {Patrol, Raid, Battle}
 	public MissionType missionType;
 
@@ -13,14 +15,14 @@ public class MissionSetup : MonoBehaviour {
 	public InsertionType insertionType;
 
 	public MissionUnitInfo playerCraft;
-	public List<MissionUnitInfo> warpingCraft; //if we're warping in, we'll have to attach to this. Player's group first, any friendlies after
+	public List<MissionUnitInfo> warpingCraft = new List<MissionUnitInfo>(); //if we're warping in, we'll have to attach to this. Player's group first, any friendlies after
 
 	[Tooltip("The ship/station whose hangar the player will exit at mission start.")]
-	public MissionUnitInfo hangarCraft; //if flying out of a hangar, we'll need this
-	public List<MissionUnitInfo> playerSquad;
-	public List<MissionUnitInfo> pmcCraft;
-	public List<MissionUnitInfo> enemyCraft;
-	public List<MissionUnitInfo> civilianCraft;
+	public MissionUnitInfo hangarCraft; //if flying out of a hangar, we'll need this. It should normally be one of the craft from the PMC craft list
+	public List<MissionUnitInfo> playerSquad = new List<MissionUnitInfo>();
+	public List<MissionUnitInfo> pmcCraft = new List<MissionUnitInfo>(); //don't include squad mates, just other support ships
+	public List<MissionUnitInfo> enemyCraft = new List<MissionUnitInfo>();
+	public List<MissionUnitInfo> civilianCraft = new List<MissionUnitInfo>();
 
 	public GameObject backgroundForArea;
 
@@ -30,6 +32,7 @@ public class MissionSetup : MonoBehaviour {
 	public GameObject transportAI;
 	public GameObject shuttleAI;
 	public GameObject stormwallAI;
+	public GameObject pmcHomeShip;
 
 
 	void Awake()
@@ -68,15 +71,23 @@ public class MissionSetup : MonoBehaviour {
 		else if(playerCraft == null)
 		{
 			Debug.Log("Setting Insertion Type to NotPresent. No Player set.");
-			insertionType = InsertionType.NotPresent;
-		}
-		else
-		{
-			Debug.Log("Setting Insertion Type to NotPresent. Something went wrong.");
-			insertionType = InsertionType.NotPresent;
+			insertionType = InsertionType.NotPresent;		
 		}
 
+		inMission = true;
+
 	}//end of ValidateChoices
+
+	void Update()
+	{
+		if(inMission)
+		{
+			if(Input.GetKeyDown(KeyCode.X))
+			{
+				ClickToPlay.instance.LoadScene("rts_CAG walkabout");
+			}
+		}
+	}
 
 
 }//end of script
@@ -90,7 +101,6 @@ public class MissionUnitInfo{
 	public GameObject shipType;
 
 	public bool activeAtStart = true;
-	public bool isPlayer = false;
 
 	public enum PrimaryWeapon{DualCannon}
 	public PrimaryWeapon primaryWeapon;
