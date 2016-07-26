@@ -31,9 +31,10 @@ public class PlayerFighterMovement : EnginesFighter {
 		{
 			myRigidBody.velocity = transform.up * startSpeed;	
 		}
-		else
+		else if(myRigidBody.velocity.magnitude > maxNormalVelocity)
 		{
 			currentMaxVelocityAllowed = myRigidBody.velocity.magnitude;
+			stillHaveAfterburnMomentum = true;
 		}
 
 		nitroRemaining = maxNitro;

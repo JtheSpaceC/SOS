@@ -96,10 +96,14 @@ public class EnginesFighter : MonoBehaviour {
 	{
 		currentMaxVelocityAllowed = maxNormalVelocity;
 
-		if(Time.time < 1) //if it's after a second the speed will have been set by a cutscene or hangar launch or something else
+		if(Director.instance.timer < 1) //if it's after a second the speed will have been set by a cutscene or hangar launch or something else
+		{
 			myRigidBody.velocity = transform.up * startSpeed;
+		}
 		else
+		{
 			currentMaxVelocityAllowed = myRigidBody.velocity.magnitude;
+		}
 
 		currentAccelerationRate = normalAccelerationRate;
 	}
@@ -448,6 +452,7 @@ public class EnginesFighter : MonoBehaviour {
 				else return;
 			}
 		}
+	
 		myRigidBody.AddForce (transform.up * direction * currentAccelerationRate * Time.deltaTime);
 	}
 

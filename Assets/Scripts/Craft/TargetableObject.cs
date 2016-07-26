@@ -7,7 +7,7 @@ public class TargetableObject : MonoBehaviour {
 	[HideInInspector]public AICommander enemyCommander;
 	[HideInInspector]public WarpDrive warpDrive;
 
-	protected Rigidbody2D myRigidbody;
+	[HideInInspector] public Rigidbody2D myRigidbody;
 
 	public enum WhichSide {Enemy, Ally};
 	public WhichSide whichSide;

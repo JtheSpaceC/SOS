@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Director : MonoBehaviour {
 
@@ -150,7 +151,7 @@ public class Director : MonoBehaviour {
 		{
 			player.transform.position = hangarToExit.GetComponent<SupportShipFunctions>().hangars[0].transform.position;
 			player.transform.rotation = hangarToExit.GetComponent<SupportShipFunctions>().hangars[0].transform.rotation;
-			player.GetComponent<PlayerAILogic>().TogglePlayerControl(false, false, false, false);
+			StartCoroutine(PlayerShipLaunchFromHangar());
 
 			for(int i = 0; i < missionSetupScript.playerSquad.Count; i++)
 			{
@@ -158,6 +159,8 @@ public class Director : MonoBehaviour {
 					hangarToExit.GetComponent<SupportShipFunctions>().hangars[i+1].transform.position;
 				player.GetComponentInChildren<SquadronLeader>().activeWingmen[i].transform.rotation = 
 					hangarToExit.GetComponent<SupportShipFunctions>().hangars[i+1].transform.rotation;
+				StartCoroutine
+				(ShipLaunchFromHangar(player.GetComponentInChildren<SquadronLeader>().activeWingmen[i].GetComponent<AIFighter>()));
 			}
 		}
 
@@ -182,21 +185,45 @@ public class Director : MonoBehaviour {
 		//(happens in Start())
 	}
 
+	IEnumerator ShipLaunchFromHangar(AIFighter shipAI)
+	{
+		shipAI.enabled = false;
+
+		yield return new WaitForSeconds(Random.Range(1.75f, 2.25f));
+
+		float startTime = timer;
+
+		while(timer < (startTime + 2))
+		{
+			shipAI.engineScript.MoveToTarget(shipAI.transform.position + (shipAI.transform.up * 10), false);
+			yield return new WaitForEndOfFrame();
+		}
+
+		shipAI.enabled = true;
+	}
+
+	IEnumerator PlayerShipLaunchFromHangar()
+	{
+		player.GetComponent<PlayerAILogic>().TogglePlayerControl(false, false, false, false);
+
+		yield return new WaitForSeconds(2);
+
+		float startTime = timer;
+
+		while(timer < (startTime + 2))
+		{
+			player.GetComponent<EnginesFighter>().MoveToTarget(player.transform.position + (player.transform.up * 10), false);
+			yield return new WaitForEndOfFrame();
+		}
+
+		player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true);
+
+	}
+
 	void Update () 
 	{
 		if(!ClickToPlay.instance.paused)
-		{
-			if(timer > 2 && timer < 4)
-			{
-				player.GetComponent<EnginesFighter>().MoveToTarget(player.transform.position + (player.transform.up * 10), false);
-			}
-			else if(timer > 4)
-			{
-				player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true);
-			}
-
-			print(player.GetComponent<Rigidbody2D>().velocity.magnitude);
-				
+		{								
 			if(gameTimeText && playerKillsText)
 			{
 				//Mission Clock Stuff
