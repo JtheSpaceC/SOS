@@ -208,6 +208,9 @@ public class Director : MonoBehaviour {
 
 			yield return new WaitForEndOfFrame();
 		}
+		Vector3 position = shipAI.transform.position;
+		position.z = 0;
+		shipAI.transform.position = position;
 
 		shipAI.healthScript.enabled = true;
 		shipAI.enabled = true;
@@ -227,12 +230,15 @@ public class Director : MonoBehaviour {
 			player.GetComponent<EnginesFighter>().MoveToTarget(player.transform.position + (player.transform.up * 10), false);
 
 			//bring ship up towards zero from the lower hangar starting position
-			float newZ = Mathf.Lerp(startingZ, 0, (Time.time - startTime)/2f);
+			float newZ = Mathf.Lerp(startingZ, 0, (timer - startTime)/2f);
 			Vector3 pos = player.transform.position;
 			pos.z = newZ;
 			player.transform.position = pos;
 			yield return new WaitForEndOfFrame();
 		}
+		Vector3 position = player.transform.position;
+		position.z = 0;
+		player.transform.position = position;
 
 		player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true);
 		player.GetComponentInChildren<SquadronLeader>().CoverMe();
