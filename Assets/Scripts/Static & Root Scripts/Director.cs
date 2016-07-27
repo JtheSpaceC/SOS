@@ -122,6 +122,7 @@ public class Director : MonoBehaviour {
 		for(int i = 0; i < missionSetupScript.pmcCraft.Count; i++)
 		{
 			GameObject pmcCraft = Instantiate(missionSetupScript.pmcCraft[i].shipType) as GameObject;
+			pmcCraft.transform.position += missionSetupScript.pmcCraft[i].spawnPos;
 
 			//make a record of which hangar we've to exit (in case that's the chosen insertion method)
 			if(missionSetupScript.hangarCraft == missionSetupScript.pmcCraft[i]) 
@@ -169,7 +170,7 @@ public class Director : MonoBehaviour {
 		if(missionSetupScript.playerCraft != null)
 		{
 			Vector3 camPos = Camera.main.transform.position;
-			Camera.main.transform.position = GameObject.FindGameObjectWithTag("PlayerFighter").transform.position;
+			Camera.main.transform.position = (Vector2)GameObject.FindGameObjectWithTag("PlayerFighter").transform.position;
 			Camera.main.transform.position += new Vector3 (0, 0, camPos.z);
 		}
 
@@ -188,6 +189,7 @@ public class Director : MonoBehaviour {
 	IEnumerator ShipLaunchFromHangar(AIFighter shipAI)
 	{
 		shipAI.enabled = false;
+		float startingZ = shipAI.transform.position.z;
 
 		yield return new WaitForSeconds(Random.Range(1.75f, 2.25f));
 
@@ -196,6 +198,13 @@ public class Director : MonoBehaviour {
 		while(timer < (startTime + 2))
 		{
 			shipAI.engineScript.MoveToTarget(shipAI.transform.position + (shipAI.transform.up * 10), false);
+
+			//bring ship up towards zero from the lower hangar starting position
+			float newZ = Mathf.Lerp(startingZ, 0, (timer - startTime) /2f);
+			Vector3 pos = shipAI.transform.position;
+			pos.z = newZ;
+			shipAI.transform.position = pos;
+
 			yield return new WaitForEndOfFrame();
 		}
 
@@ -205,6 +214,7 @@ public class Director : MonoBehaviour {
 	IEnumerator PlayerShipLaunchFromHangar()
 	{
 		player.GetComponent<PlayerAILogic>().TogglePlayerControl(false, false, false, false);
+		float startingZ = player.transform.position.z;
 
 		yield return new WaitForSeconds(2);
 
@@ -213,11 +223,17 @@ public class Director : MonoBehaviour {
 		while(timer < (startTime + 2))
 		{
 			player.GetComponent<EnginesFighter>().MoveToTarget(player.transform.position + (player.transform.up * 10), false);
+
+			//bring ship up towards zero from the lower hangar starting position
+			float newZ = Mathf.Lerp(startingZ, 0, (Time.time - startTime)/2f);
+			Vector3 pos = player.transform.position;
+			pos.z = newZ;
+			player.transform.position = pos;
 			yield return new WaitForEndOfFrame();
 		}
 
 		player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true);
-
+		player.GetComponentInChildren<SquadronLeader>().CoverMe();
 	}
 
 	void Update () 

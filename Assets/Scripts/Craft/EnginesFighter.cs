@@ -100,7 +100,7 @@ public class EnginesFighter : MonoBehaviour {
 		{
 			myRigidBody.velocity = transform.up * startSpeed;
 		}
-		else
+		else if(myRigidBody.velocity.magnitude > currentMaxVelocityAllowed) //this was put in to fix fighters slowing after they launch from hangar
 		{
 			currentMaxVelocityAllowed = myRigidBody.velocity.magnitude;
 		}

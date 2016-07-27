@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class AsteroidSpawner : MonoBehaviour {
 
@@ -32,13 +31,13 @@ public class AsteroidSpawner : MonoBehaviour {
 	{	
 		if(asteroidCount < maxAsteroids)
 		{
-			Vector2 spawnPosition = (Vector2)Camera.main.transform.position + 
+			Vector3 spawnPosition = (Vector2)Camera.main.transform.position + 
 				(Random.insideUnitCircle.normalized*Random.Range(noSpawnRadius, maxSpawnRadius));
 
 			if(asteroidField.bounds.Contains(spawnPosition))
 			{
 				GameObject obj = asteroidPoolerScript.current.GetPooledObject ();
-				obj.transform.position = spawnPosition;
+				obj.transform.position = spawnPosition + new Vector3 (0, 0, obj.transform.position.z);
 				obj.GetComponent<Asteroid>().myAsteroidSpawner = this;
 				obj.SetActive (true);
 				

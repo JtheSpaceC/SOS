@@ -41,8 +41,8 @@ public class Spawner : MonoBehaviour {
 		Vector3 spawnPoint = player == null ? Vector3.zero : player.transform.position;
 
 		GameObject newFighter =
-			Instantiate (spawnObj, spawnPoint + (Vector3)Random.insideUnitCircle.normalized * spawnRadius, Quaternion.identity)
-				as GameObject;
+			Instantiate (spawnObj, spawnObj.transform.position + spawnPoint + (Vector3)Random.insideUnitCircle.normalized * spawnRadius, 
+				Quaternion.identity) as GameObject;
 		newFighter.name = "Stormwall Fighter " +i;
 		//Instantiate (spawnObj, newFighter.transform.position + (Vector3)Random.insideUnitCircle, Quaternion.identity);
 

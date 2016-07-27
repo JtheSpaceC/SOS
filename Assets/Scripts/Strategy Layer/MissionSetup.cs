@@ -100,6 +100,8 @@ public class MissionUnitInfo{
 
 	public GameObject shipType;
 
+	public Vector3 spawnPos;
+
 	public bool activeAtStart = true;
 
 	public enum PrimaryWeapon{DualCannon}
