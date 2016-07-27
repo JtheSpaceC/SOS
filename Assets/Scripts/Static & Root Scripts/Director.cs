@@ -188,6 +188,7 @@ public class Director : MonoBehaviour {
 
 	IEnumerator ShipLaunchFromHangar(AIFighter shipAI)
 	{
+		shipAI.healthScript.enabled = false;
 		shipAI.enabled = false;
 		float startingZ = shipAI.transform.position.z;
 
@@ -208,6 +209,7 @@ public class Director : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 		}
 
+		shipAI.healthScript.enabled = true;
 		shipAI.enabled = true;
 	}
 
