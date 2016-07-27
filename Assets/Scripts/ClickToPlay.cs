@@ -117,7 +117,7 @@ public class ClickToPlay : MonoBehaviour
 
 	public void EscMenu()
 	{
-		if (disablePlayerSelectButtonForMenu && GameObject.FindGameObjectWithTag("PlayerFighter") != null)
+		if (disablePlayerSelectButtonForMenu && GameObject.FindGameObjectWithTag("PlayerFighter") != null && playerShootScript)
 			playerShootScript.allowedToFire = false;
 
 		CameraTactical.instance.canAccessTacticalMap = false;
@@ -134,7 +134,7 @@ public class ClickToPlay : MonoBehaviour
 
 	public void ResumeFromEscMenu()
 	{
-		if (disablePlayerSelectButtonForMenu && GameObject.FindGameObjectWithTag("PlayerFighter") != null)
+		if (disablePlayerSelectButtonForMenu && GameObject.FindGameObjectWithTag("PlayerFighter") != null && playerShootScript)
 			StartCoroutine (playerShootScript.AllowedToFire ());
 
 		foreach (GameObject screen in screensToDisableOnResume)
