@@ -20,8 +20,8 @@ public class PMCMisisonSupports : MonoBehaviour {
 	public GameObject retrievalShuttlePrefab;
 	public float retrievalShuttleSpawnRadius = 20;
 
-	Vector2 insertionPoint;
-	Vector2 spawnPos;
+	Vector3 insertionPoint;
+	Vector3 spawnPos;
 
 	[HideInInspector] public GameObject retrievalShuttle;
 	GameObject playerEVA;
@@ -89,12 +89,14 @@ public class PMCMisisonSupports : MonoBehaviour {
 
 		if(FindObjectOfType<AsteroidField>())
 		{
-			spawnPos = (insertionPoint - (Vector2)FindObjectOfType<AsteroidField>().transform.position).normalized * 1000;
+			spawnPos = (insertionPoint - FindObjectOfType<AsteroidField>().transform.position).normalized * 1000;
 		}
 		else
 		{
-			spawnPos = (insertionPoint - (Vector2)pmcCommander.transform.position).normalized * 1000;
+			spawnPos = (insertionPoint - pmcCommander.transform.position).normalized * 1000;
 		}
+
+		spawnPos += fighterTransportPrefab.transform.position;
 
 		Subtitles.instance.PostSubtitle(new string[]{"Pickup is on its way! ETA 10 seconds. Stand by!"});
 		Tools.instance.CreateWaypoint (Tools.WaypointTypes.Extraction, insertionPoint);

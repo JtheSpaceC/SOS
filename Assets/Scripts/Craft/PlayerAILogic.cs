@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class PlayerAILogic : FighterFunctions {
 
@@ -36,6 +34,10 @@ public class PlayerAILogic : FighterFunctions {
 		shootScript = GetComponentInChildren<WeaponsPrimaryFighter> ();
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
 		dodgeScript = GetComponentInChildren<Dodge>();
+		if(transform.FindChild("Effects/GUI"))
+		{
+			myGui = transform.FindChild("Effects/GUI").gameObject;
+		}
 
 		SetUpSideInfo();
 

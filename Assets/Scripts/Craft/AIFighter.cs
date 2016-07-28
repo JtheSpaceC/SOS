@@ -70,6 +70,10 @@ public class AIFighter : FighterFunctions {
 		engineScript = GetComponent<EnginesFighter> ();
 		shootScript = GetComponentInChildren<WeaponsPrimaryFighter> ();
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
+		if(transform.FindChild("Effects/GUI"))
+		{
+			myGui = transform.FindChild("Effects/GUI").gameObject;
+		}
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
 

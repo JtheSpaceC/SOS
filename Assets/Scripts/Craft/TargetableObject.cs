@@ -25,10 +25,11 @@ public class TargetableObject : MonoBehaviour {
 	float firingAngle = 25;
 
 	protected string myActivity;
-	protected Vector2 warpOutLookAtPoint;
-	protected Vector2 literalSpawnPoint;
-	[HideInInspector] public Vector2 insertionPoint; //where to warp in to
+	protected Vector3 warpOutLookAtPoint;
+	protected Vector3 literalSpawnPoint;
+	[HideInInspector] public Vector3 insertionPoint; //where to warp in to
 
+	[HideInInspector] public GameObject myGui;
 
 	
 

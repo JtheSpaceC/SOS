@@ -196,23 +196,11 @@ public class AITransport : SupportShipFunctions {
 		}
 	}
 
-	void OnTriggerExit2D (Collider2D other)
+	void OnTriggerExit2D(Collider2D other)
 	{
-		if(other.tag == "Fighter")
+		if((other.tag == "Fighter" || other.tag == "PlayerFighter") && other.transform.position.z != 0f)
 		{
-			if(!other.GetComponent<EnginesFighter>().linedUpToDock)
-			{
-				other.GetComponent<SpriteRenderer>().sortingLayerName = "Fighters";
-				other.SendMessage("MoveAllSortingOrders");
-			}
-		}
-		else if(other.tag == "PlayerFighter")
-		{
-			if(!other.GetComponent<PlayerFighterMovement>().linedUpToDock)
-			{
-				other.GetComponent<SpriteRenderer>().sortingLayerName = "Fighters";
-				other.SendMessage("MoveAllSortingOrders");
-			}
+			other.transform.position = new Vector3 (other.transform.position.x, other.transform.position.y, 0);
 		}
 	}
 
@@ -250,11 +238,12 @@ public class AITransport : SupportShipFunctions {
 				fighterEngineScripts[i].MoveToTarget(lineupPos, true);
 				fighterEngineScripts[i].LookAtTarget(carrySpots[i].position);
 			}
-			else if(!fighterHealthScripts[i].dead && !fighterEngineScripts[i].linedUpToDock)
+			else if(!fighterHealthScripts[i].dead && !fighterEngineScripts[i].linedUpToDock) //they're at the lineup point. Happens once
 			{
 				fighterEngineScripts[i].linedUpToDock = true;
 				fighterEngineScripts[i].myRigidBody.velocity = Vector2.zero;
-				SetSortingLayersBeneathTheTransport(fightersToCarry[i]);
+				fighterEngineScripts[i].transform.position = 
+					new Vector3(fighterEngineScripts[i].transform.position.x, fighterEngineScripts[i].transform.position.y, carry1.position.z);
 			}
 			else if(fighterHealthScripts[i].dead)
 			{
@@ -274,6 +263,7 @@ public class AITransport : SupportShipFunctions {
 				{
 					fightersToCarry[i].transform.position = carrySpots[i].position;
 					fightersToCarry[i].transform.parent = carrySpots[i];
+					fightersToCarry[i].GetComponent<TargetableObject>().myGui.SetActive(false);
 					fighterEngineScripts[i].securedToDock = true;
 					fighterEngineScripts[i].myRigidBody.isKinematic = true;
 					fighterEngineScripts[i].EnginesEffect(0, false);
@@ -380,14 +370,6 @@ public class AITransport : SupportShipFunctions {
 	}//end of SetUpReferences
 
 
-	public void SetSortingLayersBeneathTheTransport(GameObject fighterToChange)
-	{
-		//first change the fighter's layer to this one
-		fighterToChange.GetComponent<SpriteRenderer>().sortingLayerName = this.GetComponent<SpriteRenderer>().sortingLayerName;
-		//then make it change all its own children to match its own new layer
-		fighterToChange.SendMessage("MoveAllSortingOrders");
-	}
-
 	void AllAboard()
 	{
 		if(switchingState)
@@ -434,7 +416,7 @@ public class AITransport : SupportShipFunctions {
 				fighter1.GetComponent<Rigidbody2D> ().isKinematic = true;
 				fighter1.transform.rotation = carry1.transform.rotation;
 				fighter1.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
-				SetSortingLayersBeneathTheTransport (fighter1);
+				fighter1.GetComponent<TargetableObject>().myGui.SetActive(false);
 			}
 		}
 
@@ -448,7 +430,7 @@ public class AITransport : SupportShipFunctions {
 				fighter2.GetComponent<Rigidbody2D> ().isKinematic = true;
 				fighter2.transform.rotation = carry2.transform.rotation;
 				fighter2.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
-				SetSortingLayersBeneathTheTransport (fighter2);
+				fighter2.GetComponent<TargetableObject>().myGui.SetActive(false);
 			}
 		}
 
@@ -462,7 +444,7 @@ public class AITransport : SupportShipFunctions {
 				fighter3.GetComponent<Rigidbody2D> ().isKinematic = true;
 				fighter3.transform.rotation = carry3.transform.rotation;
 				fighter3.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
-				SetSortingLayersBeneathTheTransport (fighter3);
+				fighter3.GetComponent<TargetableObject>().myGui.SetActive(false);
 			}
 		}
 	}
@@ -473,8 +455,11 @@ public class AITransport : SupportShipFunctions {
 		{
 			if(CheckTargetIsLegit(theCaller))
 			{
-				if(insertionPoint == Vector2.zero)
-					insertionPoint = (Vector2)theCaller.transform.position + Random.insideUnitCircle * 5f;
+				if(insertionPoint == Vector3.zero)
+				{
+					insertionPoint = theCaller.transform.position + (Vector3)Random.insideUnitCircle * 5f;
+					insertionPoint += new Vector3(0, 0, transform.position.z);
+				}
 				literalSpawnPoint = transform.position;
 				startTime = Time.time;
 			}
@@ -504,8 +489,8 @@ public class AITransport : SupportShipFunctions {
 
 			switchingState = false;
 		}
-		transform.position = Vector2.Lerp (literalSpawnPoint, insertionPoint, (Time.time - startTime) / warpInTime);
-		engineScript.LookAtTarget (insertionPoint + (Vector2)transform.up);
+		transform.position = Vector3.Lerp (literalSpawnPoint, insertionPoint, (Time.time - startTime) / warpInTime);
+		engineScript.LookAtTarget (insertionPoint + transform.up);
 
 		if (reelingInPlayerGroup)
 		{
@@ -584,7 +569,7 @@ public class AITransport : SupportShipFunctions {
 			}
 			camOffset = Camera.main.transform.position - transform.position;
 
-			warpOutLookAtPoint = (literalSpawnPoint - (Vector2)transform.position).normalized * 10000;
+			warpOutLookAtPoint = (literalSpawnPoint - transform.position).normalized * 10000;
 
 			if(whichSide == WhichSide.Ally)
 			{
@@ -658,6 +643,7 @@ public class AITransport : SupportShipFunctions {
 			carryFighter1Health.playerHasAutoDodge = playerHadAutoDodge;
 			carryFighter1Health.snapFocusAmount = playerManaToRestore;
 			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.CoverMe; //TODO: May move this line to respect AI leaders
+			carryFighter1.GetComponent<TargetableObject>().myGui.SetActive(true);
 		}
 		else
 		{
@@ -681,6 +667,7 @@ public class AITransport : SupportShipFunctions {
 				fighter.transform.FindChild("Breathing Room").gameObject.SetActive(true);
 				fighter.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Play();
 				fighter.SendMessage("ToggleWeaponsOnOff", true);
+				fighterAIScript.myGui.SetActive(true);
 			}
 
 			fighter.transform.SetParent(null);

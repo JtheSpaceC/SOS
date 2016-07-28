@@ -181,7 +181,7 @@ public class AIAssaultShuttle : SupportShipFunctions {
 			}
 			camOffset = Camera.main.transform.position - transform.position;
 
-			warpOutLookAtPoint = (literalSpawnPoint - (Vector2)transform.position).normalized * 1000;
+			warpOutLookAtPoint = (literalSpawnPoint - transform.position).normalized * 1000;
 
 			if(whichSide == WhichSide.Ally)
 			{

@@ -28,20 +28,6 @@ public class FighterFunctions : TargetableObject {
 		return closestGameObject.gameObject;
 	}
 
-	protected void MoveAllSortingOrders()
-	{
-		SpriteRenderer[] allSRs = GetComponentsInChildren<SpriteRenderer>(); //doesn't work on disabled gameObjects
-		string thisSortingLayer = GetComponent<SpriteRenderer>().sortingLayerName;
-
-		foreach(SpriteRenderer sr in allSRs)
-		{
-			if(sr.sortingLayerName != "UI")
-			{
-				sr.sortingLayerName = thisSortingLayer;
-			}
-		}
-	}
-
 	protected GameObject SelectAnEnemyAttackingMe(List <GameObject> allAttackers)
 	{
 		if (allAttackers.Count == 0)

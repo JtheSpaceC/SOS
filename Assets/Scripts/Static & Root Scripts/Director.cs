@@ -201,7 +201,8 @@ public class Director : MonoBehaviour {
 			shipAI.engineScript.MoveToTarget(shipAI.transform.position + (shipAI.transform.up * 10), false);
 
 			//bring ship up towards zero from the lower hangar starting position
-			float newZ = Mathf.Lerp(startingZ, 0, (timer - startTime) /2f);
+			float newZ = Mathf.Lerp(startingZ, 0, (Mathf.Pow((timer - startTime), 2)
+				/ Mathf.Pow(2f, 2)));
 			Vector3 pos = shipAI.transform.position;
 			pos.z = newZ;
 			shipAI.transform.position = pos;
@@ -230,7 +231,8 @@ public class Director : MonoBehaviour {
 			player.GetComponent<EnginesFighter>().MoveToTarget(player.transform.position + (player.transform.up * 10), false);
 
 			//bring ship up towards zero from the lower hangar starting position
-			float newZ = Mathf.Lerp(startingZ, 0, (timer - startTime)/2f);
+			float newZ = Mathf.Lerp(startingZ, 0, (Mathf.Pow((timer - startTime), 2)
+				/ Mathf.Pow(2f, 2)));
 			Vector3 pos = player.transform.position;
 			pos.z = newZ;
 			player.transform.position = pos;
