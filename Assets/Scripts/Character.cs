@@ -68,7 +68,7 @@ public class Character : MonoBehaviour {
 
 	//for speaking & mouth behaviour
 	Sprite originalMouth;
-	bool speaking = false;
+	//bool speaking = false;
 
 
 
@@ -342,7 +342,7 @@ public class Character : MonoBehaviour {
 
 	public IEnumerator Speaking()
 	{
-		speaking = true;
+		//speaking = true;
 		Invoke ("StopSpeaking", 1);
 		mouth.sprite = GetARandomSprite(appearances.speakingMouthShapes);
 
@@ -359,7 +359,7 @@ public class Character : MonoBehaviour {
 	{
 		StopCoroutine("Speaking");
 		mouth.sprite = originalMouth;
-		speaking = false;
+		//speaking = false;
 	}
 
 	void RandomNewEyesPosition()

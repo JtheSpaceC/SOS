@@ -134,6 +134,7 @@ public class Director : MonoBehaviour {
 		for(int i = 0; i < missionSetupScript.enemyCraft.Count; i++)
 		{
 			GameObject enemy = Instantiate(missionSetupScript.enemyCraft[i].shipType) as GameObject;
+			enemy.transform.position = missionSetupScript.enemyCraft[i].spawnPos;
 		}
 
 		for(int i = 0; i < missionSetupScript.civilianCraft.Count; i++)
@@ -141,9 +142,9 @@ public class Director : MonoBehaviour {
 
 		}
 
-		//set mission type
+		//set MISSION type
 
-		//set insertion type
+		//set INSERTION type
 
 		if(missionSetupScript.insertionType == MissionSetup.InsertionType.AlreadyPresent)
 		{//do nothing
@@ -164,13 +165,25 @@ public class Director : MonoBehaviour {
 				(ShipLaunchFromHangar(player.GetComponentInChildren<SquadronLeader>().activeWingmen[i].GetComponent<AIFighter>()));
 			}
 		}
+		else if(missionSetupScript.insertionType == MissionSetup.InsertionType.NotPresent)
+		{
+			player = null;
+		}
+		else if(missionSetupScript.insertionType == MissionSetup.InsertionType.RestInPosition)
+		{
+			Debug.LogError("Not Set up for this yet");
+		}
+		else if(missionSetupScript.insertionType == MissionSetup.InsertionType.WarpIn)
+		{
+			
+		}
 
-		//set Camera starting position
+		//set CAMERA starting position
 
 		if(missionSetupScript.playerCraft != null)
 		{
 			Vector3 camPos = Camera.main.transform.position;
-			Camera.main.transform.position = (Vector2)GameObject.FindGameObjectWithTag("PlayerFighter").transform.position;
+			Camera.main.transform.position = (Vector2)player.transform.position;
 			Camera.main.transform.position += new Vector3 (0, 0, camPos.z);
 		}
 

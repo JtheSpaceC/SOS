@@ -7,6 +7,7 @@ public class CampaignGenerator : MonoBehaviour {
 	public void GenerateNewTour()
 	{
 		TourOfDuty tod = new TourOfDuty();
+		tod.techLevel = 1;
 	}
 }
 

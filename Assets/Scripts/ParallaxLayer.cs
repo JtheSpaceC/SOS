@@ -5,6 +5,7 @@ public class ParallaxLayer : MonoBehaviour {
 	//NOTE: This requires the object to be a child of a more stationary parent in order to keep a relative point in space
 
 	public Vector3 realLocalPosition;
+	public float scaler = 1;
 	Vector3 imageProjectPosition;
 
 	[Tooltip("0 puts it on the player layer, -1 at the camera's eye (above player), and 1 at infinite distance.")]
@@ -38,7 +39,9 @@ public class ParallaxLayer : MonoBehaviour {
 
 	void SetProjectedImageLocation()
 	{
-		imageProjectPosition = realLocalPosition + (Camera.main.transform.position - transform.parent.position) * movement_resistance;
+		imageProjectPosition = realLocalPosition + (Camera.main.transform.position - transform.parent.position) 
+			* Mathf.Pow(movement_resistance, Mathf.Sqrt(scaler));
+			
 		imageProjectPosition.z = realLocalPosition.z;
 		transform.localPosition = imageProjectPosition;	
 	}

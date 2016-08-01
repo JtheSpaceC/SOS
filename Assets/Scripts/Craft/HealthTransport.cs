@@ -61,6 +61,7 @@ public class HealthTransport : Health {
 	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, float baseDamage, float critChance)
 	{
 		float damage = baseDamage;
+		damage *= 1; //may want to adjust damage by crit or bonus damage 
 
 		//1. apply damage
 		
@@ -99,7 +100,7 @@ public class HealthTransport : Health {
 		}
 		
 		//2. Flah collider off to reduce repeat hits all at once
-		if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+		if(GetComponent<SupportShipFunctions>().whichSide == TargetableObject.WhichSide.Enemy)
 			StartCoroutine (FlashOnInvincibility (2));
 		else
 			StartCoroutine (FlashOnInvincibility (0));

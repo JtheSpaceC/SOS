@@ -21,7 +21,6 @@ public class DemoLevel : MonoBehaviour {
 	public GameObject convoyPointerArrow;
 	public Transform convoy;
 	public CircleCollider2D asteroidField;
-	float asteroidFieldRadius;
 
 	public Text missileAmmoText;
 	public Text objectiveText;
@@ -137,7 +136,6 @@ public class DemoLevel : MonoBehaviour {
 
 		InvokeRepeating("CheckPlayerHasSeenTransport", 17, 1);
 		InvokeRepeating("CheckPlayerAndConvoyLocation", 10, 4);
-		asteroidFieldRadius = asteroidField.radius;
 	}
 
 	void OnEnable()

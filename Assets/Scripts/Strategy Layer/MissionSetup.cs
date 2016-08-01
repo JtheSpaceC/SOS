@@ -85,8 +85,18 @@ public class MissionSetup : MonoBehaviour {
 			if(Input.GetKeyDown(KeyCode.X))
 			{
 				ClickToPlay.instance.LoadScene("rts_CAG walkabout");
+				StartCoroutine("EnableLeaveSquadronHQ");
 			}
 		}
+	}
+
+	IEnumerator EnableLeaveSquadronHQ()
+	{
+		while(CAGManager.instance == null)
+		{
+			yield return new WaitForEndOfFrame();
+		}
+		CAGManager.instance.EnableLeaveSquadronHQ(true);
 	}
 
 
