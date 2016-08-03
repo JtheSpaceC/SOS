@@ -31,7 +31,7 @@ public class Dodge : MonoBehaviour
 
 	private Animator animator;
 	public Transform animationChild;
-	[Tooltip ("If there's an extra item you want to rotate.")] public Transform alsoRotate;
+	[Tooltip ("If there's extra items you want to rotate.")] public Transform[] alsoRotate;
 	Vector3 rotation;
 	float rotY;
 	float t; //time
@@ -194,7 +194,7 @@ public class Dodge : MonoBehaviour
 		}
 	}
 
-	IEnumerator RollAnimation()
+	IEnumerator RollAnimation() //only happens if animator isn't enabled
 	{
 		startTime = Time.time;
 
@@ -214,8 +214,17 @@ public class Dodge : MonoBehaviour
 			rotY = Mathf.Lerp(0, 360f, t);
 			Vector3 newRot = new Vector3 (0, rotY, 0);
 			animationChild.localRotation = Quaternion.Euler(newRot);
-			if(alsoRotate)
-				alsoRotate.localRotation = Quaternion.Euler(newRot);
+
+			if(alsoRotate.Length > 0)
+			{
+				for(int i = 0; i < alsoRotate.Length; i++)
+				{
+					if(alsoRotate[i] != null)
+					{
+						alsoRotate[i].localRotation = Quaternion.Euler(newRot);
+					}
+				}
+			}
 			yield return new WaitForEndOfFrame();
 		}
 
