@@ -8,8 +8,15 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 	GameObject player;
 
+	public bool useLimitedAmmo = false;
 	int maxAmmo = 1200;
 	public int ammo = 900;
+
+	public float barrelCoolRate = 2.5f;
+	public float barrelHeatRate = 20f;
+	float barrelTemp = 0f;
+	bool overheated = false;
+	float overheatSteamVolume;
 
 	public bool playerControlled = false;
 	public bool allowedToFire = false;
@@ -71,7 +78,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 	void Start()
 	{
-		ammo = Mathf.Clamp(ammo, 0, maxAmmo);
+		if(useLimitedAmmo)
+			ammo = Mathf.Clamp(ammo, 0, maxAmmo);
 
 		if(playerControlled && ClickToPlay.instance.disablePlayerSelectButtonForMenu)
 		{
@@ -82,9 +90,16 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			player = GameObject.FindGameObjectWithTag("PlayerFighter");
 			playerSquadLeaderScript = player.GetComponentInChildren<SquadronLeader>();
 
-			Tools.instance.ammoRemainingSlider.maxValue = maxAmmo;
-			Tools.instance.ammoRemainingSlider.value = ammo;
-			Tools.instance.ammoRemainingText.text = "Ammo: " + ammo + " / " + maxAmmo;
+			if(useLimitedAmmo)
+			{
+				Tools.instance.ammoRemainingSlider.maxValue = maxAmmo;
+				Tools.instance.ammoRemainingSlider.value = ammo;
+				Tools.instance.ammoRemainingText.text = "Ammo: " + ammo + " / " + maxAmmo;
+			}
+			else
+			{
+				Tools.instance.ammoRemainingSlider.gameObject.SetActive(false);
+			}
 		}
 	}
 	
@@ -123,12 +138,25 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 		{
 			hammerDown = false;
 		}
+
+		if(!ClickToPlay.instance.paused && playerControlled)
+		{
+			barrelTemp -= 100/barrelCoolRate * Time.deltaTime;
+			barrelTemp = Mathf.Clamp(barrelTemp, 0, 100);
+
+			if(barrelTemp == 0)
+				overheated = false;
+
+			Tools.instance.barrelTempSlider.value = barrelTemp;
+			overheatSteamVolume = Mathf.Pow(barrelTemp/100, 3);
+			Tools.instance.barrelTempAudio.volume += (overheatSteamVolume - Tools.instance.barrelTempAudio.volume) * Time.deltaTime * 2;
+		}
 	}
 	
 	
 	public void FirePrimary(bool ploughTheRoad)
 	{
-		if (Time.time < nextFire || ClickToPlay.instance.paused || ammo <= 0)
+		if (Time.time < nextFire || ClickToPlay.instance.paused || ammo <= 0 || overheated)
 			return;
 
 		nextFire = Time.time + fireRate;
@@ -139,6 +167,11 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 		{
 			CameraShake.instance.Shake (0.05f, 0.1f);
 			Tools.instance.VibrateController(0, .25f, .25f, 0.1f);
+
+			barrelTemp += barrelHeatRate;
+
+			if(barrelTemp >= 100f)
+				overheated = true;
 		}
 
 		if(shotSpawn1 != null)
@@ -158,7 +191,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj1.SetActive(true);
 			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
-			ammo--;
+			if(useLimitedAmmo)
+				ammo--;
 		}
 		
 		
@@ -176,7 +210,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj2.SetActive(true);
 			obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
-			ammo--;
+			if(useLimitedAmmo)
+				ammo--;
 		}
 
 		if(shotSpawn3 != null && ammo > 0)
@@ -193,7 +228,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj3.SetActive(true);
 			obj3.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
-			ammo--;
+			if(useLimitedAmmo)
+				ammo--;
 		}
 
 		if(shotSpawn4 != null && ammo > 0)
@@ -210,10 +246,11 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj4.SetActive(true);
 			obj4.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
 
-			ammo--;
+			if(useLimitedAmmo)
+				ammo--;
 		}
 
-		if(playerControlled)
+		if(playerControlled && useLimitedAmmo)
 		{
 			Tools.instance.ammoRemainingSlider.value = ammo;
 			Tools.instance.ammoRemainingText.text = "Ammo: " + ammo + " / " + maxAmmo;
