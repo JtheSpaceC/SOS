@@ -314,9 +314,9 @@ public class Director : MonoBehaviour {
 	}
 		
 
-	public void SpawnPilotEVA(Vector2 pos, Quaternion rot, bool isPlayer)
+	public void SpawnPilotEVA(Vector3 pos, Quaternion rot, bool isPlayer)
 	{
-		GameObject pilot = Instantiate(pilotEVAPrefab, pos, rot) as GameObject;
+		GameObject pilot = Instantiate(pilotEVAPrefab, pos + pilotEVAPrefab.transform.position, rot) as GameObject;
 		if(isPlayer)
 		{
 			pilot.tag = "PlayerEVA";

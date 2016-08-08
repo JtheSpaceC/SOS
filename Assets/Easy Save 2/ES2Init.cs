@@ -64,10 +64,7 @@ public class ES2Init : MonoBehaviour
 		ES2TypeManager.types[typeof(UnityEngine.PolygonCollider2D)] = new ES2_PolygonCollider2D();
 		ES2TypeManager.types[typeof(System.Object)] = new ES2_object();
 		ES2TypeManager.types[typeof(UnityEngine.Texture)] = new ES2_Texture();
-		ES2TypeManager.types[typeof(ES2GlobalSettings)] = new ES2UserType_ES2GlobalSettings();
-		ES2TypeManager.types[typeof(Room)] = new ES2UserType_Room();
 		ES2TypeManager.types[typeof(UnityEngine.AudioClip)] = new ES2_AudioClip();
-		ES2TypeManager.types[typeof(UnityEngine.SpriteRenderer)] = new ES2UserType_UnityEngineSpriteRenderer();
 
 		ES2.initialised = true;
 	}

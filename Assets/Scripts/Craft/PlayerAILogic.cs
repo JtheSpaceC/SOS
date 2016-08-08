@@ -34,6 +34,8 @@ public class PlayerAILogic : FighterFunctions {
 		shootScript = GetComponentInChildren<WeaponsPrimaryFighter> ();
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
 		dodgeScript = GetComponentInChildren<Dodge>();
+		myRigidbody = GetComponent<Rigidbody2D>();
+
 		if(transform.FindChild("Effects/GUI"))
 		{
 			myGui = transform.FindChild("Effects/GUI").gameObject;

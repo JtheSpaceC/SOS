@@ -188,6 +188,10 @@ public class HealthFighter : Health {
 					Director.instance.numberOfAutomatedDodges++;
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 				}
+				else if(theBullet.tag == "Asteroid")
+				{
+					//do nothing. player should manually dodge asteroids
+				}
 				else
 				{
 					dodgeScript.Roll(0);
@@ -255,7 +259,7 @@ public class HealthFighter : Health {
 			StartCoroutine (Tools.instance.WhiteScreenFlash(0.1f));
 
 			//9. Restore a mana if alive and not docking
-			if(!dead && snapFocusAmount > 0)
+			if(!dead && snapFocusAmount > 0 && theBullet.tag != "Asteroid")
 				for(int i = 0; i < snapFocusAmount; i++)
 				{
 					StartCoroutine(dodgeScript.IncreasePlayerAwarenessMana());
