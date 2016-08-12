@@ -587,7 +587,8 @@ public class HealthFighter : Health {
 
 		GetComponent<Animator>().enabled = false;
 		GetComponentInChildren<Dodge>().enabled = false;
-		radarSig.SetActive (false);
+		if(radarSig)
+			radarSig.SetActive (false);
 		transform.FindChild("Effects").gameObject.SetActive(false);
 
 		transform.SetParent (null);
@@ -607,6 +608,7 @@ public class HealthFighter : Health {
 
 			myAIScript.engineScript.engineNoise.gameObject.SetActive(false);
 			myAIScript.shootScript.transform.parent.gameObject.SetActive(false);
+			myAIScript.missilesScript.targetingPip.SetActive(false);
 			myAIScript.engineScript.enabled = false;
 			RadioCommands.instance.gameObject.SetActive(false);
 			//dodgeScript.dodgeCooldownImage.gameObject.SetActive(false);

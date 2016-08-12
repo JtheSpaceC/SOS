@@ -646,23 +646,26 @@ public class EnginesFighter : MonoBehaviour {
 
 		//first we adjust the engine scale. This always needs to animate, so we haven't checked the bool yet
 
-		Vector3 engineScale = engine1.transform.localScale;
-		engineScale.x = rearEngineVisualSize; //just resetting to normal so it doesn't break after afterburning before
-		engineScale.y = smoothedAccelerationInput * rearEngineVisualSize;
-		engineScale.z = 1;
-		if(myAudioPitchSouldScaleForEngines)
-			engineNoise.pitch = 0.2f + (0.7f * smoothedAccelerationInput);
-
-		if(afterburnerIsOn) //increase the length and width of the effect
+		if(engine1 != null)
 		{
-			engineScale.x *= afterburnerMultiplier;
-			engineScale.y *= afterburnerMultiplier;
-		}
-		if(securedToDock) //if we're docked, make sure the engines look off
-			engineScale.y = 0;
+			Vector3 engineScale = engine1.transform.localScale;
+			engineScale.x = rearEngineVisualSize; //just resetting to normal so it doesn't break after afterburning before
+			engineScale.y = smoothedAccelerationInput * rearEngineVisualSize;
+			engineScale.z = 1;
+			if(myAudioPitchSouldScaleForEngines)
+				engineNoise.pitch = 0.2f + (0.7f * smoothedAccelerationInput);
 
-		engine1.transform.localScale = engineScale;
-		engine2.transform.localScale = engineScale;
+			if(afterburnerIsOn) //increase the length and width of the effect
+			{
+				engineScale.x *= afterburnerMultiplier;
+				engineScale.y *= afterburnerMultiplier;
+			}
+			if(securedToDock) //if we're docked, make sure the engines look off
+				engineScale.y = 0;
+
+			engine1.transform.localScale = engineScale;
+			engine2.transform.localScale = engineScale;
+		}
 
 		if(!doAnimations) //if the movement point was too close, we might not want to animate, so skip what comes next
 			return;

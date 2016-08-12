@@ -19,24 +19,52 @@ public class Spawner : MonoBehaviour {
 	public float maxSpawnTime = 20;
 	int i = 0;
 
+	public bool automaticSpawning = true;
+	public KeyCode myKey;
+
 
 	void Start()
 	{
-		Invoke ("Spawn", firstDelay);
+		if(automaticSpawning)
+			Invoke ("Spawn", firstDelay);
+	
 		player = GameObject.FindGameObjectWithTag ("PlayerFighter");
 
 		if (decreaseSpawnGapOverTime)
 			spawnTime = maxSpawnTime;
 	}
 
+	#if UNITY_EDITOR
+
+	void Update()
+	{
+		if(Input.GetKeyDown(myKey))
+		{
+			DoTheSpawn();
+		}
+	}
+
+	#endif
+
 	void Spawn()
 	{
-		i++;
 		if (enemyCommanderScript.myFighters.Count >= maxFightersAtOnce)
 		{
 			Invoke ("Spawn", spawnTime);
 			return;
 		}
+
+		DoTheSpawn();
+
+		if(decreaseSpawnGapOverTime)
+			spawnTime = Mathf.Clamp (spawnTime -= decreaseAmount, minSpawnTime, maxSpawnTime);
+
+		Invoke ("Spawn", spawnTime);
+	}
+
+	void DoTheSpawn()
+	{
+		i++;
 
 		Vector3 spawnPoint = player == null ? Vector3.zero : player.transform.position;
 
@@ -45,11 +73,5 @@ public class Spawner : MonoBehaviour {
 				Quaternion.identity) as GameObject;
 		newFighter.name = "Stormwall Fighter " +i;
 		//Instantiate (spawnObj, newFighter.transform.position + (Vector3)Random.insideUnitCircle, Quaternion.identity);
-
-
-		if(decreaseSpawnGapOverTime)
-			spawnTime = Mathf.Clamp (spawnTime -= decreaseAmount, minSpawnTime, maxSpawnTime);
-
-		Invoke ("Spawn", spawnTime);
 	}
 }

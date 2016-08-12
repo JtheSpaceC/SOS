@@ -32,13 +32,12 @@ public class SpawnerGroup : MonoBehaviour {
 		}
 		squadName = myCommander.RequestSquadronName ();
 
-		SpawnTrio ();
-
+		SpawnGroup ();
 
 		Destroy (gameObject);
 	}
 
-	void SpawnTrio ()
+	void SpawnGroup ()
 	{
 		//spawn the required number of craft
 		for (int i = 0; i < numberToSpawn; i++) {
