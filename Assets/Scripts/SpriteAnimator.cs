@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(SpriteRenderer))]
+
 public class SpriteAnimator : MonoBehaviour {
 
 	public bool startImmediately = true;

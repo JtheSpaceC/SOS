@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class rotator : MonoBehaviour {
+public class Rotator : MonoBehaviour {
 
 	public enum AxisMovement {Z_only};
 	public AxisMovement axisMovement;
@@ -32,6 +32,8 @@ public class rotator : MonoBehaviour {
 			
 		if(randomizeDirection)
 			rotSpeed *= Mathf.Pow(-1, Random.Range(1, 3));
+
+		z = transform.eulerAngles.z;
 	}
 
 	void FixedUpdate () 

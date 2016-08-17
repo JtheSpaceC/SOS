@@ -110,9 +110,9 @@ public class SpriteExploder : MonoBehaviour {
 				gibRB.AddTorque(Random.Range(-force*8, force*8)); 
 				//gib.gameObject.AddComponent<FadeAndDestroyMesh>();
 				//gib.gameObject.AddComponent<DeleteAfterInvisible>();
-				gib.gameObject.AddComponent<rotator>();
-				gib.GetComponent<rotator>().Mode = rotator.myMode.RandomizedAtStart;
-				gib.GetComponent<rotator>().randomizeDirection = true;
+				gib.gameObject.AddComponent<Rotator>();
+				gib.GetComponent<Rotator>().Mode = Rotator.myMode.RandomizedAtStart;
+				gib.GetComponent<Rotator>().randomizeDirection = true;
 
 			}
 		}

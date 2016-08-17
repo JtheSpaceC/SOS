@@ -89,6 +89,9 @@ public class HealthFighter : Health {
 	
 	void Update()
 	{
+		if(dead)
+			return;
+		
 		UpdateBaseClass (); //only affects Player through 'Health' script
 		
 		//FOR PARTICLE DAMAGE
@@ -561,15 +564,13 @@ public class HealthFighter : Health {
 
 	public void Death()
 	{
-		//this first part fixes the Sprite Exploder issues that comes with dying near the end of roll animation
-		if(GetComponent<SpriteRenderer>().sprite == null)
-		{
-			GetComponent<SpriteRenderer>().sprite = startSprite;
-		}
-
 		// collider is turned off by SpriteExploder
 
 		dead = true;
+
+		GetComponent<SpriteRenderer>().enabled = true;
+		transform.FindChild("Effects/GUI").gameObject.SetActive(false);
+		transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().enabled = false;
 
 		if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters" && !thisIsPlayer)
 		{
@@ -589,7 +590,6 @@ public class HealthFighter : Health {
 		GetComponentInChildren<Dodge>().enabled = false;
 		if(radarSig)
 			radarSig.SetActive (false);
-		transform.FindChild("Effects").gameObject.SetActive(false);
 
 		transform.SetParent (null);
 
@@ -675,10 +675,43 @@ public class HealthFighter : Health {
 			}catch{} 
 
 			Invoke("Deactivate", 10);
+
+			if(Random.Range(0, 2) == 1)
+			{
+				//for two stage death
+				gameObject.AddComponent<Rotator>();
+				GetComponent<Rotator>().Mode = Rotator.myMode.RandomizedAtStart;
+				GetComponent<Rotator>().randomizeDirection = true;
+				smoke.gameObject.SetActive(true);
+				smokeEm.rate = 150;
+				smoke.startLifetime *= 3;
+				flames.gameObject.SetActive(true);
+				flamesEm.rate = 100;
+				flames.startLifetime *= 3;
+				temporarilyInvincible = true;
+
+				Invoke("Explode", 2);
+			}
+			else 
+				Explode();
 		}
-		SpriteExploder.instance.Explode (this.gameObject, 3, 0.5f);
+		
 
 	}//end of Death
+
+	void Explode()
+	{
+		Tools.instance.SpawnExplosion (this.gameObject, transform.position, true);
+		transform.FindChild("Effects").gameObject.SetActive(false);
+
+		//this part fixes the Sprite Exploder issues that comes with dying near the end of roll animation
+		if(GetComponent<SpriteRenderer>().sprite == null)
+		{
+			GetComponent<SpriteRenderer>().sprite = startSprite;
+		}
+
+		SpriteExploder.instance.Explode (this.gameObject, 3, 0.5f);
+	}
 
 
 }//Mono
