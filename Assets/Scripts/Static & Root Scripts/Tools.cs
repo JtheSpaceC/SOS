@@ -21,6 +21,7 @@ public class Tools: MonoBehaviour
 	public Text ammoRemainingText;
 	public Slider barrelTempSlider;
 	[HideInInspector] public AudioSource barrelTempAudio;
+	[HideInInspector] public Image barrelTempFillImage;
 	public Text missilesRemainingText;
 
 	public Slider nitroRemainingSlider;
@@ -132,6 +133,7 @@ public class Tools: MonoBehaviour
 		}
 
 		barrelTempAudio = barrelTempSlider.GetComponent<AudioSource>();
+		barrelTempFillImage = barrelTempSlider.transform.FindChild("Fill Area/Fill").GetComponent<Image>();
 
 		AudioMasterScript.instance.StopAllCoroutines();
 		AudioMasterScript.instance.ZeroSFX();

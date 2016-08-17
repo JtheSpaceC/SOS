@@ -139,6 +139,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			hammerDown = false;
 		}
 
+		//barrel temperature system
+
 		if(!ClickToPlay.instance.paused && playerControlled)
 		{
 			barrelTemp -= 100/barrelCoolRate * Time.deltaTime;
@@ -150,6 +152,11 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			Tools.instance.barrelTempSlider.value = barrelTemp;
 			overheatSteamVolume = Mathf.Pow(barrelTemp/100, 3);
 			Tools.instance.barrelTempAudio.volume += (overheatSteamVolume - Tools.instance.barrelTempAudio.volume) * Time.deltaTime * 2;
+
+			if(!overheated)
+				Tools.instance.barrelTempFillImage.color = Color.Lerp(Color.white, Color.red, barrelTemp/100f);
+			else
+				Tools.instance.barrelTempFillImage.color = Color.red;
 		}
 	}
 	

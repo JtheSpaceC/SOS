@@ -676,7 +676,7 @@ public class HealthFighter : Health {
 
 			Invoke("Deactivate", 10);
 
-			if(Random.Range(0, 2) == 1)
+			if(!thisIsPlayer && Random.Range(0, 2) == 1)
 			{
 				//for two stage death
 				gameObject.AddComponent<Rotator>();
