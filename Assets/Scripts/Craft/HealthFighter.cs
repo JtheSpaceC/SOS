@@ -632,6 +632,8 @@ public class HealthFighter : Health {
 
 			_battleEventManager.instance.CallPlayerShotDown();
 			Director.instance.SpawnPilotEVA(transform.position, transform.rotation, true);
+
+			Explode();
 		}
 		//any other fighter death
 		else
@@ -676,7 +678,7 @@ public class HealthFighter : Health {
 
 			Invoke("Deactivate", 10);
 
-			if(!thisIsPlayer && Random.Range(0, 2) == 1)
+			if(Random.Range(0, 2) == 1)
 			{
 				//for two stage death
 				gameObject.AddComponent<Rotator>();
@@ -709,7 +711,6 @@ public class HealthFighter : Health {
 		{
 			GetComponent<SpriteRenderer>().sprite = startSprite;
 		}
-
 		SpriteExploder.instance.Explode (this.gameObject, 3, 0.5f);
 	}
 
