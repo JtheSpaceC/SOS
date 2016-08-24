@@ -11,7 +11,11 @@ public class Health : MonoBehaviour {
 	public int maxHealth = 5; //formerly 100
 	public int awareness = 0;
 	public int maxAwareness = 5;
-	[Tooltip ("AI only. Per bar, in seconds")]
+
+	public enum AwarenessMode {Recharge, SkillBased};
+	public AwarenessMode awarenessMode;
+
+	[Tooltip ("If using Recharge mode only. Per bar, in seconds")]
 	public float awarenessRechargeTime = 3;
 	public int snapFocusAmount = 1;
 	public int armourPoints = 0;
@@ -106,7 +110,7 @@ public class Health : MonoBehaviour {
 
 		if(this.tag == "PlayerFighter")
 		{
-			healthSlider.value = (float)health/(float)maxHealth * 100;
+			healthSlider.value = (float)health/(float)maxHealth * 100f;
 
 			//FOR HEALTH BAR COLOUR
 			/*float alpha = healthSliderFill.color.a;
@@ -130,7 +134,8 @@ public class Health : MonoBehaviour {
 				bloodSplashImage.color = Color.Lerp (bloodSplashImage.color, Color.clear, flashFadeSpeed * Time.deltaTime);
 			}
 		}
-		else if(healthSlider && awarenessSlider)
+
+		if(healthSlider && awarenessSlider)
 		{
 			healthSlider.value = (float)health/(float)maxHealth * 100;
 			awarenessSlider.value = (float)awareness/(float)maxAwareness * 100;

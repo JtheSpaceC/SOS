@@ -41,7 +41,8 @@ public class SpawnerGroup : MonoBehaviour {
 	{
 		//spawn the required number of craft
 		for (int i = 0; i < numberToSpawn; i++) {
-			GameObject obj = Instantiate (objectPrefab, (Vector2)transform.position + Random.insideUnitCircle, Quaternion.identity) as GameObject;
+			GameObject obj = Instantiate (objectPrefab, (Vector2)transform.position + Random.insideUnitCircle.normalized *2f, 
+				Quaternion.identity) as GameObject;
 			obj.name = squadName + " " + (i + 1);
 			craft.Add (obj);
 		}

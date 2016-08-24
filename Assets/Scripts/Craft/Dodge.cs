@@ -20,6 +20,7 @@ public class Dodge : MonoBehaviour
 	[HideInInspector] public bool playerActivatedManualDodge = false;
 	[HideInInspector] public Image dodgeCooldownImage;
 	[HideInInspector] public Text dodgeCooldownImageText;
+	bool showRollCooldownImage = true;
 
 	[HideInInspector] public bool dodging = false;
 	public float rollDuration = 1.11f;
@@ -69,9 +70,9 @@ public class Dodge : MonoBehaviour
 			hasAvatar = true;
 
 		if(playerControlled)
-		{
-			/*dodgeCooldownImage = GameObject.Find("Dodge Cooldown Image").GetComponent<Image>();
-			dodgeCooldownImageText = dodgeCooldownImage.GetComponentInChildren<Text>();*/
+		{			
+			dodgeCooldownImage = GameObject.Find("Dodge Cooldown Image").GetComponent<Image>();
+			dodgeCooldownImageText = dodgeCooldownImage.GetComponentInChildren<Text>();
 			//awarenessManaFillImage = GameObject.Find("Awareness Image").GetComponent<Image>();
 			awarenessMeterAudioSource = healthScript.awarenessSlider.GetComponent<AudioSource>();
 			//powerupReadyImage = GameObject.Find("Powerup Image").GetComponent<Image>();
@@ -106,6 +107,10 @@ public class Dodge : MonoBehaviour
 				healthScript.awarenessSlider.gameObject.SetActive(false);
 			}
 		}
+		if(cooldownAmount <= rollDuration)
+		{
+			showRollCooldownImage = false;
+		}
 
 	}
 	
@@ -115,8 +120,8 @@ public class Dodge : MonoBehaviour
 		{
 			if(rollCooldown <= 0)
 			{ 		
-			/*	dodgeCooldownImage.enabled = false;
-				dodgeCooldownImageText.enabled = false;*/
+				dodgeCooldownImage.enabled = false;
+				dodgeCooldownImageText.enabled = false;
 
 				if (Input.GetButtonDown("Dodge"))
 				{
@@ -128,11 +133,11 @@ public class Dodge : MonoBehaviour
 					}
 				}		
 			}
-			else if(rollCooldown >0)
+			else if(rollCooldown >0 && showRollCooldownImage)
 			{
-				/*dodgeCooldownImage.enabled = true;
+				dodgeCooldownImage.enabled = true;
 				dodgeCooldownImage.GetComponentInChildren<Text>().enabled = true;
-				dodgeCooldownImage.fillAmount = rollCooldown / cooldownAmount;*/
+				dodgeCooldownImage.fillAmount = rollCooldown / cooldownAmount;
 			}
 		}
 

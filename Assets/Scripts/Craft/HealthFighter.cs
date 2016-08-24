@@ -112,6 +112,8 @@ public class HealthFighter : Health {
 		}
 		else
 		{flames.gameObject.SetActive(false);}
+
+		//FOR HEALTH RECOVERY
 		
 		if(health <= maxHealth/5 && !hasFireExtinguisher)
 		{
@@ -165,8 +167,11 @@ public class HealthFighter : Health {
 			{
 				if(dodgeScript.playerActivatedManualDodge && !lastDamageWasFromAsteroid)
 				{
-					dodgeScript.playerActivatedManualDodge = false;
-					StartCoroutine(dodgeScript.IncreasePlayerAwarenessMana());
+					if(awarenessMode == AwarenessMode.SkillBased)
+					{
+						dodgeScript.playerActivatedManualDodge = false;
+						StartCoroutine(dodgeScript.IncreasePlayerAwarenessMana());
+					}
 					Director.instance.numberOfSuccessfulDodges ++;
 				}
 				return;
@@ -213,8 +218,16 @@ public class HealthFighter : Health {
 			else
 			{
 				theBullet.GetComponent<Asteroid>().CamShake();
-			}			
+			}
 
+			if(awarenessMode == AwarenessMode.Recharge)
+			{
+				if(awarenessRechargeTime > 0)
+				{
+					CancelInvoke("AwarenessRecharge");
+					InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
+				}
+			}
 			//5. apply damage
 
 			health -= (int)damage;
@@ -237,6 +250,8 @@ public class HealthFighter : Health {
 			if(health <= 0 && dead == false)
 			{
 				Death();
+
+				bloodSplashImage.color = Color.clear;
 
 				if(theAttacker.tag == "Asteroid")
 				{
@@ -307,7 +322,7 @@ public class HealthFighter : Health {
 				return;
 			}
 
-			//3. see if you can dodge out of trouble (player must not be on cooldown)
+			//3. see if you can dodge out of trouble
 
 			if((hasDodge && (dodgeScript.canDodge || dodgeScript.dodgeCoroutineStarted))
 				|| theBullet.tag == "Asteroid")
@@ -502,6 +517,8 @@ public class HealthFighter : Health {
 	{
 		if(!updateAvatarBars)
 			return;
+
+		awareness = Mathf.Clamp(awareness, 0, maxAwareness);
 		
 		for (int i = 0; i < avatarAwarenessBars.childCount; i++) 
 		{

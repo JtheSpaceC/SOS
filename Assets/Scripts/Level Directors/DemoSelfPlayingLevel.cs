@@ -12,6 +12,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public bool changeTargetsAtIntervals = true;
 	public Text followCamText;
 	public Text pressStartText;
+	public Text scoresText;
+	public bool keepScores = false;
+	public AICommander pmcCommander;
+	public AICommander enemyCommander;
 
 	public float sceneResetTime = 90;
 	float originalSceneResetTime;
@@ -38,11 +42,15 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	bool haveLoadedMenu = false;
 	GameObject mainMenu;
 
+	public bool cameraAutoChanges = true;
+
 
 	void Start () 
 	{
 		target = GameObject.FindGameObjectWithTag ("Fighter");
-		Invoke("FindATargetFalse", 1);
+
+		if(cameraAutoChanges)
+			Invoke("FindATargetFalse", 1);
 
 		Invoke("FixMaxAwareness", 0.05f);
 
@@ -68,6 +76,11 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		Camera.main.GetComponent<ClickToPlay>().escGivesQuitMenu = false;
 
 		originalSceneResetTime = sceneResetTime;
+
+		if(!keepScores)
+		{
+			scoresText.text = "";
+		}
 	}
 
 
@@ -129,11 +142,18 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			}
 		}
 
-		if(Director.instance.timer > sceneResetTime)
+		if(Director.instance.timer > sceneResetTime && sceneResetTime > 0)
 		{
 			Director.instance.timer = -999;
 			Tools.instance.CommenceFadeout(0, 2.5f);
 			Invoke("RestartScene", 2.5f);
+		}
+
+		if(keepScores)
+		{
+			scoresText.text = "Kills:\n-------\n" + 
+				"PMC: " + pmcCommander.kills + "\n" +
+				"Enemy:" + enemyCommander.kills;
 		}
 	}
 
@@ -231,7 +251,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			Invoke ("FindATargetFalse", 1);
 		}
 
-		Invoke ("FindATargetFalse", Random.Range (5, 10));
+		if(cameraAutoChanges)
+			Invoke ("FindATargetFalse", Random.Range (5, 10));
 	}
 
 	void SpawnPMC()
