@@ -178,7 +178,10 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			barrelTemp += barrelHeatRate;
 
 			if(barrelTemp >= 100f)
+			{
 				overheated = true;
+				GetComponent<AudioSource>().Play();
+			}
 		}
 
 		if(shotSpawn1 != null)
