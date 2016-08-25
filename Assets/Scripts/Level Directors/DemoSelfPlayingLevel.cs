@@ -43,6 +43,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	GameObject mainMenu;
 
 	public bool cameraAutoChanges = true;
+	public bool showEnemyUI = true;
 
 
 	void Start () 
@@ -285,8 +286,11 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			}
 			else
 			{
-				fighter.healthScript.healthSlider.gameObject.SetActive(false);
-				fighter.healthScript.awarenessSlider.gameObject.SetActive(false);
+				if(!showEnemyUI)
+				{
+					fighter.healthScript.healthSlider.gameObject.SetActive(false);
+					fighter.healthScript.awarenessSlider.gameObject.SetActive(false);
+				}
 			}			
 		}
 	}

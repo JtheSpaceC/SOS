@@ -12,7 +12,10 @@ public class HealthFighter : Health {
 	bool thisIsPlayer = false;
 
 	[Header("For dodging shots")]
-	public bool hasDodge = true;
+
+	[HideInInspector]public bool hasDodge;
+
+	[Tooltip("Only affects if this is the player.")]
 	public bool playerHasAutoDodge = false;
 	[Range(0, 100)]
 	public float asteroidDodgeSkill = 80f;
@@ -45,6 +48,10 @@ public class HealthFighter : Health {
 		myAIScript = GetComponent<AIFighter> ();
 
 		dodgeScript = GetComponentInChildren<Dodge>();
+		if(dodgeScript != null)
+			hasDodge = true;
+		else
+			hasDodge = false;
 
 		startSprite = GetComponent<SpriteRenderer> ().sprite;
 
@@ -184,31 +191,47 @@ public class HealthFighter : Health {
 				return;
 			}
 
-			//3. see if you can auto-dodge out of trouble
+			//3. see if you can auto-dodge out of trouble 
 
 			if(playerHasAutoDodge && dodgeScript.canDodge && awareness >0)
 			{
 				if(theBullet.tag == "Bomb" && missileDodgeSkill <= 0)
 				{/*do nothing*/}
 				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0)
-				{					
-					dodgeScript.Roll(0);
+				{
+					/*dodgeScript.Roll(0);
 					Director.instance.numberOfAutomatedDodges++;
-					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
+				
+					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));*/ 
 				}
 				else if(theBullet.tag == "Asteroid")
 				{
 					//do nothing. player should manually dodge asteroids
 				}
-				else
+				else //it's a bullet
 				{
 					dodgeScript.Roll(0);
 					Director.instance.numberOfAutomatedDodges++;
 					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 					return;
 				}
-			}				
 
+
+			}				
+			else if(!playerHasAutoDodge)
+			{
+				if(awarenessMode == AwarenessMode.Recharge)
+				{
+					if(awarenessRechargeTime > 0)
+					{
+						CancelInvoke("AwarenessRecharge");
+						InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
+					}
+				}
+
+				StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(damage)); //TODO: Input enemy accuracy here, and same for AI
+				return;
+			}
 			//4. If we get here, the shot will hit. Shake camera
 
 			if(theBullet.tag != "Asteroid")
@@ -322,7 +345,7 @@ public class HealthFighter : Health {
 				return;
 			}
 
-			//3. see if you can dodge out of trouble
+			//3. see if AI can dodge out of trouble
 
 			if((hasDodge && (dodgeScript.canDodge || dodgeScript.dodgeCoroutineStarted))
 				|| theBullet.tag == "Asteroid")
@@ -396,7 +419,7 @@ public class HealthFighter : Health {
 					awareness = Mathf.Clamp(awareness - damage, 0, maxAwareness);
 					UpdateAvatarAwarenessBars();
 
-					if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+					/*if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
 						dodgeScript.Roll(2);
 					else
 					{
@@ -404,7 +427,7 @@ public class HealthFighter : Health {
 
 						if(updateAvatarBars)
 							StartCoroutine(Tools.instance.ImageFlashToClear(avatarFlashImage, Tools.instance.avatarAwarenessFlashColour, 1f));
-					}
+					}*/
 
 					if(awarenessRechargeTime > 0)
 					{

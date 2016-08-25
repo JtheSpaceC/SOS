@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -42,8 +43,13 @@ public class Director : MonoBehaviour {
 	public GameObject toggleableObject2;
 	public GameObject toggleableObject1;
 
+	public KeyCode controlOfCameraKey = KeyCode.F1;
+
 	GameObject player;
 	GameObject hangarToExit;
+
+	public UnityEvent[] testActions;
+	public KeyCode[] hotkeysForTestActions;
 
 
 	void Awake()
@@ -286,6 +292,20 @@ public class Director : MonoBehaviour {
 
 			if(Input.GetKeyDown(KeyCode.Delete))
 				GameObject.FindGameObjectWithTag("PlayerFighter").GetComponent<HealthFighter>().health = 0;
+
+			if(Input.GetKeyDown(controlOfCameraKey))
+				Camera.main.GetComponent<RTSCamera>().enabled = !Camera.main.GetComponent<RTSCamera>().enabled;
+
+			if(hotkeysForTestActions.Length > 0)
+			{
+				for(int i = 0; i < hotkeysForTestActions.Length; i++)
+				{
+					if(Input.GetKeyDown(hotkeysForTestActions[i]))
+					{
+						testActions[i].Invoke();
+					}
+				}
+			}
 			
 			#endif
 

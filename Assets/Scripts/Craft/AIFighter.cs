@@ -478,10 +478,19 @@ public class AIFighter : FighterFunctions {
 		//NOTE: Part of the target finding functionality is in the TargetDestroyed() method.
 		if(switchingStates)
 		{
+			if(myFormationPosition == null) //if we haven't a leader or it's not set up properly, we can't 
+				//cover anyone, so return
+			{
+				ChangeToNewState(normalStates, new float[]{1});
+				return;
+			}
+			
 			shootScript.enabled = true;
 			timer = 0;
 			constantThrustProportion = Random.Range (0,76)/100; //not used
 			engineScript.currentAccelerationRate = engineScript.normalAccelerationRate * engineScript.afterburnerMultiplier;
+
+
 
 			switchingStates = false;
 		}

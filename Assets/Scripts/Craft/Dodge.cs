@@ -55,6 +55,23 @@ public class Dodge : MonoBehaviour
 	float originalBarFill;
 	float logoScale;
 
+	[Header("Dodge Skills")]
+	[Range (0, 100f)]
+	public float frontDodgeSkill = 50f;
+	[Range (0, 100f)]
+	public float sideDodgeSkill	= 25f;
+	[Range (0, 100f)]
+	public float rearDodgeSkill = 0f;
+
+	[Header("Front/Side/Rear Definitions")]
+	[Tooltip("What angle is defined as the front? Default 45. Cockpit visibility (fiction) should be considered.")]
+	[Range (0, 90f)]
+	public float frontAngle = 45f;
+	[Tooltip("After the front, up to what remaining angle is defined as the side? Default 135. Rear is automatically this number up to 180")]
+	[Range (45f, 170f)]
+	public float sideAngle = 135f;
+
+
 
 	void Start()
 	{
@@ -111,8 +128,48 @@ public class Dodge : MonoBehaviour
 		{
 			showRollCooldownImage = false;
 		}
-
 	}
+
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		//if a bullet, check who fired it
+		if(other.tag == "Bullet")
+		{
+			//return if it's friendly fire
+			if(StaticTools.IsInLayerMask(other.GetComponent<ShotHit>().theFirer, transform.root.GetComponent<TargetableObject>().friendlyFireMask))
+			{
+				return;
+			}
+				
+			//Detect the angle the bullet is coming from (front vs rear, etc)
+			//Run chance to roll from the given skill for that angle
+
+			float angle =  Vector2.Angle(other.transform.position - transform.position, transform.up);
+
+			if(angle < frontAngle) //comes from front
+			{
+				if(Random.Range(0, 100f) < frontDodgeSkill)
+				{
+					Roll(2);
+				}
+			}
+			else if(angle < sideAngle) // comes from side
+			{
+				if(Random.Range(0, 100f) < sideDodgeSkill)
+				{
+					Roll(2);
+				}			}
+			else //comes from rear
+			{
+				if(Random.Range(0, 100f) < rearDodgeSkill)
+				{
+					Roll(2);
+				}			
+			}
+		}
+	}
+
 	
 	void Update ()
 	{	

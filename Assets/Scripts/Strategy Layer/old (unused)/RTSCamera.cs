@@ -132,7 +132,8 @@ public class RTSCamera : MonoBehaviour {
 
 		//FOR ZOOM
 
-		if (canZoom) {
+		if (canZoom) 
+		{
 			realZoomSpeed = zoomSpeed * (cameraToControl.orthographicSize / maxZoom);
 
 			//OLD WAY 

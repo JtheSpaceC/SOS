@@ -13,6 +13,7 @@ public class Health : MonoBehaviour {
 	public int maxAwareness = 5;
 
 	public enum AwarenessMode {Recharge, SkillBased};
+	[Tooltip("Only used with Player")]
 	public AwarenessMode awarenessMode;
 
 	[Tooltip ("If using Recharge mode only. Per bar, in seconds")]
@@ -111,6 +112,7 @@ public class Health : MonoBehaviour {
 		if(this.tag == "PlayerFighter")
 		{
 			healthSlider.value = (float)health/(float)maxHealth * 100f;
+			awarenessSlider.value = (float)awareness/(float)maxAwareness * 100f;
 
 			//FOR HEALTH BAR COLOUR
 			/*float alpha = healthSliderFill.color.a;

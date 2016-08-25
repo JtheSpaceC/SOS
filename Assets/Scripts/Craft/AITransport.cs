@@ -91,24 +91,6 @@ public class AITransport : SupportShipFunctions {
 
 	void Update()
 	{
-		//TODO: Remove this?
-		#if UNITY_EDITOR
-		if(Input.GetKeyDown(KeyCode.Keypad2))
-		{
-			GameObject.Find("ARROW 2").SendMessage("Death");
-		}
-		if(Input.GetKeyDown(KeyCode.Keypad3))
-		{
-			GameObject.Find("ARROW 3").SendMessage("Death");
-		}
-		if(Input.GetKeyDown(KeyCode.Keypad1))
-		{
-			GameObject.Find("ARROW 1").SendMessage("Death");
-		}
-		if (Input.GetKeyDown (KeyCode.Keypad4))
-			this.SendMessage("Death");
-		#endif
-
 		if(previousState == StateMachine.WarpIn && switchingState)
 		{
 			engineAudioSource.Stop();
