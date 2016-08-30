@@ -182,7 +182,7 @@ public class Missile : MonoBehaviour {
 		if(other.tag == "Fighter" || other.tag == "PlayerFighter")
 		{
 			//the other object will tell this to explode or not based on whether the missile was dodged
-			other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, damage, 0);
+			other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, damage, 0, 0);
 		}
 		else if(other.tag == "Asteroid")
 		{

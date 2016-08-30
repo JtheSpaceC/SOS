@@ -193,7 +193,7 @@ public class AIFighter : FighterFunctions {
 
 		//if we get hit, go evasive if health is lower than cowardice rating
 		if(currentState != StateMachine.Docking && !inRetreatState && !healthScript.dead &&
-			((float)healthScript.health/healthScript.maxHealth * 100) <= cowardice)
+			(healthScript.health/healthScript.maxHealth * 100) <= cowardice)
 		{
 			if(healthScript.lastDamageWasFromAsteroid)
 			{ 
@@ -202,7 +202,7 @@ public class AIFighter : FighterFunctions {
 			else
 			{
 				ChangeToNewState(retreatStates, new float[]{2,1});
-				healthScript.awareness = healthScript.maxAwareness *3/2;
+				healthScript.awareness = healthScript.maxAwareness;
 				inRetreatState = true;
 
 				if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")

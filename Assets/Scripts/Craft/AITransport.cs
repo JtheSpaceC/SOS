@@ -339,7 +339,7 @@ public class AITransport : SupportShipFunctions {
 				AIFighter fighterAIScript = fighter.GetComponent<AIFighter>();
 				fighterAIScript.ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Docking}, new float[]{1});
 				fighterAIScript.dockingWith = this.gameObject;
-				fighterAIScript.healthScript.hasDodge = false;
+				//fighterAIScript.healthScript.hasDodge = false;
 				fighter.transform.FindChild("Breathing Room").gameObject.SetActive(false);
 				fighter.SendMessage("ToggleWeaponsOnOff", false);
 			}
@@ -645,7 +645,7 @@ public class AITransport : SupportShipFunctions {
 				AIFighter fighterAIScript = fighter.GetComponent<AIFighter>();
 				fighter.GetComponent<Rigidbody2D>().isKinematic = false;
 				fighterAIScript.ChangeToNewState(new AIFighter.StateMachine[]{fighterAIScript.formerState}, new float[]{1});
-				fighterAIScript.healthScript.hasDodge = true; //TODO: What if they didn't have dodge before?
+				//fighterAIScript.healthScript.hasDodge = true; //TODO: What if they didn't have dodge before?
 				fighter.transform.FindChild("Breathing Room").gameObject.SetActive(true);
 				fighter.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Play();
 				fighter.SendMessage("ToggleWeaponsOnOff", true);

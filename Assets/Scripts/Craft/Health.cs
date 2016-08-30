@@ -7,10 +7,10 @@ using System.Collections;
 public class Health : MonoBehaviour {
 
 	public bool dead = false;
-	public int health = 5;
-	public int maxHealth = 5; //formerly 100
-	public int awareness = 0;
-	public int maxAwareness = 5;
+	public float health = 5;
+	public float maxHealth = 5; //formerly 100
+	public float awareness = 0;
+	public float maxAwareness = 5;
 
 	public enum AwarenessMode {Recharge, SkillBased};
 	[Tooltip("Only used with Player")]

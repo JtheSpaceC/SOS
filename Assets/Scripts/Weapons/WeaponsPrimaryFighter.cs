@@ -35,6 +35,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 	public float weaponsRange = 17;
 	public int shotDamage = 1;
 	public float shotCritChance = 10f;
+	public float firerAccuracy = 1f;
 	public float projectileSpeed = 7f;
 
 	GameObject theFirer;
@@ -43,6 +44,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 	void Awake()
 	{
 		theFirer = this.transform.parent.parent.gameObject;
+		firerAccuracy = theFirer.GetComponent<TargetableObject>().accuracy;
 
 		if(weaponTypeFromObjectPoolList == null)
 		{
@@ -199,7 +201,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj1.transform.rotation = rot;
 
 			obj1.SetActive(true);
-			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
+			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, firerAccuracy);
 
 			if(useLimitedAmmo)
 				ammo--;
@@ -218,7 +220,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj2.transform.rotation = rot;
 
 			obj2.SetActive(true);
-			obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
+			obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, firerAccuracy);
 
 			if(useLimitedAmmo)
 				ammo--;
@@ -236,7 +238,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj3.transform.rotation = rot;
 
 			obj3.SetActive(true);
-			obj3.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
+			obj3.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, firerAccuracy);
 
 			if(useLimitedAmmo)
 				ammo--;
@@ -254,7 +256,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			obj4.transform.rotation = rot;
 
 			obj4.SetActive(true);
-			obj4.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
+			obj4.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, firerAccuracy);
 
 			if(useLimitedAmmo)
 				ammo--;

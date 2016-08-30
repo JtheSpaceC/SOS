@@ -15,6 +15,8 @@ public class ShotHit : MonoBehaviour {
 	public float amplitude = 0.1f;
 	public float duration = 0.5f;
 
+	[HideInInspector] public float accuracy = 1;
+
 
 	void Awake()
 	{
@@ -27,7 +29,7 @@ public class ShotHit : MonoBehaviour {
 		if(other.tag == "Fighter" || other.tag == "PlayerFighter")
 		{
 			if(other.GetComponent<HealthFighter>().enabled)
-				other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, normalDamage, chanceToCrit);
+				other.GetComponent<HealthFighter>().YouveBeenHit(theFirer, this.gameObject, normalDamage, chanceToCrit, accuracy);
 		}
 		else if(other.tag == "Turret")
 		{

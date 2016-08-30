@@ -38,8 +38,6 @@ public class Tools: MonoBehaviour
 	float fadeInDuration = 2f;
 	float fadeOutDuration = 3f;
 
-	bool camCurrentlyOnHitSlowdown = false;
-
 	public Color whiteOutColour;
 
 	public Toggle allowVibrationToggleSwitch;
@@ -272,25 +270,7 @@ public class Tools: MonoBehaviour
 		yield return new WaitForSeconds(givenTime);
 		givenText.color = returnColour;
 	}
-
-
-	public IEnumerator HitCamSlowdown()
-	{
-		if(!camCurrentlyOnHitSlowdown)
-		{		
-			camCurrentlyOnHitSlowdown = true;
-			Time.timeScale = 0.75f;
-
-			for(int i = 0; i < 20; i++)
-			{
-				yield return new WaitForEndOfFrame();
-			}
-
-			Time.timeScale = 1;
-			camCurrentlyOnHitSlowdown = false;
-			StopCoroutine(HitCamSlowdown());
-		}
-	}
+		
 
 	public IEnumerator WhiteScreenFlash(float flashDuration)
 	{

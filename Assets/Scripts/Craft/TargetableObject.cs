@@ -31,6 +31,7 @@ public class TargetableObject : MonoBehaviour {
 
 	[HideInInspector] public GameObject myGui;
 
+	public float accuracy = 1f;
 	
 
 	protected void SetUpSideInfo () {

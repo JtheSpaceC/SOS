@@ -63,6 +63,12 @@ public class Dodge : MonoBehaviour
 	[Range (0, 100f)]
 	public float rearDodgeSkill = 0f;
 
+	[Tooltip("Above chances multiplied by this number if attacked by missile. Default = 0.5f")]
+	public float missileMultiplier = 0.5f;
+
+	[Tooltip("Above chances multiplied by this number if dodging asteroid. Default = 2f")]
+	public float asteroidMultiplier = 2f;
+
 	[Header("Front/Side/Rear Definitions")]
 	[Tooltip("What angle is defined as the front? Default 45. Cockpit visibility (fiction) should be considered.")]
 	[Range (0, 90f)]
@@ -71,6 +77,8 @@ public class Dodge : MonoBehaviour
 	[Range (45f, 170f)]
 	public float sideAngle = 135f;
 
+	float angle;
+	float diceRoll;
 
 
 	void Start()
@@ -133,6 +141,10 @@ public class Dodge : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		//Detect the angle the bullet/asteroid/missile is coming from (front vs rear, etc), and roll the dice to use later
+		angle =  Vector2.Angle(other.transform.position - transform.position, transform.up);
+		diceRoll = Random.Range(0, 100f);
+
 		//if a bullet, check who fired it
 		if(other.tag == "Bullet")
 		{
@@ -142,31 +154,60 @@ public class Dodge : MonoBehaviour
 				return;
 			}
 				
-			//Detect the angle the bullet is coming from (front vs rear, etc)
-			//Run chance to roll from the given skill for that angle
-
-			float angle =  Vector2.Angle(other.transform.position - transform.position, transform.up);
-
-			if(angle < frontAngle) //comes from front
+			RunChanceToDodgeCalculation(1);
+		}
+		else if(other.tag == "Asteroid")
+		{
+			if(!playerControlled)
 			{
-				if(Random.Range(0, 100f) < frontDodgeSkill)
+				if(!transform.parent.parent.GetComponent<SpriteRenderer>().isVisible) //will never hit asteroids when off screen
 				{
-					Roll(2);
+					Roll();
+					return;
 				}
+				//see about asteroid dodge skill
+				RunChanceToDodgeCalculation(asteroidMultiplier);
 			}
-			else if(angle < sideAngle) // comes from side
+		}
+		else if(other.tag == "Bomb")
+		{
+			if(!playerControlled)
 			{
-				if(Random.Range(0, 100f) < sideDodgeSkill)
+				//return if it's friendly fire
+				if(StaticTools.IsInLayerMask(other.GetComponent<Missile>().theFirer, transform.root.GetComponent<TargetableObject>().friendlyFireMask))
 				{
-					Roll(2);
-				}			}
-			else //comes from rear
-			{
-				if(Random.Range(0, 100f) < rearDodgeSkill)
-				{
-					Roll(2);
-				}			
+					return;
+				}
+				//see about missile dodge skill
+				RunChanceToDodgeCalculation(missileMultiplier);
 			}
+		}
+	}
+
+	void RunChanceToDodgeCalculation(float multiplier)
+	{
+		//Run chance to roll from the given skill for that angle
+
+		if(angle < frontAngle) //comes from front
+		{
+			if(diceRoll < frontDodgeSkill * multiplier)
+			{
+				Roll();
+			}
+		}
+		else if(angle < sideAngle) // comes from side
+		{
+			if(diceRoll < sideDodgeSkill * multiplier)
+			{
+				Roll();
+			}			
+		}
+		else //comes from rear
+		{
+			if(diceRoll < rearDodgeSkill * multiplier)
+			{
+				Roll();
+			}			
 		}
 	}
 
@@ -186,7 +227,7 @@ public class Dodge : MonoBehaviour
 					{
 						Director.instance.numberOfManualDodges++;
 						playerActivatedManualDodge = true;
-						Roll (0);
+						Roll (/*0*/);
 					}
 				}		
 			}
@@ -203,22 +244,26 @@ public class Dodge : MonoBehaviour
 
 	}//end of UPDATE
 
-	IEnumerator SetDodgingToTrue(int frameDelay)
+	//can probably refactor and remove this once sure it's no longer used
+	IEnumerator SetDodgingToTrue(/*int frameDelay*/)
 	{
 		dodgeCoroutineStarted = true;
 
-		while (frameDelay > 0)
+		//next line just in to make the code continue to run. Not really using coroutine anymore
+		yield return new WaitForEndOfFrame();
+
+		/*while (frameDelay > 0)
 		{
 			frameDelay--;
 			yield return new WaitForEndOfFrame();
-		}
+		}*/
 		dodging = true;
 
 		dodgeCoroutineStarted = false;
 	}
 	
 	
-	public void Roll(int frameDelay)
+	public void Roll(/*int frameDelay*/)
 	{
 		if (ClickToPlay.instance.paused || !canDodge)
 			return;
@@ -226,7 +271,7 @@ public class Dodge : MonoBehaviour
 		if(dodgingCostsNitro && playerControlled && playerMovementScript.nitroRemaining/playerMovementScript.nitroBurnRate < rollDuration)
 			return;
 
-		StartCoroutine(SetDodgingToTrue(frameDelay));
+		StartCoroutine(SetDodgingToTrue(/*frameDelay*/));
 
 		canDodge = false;
 		myAudioSource.Play();
@@ -343,7 +388,7 @@ public class Dodge : MonoBehaviour
 	}
 
 	
-	public IEnumerator DumpPlayerAwarenessMana(int howMany)
+	public IEnumerator DumpPlayerAwarenessMana(float howMany)
 	{
 		if(!awarenessMechanicEnabled)
 			yield break;

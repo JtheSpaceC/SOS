@@ -268,7 +268,7 @@ public class Asteroid : MonoBehaviour {
 	{
 		if (other.tag == "PlayerFighter" || other.tag == "Fighter") 
 		{
-			other.GetComponent<HealthFighter>().YouveBeenHit(gameObject, gameObject, damage, 0);
+			other.GetComponent<HealthFighter>().YouveBeenHit(gameObject, gameObject, damage, 0, 0);
 		}
 		else if (other.tag == "Turret") 
 		{

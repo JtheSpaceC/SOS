@@ -13,10 +13,9 @@ public class HealthFighter : Health {
 
 	[Header("For dodging shots")]
 
-	[HideInInspector]public bool hasDodge;
-
 	[Tooltip("Only affects if this is the player.")]
-	public bool playerHasAutoDodge = false;
+	[HideInInspector] public bool playerHasAutoDodge = false;
+
 	[Range(0, 100)]
 	public float asteroidDodgeSkill = 80f;
 	[Range(0,100)]
@@ -47,16 +46,12 @@ public class HealthFighter : Health {
 
 		myAIScript = GetComponent<AIFighter> ();
 
-		dodgeScript = GetComponentInChildren<Dodge>();
-		if(dodgeScript != null)
-			hasDodge = true;
-		else
-			hasDodge = false;
-
 		startSprite = GetComponent<SpriteRenderer> ().sprite;
 
 		if(this.tag == "PlayerFighter")
 			thisIsPlayer = true;
+
+		dodgeScript = GetComponentInChildren<Dodge>();
 	}
 
 	public void SetUpAvatarBars()
@@ -146,10 +141,10 @@ public class HealthFighter : Health {
 	}
 
 
-	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, int baseDamage, float critChance)
+	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, float baseDamage, float critChance, float accuracy)
 	{
 		int diceRoll = 0;
-		int damage = baseDamage;
+		float damage = baseDamage;
 
 		if(theAttacker == previousAttacker && theAttacker == previousPreviousAttacker)
 		{
@@ -193,16 +188,16 @@ public class HealthFighter : Health {
 
 			//3. see if you can auto-dodge out of trouble 
 
-			if(playerHasAutoDodge && dodgeScript.canDodge && awareness >0)
+		/*	if(playerHasAutoDodge && dodgeScript.canDodge && awareness >0) //mostly disabled now
 			{
 				if(theBullet.tag == "Bomb" && missileDodgeSkill <= 0)
-				{/*do nothing*/}
+				{do nothing}
 				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0)
 				{
-					/*dodgeScript.Roll(0);
-					Director.instance.numberOfAutomatedDodges++;
-				
-					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));*/ 
+//					dodgeScript.Roll(0);
+//					Director.instance.numberOfAutomatedDodges++;
+//				
+//					StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(1));
 				}
 				else if(theBullet.tag == "Asteroid")
 				{
@@ -218,19 +213,37 @@ public class HealthFighter : Health {
 
 
 			}				
-			else if(!playerHasAutoDodge)
+			else*/ 
+
+			if(!playerHasAutoDodge && awareness > 0)
 			{
-				if(awarenessMode == AwarenessMode.Recharge)
+				if(awareness > 0 && theBullet.tag == "Bullet") //otherwise, dodge a bullet
 				{
-					if(awarenessRechargeTime > 0)
+					if(accuracy <= awareness)
 					{
-						CancelInvoke("AwarenessRecharge");
-						InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
+						awareness = Mathf.Clamp(awareness - accuracy, 0, maxAwareness);
+						StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(damage)); 
+
+						if(awarenessRechargeTime > 0)
+						{
+							CancelInvoke("AwarenessRecharge");
+							InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
+						}
+						return;
+					}
+					else if(accuracy > awareness)
+					{
+						damage *= (accuracy - awareness)/accuracy;
+						awareness = 0;
+						StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(damage)); 
+
+						if(awarenessRechargeTime > 0)
+						{
+							CancelInvoke("AwarenessRecharge");
+							InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
+						}
 					}
 				}
-
-				StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(damage)); //TODO: Input enemy accuracy here, and same for AI
-				return;
 			}
 			//4. If we get here, the shot will hit. Shake camera
 
@@ -253,7 +266,7 @@ public class HealthFighter : Health {
 			}
 			//5. apply damage
 
-			health -= (int)damage;
+			health -= damage;
 			Tools.instance.SpawnExplosionMini (this.gameObject, 0.35f);
 
 			if (theBullet.tag != "Asteroid" && theBullet.tag != "Bomb") 
@@ -346,12 +359,15 @@ public class HealthFighter : Health {
 			}
 
 			//3. see if AI can dodge out of trouble
+			#region removed most of step 3. Now handled on dodge scipt itself
 
+			/*
 			if((hasDodge && (dodgeScript.canDodge || dodgeScript.dodgeCoroutineStarted))
 				|| theBullet.tag == "Asteroid")
 			{
 				if(theBullet.tag == "Bomb" && missileDodgeSkill <= 0) //if it's a missile and you CAN'T dodge missiles
-				{/*do nothing*/}
+				{//do nothing
+		}
 				else if(theBullet.tag == "Bomb" && missileDodgeSkill > 0) //if it's a missile and you CAN dodge missiles
 				{
 					diceRoll = Random.Range(0, 101);
@@ -414,21 +430,14 @@ public class HealthFighter : Health {
 						}
 					}
 				}
-				else if(awareness > 0) //otherwise, dodge a bullet
+				else*/ 
+			#endregion
+			if(awareness > 0 && theBullet.tag == "Bullet") //otherwise, dodge a bullet
+			{
+				if(accuracy <= awareness)
 				{
-					awareness = Mathf.Clamp(awareness - damage, 0, maxAwareness);
+					awareness = Mathf.Clamp(awareness - accuracy, 0, maxAwareness);
 					UpdateAvatarAwarenessBars();
-
-					/*if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
-						dodgeScript.Roll(2);
-					else
-					{
-						dodgeScript.Roll(0);
-
-						if(updateAvatarBars)
-							StartCoroutine(Tools.instance.ImageFlashToClear(avatarFlashImage, Tools.instance.avatarAwarenessFlashColour, 1f));
-					}*/
-
 					if(awarenessRechargeTime > 0)
 					{
 						CancelInvoke("AwarenessRecharge");
@@ -436,7 +445,19 @@ public class HealthFighter : Health {
 					}
 					return;
 				}
+				else if(accuracy > awareness)
+				{
+					damage *= (accuracy - awareness)/accuracy;
+					awareness = 0;
+					UpdateAvatarAwarenessBars();
+					if(awarenessRechargeTime > 0)
+					{
+						CancelInvoke("AwarenessRecharge");
+						InvokeRepeating("AwarenessRecharge", awarenessRechargeTime, awarenessRechargeTime);
+					}
+				}
 			}
+			//}
 
 
 			//4. If we get here, the shot will hit. apply damage
@@ -500,12 +521,6 @@ public class HealthFighter : Health {
 					StartCoroutine (FlashOnInvincibility (2));
 				else
 					StartCoroutine (FlashOnInvincibility (0));
-
-			}
-
-			if(theAttacker.tag == "PlayerFighter")
-			{
-				//StartCoroutine(Tools.instance.HitCamSlowdown());
 			}
 		}
 		#endregion
@@ -565,7 +580,7 @@ public class HealthFighter : Health {
 		}
 	}
 
-	public void RetreatAndRetrieval()
+	public void RetreatAndRetrieval() //moment when unit leaves the map, normally via RTB order
 	{
 		if(updateAvatarBars)
 		{
@@ -618,8 +633,11 @@ public class HealthFighter : Health {
 			_battleEventManager.instance.CallWingmanDied();
 		}
 			
-		if (hasDodge)
+		if (dodgeScript)
+		{
 			dodgeScript.CancelRollForDeath ();
+			dodgeScript.enabled = false;
+		}
 
 		awareness = 0;
 		CancelInvoke("AwarenessRecharge");
@@ -627,7 +645,6 @@ public class HealthFighter : Health {
 		Tools.instance.SpawnExplosion (this.gameObject, transform.position, true);
 
 		GetComponent<Animator>().enabled = false;
-		GetComponentInChildren<Dodge>().enabled = false;
 		if(radarSig)
 			radarSig.SetActive (false);
 
@@ -744,7 +761,25 @@ public class HealthFighter : Health {
 	void Explode()
 	{
 		Tools.instance.SpawnExplosion (this.gameObject, transform.position, true);
-		transform.FindChild("Effects").gameObject.SetActive(false);
+
+
+		GameObject effects = transform.FindChild("Effects").gameObject;
+
+		//transform.FindChild("Effects").gameObject.SetActive(false);
+		effects.transform.FindChild("Animation").gameObject.SetActive(false);
+		effects.AddComponent<DestroyAfterTime>();
+		effects.GetComponent<DestroyAfterTime>().enabled = false;
+		effects.GetComponent<DestroyAfterTime>().delayTime = 5;
+		effects.GetComponent<DestroyAfterTime>().enabled = true;
+		smoke.startLifetime = 2;
+		flames.startLifetime = 2;
+		Invoke("StopParticles", 0);
+
+		effects.transform.SetParent(null);
+		Rigidbody2D effectsRB = effects.AddComponent<Rigidbody2D>();
+		effectsRB.gravityScale = 0;
+
+		effectsRB.velocity = GetComponent<TargetableObject>().myRigidbody.velocity;
 
 		//this part fixes the Sprite Exploder issues that comes with dying near the end of roll animation
 		if(GetComponent<SpriteRenderer>().sprite == null)
@@ -752,6 +787,13 @@ public class HealthFighter : Health {
 			GetComponent<SpriteRenderer>().sprite = startSprite;
 		}
 		SpriteExploder.instance.Explode (this.gameObject, 3, 0.5f);
+
+	}
+
+	void StopParticles()
+	{
+		smokeEm.rate = 0;
+		flamesEm.rate = 0;
 	}
 
 

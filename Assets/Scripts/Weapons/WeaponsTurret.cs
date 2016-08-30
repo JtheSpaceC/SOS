@@ -249,7 +249,7 @@ public class WeaponsTurret : TargetableObject {
 			obj1.transform.position = shotSpawn1.position;
 			obj1.transform.rotation = shotSpawn1.rotation;
 			obj1.SetActive(true);
-			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed);
+			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, accuracy);
 		}
 	}
 	
