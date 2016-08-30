@@ -152,9 +152,13 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 		if(keepScores)
 		{
-			scoresText.text = "Kills:\n-------\n" + 
-				"PMC: " + pmcCommander.kills + "\n" +
-				"Enemy:" + enemyCommander.kills;
+			scoresText.text = "Craft Lost:\n-------\n" + 
+				"PMC: " + pmcCommander.losses + "\n" +
+				"Enemy:" + enemyCommander.losses 
+				+ "\n\n" +
+				"Craft Retreated:\n-------\n" + 
+				"PMC: " + pmcCommander.retreated + "\n" +
+				"Enemy:" + enemyCommander.retreated;
 		}
 	}
 

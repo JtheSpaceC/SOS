@@ -264,6 +264,31 @@ public class Tools: MonoBehaviour
 		}
 	}
 
+	public bool CheckTargetIsRetreating(GameObject targetToCheck, GameObject theCaller)
+	{		
+		if (targetToCheck == null)
+		{
+			Debug.LogError("ERROR: " + theCaller.name + " checked if a NULL target was retreating. ");
+			return false;
+		}
+		else if(targetToCheck.tag == "FormationPosition")
+		{
+			Debug.LogError("ERROR: " + theCaller.name + " checked if a FORMATION was retreating. ");
+			return false;
+		}
+		else if(targetToCheck.tag == "PlayerFighter" || targetToCheck.tag == "Turret")
+		{
+			return false;
+		}
+		else if(targetToCheck.GetComponent<AIFighter>().currentState == AIFighter.StateMachine.Evade || 
+			targetToCheck.GetComponent<AIFighter>().currentState == AIFighter.StateMachine.Retreat)
+		{
+			return true;
+		}
+		else 
+			return false;		
+	}
+
 	public IEnumerator TextAnim(Text givenText, Color flashColour, Color returnColour, float givenTime)
 	{
 		givenText.color = flashColour;

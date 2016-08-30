@@ -26,6 +26,7 @@ public class AICommander : MonoBehaviour {
 
 	public int kills = 0;
 	public int losses = 0;
+	public int retreated = 0;
 
 	public string[] squadronNames;
 	int squadronsNamedAlready = 0;
@@ -39,7 +40,7 @@ public class AICommander : MonoBehaviour {
 		}
 	}
 
-	public GameObject ClosestTarget(List<GameObject> whichTargetList, Vector2 positionOfAsker)
+	public GameObject ClosestPriorityTarget(List<GameObject> whichTargetList, Vector2 positionOfAsker)
 	{
 		if (whichTargetList.Count == 0)
 			return null;
@@ -51,7 +52,7 @@ public class AICommander : MonoBehaviour {
 		{
 			float thisDist = Vector2.Distance(target.transform.position, positionOfAsker);
 
-			if(thisDist < closestDist)
+			if(thisDist < closestDist && !Tools.instance.CheckTargetIsRetreating(target, this.gameObject))
 			{
 				resultingTarget = target;
 				closestDist = thisDist;

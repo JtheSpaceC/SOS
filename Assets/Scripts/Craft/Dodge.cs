@@ -278,7 +278,7 @@ public class Dodge : MonoBehaviour
 		rollCooldown = cooldownAmount; 
 		animator.SetTrigger ("Dodging");
 
-		if(!animator.enabled)
+		if(!animator.enabled && animationChild != null)
 			StartCoroutine("RollAnimation"); //used to roll a model with code instead of using the animator
 
 
@@ -302,7 +302,7 @@ public class Dodge : MonoBehaviour
 	}
 
 	IEnumerator RollAnimation() //only happens if animator isn't enabled
-	{
+	{		
 		startTime = Time.time;
 
 		while(Time.time < startTime + rollDuration)

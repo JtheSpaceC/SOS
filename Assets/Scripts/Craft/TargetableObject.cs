@@ -217,31 +217,6 @@ public class TargetableObject : MonoBehaviour {
 		}
 	}
 	
-	protected bool CheckTargetIsRetreating(GameObject targetToCheck)
-	{		
-		if (targetToCheck == null)
-		{
-			Debug.LogError("ERROR: " + this.name + " checked if a NULL target was retreating. ");
-			return false;
-		}
-		else if(targetToCheck.tag == "FormationPosition")
-		{
-			Debug.LogError("ERROR: " + this.name + " checked if a FORMATION was retreating. ");
-			return false;
-		}
-		else if(targetToCheck.tag == "PlayerFighter" || targetToCheck.tag == "Turret")
-		{
-			return false;
-		}
-		else if(targetToCheck.GetComponent<AIFighter>().currentState == AIFighter.StateMachine.Evade || 
-			targetToCheck.GetComponent<AIFighter>().currentState == AIFighter.StateMachine.Retreat)
-		{
-			return true;
-		}
-		else 
-			return false;		
-	}
-	
 	void AddSomeoneAttackingMe(GameObject attacker)
 	{
 		if(!myAttackers.Contains(attacker))

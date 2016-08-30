@@ -588,6 +588,7 @@ public class HealthFighter : Health {
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().text = "R.T.B.";
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isRTB", true);
 			myAIScript.myCharacterAvatarScript.gameObject.SetActive(false);
+			myAIScript.myCommander.retreated++;
 		}
 		gameObject.SendMessage("HUDPointerOff");
 
@@ -787,7 +788,6 @@ public class HealthFighter : Health {
 			GetComponent<SpriteRenderer>().sprite = startSprite;
 		}
 		SpriteExploder.instance.Explode (this.gameObject, 3, 0.5f);
-
 	}
 
 	void StopParticles()
