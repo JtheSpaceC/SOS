@@ -52,7 +52,7 @@ public class AICommander : MonoBehaviour {
 		{
 			float thisDist = Vector2.Distance(target.transform.position, positionOfAsker);
 
-			if(thisDist < closestDist && !Tools.instance.CheckTargetIsRetreating(target, this.gameObject))
+			if(thisDist < closestDist && !Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "AICommander"))
 			{
 				resultingTarget = target;
 				closestDist = thisDist;

@@ -40,6 +40,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 	GameObject theFirer;
 
+	int shotsTaken;
+
 	
 	void Awake()
 	{
@@ -143,7 +145,7 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 		//barrel temperature system
 
-		if(!ClickToPlay.instance.paused && playerControlled)
+		if(!ClickToPlay.instance.paused)
 		{
 			barrelTemp -= 100/barrelCoolRate * Time.deltaTime;
 			barrelTemp = Mathf.Clamp(barrelTemp, 0, 100);
@@ -151,14 +153,17 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			if(barrelTemp == 0)
 				overheated = false;
 
-			Tools.instance.barrelTempSlider.value = barrelTemp;
-			overheatSteamVolume = Mathf.Pow(barrelTemp/100, 3);
-			Tools.instance.barrelTempAudio.volume += (overheatSteamVolume - Tools.instance.barrelTempAudio.volume) * Time.deltaTime * 2;
+			if(playerControlled) //for player's overheat GUI
+			{
+				Tools.instance.barrelTempSlider.value = barrelTemp;
+				overheatSteamVolume = Mathf.Pow(barrelTemp/100, 3);
+				Tools.instance.barrelTempAudio.volume += (overheatSteamVolume - Tools.instance.barrelTempAudio.volume) * Time.deltaTime * 2;
 
-			if(!overheated)
-				Tools.instance.barrelTempFillImage.color = Color.Lerp(Color.white, Color.red, barrelTemp/100f);
-			else
-				Tools.instance.barrelTempFillImage.color = Color.red;
+				if(!overheated)
+					Tools.instance.barrelTempFillImage.color = Color.Lerp(Color.white, Color.red, barrelTemp/100f);
+				else
+					Tools.instance.barrelTempFillImage.color = Color.red;
+			}
 		}
 	}
 	
@@ -176,14 +181,17 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 		{
 			CameraShake.instance.Shake (0.05f, 0.1f);
 			Tools.instance.VibrateController(0, .25f, .25f, 0.1f);
+		}
 
-			barrelTemp += barrelHeatRate;
-
-			if(barrelTemp >= 100f)
-			{
-				overheated = true;
+		//increase barrel temperature
+		barrelTemp += barrelHeatRate;
+		if(barrelTemp >= 100f)
+		{
+			overheated = true;
+			if(playerControlled)
 				GetComponent<AudioSource>().Play();
-			}
+			else
+				Debug.Log(transform.root.name + "'s weapons overheated"); //checking, because I don't think this will happen often
 		}
 
 		if(shotSpawn1 != null)
@@ -205,6 +213,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 			if(useLimitedAmmo)
 				ammo--;
+
+			shotsTaken++;
 		}
 		
 		
@@ -224,6 +234,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 			if(useLimitedAmmo)
 				ammo--;
+
+			shotsTaken++;
 		}
 
 		if(shotSpawn3 != null && ammo > 0)
@@ -242,6 +254,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 			if(useLimitedAmmo)
 				ammo--;
+
+			shotsTaken++;
 		}
 
 		if(shotSpawn4 != null && ammo > 0)
@@ -260,6 +274,8 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 
 			if(useLimitedAmmo)
 				ammo--;
+
+			shotsTaken++;
 		}
 
 		if(playerControlled && useLimitedAmmo)

@@ -51,6 +51,9 @@ public class TargetableObject : MonoBehaviour {
 		friendlyFireMask = myCommander.fighterFriendlyFireMask;
 		potshotAtEnemiesMask = myCommander.fighterPotshotMask;
 		potshotsPlusFriendliesMask = friendlyFireMask + potshotAtEnemiesMask;
+
+		myCommander.myTurrets.Add(this.gameObject);
+		enemyCommander.knownEnemyTurrets.Add(this.gameObject);
 	}
 
 
@@ -141,7 +144,7 @@ public class TargetableObject : MonoBehaviour {
 	}
 
 
-	protected void CheckAndAddTargetToCommanderList(AICommander myCommander, GameObject target)
+	/*protected void CheckAndAddTargetToCommanderList(AICommander myCommander, GameObject target)
 	{
 		if (whichSide == WhichSide.Ally && myCommander.knownEnemyFighters.Count == 0)
 		{
@@ -158,7 +161,7 @@ public class TargetableObject : MonoBehaviour {
 				return;
 			}
 			
-			//TODO: Remove once I'm sure I haven't seen this in a while - Kevin 6/6/16
+			//TODO: Remove once I'm sure I haven't seen this in a while - Kevin 31/8/16
 			Debug.LogError("This Should Never Be Called Anymore");
 			myCommander.knownEnemyFighters.Add(target);
 
@@ -184,7 +187,7 @@ public class TargetableObject : MonoBehaviour {
 				Debug.Log("Removed "+target+"(INVALID) from "+ myCommander.name+" KnownFighters List");
 			}
 		}
-	}
+	}*/
 
 	protected bool CheckTargetIsLegit(GameObject target)
 	{
@@ -223,7 +226,7 @@ public class TargetableObject : MonoBehaviour {
 		{
 			myAttackers.Add (attacker);
 		}
-		CheckAndAddTargetToCommanderList (myCommander, attacker);
+		//CheckAndAddTargetToCommanderList (myCommander, attacker);
 	}
 	void RemoveSomeoneAttackingMe (GameObject attackerWhoDiedOrChangedTargets)
 	{

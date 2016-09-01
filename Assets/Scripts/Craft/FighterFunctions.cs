@@ -38,13 +38,12 @@ public class FighterFunctions : TargetableObject {
 
 		foreach(GameObject target in allAttackers)
 		{
-			if(!target.activeSelf || target.GetComponent<HealthFighter>().dead)
+			if(!CheckTargetIsLegit(target))
 			{
-				Debug.Log("BIG FUCKING ERROR WITH " + target.name + " on "+gameObject.name + "!!!!!!");
+				//Debug.Log("BIG FUCKING ERROR WITH " + target.name + " on "+gameObject.name + "!!!!!!");
 				allAttackers.Remove(target);
 				break;
 			}
-
 			else if(Vector2.Distance(transform.position, target.transform.position) < closestDist)
 			{
 				closestGameObject = target.gameObject;
@@ -119,8 +118,6 @@ public class FighterFunctions : TargetableObject {
 			leader.GetComponent<PlayerAILogic> ().myAttackers.Remove (badTarget);
 		else
 			leader.GetComponent<AIFighter>().myAttackers.Remove (badTarget);
-
-		Debug.Log ("Removed " + badTarget.name + " from " + leader.name + "'s Attacker List");
 	}
 
 

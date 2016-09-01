@@ -8,7 +8,7 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector]public EnginesFighter engineScript;
 	[HideInInspector]public WeaponsPrimaryFighter shootScript;
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
-	[HideInInspector]public Character myCharacterAvatarScript;
+	public Character myCharacterAvatarScript;
 
 	public enum Orders {FighterSuperiority, Patrol, Escort, Wingman, RTB, FullRetreat, NA}; //set by commander //TODO: not used yet
 	public Orders orders;
@@ -339,7 +339,6 @@ public class AIFighter : FighterFunctions {
 			{
 				if(!CheckTargetIsLegit(target))
 				{
-					Debug.Log("ERROR: "+ gameObject.name +" CHOSE INACTIVE TARGET ON DOGFIGHT");
 					if(myCommander.knownEnemyFighters.Contains(target))
 						myCommander.knownEnemyFighters.Remove(target);
 
@@ -359,7 +358,6 @@ public class AIFighter : FighterFunctions {
 
 		if(target == null)
 		{
-			Debug.Log("target is null and " + this.name +" was dogfighting ");
 			float[] weights = new float[]{1};
 			ChangeToNewState(normalStates, weights);
 			return;
@@ -369,7 +367,7 @@ public class AIFighter : FighterFunctions {
 			DogfightingFunction (engineScript, target, shootScript, constantThrustProportion);
 
 			//if the target is retreating and there are other active fighters, let this one go.
-			if(Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject))
+			if(Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "dogfighting"))
 			{
 				if(myCommander.ClosestPriorityTarget(myCommander.knownEnemyFighters, transform.position) != null)
 				{
@@ -417,7 +415,7 @@ public class AIFighter : FighterFunctions {
 
 			if(targetCheck != null)
 			{
-				CheckAndAddTargetToCommanderList(myCommander, targetCheck);
+				//CheckAndAddTargetToCommanderList(myCommander, targetCheck);
 				myCommander.RequestOrders(GetComponent<AIFighter>());
 				return;
 			}
@@ -500,8 +498,6 @@ public class AIFighter : FighterFunctions {
 			constantThrustProportion = Random.Range (0,76)/100; //not used
 			engineScript.currentAccelerationRate = engineScript.normalAccelerationRate * engineScript.afterburnerMultiplier;
 
-
-
 			switchingStates = false;
 		}
 		if(target == null)
@@ -541,9 +537,8 @@ public class AIFighter : FighterFunctions {
 
 				if(targetCheck != null) //if someone's attacking my Leader
 				{
-					if(!CheckTargetIsLegit(targetCheck) || Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject))
+					if(!CheckTargetIsLegit(targetCheck) || Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "first. timer > 1. targetCheck != null"))
 					{
-						Debug.Log(gameObject.name +" CHOSE INACTIVE TARGET FROM LEADER'S ATTACKERS");
 						RemoveBadTargetFromLeadersAttackers(flightLeader, targetCheck);
 						return;
 					}
@@ -560,14 +555,15 @@ public class AIFighter : FighterFunctions {
 					{
 						if(!CheckTargetIsLegit(localTarget))
 						{
-							Debug.Log("SCANNED LOCALITY FOR A TARGET AND CHOSE INACTIVE ONE");
+							//Debug.Log("SCANNED LOCALITY FOR A TARGET AND CHOSE INACTIVE ONE");
 							return;
 						}
-						else if(Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject))
+						else if(Tools.instance.CheckTargetIsRetreating(localTarget, this.gameObject,
+							"timer >1. else. localTarget != null. else"))
 						{
 							return;
 						}
-						CheckAndAddTargetToCommanderList(myCommander, localTarget);
+						//CheckAndAddTargetToCommanderList(myCommander, localTarget);
 
 						target = localTarget;
 						target.SendMessage("AddSomeoneAttackingMe", this.gameObject);
@@ -592,7 +588,7 @@ public class AIFighter : FighterFunctions {
 				target = null;
 				return;
 			}
-			if(target != null && Tools.instance.CheckTargetIsRetreating(target, this.gameObject))
+			if(target != null && Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "the last one"))
 			{
 				Invoke("LeaveThemAlone", 2);
 				return;
@@ -662,7 +658,7 @@ public class AIFighter : FighterFunctions {
 
 			evadePosition = ChooseRetreatPosition(myRigidbody, potshotAtEnemiesMask, enemyCommander);
 
-			if(Vector2.Distance(transform.position, Camera.main.transform.position) > 250)
+			if(Vector2.Distance(transform.position, Camera.main.transform.position) > 250f)
 				healthScript.RetreatAndRetrieval();
 		}
 
@@ -751,7 +747,7 @@ public class AIFighter : FighterFunctions {
 	}
 	void LeaveThemAlone()
 	{
-		if(CheckTargetIsLegit(target) && Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject))
+		if(CheckTargetIsLegit(target) && Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "Leave Them Alone"))
 		{
 			target.SendMessage("RemoveSomeoneAttackingMe", this.gameObject, SendMessageOptions.DontRequireReceiver);
 			target = null;

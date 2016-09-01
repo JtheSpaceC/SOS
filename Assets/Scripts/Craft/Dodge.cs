@@ -29,6 +29,7 @@ public class Dodge : MonoBehaviour
 	public float cooldownAmount = 1.11f; //used in Inspector to set how long the cooldown is. Stays constant. Player only
 	[HideInInspector] public bool canDodge = true;
 	[HideInInspector] public bool dodgeCoroutineStarted;
+	float cantDodgeTime = 0.25f;
 
 	private Animator animator;
 	public Transform animationChild;
@@ -141,6 +142,9 @@ public class Dodge : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		if(!canDodge)
+			return;
+
 		//Detect the angle the bullet/asteroid/missile is coming from (front vs rear, etc), and roll the dice to use later
 		angle =  Vector2.Angle(other.transform.position - transform.position, transform.up);
 		diceRoll = Random.Range(0, 100f);
@@ -194,21 +198,41 @@ public class Dodge : MonoBehaviour
 			{
 				Roll();
 			}
+			else
+			{
+				canDodge = false;
+				Invoke("CanDodgeAgain", cantDodgeTime);
+			}
 		}
 		else if(angle < sideAngle) // comes from side
 		{
 			if(diceRoll < sideDodgeSkill * multiplier)
 			{
 				Roll();
-			}			
+			}
+			else
+			{
+				canDodge = false;
+				Invoke("CanDodgeAgain", cantDodgeTime);
+			}
 		}
 		else //comes from rear
 		{
 			if(diceRoll < rearDodgeSkill * multiplier)
 			{
 				Roll();
-			}			
+			}
+			else
+			{
+				canDodge = false;
+				Invoke("CanDodgeAgain", cantDodgeTime);
+			}
 		}
+	}
+
+	void CanDodgeAgain()
+	{
+		canDodge = true;
 	}
 
 	
@@ -384,7 +408,7 @@ public class Dodge : MonoBehaviour
 		rollCooldown -= Time.deltaTime; 
 
 		if (rollCooldown <= 0)
-			canDodge = true;
+			CanDodgeAgain();
 	}
 
 	

@@ -264,11 +264,11 @@ public class Tools: MonoBehaviour
 		}
 	}
 
-	public bool CheckTargetIsRetreating(GameObject targetToCheck, GameObject theCaller)
+	public bool CheckTargetIsRetreating(GameObject targetToCheck, GameObject theCaller, string whereWasItCalled)
 	{		
 		if (targetToCheck == null)
 		{
-			Debug.LogError("ERROR: " + theCaller.name + " checked if a NULL target was retreating. ");
+			Debug.LogError("ERROR: " + theCaller.name + " checked if a NULL target was retreating. " + whereWasItCalled);
 			return false;
 		}
 		else if(targetToCheck.tag == "FormationPosition")

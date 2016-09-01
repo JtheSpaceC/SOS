@@ -162,7 +162,7 @@ public class WeaponsTurret : TargetableObject {
 				{
 					if(CheckTargetIsLegit(potentialTarget.gameObject))
 					{
-						CheckAndAddTargetToCommanderList(myCommander, potentialTarget.gameObject);
+						//CheckAndAddTargetToCommanderList(myCommander, potentialTarget.gameObject);
 
 						if(target == null)
 							target = potentialTarget.transform;

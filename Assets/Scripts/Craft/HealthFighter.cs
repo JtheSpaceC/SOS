@@ -587,10 +587,13 @@ public class HealthFighter : Health {
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().text = "R.T.B.";
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isRTB", true);
-			myAIScript.myCharacterAvatarScript.gameObject.SetActive(false);
-			myAIScript.myCommander.retreated++;
 		}
+		if(myAIScript.myCharacterAvatarScript)
+			Destroy(myAIScript.myCharacterAvatarScript.gameObject);
+
 		gameObject.SendMessage("HUDPointerOff");
+
+		myAIScript.myCommander.retreated++;
 
 		if(myAIScript.enemyCommander.knownEnemyFighters.Contains(gameObject))
 		{
@@ -614,9 +617,10 @@ public class HealthFighter : Health {
 			myAIScript.flightLeadSquadronScript.retrievedWingmen.Add(gameObject);
 			myAIScript.flightLeadSquadronScript.CheckActiveMateStatus();
 		}catch{} 
-
-		Destroy(gameObject);
+			
+		Deactivate();
 	}
+
 
 	public void Death()
 	{
@@ -698,9 +702,12 @@ public class HealthFighter : Health {
 		{
 			myAIScript.shootScript.enabled = false;
 			myAIScript.engineScript.enabled = false;
+			if(myAIScript.myCharacterAvatarScript)
+				Destroy(myAIScript.myCharacterAvatarScript.gameObject);
+			
+			
 			if(updateAvatarBars)
 			{
-				myAIScript.myCharacterAvatarScript.gameObject.SetActive(false);
 				myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
 				myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isShotDown", true);
 			}
