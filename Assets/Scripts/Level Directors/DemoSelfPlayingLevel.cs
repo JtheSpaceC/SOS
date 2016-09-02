@@ -24,6 +24,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public GameObject PMCFighterTrioPrefab;
 	public GameObject EnemyFighterTrioPrefab;
+	public Transform theFleet;
 
 	private Vector3 velocity = Vector3.zero;
 
@@ -44,6 +45,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public bool cameraAutoChanges = true;
 	public bool showEnemyUI = true;
+	[Tooltip("Do we replace prefab health with ones we specifically want for demo?")] 
+	public bool overridePrefabHealths = true;
 
 
 	void Start () 
@@ -53,7 +56,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		if(cameraAutoChanges)
 			Invoke("FindATargetFalse", 1);
 
-		Invoke("FixMaxAwareness", 0.05f);
+		Invoke("FixDemoSpecificConcerns", 0.05f);
 
 		followCamText.text = "";
 		if (spawnerOn) 
@@ -267,7 +270,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 		Instantiate (PMCFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 55), Quaternion.identity);
 
-		Invoke("FixMaxAwareness", 0.05f);
+		Invoke("FixDemoSpecificConcerns", 0.05f);
 	}
 	void SpawnEnemy()
 	{
@@ -277,16 +280,22 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		}
 		
 		Instantiate (EnemyFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 100), Quaternion.identity);
-		Invoke("FixMaxAwareness", 0.05f);
+		Invoke("FixDemoSpecificConcerns", 0.05f);
 	}
-	void FixMaxAwareness()
+	void FixDemoSpecificConcerns()
 	{
 		AIFighter[] fighterscripts = FindObjectsOfType<AIFighter>();
 		foreach(AIFighter fighter in fighterscripts)
 		{
 			if (fighter.whichSide == TargetableObject.WhichSide.Ally)
 			{
-				fighter.healthScript.maxAwareness = 2 ; //formerly 3
+				if(overridePrefabHealths)
+					fighter.healthScript.maxAwareness = 2 ; //formerly 3
+
+				if(fighter.GetComponentInChildren<SquadronLeader>())
+				{
+					fighter.GetComponent<AIFighter>().escortShip = theFleet;
+				}
 			}
 			else
 			{
@@ -295,7 +304,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 					fighter.healthScript.healthSlider.gameObject.SetActive(false);
 					fighter.healthScript.awarenessSlider.gameObject.SetActive(false);
 				}
-			}			
+			}
 		}
 	}
 

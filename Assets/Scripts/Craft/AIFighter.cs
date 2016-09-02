@@ -42,6 +42,7 @@ public class AIFighter : FighterFunctions {
 
 	public Vector2 patrolPoint;
 	public Vector2 guardPoint;
+	public Transform escortShip;
 	public bool movingGuardPoint = false;
 	public float guardDistance = 20; //when Patrolling, how close an enemy has to get to break up the patrol
 	public float coveringDistance = 15; //how close to stay to leader when Covering them
@@ -203,7 +204,7 @@ public class AIFighter : FighterFunctions {
 			else
 			{
 				ChangeToNewState(retreatStates, new float[]{2,1});
-				healthScript.awareness = healthScript.maxAwareness;
+				healthScript.awareness += (int)(healthScript.maxAwareness/2f);
 				inRetreatState = true;
 
 				if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")
@@ -369,7 +370,8 @@ public class AIFighter : FighterFunctions {
 			//if the target is retreating and there are other active fighters, let this one go.
 			if(Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "dogfighting"))
 			{
-				if(myCommander.ClosestPriorityTarget(myCommander.knownEnemyFighters, transform.position) != null)
+				if(myCommander.ClosestPriorityTarget(myCommander.knownEnemyFighters, transform.position) != null
+					|| (escortShip && Vector2.Distance(target.transform.position, escortShip.position) > (guardDistance * 2)))
 				{
 					Invoke("LeaveThemAlone", 2);
 				}
@@ -394,6 +396,7 @@ public class AIFighter : FighterFunctions {
 			target = null;
 			timer = 1;
 
+			ChooseGuardPoint();
 			patrolPoint = PatrolPoint(guardPoint, guardDistance);
 			engineScript.currentMaxVelocityAllowed = engineScript.maxNormalVelocity * 3/4;
 
@@ -416,20 +419,22 @@ public class AIFighter : FighterFunctions {
 			if(targetCheck != null)
 			{
 				//CheckAndAddTargetToCommanderList(myCommander, targetCheck);
-				myCommander.RequestOrders(GetComponent<AIFighter>());
-				return;
+				if(escortShip && Vector2.Distance(targetCheck.transform.position, escortShip.position) < guardDistance + 15f)
+				{
+					myCommander.RequestOrders(this);
+					return;
+				}
+				else if(!escortShip)
+				{
+					myCommander.RequestOrders(this);
+					return;
+				}
 			}
 		}
 
 		if(Vector2.Distance(transform.position, patrolPoint) < 5)
 		{
-			if (movingGuardPoint && flightLeader != null)
-			{
-				guardPoint = (Vector2)flightLeader.transform.position;
-			}
-			else if(movingGuardPoint && flightLeader == null)
-				guardPoint = (Vector2)transform.position;
-
+			ChooseGuardPoint();
 			patrolPoint = PatrolPoint(guardPoint, guardDistance);
 		}
 		engineScript.LookAtTarget (patrolPoint);
@@ -733,13 +738,13 @@ public class AIFighter : FighterFunctions {
 	void DefendYourself(GameObject theAttacker)
 	{
 		if(currentState != StateMachine.Retreat && currentState != StateMachine.Evade && currentState != StateMachine.FormUp 
-			&& target != theAttacker && theAttacker != gameObject)
+			&& target != theAttacker && theAttacker != gameObject && !StaticTools.IsInLayerMask(theAttacker, friendlyFireMask))
 		{
-			if(target)
-				target.GetComponent<TargetableObject>().myAttackers.Remove(this.gameObject);
-
 			if(!StaticTools.IsInLayerMask(theAttacker, LayerMask.GetMask("PMCCapital", "EnemyCapital")))
 			{
+				if(target)
+					target.GetComponent<TargetableObject>().myAttackers.Remove(this.gameObject);
+				
 				target = theAttacker;
 				target.GetComponent<TargetableObject>().myAttackers.Add(this.gameObject);
 			}
@@ -771,6 +776,20 @@ public class AIFighter : FighterFunctions {
 			CameraTactical.reportedInfo += "Fully Functional";		
 		else
 			CameraTactical.reportedInfo += "Damaged";
+	}
+
+	void ChooseGuardPoint() //used in Patrol
+	{
+		if(escortShip)
+		{
+			guardPoint = (Vector2)escortShip.transform.position;
+		}
+		else if (movingGuardPoint && flightLeader != null)
+		{
+			guardPoint = (Vector2)flightLeader.transform.position;
+		}
+		else if(movingGuardPoint && flightLeader == null)
+			guardPoint = (Vector2)transform.position;
 	}
 
 	#endregion

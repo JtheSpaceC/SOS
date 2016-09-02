@@ -580,27 +580,20 @@ public class HealthFighter : Health {
 		}
 	}
 
-	public void RetreatAndRetrieval() //moment when unit leaves the map, normally via RTB order
+	void InitialDeactivation()
 	{
-		if(updateAvatarBars)
-		{
-			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
-			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().text = "R.T.B.";
-			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isRTB", true);
-		}
-		if(myAIScript.myCharacterAvatarScript)
-			Destroy(myAIScript.myCharacterAvatarScript.gameObject);
-
 		gameObject.SendMessage("HUDPointerOff");
-
-		myAIScript.myCommander.retreated++;
 
 		if(myAIScript.enemyCommander.knownEnemyFighters.Contains(gameObject))
 		{
 			myAIScript.enemyCommander.knownEnemyFighters.Remove(gameObject);
 		}
+
 		myAIScript.enemyCommander.RemoveFromMyAttackersWhenDead(gameObject); //removes this from whoever it was attacking
 		myAIScript.myCommander.myFighters.Remove(gameObject);
+
+		if(myAIScript.myCharacterAvatarScript)
+			Destroy(myAIScript.myCharacterAvatarScript.gameObject);
 
 		foreach(GameObject go in myAIScript.myAttackers)
 		{
@@ -609,16 +602,44 @@ public class HealthFighter : Health {
 			go.SendMessage("TargetDestroyed", SendMessageOptions.DontRequireReceiver);
 		}
 
+		try{
+			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(gameObject);
+			myAIScript.flightLeadSquadronScript.CheckActiveMateStatus();
+		}catch{} 
+	}
+
+
+	public void RetreatAndRetrieval() //moment when unit leaves the map, normally via RTB order
+	{
+		InitialDeactivation();
+
+		if(updateAvatarBars)
+		{
+			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
+			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().text = "R.T.B.";
+			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isRTB", true);
+		}
+
+		myAIScript.myCommander.retreated++;
+
 		if(myAIScript.whichSide == TargetableObject.WhichSide.Ally)
 			Subtitles.instance.PostSubtitle(new string[]{this.name + " has Returned To Base."});
 
 		try{
-			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(gameObject);
 			myAIScript.flightLeadSquadronScript.retrievedWingmen.Add(gameObject);
-			myAIScript.flightLeadSquadronScript.CheckActiveMateStatus();
 		}catch{} 
+
+		transform.SetParent (null);
+
+		//TODO: if you are the flight leader, record death stats and set a new leader
+		if(GetComponentInChildren<SquadronLeader>() != null && 
+			GetComponentInChildren<SquadronLeader>().firstFlightOrders != SquadronLeader.Orders.Extraction)
+		{
+			GetComponentInChildren<SquadronLeader>().EngageAtWill();
+			GetComponentInChildren<SquadronLeader>().gameObject.SetActive(false);
+		}
 			
-		Deactivate();
+		FinalDeactivation();
 	}
 
 
@@ -652,16 +673,6 @@ public class HealthFighter : Health {
 		GetComponent<Animator>().enabled = false;
 		if(radarSig)
 			radarSig.SetActive (false);
-
-		transform.SetParent (null);
-
-		//TODO: if you are the flight leader, record death stats and set a new leader
-		if(GetComponentInChildren<SquadronLeader>() != null && 
-		   GetComponentInChildren<SquadronLeader>().firstFlightOrders != SquadronLeader.Orders.Extraction)
-		{
-			GetComponentInChildren<SquadronLeader>().EngageAtWill();
-			GetComponentInChildren<SquadronLeader>().gameObject.SetActive(false);
-		}
 
 		//Player-specific death
 		if(thisIsPlayer)
@@ -701,24 +712,16 @@ public class HealthFighter : Health {
 		else
 		{
 			myAIScript.shootScript.enabled = false;
-			myAIScript.engineScript.enabled = false;
-			if(myAIScript.myCharacterAvatarScript)
-				Destroy(myAIScript.myCharacterAvatarScript.gameObject);
-			
+			myAIScript.engineScript.enabled = false;		
 			
 			if(updateAvatarBars)
 			{
 				myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
 				myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isShotDown", true);
 			}
-			gameObject.SendMessage("HUDPointerOff");
 
-			if(myAIScript.enemyCommander.knownEnemyFighters.Contains(gameObject))
-			{
-				myAIScript.enemyCommander.knownEnemyFighters.Remove(gameObject);
-			}
-			myAIScript.enemyCommander.RemoveFromMyAttackersWhenDead(gameObject); //removes this from whoever it was attacking
-			myAIScript.myCommander.myFighters.Remove(gameObject);
+			InitialDeactivation();
+
 			myAIScript.orders = AIFighter.Orders.NA;
 			myAIScript.ChangeToNewState(myAIScript.deathStates, new float[]{1});
 			myAIScript.myCommander.losses ++;
@@ -728,20 +731,11 @@ public class HealthFighter : Health {
 				previousAttacker.SendMessage("AddKill", SendMessageOptions.DontRequireReceiver);
 			}
 
-			foreach(GameObject go in myAIScript.myAttackers)
-			{
-				//this should never return null ref because myAttackers is adjusted at death time of the attacker, but it does sometimes, hence
-				//don't require receiver
-				go.SendMessage("TargetDestroyed", SendMessageOptions.DontRequireReceiver);
-			}
-			//myAIScript.myAttackers.Clear();
 			try{
-			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(gameObject);
 			myAIScript.flightLeadSquadronScript.deadWingmen.Add(gameObject);
-			myAIScript.flightLeadSquadronScript.CheckActiveMateStatus();
 			}catch{} 
 
-			Invoke("Deactivate", 10);
+			Invoke("FinalDeactivation", 10);
 
 			if(Random.Range(0, 2) == 1)
 			{
@@ -761,8 +755,7 @@ public class HealthFighter : Health {
 			}
 			else 
 				Explode();
-		}
-		
+		}	
 
 	}//end of Death
 

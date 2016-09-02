@@ -358,7 +358,7 @@ public class SquadronLeader : MonoBehaviour {
 				mate03.SendMessage("HUDPointerOn", toolTipDuration);
 			}
 		}
-		
+			
 		string[] acknowledgments = new string[] {"Affirmative. Searching for targets!",	"Affirmative. Going hunting!"};
 		AcknowledgeOrderIfWingmenAlive (acknowledgments);
 	}
@@ -447,7 +447,7 @@ public class SquadronLeader : MonoBehaviour {
 
 	void AcknowledgeOrderIfWingmenAlive(string[] possibleReplies)
 	{
-		if(whichSide == WhichSide.Ally)
+		if(whichSide == WhichSide.Ally && isPlayerSquad)
 		{
 			if(mate01 == null || !mate01.activeSelf || mate01.GetComponent<HealthFighter>().dead)
 				return;

@@ -63,7 +63,7 @@ public class AICommander : MonoBehaviour {
 
 	public void RequestOrders(AIFighter askerScript)
 	{
-		if(knownEnemyFighters.Count >0)
+		if(knownEnemyFighters.Count > 0)
 		{
 			askerScript.ChangeToNewState(askerScript.combatStates, new float[]{1});
 		}
