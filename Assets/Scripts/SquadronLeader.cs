@@ -161,6 +161,7 @@ public class SquadronLeader : MonoBehaviour {
 
 		}catch{};
 
+
 		try{
 		mate01RadarAnimator = mate01.transform.FindChild("RadarSig").GetComponent<Animator> ();
 		mate02RadarAnimator = mate02.transform.FindChild("RadarSig").GetComponent<Animator> ();

@@ -51,6 +51,7 @@ public class SpawnerGroup : MonoBehaviour {
 		squadLeaderPrefab.transform.SetParent (craft [0].transform.FindChild ("Abilities"));
 		squadLeaderPrefab.transform.localPosition = Vector3.zero;
 		squadLeaderPrefab.GetComponent<SquadronLeader> ().whichSide = (whichSide == WhichSide.Ally) ? SquadronLeader.WhichSide.Ally : SquadronLeader.WhichSide.Enemy;
+
 		//set up the wingmen to know who their leader is and cover him
 		for (int i = 1; i < craft.Count; i++) {
 			squadLeaderPrefab.GetComponent<SquadronLeader> ().activeWingmen.Add (craft [i]);

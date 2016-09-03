@@ -13,6 +13,8 @@ public class AICommander : MonoBehaviour {
 	public LayerMask fighterEnemyDangerSources;
 
 	public List<GameObject> myFighters;
+	public List<GameObject> myOrphanedFighters;
+	public List<SquadronLeader> mySquadrons;
 	public List<GameObject> myBombers;
 	public List<GameObject> myTransports;
 	public List<GameObject> myAssaultShuttles;
@@ -61,7 +63,7 @@ public class AICommander : MonoBehaviour {
 		return resultingTarget;
 	}
 
-	public void RequestOrders(AIFighter askerScript)
+	public void RequestOrders(AIFighter askerScript) //TODO: Seems like there should be more functionality here
 	{
 		if(knownEnemyFighters.Count > 0)
 		{

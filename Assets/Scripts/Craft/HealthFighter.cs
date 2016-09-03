@@ -29,7 +29,7 @@ public class HealthFighter : Health {
 	public GameObject radarSig;
 	public AudioSource engineNoise;
 
-	[Header("Other")]
+	[Header("Other. (Look for debugging. Don't touch!)")]
 	public GameObject previousAttacker;
 	public GameObject previousPreviousAttacker;
 	public bool lastDamageWasFromAsteroid = false;
