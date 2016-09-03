@@ -225,7 +225,9 @@ public class Character : MonoBehaviour {
 		lastName = NameGenerator.Instance.getRandomLastName();
 		callsign = NameGenerator.Instance.getRandomCallsign();
 		if(myAIFighterScript != null)
+		{
 			myAIFighterScript.nameHUDText.text = callsign;
+		}
 	}
 
 	int NewSeed(int arrayLength) //this function adds its result to the string recording the seed of this appearance

@@ -138,4 +138,16 @@ public class AICommander : MonoBehaviour {
 		}
 	}
 
+	public SquadronLeader JoinUnderstrengthSquad(SquadronLeader callingSquadLeadScript)
+	{
+		foreach(SquadronLeader sl in mySquadrons)
+		{
+			if(sl.activeWingmen.Count < 2 && sl != callingSquadLeadScript)
+			{
+				return sl;
+			}
+		}
+		return null;
+	}
+
 }//Mono

@@ -16,8 +16,6 @@ public class SpawnerGroup : MonoBehaviour {
 
 	[HideInInspector] public List<GameObject> craft;
 
-	[HideInInspector] public string squadName;
-
 
 	void Start()
 	{
@@ -30,7 +28,6 @@ public class SpawnerGroup : MonoBehaviour {
 		{
 			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
 		}
-		squadName = myCommander.RequestSquadronName ();
 
 		SpawnGroup ();
 
@@ -39,18 +36,22 @@ public class SpawnerGroup : MonoBehaviour {
 
 	void SpawnGroup ()
 	{
+		string squadronName = myCommander.RequestSquadronName ();
+
 		//spawn the required number of craft
 		for (int i = 0; i < numberToSpawn; i++) {
 			GameObject obj = Instantiate (objectPrefab, (Vector2)transform.position + Random.insideUnitCircle.normalized *2f, 
 				Quaternion.identity) as GameObject;
-			obj.name = squadName + " " + (i + 1);
+			obj.name = squadronName + " " + (i + 1);
 			craft.Add (obj);
 		}
 		//create SquadLeader object and put it on the leader
 		squadLeaderPrefab = Instantiate (squadLeaderPrefab, transform.position, Quaternion.identity) as GameObject;
 		squadLeaderPrefab.transform.SetParent (craft [0].transform.FindChild ("Abilities"));
 		squadLeaderPrefab.transform.localPosition = Vector3.zero;
-		squadLeaderPrefab.GetComponent<SquadronLeader> ().whichSide = (whichSide == WhichSide.Ally) ? SquadronLeader.WhichSide.Ally : SquadronLeader.WhichSide.Enemy;
+		squadLeaderPrefab.GetComponent<SquadronLeader>().whichSide = (whichSide == WhichSide.Ally) ? SquadronLeader.WhichSide.Ally : SquadronLeader.WhichSide.Enemy;
+		squadLeaderPrefab.GetComponent<SquadronLeader>().squadName = squadronName;
+		myCommander.mySquadrons.Add(squadLeaderPrefab.GetComponent<SquadronLeader>());
 
 		//set up the wingmen to know who their leader is and cover him
 		for (int i = 1; i < craft.Count; i++) {

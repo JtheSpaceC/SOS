@@ -38,7 +38,7 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector] public SquadronMembership squadronMembership;
 
 	[HideInInspector] public GameObject myFormationPosition;
-	[HideInInspector] public int mySquadUnitNumber = 0;
+	[HideInInspector] public int mySquadUnitNumber = 1;
 
 	public Vector2 patrolPoint;
 	public Vector2 guardPoint;
@@ -131,7 +131,11 @@ public class AIFighter : FighterFunctions {
 		flightLeadSquadronScript = flightLeader.GetComponentInChildren<SquadronLeader> ();
 		flightLeaderRigidbody = flightLeader.GetComponent<Rigidbody2D>();
 
-		if(squadronMembership == SquadronMembership.two)
+		if(squadronMembership == SquadronMembership.one)
+		{
+			mySquadUnitNumber = 1;
+		}
+		else if(squadronMembership == SquadronMembership.two)
 		{
 			myFormationPosition = flightLeadSquadronScript.wingmanPos2;
 			mySquadUnitNumber = 2;
@@ -206,6 +210,10 @@ public class AIFighter : FighterFunctions {
 				ChangeToNewState(retreatStates, new float[]{2,1});
 				healthScript.awareness += (int)(healthScript.maxAwareness/2f);
 				inRetreatState = true;
+				if(flightLeadSquadronScript.activeWingmen.Contains(this.gameObject))
+					flightLeadSquadronScript.activeWingmen.Remove(this.gameObject);
+				if(!flightLeadSquadronScript.retreatingWingmen.Contains(this.gameObject))
+					flightLeadSquadronScript.retreatingWingmen.Add(this.gameObject);
 
 				if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")
 				{
@@ -588,7 +596,8 @@ public class AIFighter : FighterFunctions {
 			//This section should be excessive, but is still the only way to stop craft targeting dead enemies and shooting at their death spots
 			else
 			{
-				Debug.Log(gameObject.name + " is setting " + target.name + " to null. NOT LEGIT");
+				//REMOVE when sure I don't want any more
+				//Debug.Log(gameObject.name + " is setting " + target.name + " to null. NOT LEGIT");
 				target.SendMessage("RemoveSomeoneAttackingMe", this.gameObject, SendMessageOptions.DontRequireReceiver); 
 				target = null;
 				return;

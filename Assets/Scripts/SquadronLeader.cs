@@ -7,12 +7,15 @@ public class SquadronLeader : MonoBehaviour {
 	public enum WhichSide {Enemy, Ally};
 	public WhichSide whichSide;
 
+	[HideInInspector] public string squadName;
+
 	bool isPlayerSquad;
 
 	[HideInInspector] public List<GameObject> allWingmen;
 	[Tooltip("Put wingmen here to handle the group setup. NB: put in order 0 - 11")]
 	public List<GameObject> activeWingmen;
 	public List<GameObject> deadWingmen;
+	public List<GameObject> retreatingWingmen;
 	public List<GameObject> retrievedWingmen;
 	public List<GameObject> EVWingmen;
 	public List<GameObject> capturedWingmen;
@@ -67,13 +70,18 @@ public class SquadronLeader : MonoBehaviour {
 	
 	void Start()
 	{
+		SetUp();
+	}
+
+	public void SetUp()
+	{
 		//this check fixes wingmen errors that prefabs are causing across different test scenes
 		List<GameObject> tempWingmenList = new List<GameObject>();
 		for(int i = 0; i < activeWingmen.Count; i++)
 		{
 			if(activeWingmen[i] != null)
-				if(activeWingmen[i].activeSelf)
-					tempWingmenList.Add(activeWingmen[i]);
+			if(activeWingmen[i].activeSelf)
+				tempWingmenList.Add(activeWingmen[i]);
 		}
 		activeWingmen.Clear ();
 		activeWingmen = tempWingmenList;
@@ -91,23 +99,26 @@ public class SquadronLeader : MonoBehaviour {
 		foreach (GameObject go in capturedWingmen) {
 			allWingmen.Add (go);
 		}
-		
+
+		GenerateWingmanFormationPositions ();
+		ReassignWingmen ();
+
+		AddStarsToCallsign();
+
+		//Invoke(firstFlightSquadOrders.ToString(), 0.01f);
+	}
+
+
+	public void ReassignWingmen()
+	{
 		if(transform.parent.parent.tag == "PlayerFighter")
 		{
 			isPlayerSquad = true;
 			GameObject.Find("RADIO layout group").GetComponent<RadioCommands>().enabled = true;
 		}
 		else
-			GetComponentInParent<AIFighter>().flightLeader = transform.parent.parent.gameObject;
-
-		GenerateWingmanFormationPositions ();
-		ReassignWingmen ();
-
-		//Invoke(firstFlightSquadOrders.ToString(), 0.01f);
-	}
-
-	public void ReassignWingmen()
-	{
+			transform.parent.parent.GetComponent<AIFighter>().flightLeader = transform.parent.parent.gameObject;
+		
 		try{
 			mate01 = transform.parent.parent.gameObject;
 			if(transform.parent.parent.tag != "PlayerFighter")
@@ -177,6 +188,8 @@ public class SquadronLeader : MonoBehaviour {
 		mate12RadarAnimator = mate12.transform.FindChild("RadarSig").GetComponent<Animator> ();
 		}catch{
 		}
+
+		mate01.GetComponent<AIFighter>().SetSquadReferences();
 
 		for(int i = 0; i < activeWingmen.Count; i++)
 		{
@@ -282,7 +295,7 @@ public class SquadronLeader : MonoBehaviour {
 
 	public void CheckActiveMateStatus()
 	{
-		if(mate02 == null || !mate02.activeSelf || mate02.GetComponent<HealthFighter>().dead)
+		if( mate02 == null || !mate02.activeSelf || mate02.GetComponent<HealthFighter>().dead)
 			mate02 = null;
 		if( mate03 == null || !mate03.activeSelf || mate03.GetComponent<HealthFighter>().dead)
 			mate03 = null;
@@ -472,6 +485,80 @@ public class SquadronLeader : MonoBehaviour {
 	void OrderReceivedFeedback()
 	{
 		//TODO: Can't remember..
+	}
+
+
+	public void AssignNewLeader(bool leaderIsDead)
+	{
+		//if leader is still alive but everyone else is dead
+		if(!leaderIsDead && activeWingmen.Count == 0)
+		{
+			FindMeANewLeader(mate01);
+			return;
+		}
+		else if(!leaderIsDead && activeWingmen.Count >= 1) //leader alive with 1 or more wingmen left
+			return; //don't make changes
+
+		//if there are no other available wingmen, do nothing. Leader was the last survivor and is now dead/retreating
+		if(leaderIsDead && activeWingmen.Count == 0)
+		{
+			mate01.GetComponent<AIFighter>().myCommander.mySquadrons.Remove(this);
+			return;
+		}
+		//if only one ship left, first check if the Commander would rather assign you to a different squad
+		else if(leaderIsDead && activeWingmen.Count == 1)
+		{
+			FindMeANewLeader(activeWingmen[0]);
+		}
+		else if(leaderIsDead && activeWingmen.Count > 1)
+		{
+			//otherwise assign a new leader, the first in the active wingmen
+			MakeExistingWingmanIntoThisSquadsLeader();
+		}
+	}
+
+	void FindMeANewLeader(GameObject who)
+	{
+		SquadronLeader potentialNewLeader = who.GetComponent<AIFighter>().myCommander.JoinUnderstrengthSquad(this);
+		if(potentialNewLeader != null)
+		{
+			mate01.GetComponent<AIFighter>().myCommander.mySquadrons.Remove(this);
+
+			potentialNewLeader.activeWingmen.Add(who);
+			potentialNewLeader.allWingmen.Add(who);
+			potentialNewLeader.ReassignWingmen();
+			potentialNewLeader.AddStarsToCallsign();
+			who.GetComponent<AIFighter>().ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
+
+			Debug.Log(who.name + " was added to " + potentialNewLeader.squadName);
+			return;
+		}
+		else if(who != mate01)
+			MakeExistingWingmanIntoThisSquadsLeader();
+	}
+	void MakeExistingWingmanIntoThisSquadsLeader()
+	{
+		GameObject newLeader = activeWingmen[0];
+		activeWingmen.Remove(newLeader);
+		this.transform.SetParent(newLeader.transform.FindChild ("Abilities"));
+		this.transform.localPosition = Vector3.zero;
+		ReassignWingmen();
+		AddStarsToCallsign();
+		newLeader.GetComponent<AIFighter>().ChangeToNewState(newLeader.GetComponent<AIFighter>().normalStates, new float[]{1});
+
+		Debug.Log(newLeader.name + " became new squad leader of " + squadName + " Squadron");
+	}
+
+	public void AddStarsToCallsign()
+	{
+		if(transform.parent.GetComponentInParent<AIFighter>() && whichSide == WhichSide.Ally)
+		{
+			string name = GetComponentInParent<AIFighter>().nameHUDText.text;
+			if(name.ToCharArray()[0] != '*')
+			{
+				GetComponentInParent<AIFighter>().nameHUDText.text = "* " + GetComponentInParent<AIFighter>().nameHUDText.text + " *";
+			}
+		}
 	}
 
 }//Mono

@@ -580,7 +580,7 @@ public class HealthFighter : Health {
 		}
 	}
 
-	void InitialDeactivation()
+	void InitialDeactivation() //player doesn't do this. just for AI
 	{
 		gameObject.SendMessage("HUDPointerOff");
 
@@ -602,10 +602,20 @@ public class HealthFighter : Health {
 			go.SendMessage("TargetDestroyed", SendMessageOptions.DontRequireReceiver);
 		}
 
-		try{
+		//if you are the flight leader set a new leader
+		SquadronLeader squadLeadScript = GetComponentInChildren<SquadronLeader>();
+
+		if(squadLeadScript != null && squadLeadScript.firstFlightOrders != SquadronLeader.Orders.Extraction)
+		{
+			squadLeadScript.AssignNewLeader(true); //if there's another active wingman, leadership will pass to them
+		}
+		//else if you were a squad member
+		else if(myAIScript.flightLeadSquadronScript) 
+		{
 			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(gameObject);
 			myAIScript.flightLeadSquadronScript.CheckActiveMateStatus();
-		}catch{} 
+			myAIScript.flightLeadSquadronScript.AssignNewLeader(false); //may or may not reassign wingmen to new squads
+		}
 	}
 
 
@@ -630,14 +640,6 @@ public class HealthFighter : Health {
 		}catch{} 
 
 		transform.SetParent (null);
-
-		//TODO: if you are the flight leader, record death stats and set a new leader
-		if(GetComponentInChildren<SquadronLeader>() != null && 
-			GetComponentInChildren<SquadronLeader>().firstFlightOrders != SquadronLeader.Orders.Extraction)
-		{
-			GetComponentInChildren<SquadronLeader>().EngageAtWill();
-			GetComponentInChildren<SquadronLeader>().gameObject.SetActive(false);
-		}
 			
 		FinalDeactivation();
 	}
@@ -706,6 +708,15 @@ public class HealthFighter : Health {
 			_battleEventManager.instance.CallPlayerShotDown();
 			Director.instance.SpawnPilotEVA(transform.position, transform.rotation, true);
 
+			//TODO: Decide what wingmen whould really do in a battle
+			//tell wingmen to resume fighting on their own if Player dies
+			SquadronLeader squadLeadScript = GetComponentInChildren<SquadronLeader>();
+			if(squadLeadScript != null && squadLeadScript.firstFlightOrders != SquadronLeader.Orders.Extraction)
+			{
+				squadLeadScript.EngageAtWill();
+				squadLeadScript.gameObject.SetActive(false);
+			}
+
 			Explode();
 		}
 		//any other fighter death
@@ -732,7 +743,8 @@ public class HealthFighter : Health {
 			}
 
 			try{
-			myAIScript.flightLeadSquadronScript.deadWingmen.Add(gameObject);
+				if(myAIScript.flightLeadSquadronScript.deadWingmen.Contains(gameObject))
+					myAIScript.flightLeadSquadronScript.deadWingmen.Add(gameObject);
 			}catch{} 
 
 			Invoke("FinalDeactivation", 10);
