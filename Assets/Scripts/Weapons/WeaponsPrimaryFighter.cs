@@ -53,7 +53,6 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			weaponTypeFromObjectPoolList = GameObject.Find("Cannon Shot Pooler");
 		}
 		cannonShotPoolerScript = weaponTypeFromObjectPoolList.GetComponent<ObjectPoolerScript> ();
-
 	}
 
 	void OnEnable()
@@ -104,6 +103,9 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			{
 				Tools.instance.ammoRemainingSlider.gameObject.SetActive(false);
 			}
+
+			if(Tools.instance.barrelTempSlider != null)
+				Tools.instance.barrelTempSlider.value = barrelTemp;
 		}
 	}
 	

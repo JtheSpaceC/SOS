@@ -156,7 +156,6 @@ public class AITransport : SupportShipFunctions {
 		if(switchingState)
 		{
 			pickupOfferCollider.enabled = true;
-
 			switchingState = false;
 		}
 	}
@@ -304,7 +303,7 @@ public class AITransport : SupportShipFunctions {
 		{
 			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.Extraction;
 			//TODO: check if it's actually the first flight, or if 2nd - 4th		
-			
+
 			//get the wingmen and create arrays of engine and fighter references
 			if(carryFighter1.GetComponentInChildren<SquadronLeader>().activeWingmen.Count >= 1)
 			{
@@ -386,47 +385,21 @@ public class AITransport : SupportShipFunctions {
 		}
 	}
 
-	public void InstantAttachFighters(GameObject fighter1, GameObject fighter2, GameObject fighter3)
-	{		
-		if(fighter1 != null)
-		{
-			if(fighter1.activeSelf)
-			{
-				fighter1.transform.SetParent (carry1);
-				fighter1.transform.position = carry1.transform.position;
-				fighter1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-				fighter1.GetComponent<Rigidbody2D> ().isKinematic = true;
-				fighter1.transform.rotation = carry1.transform.rotation;
-				fighter1.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
-				fighter1.GetComponent<TargetableObject>().myGui.SetActive(false);
-			}
-		}
+	public void InstantAttachFighters(GameObject[] fighters)
+	{
+		Transform[] carrySpots = new Transform[] {carry1, carry2, carry3};
 
-		if(fighter2 != null)
+		for(int i = 0; i < fighters.Length; i++)
 		{
-			if(fighter2.activeSelf)
+			if(fighters[i] != null && fighters[i].activeSelf)
 			{
-				fighter2.transform.SetParent (carry2);
-				fighter2.transform.position = carry2.transform.position;
-				fighter2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-				fighter2.GetComponent<Rigidbody2D> ().isKinematic = true;
-				fighter2.transform.rotation = carry2.transform.rotation;
-				fighter2.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
-				fighter2.GetComponent<TargetableObject>().myGui.SetActive(false);
-			}
-		}
-
-		if(fighter3 != null)
-		{
-			if(fighter3.activeSelf)
-			{
-				fighter3.transform.SetParent (carry3);
-				fighter3.transform.position = carry3.transform.position;
-				fighter3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-				fighter3.GetComponent<Rigidbody2D> ().isKinematic = true;
-				fighter3.transform.rotation = carry3.transform.rotation;
-				fighter3.transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
-				fighter3.GetComponent<TargetableObject>().myGui.SetActive(false);
+				fighters[i].transform.SetParent (carrySpots[i]);
+				fighters[i].transform.position = carrySpots[i].transform.position;
+				fighters[i].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+				fighters[i].GetComponent<Rigidbody2D> ().isKinematic = true;
+				fighters[i].transform.rotation = carrySpots[i].transform.rotation;
+				fighters[i].transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
+				fighters[i].GetComponent<TargetableObject>().myGui.SetActive(false);
 			}
 		}
 	}
@@ -435,7 +408,7 @@ public class AITransport : SupportShipFunctions {
 	{
 		if(switchingState)
 		{
-			if(CheckTargetIsLegit(theCaller))
+			if(Tools.instance.CheckTargetIsLegit(theCaller))
 			{
 				if(insertionPoint == Vector3.zero)
 				{
@@ -598,7 +571,7 @@ public class AITransport : SupportShipFunctions {
 			myCommander.myTransports.Remove(this.gameObject);
 			if(enemyCommander.knownEnemyTransports.Contains(this.gameObject))
 				enemyCommander.knownEnemyTransports.Remove(this.gameObject);
-			healthScript.Invoke("Deactivate", 8);
+			healthScript.Invoke("FinalDeactivation", 8);
 		}
 	}
 

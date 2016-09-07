@@ -601,21 +601,6 @@ public class HealthFighter : Health {
 			//don't require receiver
 			go.SendMessage("TargetDestroyed", SendMessageOptions.DontRequireReceiver);
 		}
-
-		//if you are the flight leader set a new leader
-		SquadronLeader squadLeadScript = GetComponentInChildren<SquadronLeader>();
-
-		if(squadLeadScript != null && squadLeadScript.firstFlightOrders != SquadronLeader.Orders.Extraction)
-		{
-			squadLeadScript.AssignNewLeader(true); //if there's another active wingman, leadership will pass to them
-		}
-		//else if you were a squad member
-		else if(myAIScript.flightLeadSquadronScript) 
-		{
-			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(gameObject);
-			myAIScript.flightLeadSquadronScript.CheckActiveMateStatus();
-			myAIScript.flightLeadSquadronScript.AssignNewLeader(false); //may or may not reassign wingmen to new squads
-		}
 	}
 
 
@@ -687,6 +672,9 @@ public class HealthFighter : Health {
 			myAIScript.engineScript.enabled = false;
 			RadioCommands.instance.gameObject.SetActive(false);
 			//dodgeScript.dodgeCooldownImage.gameObject.SetActive(false);
+
+			if(Tools.instance.barrelTempSlider)
+				Tools.instance.barrelTempSlider.gameObject.SetActive(false);
 
 			if(myAIScript.enemyCommander.knownEnemyFighters.Contains(gameObject))
 			{

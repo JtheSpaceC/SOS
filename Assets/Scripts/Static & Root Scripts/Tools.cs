@@ -289,6 +289,37 @@ public class Tools: MonoBehaviour
 			return false;		
 	}
 
+	public bool CheckTargetIsLegit(GameObject target)
+	{
+		if (target == null)
+			return false;
+
+		if (target.tag == "FormationPosition" && target.activeInHierarchy)
+			return true;
+
+		else if(!target.activeInHierarchy)
+		{
+			//	if(target != null)
+			//Debug.Log(gameObject.name + ": "+ target.name + " IS NOT LEGIT!");
+
+			return false;
+		}
+		else if((target.tag == "Fighter" || target.tag == "PlayerFighter") 
+			&& target.GetComponent<HealthFighter>().dead)
+		{
+			return false;
+		}
+		else if(target.tag == "Turret" && target.GetComponent<HealthTurret>().dead)
+		{
+			return false;
+		}
+		else
+		{
+			//Debug.Log(gameObject.name + ": "+ target.name + " is LEGIT!");
+			return true;
+		}
+	}
+
 	public IEnumerator TextAnim(Text givenText, Color flashColour, Color returnColour, float givenTime)
 	{
 		givenText.color = flashColour;

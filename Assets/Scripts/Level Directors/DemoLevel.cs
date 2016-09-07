@@ -33,6 +33,18 @@ public class DemoLevel : MonoBehaviour {
 	public PlayerAILogic playerLogicScript;
 	GameObject player;
 	float timer;
+
+	[Header("Difficulty Stuff")]
+	[Tooltip("Do we replace prefab health with ones we specifically want for demo?")] 
+	public bool overridePrefabHealths = true;
+	public int enemyStartingAwareness = 0;
+	public int enemyMaxAwareness = 2;
+	public int enemySnapFocus = 0;
+	public int enemyAwarenessRecharge = 3;
+	public int PMCStartingAwareness = 4;
+	public int PMCMaxAwareness = 4;
+	public int PMCSnapFocus = 1;
+	public int PMCAwarenessRecharge = 2;
 	
 	[Header("Start, End & Death Menu stuff")]
 	public Text keyboardControlsText;
@@ -144,6 +156,12 @@ public class DemoLevel : MonoBehaviour {
 		_battleEventManager.playerShotDown += PlayerWasShotDown;
 		_battleEventManager.playerRescued += PlayerWasRescued;
 		_battleEventManager.playerBeganDocking += PlayerBeganDocking;
+
+		if(overridePrefabHealths)
+		{
+			_battleEventManager.pmcFightersSpawned += FixDemoSpecificConcerns;
+			_battleEventManager.enemyFightersSpawned += FixDemoSpecificConcerns;
+		}
 	}
 
 	void OnDisable()
@@ -152,6 +170,12 @@ public class DemoLevel : MonoBehaviour {
 		_battleEventManager.playerShotDown -= PlayerWasShotDown;
 		_battleEventManager.playerRescued -= PlayerWasRescued;
 		_battleEventManager.playerBeganDocking -= PlayerBeganDocking;
+
+		if(overridePrefabHealths)
+		{
+			_battleEventManager.pmcFightersSpawned -= FixDemoSpecificConcerns;
+			_battleEventManager.enemyFightersSpawned -= FixDemoSpecificConcerns;
+		}
 	}
 
 	void Start()
@@ -190,6 +214,12 @@ public class DemoLevel : MonoBehaviour {
 		AITrans.SetUpReferences ();
 
 		AITrans.InstantAttachFighters (playerGroup [0], playerGroup [1], playerGroup [2]);
+
+		FixDemoSpecificConcerns();
+		playerHealth.awareness = PMCStartingAwareness;
+		playerHealth.maxAwareness = PMCMaxAwareness;
+		playerHealth.snapFocusAmount = PMCSnapFocus;
+		playerHealth.awarenessRechargeTime = PMCAwarenessRecharge;
 
 		//for other
 		equipPanel.SetActive (false);
@@ -337,6 +367,30 @@ public class DemoLevel : MonoBehaviour {
 			spawnerScript.CancelInvoke("Spawn");
 			enemyCommander.CallFullRetreat();
 			spawnerScript.enabled = false;
+		}
+	}
+
+	void FixDemoSpecificConcerns()
+	{
+		AIFighter[] fighterscripts = FindObjectsOfType<AIFighter>();
+		foreach(AIFighter fighter in fighterscripts)
+		{
+			if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Ally)
+			{				
+				fighter.healthScript.awareness = PMCStartingAwareness;
+				fighter.healthScript.maxAwareness = PMCMaxAwareness;
+				fighter.healthScript.snapFocusAmount = PMCSnapFocus;
+				fighter.healthScript.awarenessRechargeTime = PMCAwarenessRecharge;
+				fighter.statsAlreadyAdjusted = true;
+			}
+			else if(!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Enemy)
+			{
+				fighter.healthScript.awareness = enemyStartingAwareness;
+				fighter.healthScript.maxAwareness = enemyMaxAwareness;
+				fighter.healthScript.snapFocusAmount = enemySnapFocus;
+				fighter.healthScript.awarenessRechargeTime = enemyAwarenessRecharge;
+				fighter.statsAlreadyAdjusted = true;
+			}				
 		}
 	}
 

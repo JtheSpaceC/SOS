@@ -4,7 +4,6 @@ public class _battleEventManager : MonoBehaviour {
 
 	public static _battleEventManager instance;
 
-
 	public delegate void PlayerGotKill();
 	public static event PlayerGotKill playerGotKill;
 
@@ -51,6 +50,11 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void PlayerBeganDocking();
 	public static event PlayerBeganDocking playerBeganDocking;
 
+	public delegate void PMCFightersSpawned();
+	public static event PMCFightersSpawned pmcFightersSpawned;
+
+	public delegate void EnemyFightersSpawned();
+	public static event EnemyFightersSpawned enemyFightersSpawned;
 
 	void Awake()
 	{
@@ -124,6 +128,14 @@ public class _battleEventManager : MonoBehaviour {
 	public void CallPlayerBeganDocking()
 	{
 		playerBeganDocking();
+	}
+	public void CallPMCFightersSpawned()
+	{
+		pmcFightersSpawned();
+	}
+	public void CallEnemyFightersSpawned()
+	{
+		enemyFightersSpawned();
 	}
 
 

@@ -45,8 +45,18 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public bool cameraAutoChanges = true;
 	public bool showEnemyUI = true;
+
+	[Header("Difficulty Stuff")]
 	[Tooltip("Do we replace prefab health with ones we specifically want for demo?")] 
 	public bool overridePrefabHealths = true;
+	public int enemyStartingAwareness = 0;
+	public int enemyMaxAwareness = 2;
+	public int enemySnapFocus = 0;
+	public int enemyAwarenessRecharge = 3;
+	public int PMCStartingAwareness = 4;
+	public int PMCMaxAwareness = 4;
+	public int PMCSnapFocus = 1;
+	public int PMCAwarenessRecharge = 2;
 
 
 	void Start () 
@@ -55,8 +65,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 		if(cameraAutoChanges)
 			Invoke("FindATargetFalse", 1);
-
-		Invoke("FixDemoSpecificConcerns", 0.05f);
 
 		followCamText.text = "";
 		if (spawnerOn) 
@@ -84,6 +92,24 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		if(!keepScores)
 		{
 			scoresText.text = "";
+		}
+	}
+
+	void OnEnable()
+	{
+		if(overridePrefabHealths)
+		{
+			_battleEventManager.pmcFightersSpawned += FixDemoSpecificConcerns;
+			_battleEventManager.enemyFightersSpawned += FixDemoSpecificConcerns;
+		}
+	}
+
+	void OnDisable()
+	{
+		if(overridePrefabHealths)
+		{
+			_battleEventManager.pmcFightersSpawned -= FixDemoSpecificConcerns;
+			_battleEventManager.enemyFightersSpawned -= FixDemoSpecificConcerns;
 		}
 	}
 
@@ -269,8 +295,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			return;
 
 		Instantiate (PMCFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 55), Quaternion.identity);
-
-		Invoke("FixDemoSpecificConcerns", 0.05f);
 	}
 	void SpawnEnemy()
 	{
@@ -280,30 +304,43 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		}
 		
 		Instantiate (EnemyFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 100), Quaternion.identity);
-		Invoke("FixDemoSpecificConcerns", 0.05f);
 	}
 	void FixDemoSpecificConcerns()
 	{
 		AIFighter[] fighterscripts = FindObjectsOfType<AIFighter>();
 		foreach(AIFighter fighter in fighterscripts)
 		{
-			if (fighter.whichSide == TargetableObject.WhichSide.Ally)
+			if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Ally)
 			{
 				if(overridePrefabHealths)
-					fighter.healthScript.maxAwareness = 2 ; //formerly 3
+				{
+					fighter.healthScript.awareness = PMCStartingAwareness;
+					fighter.healthScript.maxAwareness = PMCMaxAwareness;
+					fighter.healthScript.snapFocusAmount = PMCSnapFocus;
+					fighter.healthScript.awarenessRechargeTime = PMCAwarenessRecharge;
+				}
 
 				if(fighter.GetComponentInChildren<SquadronLeader>())
 				{
 					fighter.GetComponent<AIFighter>().escortShip = theFleet;
 				}
+				fighter.statsAlreadyAdjusted = true;
 			}
-			else
+			else if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Enemy)				
 			{
 				if(!showEnemyUI)
 				{
 					fighter.healthScript.healthSlider.gameObject.SetActive(false);
 					fighter.healthScript.awarenessSlider.gameObject.SetActive(false);
 				}
+				if(overridePrefabHealths)
+				{
+					fighter.healthScript.awareness = enemyStartingAwareness;
+					fighter.healthScript.maxAwareness = enemyMaxAwareness;
+					fighter.healthScript.snapFocusAmount = enemySnapFocus;
+					fighter.healthScript.awarenessRechargeTime = enemyAwarenessRecharge;
+				}
+				fighter.statsAlreadyAdjusted = true;
 			}
 		}
 	}

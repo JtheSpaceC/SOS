@@ -60,6 +60,11 @@ public class SpawnerGroup : MonoBehaviour {
 			craft [i].GetComponent<AIFighter>().flightLeadSquadronScript = craft [0].GetComponentInChildren<SquadronLeader> ();
 			craft [i].GetComponent<AIFighter>().currentState = AIFighter.StateMachine.Covering;
 		}
+
+		if(whichSide == WhichSide.Ally)
+			_battleEventManager.instance.CallPMCFightersSpawned();
+		else if(whichSide == WhichSide.Enemy)
+			_battleEventManager.instance.CallEnemyFightersSpawned();
 	}
 
 }

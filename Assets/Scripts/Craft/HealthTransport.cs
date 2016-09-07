@@ -142,6 +142,6 @@ public class HealthTransport : Health {
 		{
 			myAIScript.enemyCommander.knownEnemyTransports.Remove(this.gameObject);
 		}
-		Invoke("Deactivate", 10);
+		Invoke("FinalDeactivation", 10);
 	}
 }

@@ -189,7 +189,8 @@ public class SquadronLeader : MonoBehaviour {
 		}catch{
 		}
 
-		mate01.GetComponent<AIFighter>().SetSquadReferences();
+		if(!isPlayerSquad)
+			mate01.GetComponent<AIFighter>().SetSquadReferences();
 
 		for(int i = 0; i < activeWingmen.Count; i++)
 		{
@@ -519,7 +520,7 @@ public class SquadronLeader : MonoBehaviour {
 
 	void FindMeANewLeader(GameObject who)
 	{
-		SquadronLeader potentialNewLeader = who.GetComponent<AIFighter>().myCommander.JoinUnderstrengthSquad(this);
+		SquadronLeader potentialNewLeader = who.GetComponent<TargetableObject>().myCommander.JoinUnderstrengthSquad(this);
 		if(potentialNewLeader != null)
 		{
 			mate01.GetComponent<AIFighter>().myCommander.mySquadrons.Remove(this);
@@ -530,7 +531,6 @@ public class SquadronLeader : MonoBehaviour {
 			potentialNewLeader.AddStarsToCallsign();
 			who.GetComponent<AIFighter>().ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
 
-			Debug.Log(who.name + " was added to " + potentialNewLeader.squadName);
 			return;
 		}
 		else if(who != mate01)
@@ -540,13 +540,16 @@ public class SquadronLeader : MonoBehaviour {
 	{
 		GameObject newLeader = activeWingmen[0];
 		activeWingmen.Remove(newLeader);
+		if(mate01.GetComponent<AIFighter>().escortShip)
+		{
+			newLeader.GetComponent<AIFighter>().escortShip = mate01.GetComponent<AIFighter>().escortShip;
+		}
 		this.transform.SetParent(newLeader.transform.FindChild ("Abilities"));
 		this.transform.localPosition = Vector3.zero;
 		ReassignWingmen();
 		AddStarsToCallsign();
-		newLeader.GetComponent<AIFighter>().ChangeToNewState(newLeader.GetComponent<AIFighter>().normalStates, new float[]{1});
 
-		Debug.Log(newLeader.name + " became new squad leader of " + squadName + " Squadron");
+		newLeader.GetComponent<AIFighter>().ChangeToNewState(newLeader.GetComponent<AIFighter>().normalStates, new float[]{1});
 	}
 
 	public void AddStarsToCallsign()

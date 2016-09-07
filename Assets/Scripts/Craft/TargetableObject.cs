@@ -189,36 +189,6 @@ public class TargetableObject : MonoBehaviour {
 		}
 	}*/
 
-	protected bool CheckTargetIsLegit(GameObject target)
-	{
-		if (target == null)
-			return false;
-		
-		if (target.tag == "FormationPosition" && target.activeInHierarchy)
-			return true;
-		
-		else if(!target.activeInHierarchy)
-		{
-			//	if(target != null)
-			//Debug.Log(gameObject.name + ": "+ target.name + " IS NOT LEGIT!");
-			
-			return false;
-		}
-		else if((target.tag == "Fighter" || target.tag == "PlayerFighter") 
-		        && target.GetComponent<HealthFighter>().dead)
-		{
-			return false;
-		}
-		else if(target.tag == "Turret" && target.GetComponent<HealthTurret>().dead)
-		{
-			return false;
-		}
-		else
-		{
-			//Debug.Log(gameObject.name + ": "+ target.name + " is LEGIT!");
-			return true;
-		}
-	}
 	
 	void AddSomeoneAttackingMe(GameObject attacker)
 	{

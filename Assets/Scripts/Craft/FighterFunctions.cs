@@ -38,7 +38,7 @@ public class FighterFunctions : TargetableObject {
 
 		foreach(GameObject target in allAttackers)
 		{
-			if(!CheckTargetIsLegit(target))
+			if(!Tools.instance.CheckTargetIsLegit(target))
 			{
 				//Debug.Log("BIG FUCKING ERROR WITH " + target.name + " on "+gameObject.name + "!!!!!!");
 				allAttackers.Remove(target);

@@ -52,15 +52,21 @@ public class AICommander : MonoBehaviour {
 
 		foreach(GameObject target in whichTargetList)
 		{
-			float thisDist = Vector2.Distance(target.transform.position, positionOfAsker);
-
-			if(thisDist < closestDist && !Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "AICommander"))
+			if(Tools.instance.CheckTargetIsLegit(target))
 			{
-				resultingTarget = target;
-				closestDist = thisDist;
+				float thisDist = Vector2.Distance(target.transform.position, positionOfAsker);
+
+				if(thisDist < closestDist && !Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "AICommander"))
+				{
+					resultingTarget = target;
+					closestDist = thisDist;
+				}
 			}
+			else print(target + " is not legit");
 		}
-		return resultingTarget;
+		if(resultingTarget != null)
+			return resultingTarget;
+		else return null;
 	}
 
 	public void RequestOrders(AIFighter askerScript) //TODO: Seems like there should be more functionality here

@@ -160,7 +160,7 @@ public class WeaponsTurret : TargetableObject {
 			{
 				if(potentialTarget.tag == "Fighter" || potentialTarget.tag == "PlayerFighter")
 				{
-					if(CheckTargetIsLegit(potentialTarget.gameObject))
+					if(Tools.instance.CheckTargetIsLegit(potentialTarget.gameObject))
 					{
 						//CheckAndAddTargetToCommanderList(myCommander, potentialTarget.gameObject);
 

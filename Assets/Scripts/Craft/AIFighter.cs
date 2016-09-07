@@ -64,6 +64,8 @@ public class AIFighter : FighterFunctions {
 	public GameObject HUDPointer;
 	[HideInInspector] public GameObject dockingWith;
 	public Text nameHUDText;
+
+	[HideInInspector] public bool statsAlreadyAdjusted = false;
 	
 
 	void Awake()
@@ -346,7 +348,7 @@ public class AIFighter : FighterFunctions {
 			}
 			if(target != null)
 			{
-				if(!CheckTargetIsLegit(target))
+				if(!Tools.instance.CheckTargetIsLegit(target))
 				{
 					if(myCommander.knownEnemyFighters.Contains(target))
 						myCommander.knownEnemyFighters.Remove(target);
@@ -371,7 +373,7 @@ public class AIFighter : FighterFunctions {
 			ChangeToNewState(normalStates, weights);
 			return;
 		}
-		if (CheckTargetIsLegit (target) == true) 
+		if (Tools.instance.CheckTargetIsLegit (target) == true) 
 		{
 			DogfightingFunction (engineScript, target, shootScript, constantThrustProportion);
 
@@ -428,6 +430,11 @@ public class AIFighter : FighterFunctions {
 			{
 				//CheckAndAddTargetToCommanderList(myCommander, targetCheck);
 				if(escortShip && Vector2.Distance(targetCheck.transform.position, escortShip.position) < guardDistance + 15f)
+				{
+					myCommander.RequestOrders(this);
+					return;
+				}
+				else if(escortShip && Vector2.Distance(targetCheck.transform.position, transform.position) < 15f)
 				{
 					myCommander.RequestOrders(this);
 					return;
@@ -550,7 +557,7 @@ public class AIFighter : FighterFunctions {
 
 				if(targetCheck != null) //if someone's attacking my Leader
 				{
-					if(!CheckTargetIsLegit(targetCheck) || Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "first. timer > 1. targetCheck != null"))
+					if(!Tools.instance.CheckTargetIsLegit(targetCheck) || Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "first. timer > 1. targetCheck != null"))
 					{
 						RemoveBadTargetFromLeadersAttackers(flightLeader, targetCheck);
 						return;
@@ -566,7 +573,7 @@ public class AIFighter : FighterFunctions {
 					localTarget = CheckLocaleForTargets(transform.position, coveringDistance, enemyTargets);
 					if(localTarget != null)
 					{
-						if(!CheckTargetIsLegit(localTarget))
+						if(!Tools.instance.CheckTargetIsLegit(localTarget))
 						{
 							//Debug.Log("SCANNED LOCALITY FOR A TARGET AND CHOSE INACTIVE ONE");
 							return;
@@ -589,7 +596,7 @@ public class AIFighter : FighterFunctions {
 		{
 
 			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
-			if(CheckTargetIsLegit(target) == true)
+			if(Tools.instance.CheckTargetIsLegit(target) == true)
 			{
 				DogfightingFunction (engineScript, target, shootScript, constantThrustProportion); //WARNING: This function can result in target being set to null
 			}
@@ -660,6 +667,21 @@ public class AIFighter : FighterFunctions {
 			
 			timer = 1.5f;
 			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
+
+			//if you are the flight leader set a new leader
+			SquadronLeader squadLeadScript = GetComponentInChildren<SquadronLeader>();
+
+			if(squadLeadScript != null && squadLeadScript.firstFlightOrders != SquadronLeader.Orders.Extraction)
+			{
+				squadLeadScript.AssignNewLeader(true); //if there's another active wingman, leadership will pass to them
+			}
+			//else if you were a squad member
+			else if(flightLeadSquadronScript) 
+			{
+				flightLeadSquadronScript.activeWingmen.Remove(gameObject);
+				flightLeadSquadronScript.CheckActiveMateStatus();
+				flightLeadSquadronScript.AssignNewLeader(false); //may or may not reassign wingmen to new squads
+			}
 			
 			switchingStates = false;
 		}
@@ -761,7 +783,7 @@ public class AIFighter : FighterFunctions {
 	}
 	void LeaveThemAlone()
 	{
-		if(CheckTargetIsLegit(target) && Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "Leave Them Alone"))
+		if(Tools.instance.CheckTargetIsLegit(target) && Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "Leave Them Alone"))
 		{
 			target.SendMessage("RemoveSomeoneAttackingMe", this.gameObject, SendMessageOptions.DontRequireReceiver);
 			target = null;
