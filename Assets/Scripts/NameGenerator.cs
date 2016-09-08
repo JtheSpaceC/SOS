@@ -68,6 +68,25 @@ namespace AssemblyCSharp
 		{
 			return names[UnityEngine.Random.Range(0, names.Length-1)];
 		}
+
+		public string[] GetAllMaleNames()
+		{
+			return maleNames;
+		}
+
+		public string[] GetAllFemaleNames()
+		{
+			return femaleNames;
+		}
+
+		public string[] GetAllLastNames()
+		{
+			return lastNames;
+		}
+		public string[] GetAllCallsigns()
+		{
+			return callsigns;
+		}
 	}
 }
 

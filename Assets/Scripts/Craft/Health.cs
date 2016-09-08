@@ -86,11 +86,17 @@ public class Health : MonoBehaviour {
 				newBox.transform.SetParent(awarenessBarDividingBox.transform.parent);
 				newBox.transform.localScale = Vector3.one;
 			}
-			for(int i = 0; i < awarenessBarDividingBox.transform.parent.childCount; i++)
+			if(awarenessBarDividingBox.transform.parent.childCount == 1)
 			{
-				awarenessBarDividingBox.transform.parent.GetChild(i).gameObject.SetActive(true);
+				awarenessBarDividingBox.transform.parent.GetChild(0).gameObject.SetActive(false);
 			}
-
+			else
+			{
+				for(int i = 0; i < awarenessBarDividingBox.transform.parent.childCount; i++)
+				{
+					awarenessBarDividingBox.transform.parent.GetChild(i).gameObject.SetActive(true);
+				}
+			}
 			awarenessSlider.value = (float)awareness/maxAwareness * 100/1;
 		}
 

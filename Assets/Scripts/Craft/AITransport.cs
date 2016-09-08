@@ -400,6 +400,7 @@ public class AITransport : SupportShipFunctions {
 				fighters[i].transform.rotation = carrySpots[i].transform.rotation;
 				fighters[i].transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().Stop();
 				fighters[i].GetComponent<TargetableObject>().myGui.SetActive(false);
+				fighters[i].GetComponent<EnginesFighter>().EnginesEffect(0, false);
 			}
 		}
 	}
@@ -595,6 +596,7 @@ public class AITransport : SupportShipFunctions {
 			carryFighter1.GetComponent<Rigidbody2D>().isKinematic = false;
 			carryFighter1.GetComponentInChildren<Dodge>().enabled = true;
 			carryFighter1.SendMessage("ToggleWeaponsOnOff", true);
+
 			carryFighter1Health.playerHasAutoDodge = playerHadAutoDodge;
 			carryFighter1Health.snapFocusAmount = playerManaToRestore;
 			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.CoverMe; //TODO: May move this line to respect AI leaders

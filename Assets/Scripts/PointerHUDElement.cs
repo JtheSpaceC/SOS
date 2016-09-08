@@ -5,6 +5,7 @@ public class PointerHUDElement : MonoBehaviour {
 
 	public Transform sourceObject;
 	public Transform target;
+	Transform movableCanvas;
 
 	[Tooltip("For if the target is a point, not a Transform")] 
 	public Vector2 targetWP;
@@ -39,6 +40,8 @@ public class PointerHUDElement : MonoBehaviour {
 		transform.rotation = Quaternion.Euler (Vector3.zero);
 
 		centreScreen = new Vector3 (0.5f, 0.5f, -Camera.main.transform.position.z);
+
+		movableCanvas = transform.GetChild(0);
 	}
 
 	void ChooseImage(string name)
@@ -114,6 +117,7 @@ public class PointerHUDElement : MonoBehaviour {
 	{
 		if(target != null)
 		{
+			transform.position = target.position;
 			pos = Camera.main.WorldToViewportPoint (target.position);
 			targetWP = target.position;
 		}
@@ -142,7 +146,7 @@ public class PointerHUDElement : MonoBehaviour {
 			directionToTarget.y = (targetWP.y - sourceObject.position.y);
 			directionToTarget = directionToTarget.normalized * 0.3f;
 
-			transform.position = Camera.main.ViewportToWorldPoint(centreScreen + (Vector3)directionToTarget);
+			movableCanvas.transform.position = Camera.main.ViewportToWorldPoint(centreScreen + (Vector3)directionToTarget);
 		}
 		else //turn off arrow part
 		{
@@ -154,7 +158,7 @@ public class PointerHUDElement : MonoBehaviour {
 			//keep the arrow on screen
 			pos.x = Mathf.Clamp01(pos.x);
 			pos.y = Mathf.Clamp01(pos.y);
-			transform.position = Camera.main.ViewportToWorldPoint(pos);
+			movableCanvas.transform.position = Camera.main.ViewportToWorldPoint(pos);
 
 			float distToTarget = Vector2.Distance(targetWP, (Vector2) Camera.main.transform.position);
 

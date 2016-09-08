@@ -99,7 +99,7 @@ public class PMCMisisonSupports : MonoBehaviour {
 		spawnPos += fighterTransportPrefab.transform.position;
 
 		Subtitles.instance.PostSubtitle(new string[]{"Pickup is on its way! ETA 10 seconds. Stand by!"});
-		Tools.instance.CreateWaypoint (Tools.WaypointTypes.Extraction, insertionPoint);
+		Tools.instance.CreateWaypoint (Tools.WaypointTypes.Extraction, new Vector2[]{insertionPoint});
 		_battleEventManager.instance.CallPickupOnTheWay();
 
 		GameObject transport = Instantiate(fighterTransportPrefab, spawnPos, Quaternion.identity) as GameObject;

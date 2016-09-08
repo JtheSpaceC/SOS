@@ -213,7 +213,7 @@ public class DemoLevel : MonoBehaviour {
 		AITrans.reelingInPlayerGroup = true;
 		AITrans.SetUpReferences ();
 
-		AITrans.InstantAttachFighters (playerGroup [0], playerGroup [1], playerGroup [2]);
+		AITrans.InstantAttachFighters (playerGroup.ToArray());
 
 		FixDemoSpecificConcerns();
 		playerHealth.awareness = PMCStartingAwareness;

@@ -524,6 +524,7 @@ public class SquadronLeader : MonoBehaviour {
 		if(potentialNewLeader != null)
 		{
 			mate01.GetComponent<AIFighter>().myCommander.mySquadrons.Remove(this);
+			RemoveStarsFromCallsign();
 
 			potentialNewLeader.activeWingmen.Add(who);
 			potentialNewLeader.allWingmen.Add(who);
@@ -560,6 +561,19 @@ public class SquadronLeader : MonoBehaviour {
 			if(name.ToCharArray()[0] != '*')
 			{
 				GetComponentInParent<AIFighter>().nameHUDText.text = "* " + GetComponentInParent<AIFighter>().nameHUDText.text + " *";
+			}
+		}
+	}
+
+	void RemoveStarsFromCallsign()
+	{
+		if(transform.parent.GetComponentInParent<AIFighter>() && whichSide == WhichSide.Ally)
+		{
+			string name = GetComponentInParent<AIFighter>().nameHUDText.text;
+			if(name.ToCharArray()[0] == '*')
+			{
+				string[] nameParts = name.Split(new char[]{'*',' '});
+				GetComponentInParent<AIFighter>().nameHUDText.text = nameParts[2];
 			}
 		}
 	}

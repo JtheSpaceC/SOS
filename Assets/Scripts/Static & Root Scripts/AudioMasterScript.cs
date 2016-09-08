@@ -8,6 +8,9 @@ public class AudioMasterScript : MonoBehaviour {
 
 	public AudioMixer masterMixer;
 
+	[Tooltip("Mostly for Debug")]
+	public AudioClip chime;
+
 
 	void Awake () 
 	{
@@ -65,6 +68,11 @@ public class AudioMasterScript : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 		}
 
+	}
+
+	public void PlayChime()
+	{
+		AudioSource.PlayClipAtPoint(chime, Camera.main.transform.position);
 	}
 
 }

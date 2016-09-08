@@ -85,14 +85,18 @@ public class Director : MonoBehaviour {
 	{
 		_battleEventManager.playerRescued += WarpPlayerToSafety;
 		_battleEventManager.playerGotKill += PlayerGotAKill;
+		_battleEventManager.pmcFightersSpawned += AlliesSpawned;
+		_battleEventManager.enemyFightersSpawned += EnemiesSpawned;
 	}
 
 	void OnDisable()
 	{
 		_battleEventManager.playerRescued -= WarpPlayerToSafety;
 		_battleEventManager.playerGotKill -= PlayerGotAKill;
+		_battleEventManager.pmcFightersSpawned -= AlliesSpawned;
+		_battleEventManager.enemyFightersSpawned -= EnemiesSpawned;
 	}
-
+		
 	void SetUpMission()
 	{
 		//first make sure there's no conflicting info in the MissionSetup script, like no transport to warp in, but WarpIn selected
@@ -361,5 +365,14 @@ public class Director : MonoBehaviour {
 	{
 		PMCMisisonSupports.instance.retrievalShuttle.GetComponent<AIAssaultShuttle>().
 			ChangeToNewState(AIAssaultShuttle.StateMachine.WarpOut);	
+	}
+
+	void AlliesSpawned()
+	{		
+		//REMOVE currently just a decoy function to prevent null ref when ships spawn. Might do something with this.
+	}
+	void EnemiesSpawned()
+	{
+		//REMOVE currently just a decoy function to prevent null ref when ships spawn. Might do something with this.
 	}
 }

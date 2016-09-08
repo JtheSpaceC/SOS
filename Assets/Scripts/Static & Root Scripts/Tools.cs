@@ -27,9 +27,6 @@ public class Tools: MonoBehaviour
 	public Slider nitroRemainingSlider;
 	public Text nitroRemainingText;
 
-	public GameObject debugCircle1;
-	public GameObject debugCircle2;
-
 	public Image blackoutPanel;
 	bool commenceFadeIn = false;
 	bool commenceFadeout = false;
@@ -232,12 +229,12 @@ public class Tools: MonoBehaviour
 		obj.GetComponent<Rigidbody2D>().velocity = velocity;
 	}
 
-	public void CreateWaypoint(WaypointTypes wpType, Vector2 position)
+	public void CreateWaypoint(WaypointTypes wpType, Vector2[] positions)
 	{
-		if(wpType == WaypointTypes.Extraction)
+		if(wpType == WaypointTypes.Extraction || wpType == WaypointTypes.SearchAndDestroy)
 		{
-			GameObject wp = Instantiate(waypointPrefab, position, Quaternion.identity) as GameObject;
-			wp.GetComponent<PointerHUDElement>().targetWP = position;
+			GameObject wp = Instantiate(waypointPrefab, positions[0], Quaternion.identity) as GameObject;
+			wp.GetComponent<PointerHUDElement>().targetWP = positions[0];
 		}
 	}
 
