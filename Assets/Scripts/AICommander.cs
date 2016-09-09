@@ -62,7 +62,7 @@ public class AICommander : MonoBehaviour {
 					closestDist = thisDist;
 				}
 			}
-			else print(target + " is not legit");
+			else print(target.name + " is not legit");
 		}
 		if(resultingTarget != null)
 			return resultingTarget;
