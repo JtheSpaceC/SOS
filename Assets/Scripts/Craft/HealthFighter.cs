@@ -666,6 +666,7 @@ public class HealthFighter : Health {
 		{
 			PlayerAILogic myAIScript = GetComponent<PlayerAILogic>();
 
+			transform.FindChild("Effects/Contrails").gameObject.SetActive(false);
 			myAIScript.engineScript.engineNoise.gameObject.SetActive(false);
 			myAIScript.shootScript.transform.parent.gameObject.SetActive(false);
 			myAIScript.missilesScript.targetingPip.SetActive(false);

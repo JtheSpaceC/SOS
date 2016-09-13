@@ -14,4 +14,9 @@ public class Environment : ScriptableObject {
 	{
 		return array[Random.Range(0, array.Length)];
 	}
+
+	public Color GetASceneColour()
+	{
+		return BackgroundColours[Random.Range(0, BackgroundColours.Length)];
+	}
 }

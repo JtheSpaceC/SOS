@@ -78,6 +78,12 @@ public class Director : MonoBehaviour {
 
 	void Start()
 	{
+		if(!FindObjectOfType<MissionSetup>())
+		{
+			//REMOVE: when mission setup dresses the scene always
+			DressTheScene();
+		}
+			
 		Tools.instance.CommenceFadeIn(0, 2);
 	}
 
@@ -103,6 +109,7 @@ public class Director : MonoBehaviour {
 		missionSetupScript.ValidateChoices(); 
 
 		//set a background
+		DressTheScene();
 
 		//set a player craft, their weapons, avatar, etc
 
@@ -207,6 +214,32 @@ public class Director : MonoBehaviour {
 
 		//set screen black and prepare to fade it in
 		//(happens in Start())
+	}
+
+	void DressTheScene()
+	{
+		Environment env = Tools.instance.environments;
+
+		//TODO: More dynamic system, based on world map location
+
+		Color sceneTint = env.GetASceneColour();
+
+		SpriteRenderer[] renderers = GameObject.Find("Fancy Background").GetComponentsInChildren<SpriteRenderer>();
+		foreach(SpriteRenderer renderer in renderers)
+		{
+			renderer.color = AdjustColour(renderer.color, sceneTint);
+		}
+		if(GameObject.Find("Asteroid Field"))
+		{
+			ParticleSystem ps = GameObject.Find("Asteroid Field").GetComponentInChildren<ParticleSystem>();
+			ps.startColor = AdjustColour(ps.startColor, sceneTint);
+			ps.gameObject.SetActive(false);
+			ps.gameObject.SetActive(true);
+		}
+	}
+	Color AdjustColour(Color oldColour, Color sceneTint)
+	{
+		return sceneTint * oldColour;
 	}
 
 	IEnumerator ShipLaunchFromHangar(AIFighter shipAI)
