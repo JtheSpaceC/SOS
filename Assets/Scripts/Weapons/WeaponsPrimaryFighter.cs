@@ -192,8 +192,6 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			overheated = true;
 			if(playerControlled)
 				GetComponent<AudioSource>().Play();
-			else
-				Debug.Log(transform.root.name + "'s weapons overheated"); //checking, because I don't think this will happen often
 		}
 
 		if(shotSpawn1 != null)

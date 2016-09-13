@@ -32,7 +32,7 @@ public class Dodge : MonoBehaviour
 	float cantDodgeTime = 0.25f;
 
 	private Animator animator;
-	public Transform animationChild;
+	Transform animationChild;
 	[Tooltip ("If there's extra items you want to rotate.")] public Transform[] alsoRotate;
 	Vector3 rotation;
 	float rotY;
@@ -85,6 +85,7 @@ public class Dodge : MonoBehaviour
 	void Start()
 	{
 		animator = transform.parent.parent.GetComponent<Animator> ();
+		animationChild = transform.parent.parent.FindChild("Effects/Animation");
 		rollTime = rollDuration;
 		myAudioSource = GetComponent<AudioSource>();
 		playerMovementScript = transform.parent.transform.parent.GetComponent<PlayerFighterMovement>();
@@ -326,7 +327,7 @@ public class Dodge : MonoBehaviour
 	}
 
 	IEnumerator RollAnimation() //only happens if animator isn't enabled
-	{		
+	{	
 		startTime = Time.time;
 
 		while(Time.time < startTime + rollDuration)

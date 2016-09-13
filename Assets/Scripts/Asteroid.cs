@@ -8,6 +8,7 @@ public class Asteroid : MonoBehaviour {
 	public AsteroidSpawner myAsteroidSpawner;
 
 	Rigidbody2D myRigidbody;
+	Transform radarSig;
 
 	public enum AsteroidSize {Large, Medium, Small};
 	public AsteroidSize asteroidSize;
@@ -29,7 +30,8 @@ public class Asteroid : MonoBehaviour {
 	Color startColor;
 
 	SpriteRenderer myRenderer;
-	Collider2D myCollider;
+	CircleCollider2D myCollider;
+	float colliderStartingRadius;
 
 	private float rotateSpeed;
 	private Vector2 pushDirection;
@@ -61,8 +63,11 @@ public class Asteroid : MonoBehaviour {
 		asteroidPoolerScript = GameObject.Find ("asteroid Pooler").GetComponent<ObjectPoolerScript> ();
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
-		myCollider = GetComponent<Collider2D>();
+		myCollider = GetComponent<CircleCollider2D>();
+		colliderStartingRadius = myCollider.radius;
 		myRenderer = GetComponent<SpriteRenderer>();
+
+		radarSig = transform.GetChild(0);
 
 		allSizes = new AsteroidSize[]{AsteroidSize.Large, AsteroidSize.Medium, AsteroidSize.Small};
 		startingHealth = health;
@@ -87,7 +92,7 @@ public class Asteroid : MonoBehaviour {
 	
 	void SetCharacteristics(bool setRandomNewSize)
 	{
-		myCollider.enabled =false;
+		myCollider.enabled = false;
 		Invoke("EnableCollider", 1f);
 
 		myRenderer.enabled =true;
@@ -110,21 +115,26 @@ public class Asteroid : MonoBehaviour {
 
 		if(asteroidSize == AsteroidSize.Large)
 		{
-			transform.localScale = new Vector2 (3, 3);
+			myRenderer.sprite = Tools.instance.environments.GetRandomSprite(Tools.instance.environments.asteroidsLarge);
+			myCollider.radius *= 3;
+			radarSig.localScale = new Vector2 (3, 3);
 			myRigidbody.mass = startingMass * 3; //should be squared, but I double so largest asteroids don't kill you outright
 			health = startingHealth * 3; //again, should be squared, but for pity's sake... it's not
 			damage = damageIfLarge;
 		}
 		else if(asteroidSize == AsteroidSize.Medium)
 		{
-			transform.localScale = new Vector2 (2, 2);
+			myRenderer.sprite = Tools.instance.environments.GetRandomSprite(Tools.instance.environments.asteroidsMedium);
+			myCollider.radius *= 2;
+			radarSig.localScale = new Vector2 (2, 2);
 			myRigidbody.mass = startingMass * 2;
 			health = startingHealth * 2;
 			damage = damageIfMedium;
 		}
 		else if(asteroidSize == AsteroidSize.Small)
 		{
-			transform.localScale = new Vector2 (1, 1);
+			myRenderer.sprite = Tools.instance.environments.GetRandomSprite(Tools.instance.environments.asteroidsSmall);
+			radarSig.localScale = new Vector2 (1, 1);
 			myRigidbody.mass = startingMass;
 			health = startingHealth;
 			damage = damageIfSmall;
@@ -243,6 +253,7 @@ public class Asteroid : MonoBehaviour {
 		StopAllCoroutines ();
 		myRigidbody.mass = startingMass;
 		health = startingHealth;
+		myCollider.radius = colliderStartingRadius;
 	}
 
 	void SpawnGibs(AsteroidSize whichSize, int numberOfGibs)

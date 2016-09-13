@@ -1,9 +1,15 @@
 fileFormatVersion: 2
 guid: c5660b0a6b120054e9d7d7639d1e476e
-timeCreated: 1473686197
+timeCreated: 1473700800
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: SoS-asteroids-MED-1_0
+    21300002: SoS-asteroids-MED-1_1
+    21300004: SoS-asteroids-MED-1_2
+    21300006: SoS-asteroids-MED-1_3
+    21300008: SoS-asteroids-MED-1_4
+    21300010: SoS-asteroids-MED-1_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -29,7 +35,7 @@ TextureImporter:
   textureFormat: -3
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 2
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -51,7 +57,85 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: SoS-asteroids-MED-1_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1
+        width: 197
+        height: 157
+      alignment: 9
+      pivot: {x: 0.44622728, y: 0.49100363}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-MED-1_1
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 1
+        width: 197
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-MED-1_2
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 2
+        width: 197
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-MED-1_3
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 1
+        width: 197
+        height: 157
+      alignment: 9
+      pivot: {x: 0.49283007, y: 0.51349455}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-MED-1_4
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 1
+        width: 197
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-MED-1_5
+      rect:
+        serializedVersion: 2
+        x: 1001
+        y: 1
+        width: 197
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 

@@ -10,10 +10,12 @@ public class Tools: MonoBehaviour
 	public GameObject playerUI;
 	public GameObject avatarsPanelUI;
 
-	public ObjectPoolerScript explosionPoolerScript;
-	public ObjectPoolerScript explosionMiniPoolerScript;
-	public ObjectPoolerScript asteroidPoofPoolerScript;
-	public ObjectPoolerScript asteroidPoofBigPoolerScript;
+	[HideInInspector] public ObjectPoolerScript explosionPoolerScript;
+	[HideInInspector] public ObjectPoolerScript explosionMiniPoolerScript;
+	[HideInInspector] public ObjectPoolerScript asteroidPoofPoolerScript;
+	[HideInInspector] public ObjectPoolerScript asteroidPoofBigPoolerScript;
+
+	public Environment environments;
 
 	public Text killsText;
 

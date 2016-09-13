@@ -1,9 +1,15 @@
 fileFormatVersion: 2
 guid: f227e4d86e3c8af468534151b00f3fac
-timeCreated: 1473686199
+timeCreated: 1473694505
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: SoS-asteroids-XL-1_0
+    21300002: SoS-asteroids-XL-1_1
+    21300004: SoS-asteroids-XL-1_2
+    21300006: SoS-asteroids-XL-1_3
+    21300008: SoS-asteroids-XL-1_4
+    21300010: SoS-asteroids-XL-1_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -29,7 +35,7 @@ TextureImporter:
   textureFormat: -3
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 2
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -51,7 +57,85 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: SoS-asteroids-XL-1_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 4
+        width: 790
+        height: 630
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-XL-1_1
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 6
+        width: 790
+        height: 630
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-XL-1_2
+      rect:
+        serializedVersion: 2
+        x: 1605
+        y: 7
+        width: 791
+        height: 631
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-XL-1_3
+      rect:
+        serializedVersion: 2
+        x: 2406
+        y: 4
+        width: 790
+        height: 630
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-XL-1_4
+      rect:
+        serializedVersion: 2
+        x: 3205
+        y: 4
+        width: 790
+        height: 630
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-XL-1_5
+      rect:
+        serializedVersion: 2
+        x: 4004
+        y: 6
+        width: 790
+        height: 630
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 

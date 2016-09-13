@@ -1,19 +1,13 @@
 fileFormatVersion: 2
-guid: 67d296e418f84db49bf0b55146526085
-timeCreated: 1473690205
+guid: ca7a1109295c7c8438e7b841152b76dd
+timeCreated: 1473691134
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: Asteroids (all, for particles)_0
-    21300002: Asteroids (all, for particles)_1
-    21300004: Asteroids (all, for particles)_2
-    21300006: Asteroids (all, for particles)_3
-    21300008: Asteroids (all, for particles)_4
-    21300010: Asteroids (all, for particles)_5
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -44,7 +38,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -57,85 +51,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Asteroids (all, for particles)_0
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 1001
-        width: 157
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Asteroids (all, for particles)_1
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 802
-        width: 157
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Asteroids (all, for particles)_2
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 601
-        width: 158
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Asteroids (all, for particles)_3
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 401
-        width: 157
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Asteroids (all, for particles)_4
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 201
-        width: 157
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Asteroids (all, for particles)_5
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 2
-        width: 157
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
+    sprites: []
     outline: []
   spritePackingTag: 
   userData: 

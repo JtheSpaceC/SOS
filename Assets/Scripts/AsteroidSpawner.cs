@@ -3,7 +3,6 @@
 public class AsteroidSpawner : MonoBehaviour {
 
 	ObjectPoolerScript asteroidPoolerScript;
-	public GameObject Asteroid;
 	public int firstSpawnDelay = 1;
 	public float spawnRate = 1;
 	private GameObject player;

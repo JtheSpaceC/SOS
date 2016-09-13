@@ -1,9 +1,15 @@
 fileFormatVersion: 2
 guid: cbf6397e952dbb54d91003a987444a86
-timeCreated: 1473686198
+timeCreated: 1473700785
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: SoS-asteroids-LRG-1_0
+    21300002: SoS-asteroids-LRG-1_1
+    21300004: SoS-asteroids-LRG-1_2
+    21300006: SoS-asteroids-LRG-1_3
+    21300008: SoS-asteroids-LRG-1_4
+    21300010: SoS-asteroids-LRG-1_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -29,7 +35,7 @@ TextureImporter:
   textureFormat: -3
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 2
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -44,14 +50,92 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 85.33
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: SoS-asteroids-LRG-1_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 1
+        width: 395
+        height: 315
+      alignment: 9
+      pivot: {x: 0.4499392, y: 0.48654827}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-LRG-1_1
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 3
+        width: 396
+        height: 315
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-LRG-1_2
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 3
+        width: 396
+        height: 315
+      alignment: 9
+      pivot: {x: 0.52853394, y: 0.5224196}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-LRG-1_3
+      rect:
+        serializedVersion: 2
+        x: 1203
+        y: 2
+        width: 395
+        height: 315
+      alignment: 9
+      pivot: {x: 0.49284822, y: 0.5089679}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-LRG-1_4
+      rect:
+        serializedVersion: 2
+        x: 1603
+        y: 2
+        width: 394
+        height: 315
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-asteroids-LRG-1_5
+      rect:
+        serializedVersion: 2
+        x: 2002
+        y: 2
+        width: 395
+        height: 315
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 
