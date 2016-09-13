@@ -13,9 +13,5 @@ public class PatrolMission : MonoBehaviour {
 	{
 		Tools.instance.CreateWaypoint(Tools.WaypointTypes.SearchAndDestroy, new Vector2[]{nav1, nav2, nav3, nav4});
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }
