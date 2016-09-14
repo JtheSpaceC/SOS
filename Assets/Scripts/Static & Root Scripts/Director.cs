@@ -76,6 +76,9 @@ public class Director : MonoBehaviour {
 			missionSetupScript = FindObjectOfType<MissionSetup>();
 			SetUpMission();
 		}
+
+		//TODO: More dynamic system, based on world map location
+		sceneTint = Tools.instance.environments.GetASceneColour();
 	}
 
 	void Start()
@@ -220,16 +223,11 @@ public class Director : MonoBehaviour {
 
 	void DressTheScene()
 	{
-		Environment env = Tools.instance.environments;
-
-		//TODO: More dynamic system, based on world map location
-
-		sceneTint = env.GetASceneColour();
-
 		SpriteRenderer[] renderers = GameObject.Find("Fancy Background").GetComponentsInChildren<SpriteRenderer>();
 		foreach(SpriteRenderer renderer in renderers)
 		{
-			renderer.color = AdjustColour(renderer.color, sceneTint);
+			if(renderer.name != "sun shaft")
+				renderer.color = AdjustColour(renderer.color, sceneTint);
 		}
 		if(GameObject.Find("Asteroid Field"))
 		{

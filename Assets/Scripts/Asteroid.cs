@@ -78,7 +78,7 @@ public class Asteroid : MonoBehaviour {
 		startColor = myRenderer.color;
 		coloringSpeed = Random.Range (10, 21);
 
-		adjustedColor = Color.Lerp(Color.white, Director.instance.sceneTint, 0.2f);
+		adjustedColor = Color.Lerp(Color.white, Director.instance.sceneTint, 0.175f);
 	}
 
 	void OnEnable()
