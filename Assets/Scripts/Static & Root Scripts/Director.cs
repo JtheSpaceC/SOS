@@ -51,6 +51,8 @@ public class Director : MonoBehaviour {
 	public UnityEvent[] testActions;
 	public KeyCode[] hotkeysForTestActions;
 
+	[HideInInspector] public Color sceneTint;
+
 
 	void Awake()
 	{
@@ -222,7 +224,7 @@ public class Director : MonoBehaviour {
 
 		//TODO: More dynamic system, based on world map location
 
-		Color sceneTint = env.GetASceneColour();
+		sceneTint = env.GetASceneColour();
 
 		SpriteRenderer[] renderers = GameObject.Find("Fancy Background").GetComponentsInChildren<SpriteRenderer>();
 		foreach(SpriteRenderer renderer in renderers)

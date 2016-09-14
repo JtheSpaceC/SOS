@@ -33,29 +33,31 @@ public class Asteroid : MonoBehaviour {
 	CircleCollider2D myCollider;
 	float colliderStartingRadius;
 
-	private float rotateSpeed;
-	private Vector2 pushDirection;
-	private int force;
+	float rotateSpeed;
+	Vector2 pushDirection;
+	int force;
 	[Header("Rotation Speeds Possible")]
 	public int minRange = 1000;
 	public int maxRange = 8000;
 
-	private HealthFighter FighterHealth;
+	HealthFighter FighterHealth;
 
 	//private DefensiveGunHealth defensiveGunHealth;
 
-	private float diceRoll;
+	float diceRoll;
 	
 	[Header("For Camera Shake")]
-	private float amplitude = 0.1f;
-	private float duration = 0.5f;
+	float amplitude = 0.1f;
+	float duration = 0.5f;
 	
-	private float startingMass;
-	private Rigidbody2D otherRigidbody;
-	private Vector2 otherVelocity;
-	private Vector2 relativeVelocity;
+	float startingMass;
+	Rigidbody2D otherRigidbody;
+	Vector2 otherVelocity;
+	Vector2 relativeVelocity;
 
-	private bool asteroidDestroyed;
+	bool asteroidDestroyed;
+
+	Color adjustedColor; //based on Environment scene colour;
 	
 
 	void Awake () 
@@ -75,6 +77,8 @@ public class Asteroid : MonoBehaviour {
 
 		startColor = myRenderer.color;
 		coloringSpeed = Random.Range (10, 21);
+
+		adjustedColor = Color.Lerp(Color.white, Director.instance.sceneTint, 0.2f);
 	}
 
 	void OnEnable()
@@ -138,7 +142,8 @@ public class Asteroid : MonoBehaviour {
 			myRigidbody.mass = startingMass;
 			health = startingHealth;
 			damage = damageIfSmall;
-		}		
+		}	
+		myRenderer.color = adjustedColor;
 	}
 	
 	void Update()

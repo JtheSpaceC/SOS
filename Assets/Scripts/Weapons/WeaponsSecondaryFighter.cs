@@ -26,7 +26,7 @@ public class WeaponsSecondaryFighter : MonoBehaviour {
 		if(transform.root.gameObject.tag == "PlayerFighter")
 		{
 			ammoText = GameObject.Find("GUI Missile Ammo").GetComponent<Text>();
-			ammoText.text = "Missiles: " + ammo;
+			ammoText.text = "Missiles: " + "<color>" + ammo + "</color>";
 		}
 		if (!playerControlled)
 			InvokeRepeating ("LaunchProjectile", 1, 1);

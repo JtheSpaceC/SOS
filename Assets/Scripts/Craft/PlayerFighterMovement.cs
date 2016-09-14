@@ -223,7 +223,7 @@ public class PlayerFighterMovement : EnginesFighter {
 	public void UpdateNitroHUDElements()
 	{
 		Tools.instance.nitroRemainingSlider.value = nitroRemaining;
-		Tools.instance.nitroRemainingText.text = "NITRO: " + (int)nitroRemaining + " / " + maxNitro;
+		Tools.instance.nitroRemainingText.text = "NITRO: "  + "<color>" + (int)nitroRemaining + " / " + maxNitro + "</color>";
 	}
 
 }//Mono
