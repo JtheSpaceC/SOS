@@ -672,6 +672,7 @@ public class HealthFighter : Health {
 			myAIScript.missilesScript.targetingPip.SetActive(false);
 			myAIScript.engineScript.enabled = false;
 			RadioCommands.instance.gameObject.SetActive(false);
+			GameObject.Find("Consumables Panel").SetActive(false);
 			//dodgeScript.dodgeCooldownImage.gameObject.SetActive(false);
 
 			if(Tools.instance.barrelTempSlider)

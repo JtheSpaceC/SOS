@@ -321,8 +321,8 @@ public class Director : MonoBehaviour {
 				string minsString = mins < 10 ? "0" + mins.ToString () : mins.ToString ();
 				string secsString = seconds < 10 ? "0" + seconds.ToString () : seconds.ToString ();
 
-				gameTimeText.text = "Time: " + minsString + " : " + secsString;
-				playerKillsText.text = "Kills: " + playerKills;
+				gameTimeText.text = "Time: " + "<color>" + minsString + " : " + secsString + "</color>";
+				playerKillsText.text = "Kills: " + "<color>" + playerKills + "</color>";
 			}
 
 			#if UNITY_EDITOR
