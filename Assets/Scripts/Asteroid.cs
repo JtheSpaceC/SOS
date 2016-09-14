@@ -78,7 +78,7 @@ public class Asteroid : MonoBehaviour {
 		startColor = myRenderer.color;
 		coloringSpeed = Random.Range (10, 21);
 
-		adjustedColor = Color.Lerp(Color.white, Director.instance.sceneTint, 0.175f);
+		adjustedColor = Color.Lerp(Color.white, Director.instance.sceneTint, 0.2f);
 	}
 
 	void OnEnable()
@@ -120,7 +120,7 @@ public class Asteroid : MonoBehaviour {
 		if(asteroidSize == AsteroidSize.Large)
 		{
 			myRenderer.sprite = Tools.instance.environments.GetRandomSprite(Tools.instance.environments.asteroidsLarge);
-			myCollider.radius *= 3;
+			myCollider.radius *= 3f;
 			radarSig.localScale = new Vector2 (3, 3);
 			myRigidbody.mass = startingMass * 3; //should be squared, but I double so largest asteroids don't kill you outright
 			health = startingHealth * 3; //again, should be squared, but for pity's sake... it's not
@@ -129,7 +129,7 @@ public class Asteroid : MonoBehaviour {
 		else if(asteroidSize == AsteroidSize.Medium)
 		{
 			myRenderer.sprite = Tools.instance.environments.GetRandomSprite(Tools.instance.environments.asteroidsMedium);
-			myCollider.radius *= 2;
+			myCollider.radius *= 2f;
 			radarSig.localScale = new Vector2 (2, 2);
 			myRigidbody.mass = startingMass * 2;
 			health = startingHealth * 2;
@@ -255,8 +255,13 @@ public class Asteroid : MonoBehaviour {
 
 	void OnDisable()
 	{
+		ResetVariables();
+	}
+	void ResetVariables()
+	{
 		StopAllCoroutines ();
 		myRigidbody.mass = startingMass;
+		myRigidbody.velocity = Vector2.zero;
 		health = startingHealth;
 		myCollider.radius = colliderStartingRadius;
 	}
@@ -269,7 +274,8 @@ public class Asteroid : MonoBehaviour {
 		
 			GameObject obj = asteroidPoolerScript.current.GetPooledObject ();
 			obj.transform.position = spawnPosition;
-			obj.SetActive (true);
+			obj.SetActive (true); //set now so the following lines can override the OnEnable stuff
+			obj.GetComponent<Asteroid> ().ResetVariables();
 			obj.GetComponent<Asteroid> ().asteroidSize = whichSize;
 			obj.GetComponent<Asteroid> ().SetCharacteristics(false);
 			obj.GetComponent<Asteroid>().myAsteroidSpawner = this.myAsteroidSpawner;
