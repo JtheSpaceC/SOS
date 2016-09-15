@@ -111,7 +111,8 @@ public class AIFighter : FighterFunctions {
 		else
 			cowardice = 100/healthScript.maxHealth;
 
-		StartCoroutine(SetUpAvatarBars());
+		//TODO: Reinstate this
+		//StartCoroutine(SetUpAvatarBars());
 	}
 
 	IEnumerator SetUpAvatarBars()

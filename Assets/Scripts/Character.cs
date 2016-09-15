@@ -126,6 +126,7 @@ public class Character : MonoBehaviour {
 	{
 		if(mySquadUnitNumber > 3)
 			return;
+		print(name);
 		GetComponentInChildren<Camera>().enabled = true;
 		GetComponentInChildren<Camera>().targetTexture = myRenderTexture;
 		avatarOutput = Instantiate (avatarOutputPrefab) as GameObject;
