@@ -126,17 +126,19 @@ public class Character : MonoBehaviour {
 	{
 		if(mySquadUnitNumber > 3)
 			return;
-		print(name);
 		GetComponentInChildren<Camera>().enabled = true;
 		GetComponentInChildren<Camera>().targetTexture = myRenderTexture;
 		avatarOutput = Instantiate (avatarOutputPrefab) as GameObject;
-		avatarOutput.transform.SetParent (Tools.instance.avatarsPanelUI.transform);
+		avatarOutput.transform.SetParent (Tools.instance.NextFreeAvatarsPanelUI());
 		avatarOutput.GetComponent<RawImage> ().texture = myRenderTexture;
 		avatarOutput.transform.localScale = Vector3.one;
+		avatarOutput.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+		avatarOutput.GetComponent<RectTransform>().offsetMin = Vector2.zero;		
+		avatarOutput.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;	
+
 		if(mySquadUnitNumber != 0)
 			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
 	}
-		
 
 	[ContextMenu("Generate Random Appearance")]
 	public void GenerateRandomNewAppearance()

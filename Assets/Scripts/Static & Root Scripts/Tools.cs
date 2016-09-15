@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using System.Collections;
 using XInputDotNetPure;
@@ -8,7 +9,8 @@ public class Tools: MonoBehaviour
 	public static Tools instance;
 
 	public GameObject playerUI;
-	public GameObject avatarsPanelUI;
+	public Transform[] avatarsPanelUI;
+	int nextFreePanel = 0;
 
 	[HideInInspector] public ObjectPoolerScript explosionPoolerScript;
 	[HideInInspector] public ObjectPoolerScript explosionMiniPoolerScript;
@@ -386,8 +388,16 @@ public class Tools: MonoBehaviour
 		PlayerPrefsManager.SetHintsKey(value);
 	}
 
-	[ContextMenu("Clear Player Prefs")]
-	public void ClearPlayerPrefs()
+	public Transform NextFreeAvatarsPanelUI()
+	{
+		Transform selectedPanel = avatarsPanelUI[nextFreePanel];
+		nextFreePanel ++;
+		return selectedPanel;
+	}
+
+	[MenuItem( "Project/Clear Player Prefs")]
+	//[ContextMenu("Clear Player Prefs")]
+	public static void ClearPlayerPrefs()
 	{
 		PlayerPrefs.DeleteAll();
 	}
