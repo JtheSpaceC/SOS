@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using UnityEngine.UI;
 using System.Collections;
 using XInputDotNetPure;
@@ -400,10 +399,4 @@ public class Tools: MonoBehaviour
 		return selectedPanel;
 	}
 
-	[MenuItem( "Project/Clear Player Prefs")]
-	//[ContextMenu("Clear Player Prefs")]
-	public static void ClearPlayerPrefs()
-	{
-		PlayerPrefs.DeleteAll();
-	}
 }
