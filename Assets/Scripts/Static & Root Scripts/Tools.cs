@@ -55,6 +55,11 @@ public class Tools: MonoBehaviour
 	public Color avatarAwarenessFlashColour;
 	public Color avatarHitFlashColour;
 
+	[Space()]
+
+	[Tooltip ("If a camera were to follow a ship, what stuff should it normally see?")]
+	public LayerMask normalCameraViewingLayers;
+
 
 	void Awake()
 	{

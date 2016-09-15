@@ -6,6 +6,8 @@ using System;
 
 public class Character : MonoBehaviour {
 
+	public bool showShipInsteadOfAvatar = false;
+
 	[HideInInspector] public Heartbeat heartbeatScript;
 	[HideInInspector] public BGScroller bgScrollerScript;
 	[HideInInspector] public AIFighter myAIFighterScript;
@@ -119,7 +121,6 @@ public class Character : MonoBehaviour {
 			cockpit.enabled = true;
 			bgScrollerScript.gameObject.SetActive(true);
 		}
-
 	}
 
 	public void SetUpAvatar (int mySquadUnitNumber)
@@ -138,6 +139,16 @@ public class Character : MonoBehaviour {
 
 		if(mySquadUnitNumber != 0)
 			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
+
+		if(showShipInsteadOfAvatar)
+		{
+			Transform myCam = GetComponentInChildren<Camera>().transform;
+			myCam.parent = myAIFighterScript.transform;
+			myCam.localPosition = new Vector3(0, 0, -10);
+			myCam.gameObject.AddComponent<UI_NonRotate>();
+			myCam.localRotation = Quaternion.Euler(Vector3.zero);
+			myCam.GetComponent<Camera>().cullingMask = Tools.instance.normalCameraViewingLayers;
+		}
 	}
 
 	[ContextMenu("Generate Random Appearance")]
