@@ -15,13 +15,11 @@ public class CombatEncounter : MonoBehaviour {
 	Vector3 encounterPos;
 	Vector3 fighterPos;
 
-	int fightersAlive;
 	bool bringingBackUp = false;
 
 
 	void Start()
 	{
-		fightersAlive = fighters.Count;
 		targetDepth = zDepth;
 		StartCoroutine("MoveToDepth");
 	}

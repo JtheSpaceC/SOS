@@ -5,12 +5,12 @@ using System.Collections.Generic;
 [CustomEditor(typeof(Names))]
 public class CustomPilotNamesInspector : Editor {
 
-	Names myNames;
+/*	Names myNames;
 
 	void OnEnable()
 	{
 		myNames = (Names)target;
-	}
+	}*/
 
 	public override void OnInspectorGUI()
 	{
