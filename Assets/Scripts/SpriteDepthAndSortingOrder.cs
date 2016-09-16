@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-public class SpriteDepthSortingOrder : MonoBehaviour {
+public class SpriteDepthAndSortingOrder : MonoBehaviour {
 
+	public bool changeSortingOrder = false;
 	SpriteRenderer myRenderer;
 	int startingOrderInLayer;
 
@@ -16,7 +17,8 @@ public class SpriteDepthSortingOrder : MonoBehaviour {
 
 	void Update () 
 	{
-		myRenderer.sortingOrder = -Mathf.RoundToInt(100 * transform.position.z) + startingOrderInLayer;
+		if(changeSortingOrder)
+			myRenderer.sortingOrder = -Mathf.RoundToInt(100 * transform.position.z) + startingOrderInLayer;
 		if(darkenWithDepth)
 			DepthDarkening();			
 	}

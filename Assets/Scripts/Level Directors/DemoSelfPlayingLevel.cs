@@ -35,7 +35,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	List<GameObject> PMCcraft = new List<GameObject>();
 
-	public GameObject radarLayout;
 	public GameObject[] itemsToTurnOff;
 
 	public GameObject radarCamera;
@@ -59,6 +58,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public int PMCAwarenessRecharge = 2;
 
 
+
 	void Start () 
 	{
 		target = GameObject.FindGameObjectWithTag ("Fighter");
@@ -78,7 +78,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		try{ AudioMasterScript.instance.ClearAll();}catch{}
 
 		Tools.instance.playerUI.SetActive(true);
-		radarLayout.SetActive(true);
 		foreach(GameObject obj in itemsToTurnOff)
 			obj.SetActive(false);
 
@@ -350,7 +349,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	{
 		if(target == null)
 			return;
-
 		Vector3 pos = target.transform.position;
 		pos.z = cameraZPos;
 		levelCamera.transform.position = Vector3.SmoothDamp (levelCamera.transform.position, pos, ref velocity, 0.3f);
