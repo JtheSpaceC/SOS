@@ -111,8 +111,7 @@ public class AIFighter : FighterFunctions {
 		else
 			cowardice = 100/healthScript.maxHealth;
 
-		//TODO: Reinstate this
-		//StartCoroutine(SetUpAvatarBars());
+		StartCoroutine(SetUpAvatarBars());
 	}
 
 	IEnumerator SetUpAvatarBars()
@@ -122,8 +121,13 @@ public class AIFighter : FighterFunctions {
 		
 		if(flightLeader != null && flightLeader.tag == "PlayerFighter" && mySquadUnitNumber <= 3)
 		{
-			healthScript.avatarAwarenessBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("Awareness Panel");
-			healthScript.avatarHealthBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("HP Panel");
+			//old way
+			/*healthScript.avatarAwarenessBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("Awareness Panel");
+			healthScript.avatarHealthBars = myCharacterAvatarScript.avatarOutput.transform.FindChild("HP Panel");*/
+			healthScript.avatarRadialHealthBar = 
+				myCharacterAvatarScript.avatarOutput.transform.parent.parent.FindChild("2 Hull Health").GetComponent<Image>();
+			healthScript.avatarRadialAwarenessBar = 
+				myCharacterAvatarScript.avatarOutput.transform.parent.parent.FindChild("3 Situational Awareness").GetComponent<Image>();
 			healthScript.avatarFlashImage = myCharacterAvatarScript.avatarOutput.transform.FindChild("Flash Image").GetComponent<Image>();
 			healthScript.SetUpAvatarBars();
 		}

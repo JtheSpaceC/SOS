@@ -37,6 +37,9 @@ public class HealthFighter : Health {
 	[HideInInspector] public Transform avatarAwarenessBars;
 	[HideInInspector] public Transform avatarHealthBars;
 	[HideInInspector] public Image avatarFlashImage;
+	 public Image avatarRadialHealthBar;
+	 public Image avatarRadialAwarenessBar;
+	float maxFill = 0.25f;
 	bool updateAvatarBars = false;
 
 
@@ -58,7 +61,8 @@ public class HealthFighter : Health {
 	{
 		updateAvatarBars = true;
 
-		GameObject healthBar = avatarHealthBars.GetChild(0).gameObject;
+		//OLD SYSTEM
+		/*GameObject healthBar = avatarHealthBars.GetChild(0).gameObject;
 		for(int i = 0; i < avatarHealthBars.childCount; i++)
 		{		
 			avatarHealthBars.GetChild(i).gameObject.SetActive(false);
@@ -82,7 +86,7 @@ public class HealthFighter : Health {
 			newBar.name = "awareness bar";
 			newBar.transform.SetParent(avatarAwarenessBars);
 			newBar.SetActive(true);
-		}
+		}*/
 
 		UpdateAvatarHealthBars();
 		UpdateAvatarAwarenessBars();
@@ -532,8 +536,9 @@ public class HealthFighter : Health {
 	{
 		if(!updateAvatarBars)
 			return;
-		
-		for (int i = 0; i < avatarHealthBars.childCount; i++) 
+
+		//OLD SYSTEM
+		/*for (int i = 0; i < avatarHealthBars.childCount; i++) 
 		{
 			avatarHealthBars.GetChild (i).gameObject.SetActive (false);
 		}
@@ -548,7 +553,9 @@ public class HealthFighter : Health {
 				inactiveColour.a = 0.25f;
 				avatarHealthBars.GetChild (j).GetComponent<Image> ().color = inactiveColour;
 			}
-		}
+		}*/
+		avatarRadialHealthBar.fillAmount = health/maxHealth * maxFill;
+		avatarRadialHealthBar.color = Color.Lerp(Color.red, Color.green, health/maxHealth);
 	}
 
 	public void UpdateAvatarAwarenessBars ()
@@ -557,8 +564,9 @@ public class HealthFighter : Health {
 			return;
 
 		awareness = Mathf.Clamp(awareness, 0, maxAwareness);
-		
-		for (int i = 0; i < avatarAwarenessBars.childCount; i++) 
+
+		//OLD WAY
+		/*for (int i = 0; i < avatarAwarenessBars.childCount; i++) 
 		{
 			avatarAwarenessBars.GetChild (i).gameObject.SetActive (false);
 		}
@@ -577,7 +585,9 @@ public class HealthFighter : Health {
 				activeColour.a = 1f;
 				avatarAwarenessBars.GetChild (j).GetComponent<Image> ().color = activeColour;
 			}
-		}
+		}*/
+		avatarRadialAwarenessBar.fillAmount = awareness/maxAwareness * maxFill;
+
 	}
 
 	void InitialDeactivation() //player doesn't do this. just for AI
@@ -613,6 +623,8 @@ public class HealthFighter : Health {
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().text = "R.T.B.";
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isRTB", true);
+			avatarRadialHealthBar.fillAmount = 0;
+			avatarRadialAwarenessBar.fillAmount = 0;
 		}
 
 		myAIScript.myCommander.retreated++;
@@ -719,6 +731,8 @@ public class HealthFighter : Health {
 			{
 				myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
 				myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isShotDown", true);
+				avatarRadialHealthBar.fillAmount = 0;
+				avatarRadialAwarenessBar.fillAmount = 0;
 			}
 
 			InitialDeactivation();

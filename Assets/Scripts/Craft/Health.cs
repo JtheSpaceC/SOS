@@ -45,7 +45,8 @@ public class Health : MonoBehaviour {
 	public float flashFadeSpeed = 5;
 	protected AudioSource myAudioSource;
 
-
+	Color newHealthColour;
+	float healthColourAValue;
 
 
 	protected void AwakeBaseClass()
@@ -65,6 +66,7 @@ public class Health : MonoBehaviour {
 		if(healthSlider != null)
 		{
 			healthSliderFill = healthSlider.GetComponentInChildren<Image> ();
+			healthColourAValue = healthSliderFill.color.a;
 			healthBarDividingBox.SetActive(false);
 			for (int i = 1; i < maxHealth; i++)
 			{
@@ -111,7 +113,9 @@ public class Health : MonoBehaviour {
 	{
 		if(health < maxHealth && healthSliderFill != null)
 		{
-			healthSliderFill.color = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth);
+			newHealthColour = Color.Lerp(Color.green, Color.red, 1 -(float)health /(float)maxHealth);
+			newHealthColour.a = healthColourAValue;
+			healthSliderFill.color = newHealthColour;
 			healthBarDividingBox.transform.parent.gameObject.SetActive(true);
 		}
 

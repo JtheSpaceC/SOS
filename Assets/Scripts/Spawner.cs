@@ -34,8 +34,6 @@ public class Spawner : MonoBehaviour {
 			spawnTime = maxSpawnTime;
 	}
 
-	#if UNITY_EDITOR
-
 	void Update()
 	{
 		if(Input.GetKeyDown(myKey))
@@ -43,8 +41,6 @@ public class Spawner : MonoBehaviour {
 			DoTheSpawn();
 		}
 	}
-
-	#endif
 
 	void Spawn()
 	{

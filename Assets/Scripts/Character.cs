@@ -138,7 +138,11 @@ public class Character : MonoBehaviour {
 		avatarOutput.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;	
 
 		if(mySquadUnitNumber != 0)
+		{
 			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
+			//TODO: Remove this line below when unit numbers are brought back. 
+			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().color = Color.clear;
+		}
 
 		if(showShipInsteadOfAvatar)
 		{
