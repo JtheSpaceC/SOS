@@ -53,6 +53,8 @@ public class Director : MonoBehaviour {
 
 	[HideInInspector] public Color sceneTint;
 
+	string canvasesOnOrOff = "";
+
 
 	void Awake()
 	{
@@ -329,20 +331,6 @@ public class Director : MonoBehaviour {
 
 			if(Input.GetKeyDown(KeyCode.Delete))
 				GameObject.FindGameObjectWithTag("PlayerFighter").GetComponent<HealthFighter>().health = 0;
-
-			if(Input.GetKeyDown(controlOfCameraKey))
-				Camera.main.GetComponent<RTSCamera>().enabled = !Camera.main.GetComponent<RTSCamera>().enabled;
-
-			if(hotkeysForTestActions.Length > 0)
-			{
-				for(int i = 0; i < hotkeysForTestActions.Length; i++)
-				{
-					if(Input.GetKeyDown(hotkeysForTestActions[i]))
-					{
-						testActions[i].Invoke();
-					}
-				}
-			}
 			
 			#endif
 
@@ -367,6 +355,42 @@ public class Director : MonoBehaviour {
 				toggleableObject2.SetActive(!toggleableObject2.activeSelf);
 			if(Input.GetKeyDown(KeyCode.Keypad1) && toggleableObject1 != null)
 				toggleableObject1.SetActive(!toggleableObject1.activeSelf);
+
+			if(Input.GetKeyDown(controlOfCameraKey))
+				Camera.main.GetComponent<RTSCamera>().enabled = !Camera.main.GetComponent<RTSCamera>().enabled;
+
+			if(hotkeysForTestActions.Length > 0)
+			{
+				for(int i = 0; i < hotkeysForTestActions.Length; i++)
+				{
+					if(Input.GetKeyDown(hotkeysForTestActions[i]))
+					{
+						testActions[i].Invoke();
+					}
+				}
+			}
+		}
+	}
+
+	public void ToggleWorldspaceGUIs()
+	{
+		if(canvasesOnOrOff == "off")
+			canvasesOnOrOff = "on";
+		else
+			canvasesOnOrOff = "off";
+		
+		Canvas[] allCanvases = FindObjectsOfType<Canvas>();
+		{
+			foreach(Canvas canvas in allCanvases)
+			{
+				if(canvas.renderMode == RenderMode.WorldSpace)
+				{
+					if(canvasesOnOrOff == "off")
+						canvas.enabled = false;
+					else if(canvasesOnOrOff == "on")
+						canvas.enabled = true;
+				}
+			}
 		}
 	}
 		

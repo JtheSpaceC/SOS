@@ -6,6 +6,14 @@ public class SpawnerGroup : MonoBehaviour {
 
 	AICommander myCommander;
 
+	public enum SpawnMode {Normal, ApproachFromDepth};
+	public SpawnMode spawnMode;
+
+	[Tooltip("If ApproachFromDepth is selected, what is the positive value Z depth to be used?")]
+	public float depth;
+	[Tooltip("If ApproachFromDepth is selected, what is the negative value speed of approach?")]
+	public float speed = -20f;
+
 	public enum WhichSide {Enemy, Ally};
 	public WhichSide whichSide;
 
@@ -15,6 +23,7 @@ public class SpawnerGroup : MonoBehaviour {
 	[Range(1, 12)] public int numberToSpawn = 3;
 
 	[HideInInspector] public List<GameObject> craft;
+
 
 
 	void Start()
@@ -29,9 +38,37 @@ public class SpawnerGroup : MonoBehaviour {
 			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
 		}
 
-		SpawnGroup ();
+		if(spawnMode == SpawnMode.Normal)
+		{
+			SpawnGroup ();
+		}
+		else if (spawnMode == SpawnMode.ApproachFromDepth)
+		{
+			GetComponent<TrailRenderer>().enabled = true;
+			GetComponent<moverBasic>().enabled = true;
+			GetComponent<moverBasic>().speed.z = speed;
 
-		Destroy (gameObject);
+			Vector3 pos = transform.position;
+			pos.z = depth;
+			transform.position = pos;
+		}
+
+
+	}
+
+	void Update()
+	{
+		if(spawnMode == SpawnMode.ApproachFromDepth)
+		{
+			if(transform.position.z < 0)
+			{
+				Vector3 pos = transform.position;
+				pos.z = 0;
+				transform.position = pos;
+
+				SpawnGroup();
+			}
+		}
 	}
 
 	void SpawnGroup ()
@@ -65,6 +102,8 @@ public class SpawnerGroup : MonoBehaviour {
 			_battleEventManager.instance.CallPMCFightersSpawned();
 		else if(whichSide == WhichSide.Enemy)
 			_battleEventManager.instance.CallEnemyFightersSpawned();
+
+			Destroy (gameObject);
 	}
 
 }

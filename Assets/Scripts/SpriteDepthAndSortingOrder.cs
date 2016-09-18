@@ -7,7 +7,7 @@ public class SpriteDepthAndSortingOrder : MonoBehaviour {
 	int startingOrderInLayer;
 
 	[Tooltip("Lerp between White and Black by Z distance?")] public bool darkenWithDepth = true;
-	[Tooltip("How far away is absolute black?")] public float blackDistance = 150f;
+	[Tooltip("How far away is absolute black?")] public float blackDistance = 500f;
 
 	void Awake()
 	{
