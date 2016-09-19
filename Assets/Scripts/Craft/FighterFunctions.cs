@@ -60,11 +60,10 @@ public class FighterFunctions : TargetableObject {
 
 		engineScript.LookAtTarget (target);
 
-		if(Vector2.Angle(transform.up, target.transform.position - transform.position) < 60)
+		if(Vector2.Angle(transform.up, target.transform.position - transform.position)%180 < 165)
 		{
 			engineScript.MoveToTarget (target, constantForwardThrustProportion);
 		}
-
 		
 				
 		if(Time.time > shootScript.nextFire &&

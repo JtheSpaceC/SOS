@@ -174,6 +174,7 @@ public class Tools: MonoBehaviour
 		commenceFadeIn = true;
 		commenceFadeout = false;
 
+		MoveCanvasToFront(blackoutPanel.GetComponentInParent<Canvas>());
 		fadeInDuration = dur;
 	}
 
@@ -181,6 +182,7 @@ public class Tools: MonoBehaviour
 	{
 		Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
 
+		MoveCanvasToFront(blackoutPanel.GetComponentInParent<Canvas>());
 		fadeoutStartTime = Time.time + delay;
 
 		commenceFadeIn = false;

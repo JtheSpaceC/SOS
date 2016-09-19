@@ -81,8 +81,6 @@ public class AIFighter : FighterFunctions {
 			myGui = transform.FindChild("Effects/GUI").gameObject;
 		}
 
-		CloudConnectorCore.GetObjectsByField("FighterStats", "Level", "Mantis", true);
-
 		myRigidbody = GetComponent<Rigidbody2D> ();
 
 		SetUpSideInfo();

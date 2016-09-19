@@ -15,7 +15,7 @@ public class ClickToPlay : MonoBehaviour
 	public WeaponsPrimaryFighter playerShootScript; 
 	public bool rCanRestart = false;
 	public bool paused = false;
-	public GameObject escScreen;
+	public GameObject escCanvas;
 	public GameObject escMenuPanel;
 	public GameObject pauseScreen;
 	public Image theSlidesCanvasImage;
@@ -124,8 +124,9 @@ public class ClickToPlay : MonoBehaviour
 
 		Tools.instance.VibrationStop();
 		AudioMasterScript.instance.MuteSFX();
-		escScreen.SetActive(true);
+		escCanvas.SetActive(true);
 		escMenuPanel.SetActive(true);
+		Tools.instance.MoveCanvasToFront(escCanvas.GetComponent<Canvas>());
 		Time.timeScale = 0;
 		paused = true;
 
@@ -152,6 +153,7 @@ public class ClickToPlay : MonoBehaviour
 		}
 
 		escMenuIsShown = false;
+		Tools.instance.MoveCanvasToRear(escCanvas.GetComponent<Canvas>());
 	}
 
 	public void RestartLevel()
