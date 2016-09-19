@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using XInputDotNetPure;
 
 public class Tools: MonoBehaviour
@@ -397,6 +398,40 @@ public class Tools: MonoBehaviour
 		Transform selectedPanel = avatarsPanelUI[nextFreePanel];
 		nextFreePanel ++;
 		return selectedPanel;
+	}
+
+	public void MoveCanvasToFront(Canvas subjectCanvas)
+	{
+		List<Canvas> allRelevantCanvases = GetAllCanvases();
+		int frontmostCanvas = 0;
+		for(int i = 0; i < allRelevantCanvases.Count; i++)
+		{
+			if(allRelevantCanvases[i].sortingOrder > frontmostCanvas)
+				frontmostCanvas = allRelevantCanvases[i].sortingOrder;
+		}
+		subjectCanvas.sortingOrder = frontmostCanvas +1;
+	}
+	public void MoveCanvasToRear(Canvas subjectCanvas)
+	{
+		List<Canvas> allRelevantCanvases = GetAllCanvases();
+		int rearmostCanvas = 0;
+		for(int i = 0; i < allRelevantCanvases.Count; i++)
+		{
+			if(allRelevantCanvases[i].sortingOrder < rearmostCanvas)
+				rearmostCanvas = allRelevantCanvases[i].sortingOrder;
+		}
+		subjectCanvas.sortingOrder = rearmostCanvas -1;
+	}
+	List<Canvas> GetAllCanvases()
+	{
+		Canvas[] allCanvases = FindObjectsOfType<Canvas>();
+		List<Canvas> screenspaceCanvases = new List<Canvas>();
+		foreach(Canvas canvas in allCanvases)
+		{
+			if(canvas.renderMode != RenderMode.WorldSpace)
+				screenspaceCanvases.Add(canvas);
+		}
+		return screenspaceCanvases;
 	}
 
 }

@@ -66,6 +66,8 @@ public class AIFighter : FighterFunctions {
 	public Text nameHUDText;
 
 	[HideInInspector] public bool statsAlreadyAdjusted = false;
+
+	public int mySkillLevel = 2;
 	
 
 	void Awake()
@@ -78,6 +80,8 @@ public class AIFighter : FighterFunctions {
 		{
 			myGui = transform.FindChild("Effects/GUI").gameObject;
 		}
+
+		CloudConnectorCore.GetObjectsByField("FighterStats", "Level", "Mantis", true);
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
 
