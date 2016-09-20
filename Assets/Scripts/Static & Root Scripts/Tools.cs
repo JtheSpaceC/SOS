@@ -54,6 +54,8 @@ public class Tools: MonoBehaviour
 	public Color avatarAwarenessFlashColour;
 	public Color avatarHitFlashColour;
 
+	[HideInInspector] public float normalFixedDeltaTime;
+
 	[Space()]
 
 	[Tooltip ("If a camera were to follow a ship, what stuff should it normally see?")]
@@ -140,6 +142,8 @@ public class Tools: MonoBehaviour
 
 		AudioMasterScript.instance.StopAllCoroutines();
 		AudioMasterScript.instance.ZeroSFX();
+
+		normalFixedDeltaTime = Time.fixedDeltaTime;
 	}
 		
 
@@ -409,5 +413,12 @@ public class Tools: MonoBehaviour
 		}
 		return screenspaceCanvases;
 	}
+
+	public void AlterTimeScale(float newTimescale)
+	{
+		Time.timeScale = newTimescale;
+		Time.fixedDeltaTime = normalFixedDeltaTime * newTimescale;
+	}
+
 
 }

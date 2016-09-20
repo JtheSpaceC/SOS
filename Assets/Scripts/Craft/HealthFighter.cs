@@ -771,6 +771,18 @@ public class HealthFighter : Health {
 			}
 			else 
 				Explode();
+
+			//check if the object is on screen away from the edges
+			Vector2 screenPoint = (Vector2)Camera.main.WorldToViewportPoint(transform.position); 
+			if(screenPoint.x > 0.2f && screenPoint.x < 0.8f && screenPoint.y > 0.2f && screenPoint.y < 0.8f)
+			{
+				//run a chance to slow-mo death
+				if(Random.Range(0, 100f) < Director.instance.chanceOfSlowMoDeath)
+				{
+					Tools.instance.AlterTimeScale(0.4f);
+					Invoke("MakeTimeNormal", 0.7f);
+				}
+			}
 		}	
 
 	}//end of Death
@@ -778,7 +790,6 @@ public class HealthFighter : Health {
 	void Explode()
 	{
 		Tools.instance.SpawnExplosion (this.gameObject, transform.position, true);
-
 
 		GameObject effects = transform.FindChild("Effects").gameObject;
 
@@ -810,6 +821,35 @@ public class HealthFighter : Health {
 	{
 		smokeEm.rate = 0;
 		flamesEm.rate = 0;
+	}
+
+	IEnumerator SlowMoDeath()
+	{
+		float lowestTimeScale = 0.4f;
+		float newTimeScale = lowestTimeScale;
+		Tools.instance.AlterTimeScale(newTimeScale);
+
+		Invoke("MakeTimeNormal", 0.8f);
+
+		yield return new WaitForSecondsRealtime(1);
+		//Tools.instance.AlterTimeScale(1);
+		/*yield return new WaitForSecondsRealtime(0.2f);
+		print("Done waiting");
+
+		float startTime = Director.instance.timer;
+
+		while(newTimeScale < 1f)
+		{
+			newTimeScale = Mathf.Lerp(lowestTimeScale, 1, (Director.instance.timer - startTime) / 1f);
+			Tools.instance.AlterTimeScale(newTimeScale);
+			print(Director.instance.timer);
+			yield return new WaitForFixedUpdate();
+		}
+		print("Finished");*/
+	}
+	void MakeTimeNormal()
+	{
+		Tools.instance.AlterTimeScale(1);
 	}
 
 

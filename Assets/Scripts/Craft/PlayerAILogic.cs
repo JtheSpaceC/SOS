@@ -60,9 +60,7 @@ public class PlayerAILogic : FighterFunctions {
 			Tools.instance.MoveCanvasToFront(Tools.instance.blackoutPanel.GetComponentInParent<Canvas>());
 			Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
 			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
-			print(Time.fixedDeltaTime);
-			Time.timeScale = 0.02f;
-			Time.fixedDeltaTime /= 50;
+			Tools.instance.AlterTimeScale(0.1f);
 			radialMenuShown = true;
 		}
 		else if(radialMenuShown && (Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f))
@@ -70,8 +68,7 @@ public class PlayerAILogic : FighterFunctions {
 			Tools.instance.MoveCanvasToRear(Tools.instance.blackoutPanel.GetComponentInParent<Canvas>());
 			Tools.instance.blackoutPanel.color = Color.clear;
 			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", 0f);
-			Time.timeScale = 1f;
-			Time.fixedDeltaTime *= 50;
+			Tools.instance.AlterTimeScale(1f);
 
 			radialMenuShown =false;
 		}

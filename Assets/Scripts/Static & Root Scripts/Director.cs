@@ -16,6 +16,9 @@ public class Director : MonoBehaviour {
 	Text gameTimeText;
 	Text playerKillsText;
 
+	[Range(0, 100f)]
+	public float chanceOfSlowMoDeath = 20f;
+
 	public GameObject pilotEVAPrefab;
 
 	[HideInInspector] public int playerKills = 0;
