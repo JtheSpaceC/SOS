@@ -31,14 +31,13 @@ public class Tools: MonoBehaviour
 	public Slider nitroRemainingSlider;
 	public Text nitroRemainingText;
 
+	public enum FadeScreenMode {RestClear, RestBlack, FadeIn, FadeOut};
+	public FadeScreenMode fadeScreenMode;
 	public Image blackoutPanel;
-	bool commenceFadeIn = false;
-	bool commenceFadeout = false;
-	float fadeInStartTime = 0;
-	float fadeoutStartTime = 0;
-	float fadeInDuration = 2f;
-	float fadeOutDuration = 3f;
-
+	float fadeDelay;
+	float fadeDuration;
+	Color fadeFromColour;
+	Color fadeToColour;
 	public Color whiteOutColour;
 
 	public Toggle allowVibrationToggleSwitch;
@@ -142,53 +141,28 @@ public class Tools: MonoBehaviour
 		AudioMasterScript.instance.StopAllCoroutines();
 		AudioMasterScript.instance.ZeroSFX();
 	}
+		
 
-
-	void Update()
+	public void CommenceFade(float delay, float dur, Color fromColour, Color toColour)
 	{
-		//for screen FADEIN
-		if(commenceFadeIn)
-		{			
-			blackoutPanel.color = Color.Lerp(Color.black, Color.clear, ((Time.time - fadeInStartTime)/fadeInDuration));
-			if(blackoutPanel.color == Color.black)
-			{
-				commenceFadeout = false;
-			}
-		}
-
-		//for screen FADEOUT
-		if(commenceFadeout == true)
-		{			
-			blackoutPanel.color = Color.Lerp(Color.clear, Color.black, ((Time.time - fadeoutStartTime)/fadeOutDuration));
-			if(blackoutPanel.color == Color.black)
-			{
-				commenceFadeout = false;
-			}
-		}
-	}
-
-	public void CommenceFadeIn(float delay, float dur)
-	{
-		fadeInStartTime = Time.time + delay;
-
-		commenceFadeIn = true;
-		commenceFadeout = false;
-
+		fadeDelay = delay;
+		fadeDuration = dur;
+		fadeFromColour = fromColour;
+		fadeToColour = toColour;
+		StartCoroutine("FadeScreen");
 		MoveCanvasToFront(blackoutPanel.GetComponentInParent<Canvas>());
-		fadeInDuration = dur;
 	}
-
-	public void CommenceFadeout(float delay, float dur)
+	IEnumerator FadeScreen()
 	{
-		Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
+		yield return new WaitForSeconds(fadeDelay);
+		float fadeStartTime = Time.time;
+		blackoutPanel.color = fadeFromColour;
 
-		MoveCanvasToFront(blackoutPanel.GetComponentInParent<Canvas>());
-		fadeoutStartTime = Time.time + delay;
-
-		commenceFadeIn = false;
-		commenceFadeout = true;
-
-		fadeOutDuration = dur;
+		while(blackoutPanel.color != fadeToColour)
+		{
+			blackoutPanel.color = Color.Lerp(fadeFromColour, fadeToColour, (Time.time - fadeStartTime)/fadeDuration);
+			yield return new WaitForEndOfFrame();
+		}
 	}
 
 

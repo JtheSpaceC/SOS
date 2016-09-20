@@ -171,7 +171,7 @@ public class AIAssaultShuttle : SupportShipFunctions {
 			if(!_battleEventManager.instance.playerHasBeenRescued)
 				_battleEventManager.instance.CallPlayerLeaving();
 		
-			Tools.instance.CommenceFadeout(6, 3);
+			Tools.instance.CommenceFade(6, 3, Color.clear, Color.black);
 			Tools.instance.ClearWaypoints();
 
 			foreach(GameObject turret in myTurrets)

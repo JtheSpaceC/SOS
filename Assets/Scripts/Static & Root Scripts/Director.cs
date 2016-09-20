@@ -91,7 +91,7 @@ public class Director : MonoBehaviour {
 			DressTheScene();
 		}
 			
-		Tools.instance.CommenceFadeIn(0, 2);
+		Tools.instance.CommenceFade(0, 2, Color.black, Color.clear);
 	}
 
 	void OnEnable()

@@ -87,7 +87,7 @@ public class ClickToPlay : MonoBehaviour
 	}
 	public IEnumerator LoadScene(int whichScene, float blackoutTime)
 	{
-		Tools.instance.CommenceFadeout(0, blackoutTime);
+		Tools.instance.CommenceFade(0, blackoutTime, Color.clear, Color.black);
 		yield return new WaitForSeconds(blackoutTime);
 		SceneManager.LoadScene(whichScene);
 	}

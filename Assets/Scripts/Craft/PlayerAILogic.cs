@@ -9,12 +9,15 @@ public class PlayerAILogic : FighterFunctions {
 	[HideInInspector]public WeaponsPrimaryFighter shootScript;
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
 	[HideInInspector]public Dodge dodgeScript;
+	SquadronLeader squadLeaderScript;
 
 	
 	public enum Orders {FighterSuperiority, Patrol, Escort, RTB, NA}; //set by commander
 	public Orders orders;
 	
 	public GameObject target;
+
+	bool radialMenuShown = false;
 
 	
 	void Awake()
@@ -35,6 +38,7 @@ public class PlayerAILogic : FighterFunctions {
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
 		dodgeScript = GetComponentInChildren<Dodge>();
 		myRigidbody = GetComponent<Rigidbody2D>();
+		squadLeaderScript = GetComponentInChildren<SquadronLeader>();
 
 		if(transform.FindChild("Effects/GUI"))
 		{
@@ -45,6 +49,32 @@ public class PlayerAILogic : FighterFunctions {
 
 		//Friendly Commander script automatically adds player to known craft
 		enemyCommander.knownEnemyFighters.Add (this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
+	}
+
+
+	void Update()
+	{
+		if(!radialMenuShown && (Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f))
+		{
+			Tools.instance.StopCoroutine("FadeScreen");
+			Tools.instance.MoveCanvasToFront(Tools.instance.blackoutPanel.GetComponentInParent<Canvas>());
+			Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
+			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
+			print(Time.fixedDeltaTime);
+			Time.timeScale = 0.02f;
+			Time.fixedDeltaTime /= 50;
+			radialMenuShown = true;
+		}
+		else if(radialMenuShown && (Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f))
+		{
+			Tools.instance.MoveCanvasToRear(Tools.instance.blackoutPanel.GetComponentInParent<Canvas>());
+			Tools.instance.blackoutPanel.color = Color.clear;
+			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", 0f);
+			Time.timeScale = 1f;
+			Time.fixedDeltaTime *= 50;
+
+			radialMenuShown =false;
+		}
 	}
 
 
