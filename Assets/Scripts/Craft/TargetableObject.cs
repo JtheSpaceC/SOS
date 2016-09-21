@@ -15,7 +15,7 @@ public class TargetableObject : MonoBehaviour {
 	protected LayerMask potshotAtEnemiesMask;
 	LayerMask potshotsPlusFriendliesMask;
 
-	protected bool switchingState = true;
+	protected bool switchingStates = true;
 	protected bool completedState = false;
 
 	public List<GameObject> myAttackers;	

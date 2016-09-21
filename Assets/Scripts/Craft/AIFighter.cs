@@ -13,7 +13,7 @@ public class AIFighter : FighterFunctions {
 	public enum Orders {FighterSuperiority, Patrol, Escort, Wingman, RTB, FullRetreat, NA}; //set by commander //TODO: not used yet
 	public Orders orders;
 
-	public enum StateMachine {Patroling, Dogfight, Evade, Retreat, FormUp, Covering, Docking, NA};
+	public enum StateMachine {Patroling, Tailing, Jousting, Evade, Retreat, FormUp, Covering, Docking, NA};
 	public StateMachine currentState;
 	public StateMachine formerState;
 	[HideInInspector] public StateMachine[] normalStates;
@@ -22,8 +22,6 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector] public StateMachine[] coverMeStates;
 	[HideInInspector] public StateMachine[] retreatStates;
 	[HideInInspector] public StateMachine[] deathStates;
-
-	bool switchingStates = true;
 
 	public GameObject target;
 	GameObject targetCheck;
@@ -91,7 +89,7 @@ public class AIFighter : FighterFunctions {
 		enemyCommander.AddEnemyFighters(this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
 
 		normalStates = new StateMachine[]{StateMachine.Patroling};
-		combatStates = new StateMachine[]{StateMachine.Dogfight};
+		combatStates = new StateMachine[]{StateMachine.Tailing, StateMachine.Jousting};
 		formUpStates = new StateMachine[]{StateMachine.FormUp};
 		coverMeStates = new StateMachine[]{StateMachine.Covering};
 		retreatStates = new StateMachine[] {StateMachine.Evade, StateMachine.Retreat};
@@ -258,9 +256,13 @@ public class AIFighter : FighterFunctions {
 //		}
 		#endregion
 
-		if(currentState == StateMachine.Dogfight)
+		if(currentState == StateMachine.Tailing)
 		{
-			Dogfight();
+			Tailing();
+		}
+		else if(currentState == StateMachine.Jousting)
+		{
+			Jousting();
 		}
 		else if(currentState == StateMachine.Patroling)
 		{
@@ -337,7 +339,7 @@ public class AIFighter : FighterFunctions {
 	}
 
 	#region State Handler Methods
-	void Dogfight()
+	void Tailing()
 	{
 		if(switchingStates)
 		{
@@ -382,7 +384,7 @@ public class AIFighter : FighterFunctions {
 		}
 		if (Tools.instance.CheckTargetIsLegit (target) == true) 
 		{
-			DogfightingFunction (engineScript, target, shootScript, constantThrustProportion);
+			TailingFunction (engineScript, target, shootScript, constantThrustProportion);
 
 			//if the target is retreating and there are other active fighters, let this one go.
 			if(Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "dogfighting"))
@@ -398,7 +400,72 @@ public class AIFighter : FighterFunctions {
 		{
 			target = null;
 		}
-	}//end of DOGFIGHT()
+	}//end of TAILING()
+
+
+	void Jousting()
+	{
+		if(switchingStates)
+		{
+			shootScript.enabled = true;
+			target = myCommander.ClosestPriorityTarget(myCommander.knownEnemyFighters, transform.position);
+
+			if(target == null)
+				target = myCommander.ClosestPriorityTarget(myCommander.knownEnemyTurrets, transform.position);
+
+			if(target == null)
+			{
+				float[] weights = new float[]{1};
+				ChangeToNewState(normalStates, weights);
+				return;
+			}
+			if(target != null)
+			{
+				if(!Tools.instance.CheckTargetIsLegit(target))
+				{
+					if(myCommander.knownEnemyFighters.Contains(target))
+						myCommander.knownEnemyFighters.Remove(target);
+
+					target = null;
+					return;
+				}
+
+				target.SendMessage("AddSomeoneAttackingMe", this.gameObject);
+			}
+
+			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
+			constantThrustProportion = 0;
+			//TODO: adjust the turn rate based on the forward speed
+
+			switchingStates = false;
+		}
+
+		if(target == null)
+		{
+			float[] weights = new float[]{1};
+			ChangeToNewState(normalStates, weights);
+			return;
+		}
+		if (Tools.instance.CheckTargetIsLegit (target) == true) 
+		{
+			JoustingFunction (engineScript, target, shootScript, constantThrustProportion);
+
+			//if the target is retreating and there are other active fighters, let this one go.
+			if(Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "dogfighting"))
+			{
+				if(myCommander.ClosestPriorityTarget(myCommander.knownEnemyFighters, transform.position) != null
+					|| (escortShip && Vector2.Distance(target.transform.position, escortShip.position) > (guardDistance * 2)))
+				{
+					Invoke("LeaveThemAlone", 2);
+				}
+			}
+		} 
+		else 
+		{
+			target = null;
+		}
+	}//end of JOUSTING
+
 
 	void Patrol()
 	{
@@ -605,7 +672,7 @@ public class AIFighter : FighterFunctions {
 			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
 			if(Tools.instance.CheckTargetIsLegit(target) == true)
 			{
-				DogfightingFunction (engineScript, target, shootScript, constantThrustProportion); //WARNING: This function can result in target being set to null
+				TailingFunction (engineScript, target, shootScript, constantThrustProportion); //WARNING: This function can result in target being set to null
 			}
 			//This section should be excessive, but is still the only way to stop craft targeting dead enemies and shooting at their death spots
 			else

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerAILogic : FighterFunctions {
 
@@ -16,13 +17,17 @@ public class PlayerAILogic : FighterFunctions {
 	public GameObject target;
 	public GameObject radialOptionPrefab;
 	public GameObject radialDivideBarPrefab;
+	public GameObject radialGuideArrowPrefab;
 
 	bool radialMenuShown = false;
 	RadialOption selectedOption;
+	GameObject radialGuideArrow;
 	Vector2 cursorPos;
 	Vector3 screenCentre;
+	float keyboardLedRotation; //for rotatin on the radial menu with arrow keys
+	bool takeDPadInput = true;
 
-	
+
 	void Awake()
 	{
 		if(instance == null)
@@ -35,6 +40,7 @@ public class PlayerAILogic : FighterFunctions {
 			Destroy(gameObject);
 			return;
 		}
+
 		healthScript = GetComponent<HealthFighter> ();
 		engineScript = GetComponent<PlayerFighterMovement> ();
 		shootScript = GetComponentInChildren<WeaponsPrimaryFighter> ();
@@ -58,56 +64,105 @@ public class PlayerAILogic : FighterFunctions {
 		screenCentre = Tools.instance.radialMenuCanvas.transform.position;
 	}
 
+	IEnumerator DPadInputWait()
+	{
+		takeDPadInput = false;
+		yield return new WaitForSecondsRealtime(0.4f);
+		takeDPadInput = true;
+	}
 
 	void Update()
 	{
-		if(!radialMenuShown && (Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f))
+		if(ClickToPlay.instance.paused)
+			return;
+
+		//ACTIVATE the Radial menu
+		if(!radialMenuShown && 
+			(Input.GetKeyDown(KeyCode.Q) || 
+				((Input.GetAxis("Orders Vertical")) > 0.5f) && takeDPadInput ) )
 		{
+			StartCoroutine("DPadInputWait");
 			Tools.instance.StopCoroutine("FadeScreen");
 			Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
 			Tools.instance.MoveCanvasToFront(Tools.instance.radialMenuCanvas);
 			Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
 			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
 			Tools.instance.AlterTimeScale(0.1f);
+			TogglePlayerControl(true, false, false, false);
 
 			PopulateRadialMenuOptions();
 			radialMenuShown = true;
 		}
-		else if(radialMenuShown && (Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f))
+
+		//DEACTIVATE the Radial menu
+		else if(radialMenuShown && 
+			(Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f && takeDPadInput))
 		{
+			StartCoroutine("DPadInputWait");
 			Tools.instance.MoveCanvasToRear(Tools.instance.blackoutCanvas);
 			Tools.instance.MoveCanvasToRear(Tools.instance.radialMenuCanvas);
 			Tools.instance.blackoutPanel.color = Color.clear;
 			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", 0f);
 			Tools.instance.AlterTimeScale(1f);
-			while(Tools.instance.radialMenuCanvas.transform.childCount > 0)
-			{
-				DestroyImmediate(Tools.instance.radialMenuCanvas.transform.GetChild(0).gameObject);
-			}
+			TogglePlayerControl(true, true, true, true);
+
+			ClearRadialMenu();
+
 			radialMenuShown =false;
 		}
 
+		//OPERATE the Radial menu
 		if(radialMenuShown)
 		{
-			cursorPos = new Vector2(Input.GetAxis("Horizontal"), -Input.GetAxis("Vertical")).normalized;
-
-			if(cursorPos != Vector2.zero)
+			//if using controller
+			if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
 			{
-				if(selectedOption)
-					selectedOption.selected = false;
+				//cursor pos is notional (made up), but the guide arrow object uses it
+				cursorPos = new Vector2(Input.GetAxis("Gamepad Left Horizontal"), Input.GetAxis("Gamepad Left Vertical")).normalized;
 
-				RaycastHit2D hit = Physics2D.Raycast((Vector2)screenCentre, cursorPos, 500f, LayerMask.GetMask("UI"));
+				if(cursorPos != Vector2.zero)
+				{
+					if(selectedOption)
+						selectedOption.selected = false;
 
-				if(hit.collider != null && hit.collider.GetComponent<RadialOption>())
-				{					
-					selectedOption = hit.collider.GetComponent<RadialOption>();
-					selectedOption.selected = true;
+					var variable = Vector2.Angle(Vector2.up, cursorPos);
+
+					if(cursorPos.x < 0)
+						variable = 360 - variable;
+
+					radialGuideArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -variable));
+					SendRay();
 				}
 			}
-			else if(selectedOption != null){
-				selectedOption.selected = false;
-				selectedOption = null;
+			//if using keyboard
+			else
+			{
+				if(Input.GetKey(KeyCode.LeftArrow))
+					keyboardLedRotation -= 6;
+				if(Input.GetKey(KeyCode.RightArrow))
+					keyboardLedRotation += 6;
+
+				keyboardLedRotation = keyboardLedRotation % 360;
+
+				radialGuideArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -keyboardLedRotation));
+				SendRay();
 			}
+		}
+	}
+	void SendRay()
+	{
+		RaycastHit2D hit = Physics2D.Raycast((Vector2)screenCentre, radialGuideArrow.transform.up, 500f, LayerMask.GetMask("UI"));
+		Debug.DrawLine((Vector2)screenCentre, screenCentre + (radialGuideArrow.transform.up * 500), Color.blue);
+
+		if(hit.collider != null && hit.collider.GetComponent<RadialOption>())
+		{					
+			selectedOption = hit.collider.GetComponent<RadialOption>();
+			selectedOption.selected = true;
+		}
+		else if(selectedOption)
+		{
+			selectedOption.selected = false;
+			selectedOption = null;
 		}
 	}
 
@@ -140,6 +195,21 @@ public class PlayerAILogic : FighterFunctions {
 			rotation += degreesEach;
 		}
 
+		//make the guide arrow
+		radialGuideArrow = Instantiate(radialGuideArrowPrefab) as GameObject;
+		radialGuideArrow.transform.SetParent(Tools.instance.radialMenuCanvas.transform);
+		radialGuideArrow.transform.localPosition = Vector3.zero;
+
+		keyboardLedRotation = 0;
+		radialGuideArrowPrefab.SetActive(true);
+	}
+
+	void ClearRadialMenu()
+	{
+		while(Tools.instance.radialMenuCanvas.transform.childCount > 0)
+		{
+			DestroyImmediate(Tools.instance.radialMenuCanvas.transform.GetChild(0).gameObject);
+		}
 	}
 
 

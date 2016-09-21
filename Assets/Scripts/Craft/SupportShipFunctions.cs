@@ -25,9 +25,9 @@ public class SupportShipFunctions : TargetableObject {
 
 	protected void HoldPosition()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
-			switchingState = false;
+			switchingStates = false;
 		}
 
 		if(waypoint == Vector2.zero || Vector2.Distance(transform.position, waypoint) < 0.2f)
@@ -39,9 +39,9 @@ public class SupportShipFunctions : TargetableObject {
 
 	protected void MoveToPosition(Vector2 pos)
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
-			switchingState = false;
+			switchingStates = false;
 		}
 		engineScript.LookAtTarget(pos);
 		engineScript.MoveToTarget(pos, true);

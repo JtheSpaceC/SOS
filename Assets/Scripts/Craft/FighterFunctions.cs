@@ -7,6 +7,9 @@ public class FighterFunctions : TargetableObject {
 	protected int killsThisBattle;
 	protected int totalKills;
 
+	enum JoustingStates {OnApproach, GainingDistance};
+	JoustingStates joustingStates;
+
 	// not used
 	protected GameObject CheckLocaleForTargets(Vector3 originPoint, float sensorRadius, LayerMask targetsMask)
 	{
@@ -54,7 +57,7 @@ public class FighterFunctions : TargetableObject {
 	}
 
 
-	protected void DogfightingFunction(EnginesFighter engineScript, GameObject target, WeaponsPrimaryFighter shootScript, float constantForwardThrustProportion)
+	protected void TailingFunction(EnginesFighter engineScript, GameObject target, WeaponsPrimaryFighter shootScript, float constantForwardThrustProportion)
 	{
 		//NB: It's important that we move before look, because the firing solution (in look) requires knowing the new movement position of the target
 
@@ -74,7 +77,47 @@ public class FighterFunctions : TargetableObject {
 				shootScript.FirePrimary(false);
 			}
 		}
-	} 
+	}
+
+	protected void JoustingFunction(EnginesFighter engineScript, GameObject target, WeaponsPrimaryFighter shootScript, float constantForwardThrustProportion)
+	{
+		//NB: It's important that we move before look, because the firing solution (in look) requires knowing the new movement position of the target
+
+		if(joustingStates == JoustingStates.OnApproach)
+		//then we want to fly towards and look/shoot at the target
+		{
+			//once we've passed our target, we want to switch to gaining distance
+			engineScript.LookAtTarget (target);
+
+			if(Vector2.Angle(transform.up, target.transform.position - transform.position)%180 < 165)
+			{
+				//TODO: work out a new waypoint
+
+				engineScript.MoveToTarget (target, constantForwardThrustProportion);
+			}
+
+
+			if(Time.time > shootScript.nextFire &&
+				(ReadyAimFire(target, transform, shootScript.weaponsRange) == true || TakePotshot(transform, shootScript.weaponsRange) == true))
+			{
+				if(shootScript.enabled)
+				{
+					shootScript.FirePrimary(false);
+				}
+			}
+		}
+		else if(joustingStates == JoustingStates.GainingDistance)
+		//then we want to go to a point that
+		{
+			//if we can't gain distance because the target is as fast or faster than us and is targeting us
+
+			//then switch to tailing
+
+			//don't LookAt(target), LookAt(waypoint)
+		}
+
+
+	}
 
 
 	protected Vector2 ChooseEvadePos(Rigidbody2D myRigidbody, LayerMask mask, AICommander myCommanderScript)

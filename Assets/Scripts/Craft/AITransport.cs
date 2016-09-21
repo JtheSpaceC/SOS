@@ -91,7 +91,7 @@ public class AITransport : SupportShipFunctions {
 
 	void Update()
 	{
-		if(previousState == StateMachine.WarpIn && switchingState)
+		if(previousState == StateMachine.WarpIn && switchingStates)
 		{
 			engineAudioSource.Stop();
 			engineAudioSource.loop = false;
@@ -147,16 +147,16 @@ public class AITransport : SupportShipFunctions {
 		pickupOfferCollider.enabled = false;
 
 		currentState = newState;
-		switchingState = true;
+		switchingStates = true;
 	}
 
 
 	void AwaitingPickup()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
 			pickupOfferCollider.enabled = true;
-			switchingState = false;
+			switchingStates = false;
 		}
 	}
 
@@ -187,7 +187,7 @@ public class AITransport : SupportShipFunctions {
 
 	public void ReelInPassengers()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
 			waypoint = (Vector2)transform.position + 2*GetComponent<Rigidbody2D>().velocity;
 
@@ -195,7 +195,7 @@ public class AITransport : SupportShipFunctions {
 		
 			SetUpReferences();
 
-			switchingState = false;
+			switchingStates = false;
 		}//end of switch state. now for the actual function
 
 		engineScript.MoveToTarget (waypoint, true);
@@ -353,7 +353,7 @@ public class AITransport : SupportShipFunctions {
 
 	void AllAboard()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
 			if(reelingInPlayerGroup && !carryFighter1.GetComponent<HealthFighter>().dead)
 			{
@@ -370,7 +370,7 @@ public class AITransport : SupportShipFunctions {
 				return;
 			}
 
-			switchingState = false;
+			switchingStates = false;
 		}
 
 		engineScript.MoveToTarget (waypoint, true);
@@ -407,7 +407,7 @@ public class AITransport : SupportShipFunctions {
 
 	void WarpIn()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
 			if(Tools.instance.CheckTargetIsLegit(theCaller))
 			{
@@ -443,7 +443,7 @@ public class AITransport : SupportShipFunctions {
 			engineAudioSource.loop = true;
 			engineAudioSource.Play();
 
-			switchingState = false;
+			switchingStates = false;
 		}
 		transform.position = Vector3.Lerp (literalSpawnPoint, insertionPoint, (Time.time - startTime) / warpInTime);
 		engineScript.LookAtTarget (insertionPoint + transform.up);
@@ -490,7 +490,7 @@ public class AITransport : SupportShipFunctions {
 
 	void WarpOut()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
 			if(reelingInPlayerGroup)
 			{
@@ -532,7 +532,7 @@ public class AITransport : SupportShipFunctions {
 				Subtitles.instance.PostSubtitle(new string[] {this.name + ". Warping out!"});
 			}
 
-			switchingState = false;
+			switchingStates = false;
 		}
 
 

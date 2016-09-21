@@ -88,15 +88,15 @@ public class AIAssaultShuttle : SupportShipFunctions {
 			transform.SetParent(null);
 
 		currentState = newState;
-		switchingState = true;
+		switchingStates = true;
 		completedState = false;
 	}
 
 	void Docking()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
-			switchingState = false;
+			switchingStates = false;
 			if(dockTarget.parent != null)
 				targetRB = dockTarget.transform.parent.transform.parent.transform.parent.GetComponent<Rigidbody2D>();
 			else
@@ -162,7 +162,7 @@ public class AIAssaultShuttle : SupportShipFunctions {
 
 	void WarpOut()
 	{
-		if(switchingState)
+		if(switchingStates)
 		{
 			Subtitles.instance.PostSubtitle(new string[]{name + ", Engaging Warp Drive"});
 			Camera.main.GetComponent<CameraControllerFighter>().target = null;
@@ -188,7 +188,7 @@ public class AIAssaultShuttle : SupportShipFunctions {
 				Subtitles.instance.PostSubtitle(new string[] {this.name + ". Warping out!"});
 			}
 
-			switchingState = false;
+			switchingStates = false;
 		}
 
 
