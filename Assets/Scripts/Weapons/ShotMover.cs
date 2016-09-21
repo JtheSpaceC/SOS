@@ -76,19 +76,20 @@ public class ShotMover : MonoBehaviour {
 		if(!theFirer.GetComponent<Rigidbody2D>())
 		{
 			myRigidbody.velocity = theFirer.transform.root.GetComponent<Rigidbody2D>().velocity;
-			myRigidbody.AddForce (transform.up * shotSpeed / Time.deltaTime * Tools.instance.normalFixedDeltaTime);
+			myRigidbody.AddForce (transform.up * shotSpeed / Time.fixedDeltaTime * Tools.instance.normalFixedDeltaTime);
 		}
 		
 		else
 		{
 			//FORMER (CORRECT WAY)
 			myRigidbody.velocity = theFirer.GetComponent<Rigidbody2D>().velocity;
-			myRigidbody.AddForce (transform.up * shotSpeed / Time.deltaTime * Tools.instance.normalFixedDeltaTime);
-			
+			myRigidbody.AddForce (transform.up * shotSpeed  / Time.fixedDeltaTime * Tools.instance.normalFixedDeltaTime);
+
 			//NEW (allows for more accuracy with simplistic target lead equations
 			//float platformSpeed = Mathf.Sqrt (theFirer.rigidbody2D.velocity.magnitude); //this is pretty meaningless without direction
 			//rigidbody2D.AddForce (transform.up * shotSpeed);
 			//rigidbody2D.AddForce (transform.up * platformSpeed);
+
 		}
 	}
 

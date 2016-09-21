@@ -777,7 +777,7 @@ public class HealthFighter : Health {
 			if(screenPoint.x > 0.2f && screenPoint.x < 0.8f && screenPoint.y > 0.2f && screenPoint.y < 0.8f)
 			{
 				//run a chance to slow-mo death
-				if(Random.Range(0, 100f) < Director.instance.chanceOfSlowMoDeath)
+				if(Time.timeScale == 1f && Random.Range(0, 100f) < Director.instance.chanceOfSlowMoDeath)
 				{
 					Tools.instance.AlterTimeScale(0.4f);
 					Invoke("MakeTimeNormal", 0.7f);

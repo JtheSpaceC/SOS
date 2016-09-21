@@ -9,15 +9,18 @@ public class PlayerAILogic : FighterFunctions {
 	[HideInInspector]public WeaponsPrimaryFighter shootScript;
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
 	[HideInInspector]public Dodge dodgeScript;
-	SquadronLeader squadLeaderScript;
-
 	
 	public enum Orders {FighterSuperiority, Patrol, Escort, RTB, NA}; //set by commander
 	public Orders orders;
 	
 	public GameObject target;
+	public GameObject radialOptionPrefab;
+	public GameObject radialDivideBarPrefab;
 
 	bool radialMenuShown = false;
+	RadialOption selectedOption;
+	Vector2 cursorPos;
+	Vector3 screenCentre;
 
 	
 	void Awake()
@@ -38,7 +41,6 @@ public class PlayerAILogic : FighterFunctions {
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
 		dodgeScript = GetComponentInChildren<Dodge>();
 		myRigidbody = GetComponent<Rigidbody2D>();
-		squadLeaderScript = GetComponentInChildren<SquadronLeader>();
 
 		if(transform.FindChild("Effects/GUI"))
 		{
@@ -51,27 +53,93 @@ public class PlayerAILogic : FighterFunctions {
 		enemyCommander.knownEnemyFighters.Add (this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
 	}
 
+	void Start()
+	{
+		screenCentre = Tools.instance.radialMenuCanvas.transform.position;
+	}
+
 
 	void Update()
 	{
 		if(!radialMenuShown && (Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f))
 		{
 			Tools.instance.StopCoroutine("FadeScreen");
-			Tools.instance.MoveCanvasToFront(Tools.instance.blackoutPanel.GetComponentInParent<Canvas>());
+			Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
+			Tools.instance.MoveCanvasToFront(Tools.instance.radialMenuCanvas);
 			Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
 			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
 			Tools.instance.AlterTimeScale(0.1f);
+
+			PopulateRadialMenuOptions();
 			radialMenuShown = true;
 		}
 		else if(radialMenuShown && (Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f))
 		{
-			Tools.instance.MoveCanvasToRear(Tools.instance.blackoutPanel.GetComponentInParent<Canvas>());
+			Tools.instance.MoveCanvasToRear(Tools.instance.blackoutCanvas);
+			Tools.instance.MoveCanvasToRear(Tools.instance.radialMenuCanvas);
 			Tools.instance.blackoutPanel.color = Color.clear;
 			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", 0f);
 			Tools.instance.AlterTimeScale(1f);
-
+			while(Tools.instance.radialMenuCanvas.transform.childCount > 0)
+			{
+				DestroyImmediate(Tools.instance.radialMenuCanvas.transform.GetChild(0).gameObject);
+			}
 			radialMenuShown =false;
 		}
+
+		if(radialMenuShown)
+		{
+			cursorPos = new Vector2(Input.GetAxis("Horizontal"), -Input.GetAxis("Vertical")).normalized;
+
+			if(cursorPos != Vector2.zero)
+			{
+				if(selectedOption)
+					selectedOption.selected = false;
+
+				RaycastHit2D hit = Physics2D.Raycast((Vector2)screenCentre, cursorPos, 500f, LayerMask.GetMask("UI"));
+
+				if(hit.collider != null && hit.collider.GetComponent<RadialOption>())
+				{					
+					selectedOption = hit.collider.GetComponent<RadialOption>();
+					selectedOption.selected = true;
+				}
+			}
+			else if(selectedOption != null){
+				selectedOption.selected = false;
+				selectedOption = null;
+			}
+		}
+	}
+
+	void PopulateRadialMenuOptions()
+	{
+		int radialOptions = Random.Range(2, 6);
+		float degreesEach = 360f/radialOptions;
+		float rotation = 0;
+
+		//throw up the options
+		for(int i = 0; i < radialOptions; i++)
+		{
+			GameObject newOption = Instantiate(radialOptionPrefab) as GameObject;
+			newOption.transform.SetParent(Tools.instance.radialMenuCanvas.transform);
+			newOption.transform.localPosition = Vector3.zero;
+			newOption.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+
+			rotation += degreesEach;
+		}
+		rotation = degreesEach/2;
+
+		//throw up dividing bars
+		for(int i = 0; i < radialOptions; i++)
+		{
+			GameObject newDivider = Instantiate(radialDivideBarPrefab) as GameObject;
+			newDivider.transform.SetParent(Tools.instance.radialMenuCanvas.transform);
+			newDivider.transform.localPosition = Vector3.zero;
+			newDivider.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+
+			rotation += degreesEach;
+		}
+
 	}
 
 

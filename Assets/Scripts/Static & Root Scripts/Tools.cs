@@ -33,6 +33,8 @@ public class Tools: MonoBehaviour
 
 	public enum FadeScreenMode {RestClear, RestBlack, FadeIn, FadeOut};
 	public FadeScreenMode fadeScreenMode;
+	public Canvas radialMenuCanvas;
+	public Canvas blackoutCanvas;
 	public Image blackoutPanel;
 	float fadeDelay;
 	float fadeDuration;

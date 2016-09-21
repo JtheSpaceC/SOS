@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpriteBlendingAnimationTest : MonoBehaviour {
+public class SpriteBlendingAnimationExperiment : MonoBehaviour {
 
 	public Sprite[] frames;
 
