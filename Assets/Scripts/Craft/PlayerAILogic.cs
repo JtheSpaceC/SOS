@@ -152,7 +152,7 @@ public class PlayerAILogic : FighterFunctions {
 	void SendRay()
 	{
 		RaycastHit2D hit = Physics2D.Raycast((Vector2)screenCentre, radialGuideArrow.transform.up, 500f, LayerMask.GetMask("UI"));
-		Debug.DrawLine((Vector2)screenCentre, screenCentre + (radialGuideArrow.transform.up * 500), Color.blue);
+		//Debug.DrawLine((Vector2)screenCentre, screenCentre + (radialGuideArrow.transform.up * 500), Color.blue);
 
 		if(hit.collider != null && hit.collider.GetComponent<RadialOption>())
 		{					

@@ -128,7 +128,8 @@ public class PlayerFighterMovement : EnginesFighter {
 
 		//FOR ROTATION
 
-		if(PlayerPrefsManager.leftGamepadStickBehaviour == PlayerPrefsManager.LeftGamepadStickBehaviour.stickRotates)
+		if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse ||
+			PlayerPrefsManager.leftGamepadStickBehaviour == PlayerPrefsManager.LeftGamepadStickBehaviour.stickRotates)
 		{
 			if (!ClickToPlay.instance.paused)
 			{
