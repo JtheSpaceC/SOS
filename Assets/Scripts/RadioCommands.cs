@@ -254,7 +254,7 @@ public class RadioCommands : MonoBehaviour {
 			remainingButton = button1;
 			Invoke("FadeOutRemainingButtons", 1);
 
-			playerSquadLeadScript.FormUp();
+			//playerSquadLeadScript.FormUp();
 			break;
 
 		case "RADIO SQUADRON ENGAGE AT WILL":
@@ -266,7 +266,7 @@ public class RadioCommands : MonoBehaviour {
 			remainingButton = button2;
 			Invoke("FadeOutRemainingButtons", 1);
 
-			playerSquadLeadScript.EngageAtWill();
+			//playerSquadLeadScript.EngageAtWill();
 			break;
 
 		case "RADIO SQUADRON COVER ME":
@@ -278,7 +278,7 @@ public class RadioCommands : MonoBehaviour {
 			remainingButton = button3;
 			Invoke("FadeOutRemainingButtons", 1);
 
-			playerSquadLeadScript.CoverMe();
+			//playerSquadLeadScript.CoverMe();
 			break;
 
 		case "RADIO SQUADRON DISENGAGE":
@@ -290,7 +290,7 @@ public class RadioCommands : MonoBehaviour {
 			remainingButton = button4;
 			Invoke("FadeOutRemainingButtons", 1);
 
-			playerSquadLeadScript.Disengage();
+			//playerSquadLeadScript.ReturnToBase();
 
 			break;
 		case "RADIO TACTICAL SEND BACKUP":

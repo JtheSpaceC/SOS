@@ -114,6 +114,7 @@ public class SquadronLeader : MonoBehaviour {
 		if(transform.parent.parent.tag == "PlayerFighter")
 		{
 			isPlayerSquad = true;
+			PlayerAILogic.instance.squadLeaderScript = this;
 			GameObject.Find("RADIO layout group").GetComponent<RadioCommands>().enabled = true;
 		}
 		else
@@ -320,57 +321,41 @@ public class SquadronLeader : MonoBehaviour {
 			mate12 = null;
 	}
 
-	public void FormUp()
-	{
-		CheckActiveMateStatus ();
-
-		firstFlightOrders = Orders.FormUp;
-
-		if (mate02 != null) {
-			mate02.GetComponent<AIFighter> ().ChangeToNewState (mate02.GetComponent<AIFighter> ().formUpStates, new float[]{1});
-			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
-			{
-				mate02RadarAnimator.SetTrigger("Flashing");
-				mate02.SendMessage("HUDPointerOn", toolTipDuration);
-			}
-		}
-		if (mate03 != null) {
-			mate03.GetComponent<AIFighter> ().ChangeToNewState (mate03.GetComponent<AIFighter> ().formUpStates, new float[]{1});
-			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
-			{
-				mate03RadarAnimator.SetTrigger("Flashing");
-				mate03.SendMessage("HUDPointerOn", toolTipDuration);
-			}
-		}
-		string[] acknowledgments = new string[] {"Roger that. Forming up!"};
-		AcknowledgeOrderIfWingmenAlive (acknowledgments);
-	}
-
-	public void EngageAtWill()
+	public void FormUp(AIFighter fighter)
 	{
 		CheckActiveMateStatus ();
 
 		if (firstFlightOrders == Orders.Extraction)
 			return;
 
-		firstFlightOrders = Orders.EngageAtWill;
-
-		if(mate02 != null)
+		if (activeWingmen.Contains(fighter.gameObject)) 
 		{
-			mate02.GetComponent<AIFighter> ().ChangeToNewState (mate02.GetComponent<AIFighter> ().normalStates, new float[]{1});
+			fighter.ChangeToNewState (fighter.formUpStates, new float[]{1});
 			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
 			{
-				mate02RadarAnimator.SetTrigger("Flashing");
-				mate02.SendMessage("HUDPointerOn", toolTipDuration);
+				fighter.GetComponentInChildren<RadarSignatures>().GetComponent<Animator>().SetTrigger("Flashing");
+				fighter.SendMessage("HUDPointerOn", toolTipDuration);
 			}
 		}
-		if(mate03 != null)
+
+		string[] acknowledgments = new string[] {"Roger that. Forming up!"};
+		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+	}
+
+	public void EngageAtWill(AIFighter fighter)
+	{
+		CheckActiveMateStatus ();
+
+		if (firstFlightOrders == Orders.Extraction)
+			return;
+
+		if (activeWingmen.Contains(fighter.gameObject)) 
 		{
-			mate03.GetComponent<AIFighter> ().ChangeToNewState (mate03.GetComponent<AIFighter> ().normalStates, new float[]{1});
+			fighter.ChangeToNewState (fighter.normalStates, new float[]{1});
 			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
 			{
-				mate03RadarAnimator.SetTrigger("Flashing");
-				mate03.SendMessage("HUDPointerOn", toolTipDuration);
+				fighter.GetComponentInChildren<RadarSignatures>().GetComponent<Animator>().SetTrigger("Flashing");
+				fighter.SendMessage("HUDPointerOn", toolTipDuration);
 			}
 		}
 			
@@ -378,28 +363,20 @@ public class SquadronLeader : MonoBehaviour {
 		AcknowledgeOrderIfWingmenAlive (acknowledgments);
 	}
 
-	public void CoverMe()
+	public void CoverMe(AIFighter fighter)
 	{
 		CheckActiveMateStatus ();
 
-		firstFlightOrders = Orders.CoverMe;
+		if (firstFlightOrders == Orders.Extraction)
+			return;
 
-		if(mate02)
+		if (activeWingmen.Contains(fighter.gameObject)) 
 		{
-			mate02.GetComponent<AIFighter> ().ChangeToNewState (mate02.GetComponent<AIFighter> ().coverMeStates, new float[]{1});
+			fighter.ChangeToNewState (fighter.coverMeStates, new float[]{1});
 			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
 			{
-				mate02RadarAnimator.SetTrigger("Flashing");
-				mate02.SendMessage("HUDPointerOn", toolTipDuration);
-			}
-		}
-		if (mate03) 
-		{
-			mate03.GetComponent<AIFighter> ().ChangeToNewState (mate03.GetComponent<AIFighter> ().coverMeStates, new float[]{1});
-			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
-			{
-				mate03RadarAnimator.SetTrigger("Flashing");
-				mate03.SendMessage("HUDPointerOn", toolTipDuration);
+				fighter.GetComponentInChildren<RadarSignatures>().GetComponent<Animator>().SetTrigger("Flashing");
+				fighter.SendMessage("HUDPointerOn", toolTipDuration);
 			}
 		}
 
@@ -407,28 +384,20 @@ public class SquadronLeader : MonoBehaviour {
 		AcknowledgeOrderIfWingmenAlive (acknowledgments);
 	}
 
-	public void Disengage()
+	public void ReturnToBase(AIFighter fighter)
 	{
 		CheckActiveMateStatus ();
 
-		firstFlightOrders = Orders.Disengage;
+		if (firstFlightOrders == Orders.Extraction)
+			return;
 		
-		if(mate02)
+		if (activeWingmen.Contains(fighter.gameObject)) 
 		{
-			mate02.GetComponent<AIFighter> ().ChangeToNewState (mate02.GetComponent<AIFighter> ().retreatStates, new float[]{1, 1});
+			fighter.ChangeToNewState (fighter.retreatStates, new float[]{1});
 			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
 			{
-				mate02RadarAnimator.SetTrigger("Flashing");
-				mate02.SendMessage("HUDPointerOn", toolTipDuration);
-			}
-		}
-		if(mate03)
-		{
-			mate03.GetComponent<AIFighter> ().ChangeToNewState (mate03.GetComponent<AIFighter> ().retreatStates, new float[]{1, 1});
-			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
-			{
-				mate03RadarAnimator.SetTrigger("Flashing");
-				mate03.SendMessage("HUDPointerOn", toolTipDuration);
+				fighter.GetComponentInChildren<RadarSignatures>().GetComponent<Animator>().SetTrigger("Flashing");
+				fighter.SendMessage("HUDPointerOn", toolTipDuration);
 			}
 		}
 
@@ -439,7 +408,7 @@ public class SquadronLeader : MonoBehaviour {
 
 	public void ReportIn()
 	{
-		CheckActiveMateStatus ();		
+		CheckActiveMateStatus ();
 
 		if(mate02)
 		{

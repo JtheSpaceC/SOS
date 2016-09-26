@@ -127,16 +127,10 @@ public class WeaponsPrimaryFighter : MonoBehaviour {
 			{
 				hammerDown = false;
 			}
-			if(playerSquadLeaderScript.firstFlightOrders == SquadronLeader.Orders.FormUp)
+			for(int i = 0; i < playerSquadLeaderScript.activeWingmen.Count; i++) //for group firing
 			{
-				if(playerSquadLeaderScript.mate02)
-				{
-					playerSquadLeaderScript.mate02.SendMessage("PloughTheRoad", SendMessageOptions.DontRequireReceiver);
-				}
-				if(playerSquadLeaderScript.mate03)
-				{
-					playerSquadLeaderScript.mate03.SendMessage("PloughTheRoad", SendMessageOptions.DontRequireReceiver);
-				}			
+				if(playerSquadLeaderScript.activeWingmen[i].GetComponent<AIFighter>().currentState == AIFighter.StateMachine.FormUp)
+					playerSquadLeaderScript.activeWingmen[i].SendMessage("PloughTheRoad", SendMessageOptions.DontRequireReceiver);				
 			}
 		}
 

@@ -22,7 +22,8 @@ public static class KevinsCustomEditor : object {
 			"Set Analytics.." +
 			"Set Self-Play reset timer.." +
 			"Check AI Healths.." +
-			"Turn off Manual Spawns";
+			"Turn off Manual Spawns.." +
+			"Set Canvas Resolutions to 1920 x 1080, from 1580 x 889";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)

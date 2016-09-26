@@ -299,9 +299,11 @@ public class AITransport : SupportShipFunctions {
 			fighterEngineScripts = new EnginesFighter[]{carryFighter1Engines};
 			fighterHealthScripts = new HealthFighter[] {carryFighter1Health};
 		}
-		else if(carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders != SquadronLeader.Orders.Disengage)
+		else
 		{
 			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.Extraction;
+			RadialRadioMenu.instance.canAccessRadialRadio = false;
+			RadialRadioMenu.instance.DeactivateRadialMenu();
 			//TODO: check if it's actually the first flight, or if 2nd - 4th		
 
 			//get the wingmen and create arrays of engine and fighter references
@@ -324,10 +326,6 @@ public class AITransport : SupportShipFunctions {
 					fightersToCarry = new GameObject[]{carryFighter1, carryFighter2, carryFighter3};
 				}
 			}
-		}
-		else
-		{
-			Debug.LogError("This shouldn't happen");
 		}
 		
 		//change states and disable components
@@ -422,6 +420,7 @@ public class AITransport : SupportShipFunctions {
 			if(reelingInPlayerGroup)
 			{
 				RadioCommands.instance.canAccessRadio = false;
+				RadialRadioMenu.instance.canAccessRadialRadio = false;
 				CameraTactical.instance.canAccessTacticalMap = false;
 
 				if(carryFighter2 != null)
@@ -497,6 +496,7 @@ public class AITransport : SupportShipFunctions {
 				Subtitles.instance.PostSubtitle(new string[]{"Roger! Engaging Warp Drive"});
 				Camera.main.GetComponent<CameraControllerFighter>().target = null;
 				RadioCommands.instance.canAccessRadio = false;
+				RadialRadioMenu.instance.canAccessRadialRadio = false;
 				Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
 				_battleEventManager.instance.CallPlayerLeaving();
 				Tools.instance.CommenceFade(6, 3, Color.clear, Color.black);
@@ -590,6 +590,7 @@ public class AITransport : SupportShipFunctions {
 		if(reelingInPlayerGroup)
 		{
 			RadioCommands.instance.canAccessRadio = true;
+			RadialRadioMenu.instance.canAccessRadialRadio = true;
 			CameraTactical.instance.canAccessTacticalMap = true;
 			PlayerFighterMovement carryFighter1Movement = carryFighter1.GetComponent<PlayerFighterMovement>();
 			carryFighter1Movement.enabled = true;
@@ -599,7 +600,6 @@ public class AITransport : SupportShipFunctions {
 
 			carryFighter1Health.playerHasAutoDodge = playerHadAutoDodge;
 			carryFighter1Health.snapFocusAmount = playerManaToRestore;
-			carryFighter1.GetComponentInChildren<SquadronLeader>().firstFlightOrders = SquadronLeader.Orders.CoverMe; //TODO: May move this line to respect AI leaders
 			carryFighter1.GetComponent<TargetableObject>().myGui.SetActive(true);
 		}
 		else

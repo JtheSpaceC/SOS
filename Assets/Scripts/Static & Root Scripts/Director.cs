@@ -304,7 +304,12 @@ public class Director : MonoBehaviour {
 		player.transform.position = position;
 
 		player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true);
-		player.GetComponentInChildren<SquadronLeader>().CoverMe();
+
+		for(int i = 0; i < PlayerAILogic.instance.squadLeaderScript.activeWingmen.Count; i++)
+		{
+			PlayerAILogic.instance.squadLeaderScript.CoverMe
+			(PlayerAILogic.instance.squadLeaderScript.activeWingmen[i].GetComponent<AIFighter>());
+		}
 	}
 
 	void Update () 

@@ -715,7 +715,10 @@ public class HealthFighter : Health {
 			SquadronLeader squadLeadScript = GetComponentInChildren<SquadronLeader>();
 			if(squadLeadScript != null && squadLeadScript.firstFlightOrders != SquadronLeader.Orders.Extraction)
 			{
-				squadLeadScript.EngageAtWill();
+				for(int i = 0; i < squadLeadScript.activeWingmen.Count; i++)
+				{
+					squadLeadScript.EngageAtWill(squadLeadScript.activeWingmen[i].GetComponent<AIFighter>());
+				}
 				squadLeadScript.gameObject.SetActive(false);
 			}
 
