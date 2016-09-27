@@ -7,11 +7,14 @@ public class RadialRadioMenu : MonoBehaviour {
 
 	public static RadialRadioMenu instance;
 
+	AudioSource myAudioSource;
+
 	public enum CurrentRadialScreen 
 	{
 		Default,
-		Wingmen, AllWingmen, FirstWingman, SecondWingman,
-		Tactical
+		OpenAChannel,
+		Squadron, AllWingmen, FirstWingman, SecondWingman,
+		Tactical, Extraction
 	};
 	public CurrentRadialScreen currentRadialScreen;
 
@@ -55,6 +58,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		}
 
 		radialMenuCanvas = GetComponent<Canvas>();
+		myAudioSource = GetComponent<AudioSource>();
 	}
 
 
@@ -78,11 +82,12 @@ public class RadialRadioMenu : MonoBehaviour {
 			PlayerAILogic.instance.TogglePlayerControl(true, false, false, false);
 			CameraTactical.instance.canAccessTacticalMap = false;
 
-			currentRadialScreen = CurrentRadialScreen.Wingmen;
+			currentRadialScreen = CurrentRadialScreen.OpenAChannel;
 
 			headerText.enabled = true;
 			centralText.enabled = true;
 			PopulateRadialMenuOptions(currentRadialScreen);
+			myAudioSource.Play();
 			radialMenuShown = true;
 		}
 
@@ -161,7 +166,12 @@ public class RadialRadioMenu : MonoBehaviour {
 	{
 		int radialOptions = 0;
 
-		if(currentRadialScreen == CurrentRadialScreen.Wingmen)
+		if(currentRadialScreen == CurrentRadialScreen.OpenAChannel)
+		{
+			radialOptions = 2; //TODO: Add channel for nearby ships
+			headerText.text = "Open a Channel to..";
+		}
+		else if(currentRadialScreen == CurrentRadialScreen.Squadron)
 		{
 			if(PlayerAILogic.instance.squadLeaderScript.activeWingmen.Count == 0)
 			{
@@ -172,11 +182,16 @@ public class RadialRadioMenu : MonoBehaviour {
 			}
 			else
 			{
-				headerText.text = "Open a Channel to..";
+				headerText.text = "..Select Wingmen..";
 				radialOptions = PlayerAILogic.instance.squadLeaderScript.activeWingmen.Count;
 				if(radialOptions > 1)
 					radialOptions += 1; //for an 'all' option
 			}
+		}
+		else if(currentRadialScreen == CurrentRadialScreen.Tactical)
+		{
+			//TODO: Detect how many options we have
+			radialOptions = 1;
 		}
 		else if(currentScreen == CurrentRadialScreen.FirstWingman || currentScreen == CurrentRadialScreen.SecondWingman
 			|| currentScreen == CurrentRadialScreen.AllWingmen)
@@ -259,7 +274,8 @@ public class RadialRadioMenu : MonoBehaviour {
 		Tools.instance.blackoutPanel.color = Color.clear;
 		AudioMasterScript.instance.masterMixer.SetFloat ("Master vol", 0f);
 		Tools.instance.AlterTimeScale (1f);
-		PlayerAILogic.instance.TogglePlayerControl (true, true, true, true);
+		bool[] bools = PlayerAILogic.instance.previousPlayerControlBools;
+		PlayerAILogic.instance.TogglePlayerControl (bools[0], bools[1], bools[2], bools[3]);
 		CameraTactical.instance.canAccessTacticalMap = true;
 		headerText.enabled = false;
 		centralText.enabled = false;
@@ -309,7 +325,14 @@ public class RadialRadioMenu : MonoBehaviour {
 
 	void AssignCommandsToEachOption()
 	{
-		if(currentRadialScreen == CurrentRadialScreen.Wingmen)
+		if(currentRadialScreen == CurrentRadialScreen.OpenAChannel)
+		{
+			activeRadialOptions[0].displayText = "Squadron";
+			activeRadialOptions[0].myRadialScreen = CurrentRadialScreen.Squadron;
+			activeRadialOptions[1].displayText = "Tactical";
+			activeRadialOptions[1].myRadialScreen = CurrentRadialScreen.Tactical;
+		}
+		else if(currentRadialScreen == CurrentRadialScreen.Squadron)
 		{
 			if(activeRadialOptions.Count == 1) //if there's only the one wingman
 			{
@@ -339,7 +362,6 @@ public class RadialRadioMenu : MonoBehaviour {
 			}
 			return;
 		}
-
 		else if(currentRadialScreen == CurrentRadialScreen.FirstWingman || currentRadialScreen == CurrentRadialScreen.SecondWingman
 			|| currentRadialScreen == CurrentRadialScreen.AllWingmen)
 		{
@@ -348,6 +370,11 @@ public class RadialRadioMenu : MonoBehaviour {
 				activeRadialOptions[i].displayText = Orders[i];
 				activeRadialOptions[i].containsFinalCommand = true;
 			}
+		}
+		else if(currentRadialScreen == CurrentRadialScreen.Tactical)
+		{
+			activeRadialOptions[0].displayText = "Extraction";
+			activeRadialOptions[0].containsFinalCommand = true;
 		}
 	}
 

@@ -34,7 +34,11 @@ public class RadialOption : MonoBehaviour {
 
 	public void RunMySelection()
 	{
-		if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.AllWingmen)
+		if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.Squadron)
+		{
+			
+		}
+		else if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.AllWingmen)
 		{
 			RadialRadioMenu.instance.selectedWingmen.Clear();
 			foreach(GameObject fighter in PlayerAILogic.instance.squadLeaderScript.activeWingmen)
@@ -53,6 +57,10 @@ public class RadialOption : MonoBehaviour {
 			RadialRadioMenu.instance.selectedWingmen.Clear();
 			RadialRadioMenu.instance.selectedWingmen.Add(
 				PlayerAILogic.instance.squadLeaderScript.activeWingmen[1].GetComponent<AIFighter>());
+		}
+		else if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.Tactical)
+		{
+
 		}
 		else if(containsFinalCommand)
 		{
@@ -98,7 +106,9 @@ public class RadialOption : MonoBehaviour {
 				PlayerAILogic.instance.squadLeaderScript.EngageAtWill(wingman);
 			}
 			break;
-
+		case "Extraction":
+			PMCMisisonSupports.instance.Extraction(PlayerAILogic.instance.squadLeaderScript.mate01);
+			break;
 		}
 	}
 

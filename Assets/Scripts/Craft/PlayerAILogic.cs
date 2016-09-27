@@ -17,6 +17,8 @@ public class PlayerAILogic : FighterFunctions {
 	
 	public GameObject target;
 
+	[HideInInspector] public bool[] previousPlayerControlBools = new bool[4];
+
 
 	void Awake()
 	{
@@ -52,11 +54,10 @@ public class PlayerAILogic : FighterFunctions {
 
 
 	public void TogglePlayerControl(bool healthScriptenabled, bool engineScriptEnabled, bool dodgeScriptEnabled, bool shootScriptEnabled)
-	{	
-		return;
+	{
+		previousPlayerControlBools = new bool[]{healthScript.enabled, engineScript.enabled, dodgeScript.enabled, shootScript.enabled};
 		healthScript.enabled = healthScriptenabled;
-		if (squadLeaderScript.firstFlightOrders != SquadronLeader.Orders.Extraction)		
-			engineScript.enabled = engineScriptEnabled;
+		engineScript.enabled = engineScriptEnabled;
 		dodgeScript.enabled = dodgeScriptEnabled;
 		shootScript.enabled = shootScriptEnabled;
 	}
