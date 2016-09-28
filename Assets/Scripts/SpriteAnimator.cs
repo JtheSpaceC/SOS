@@ -6,7 +6,9 @@ using UnityEngine.Events;
 public class SpriteAnimator : MonoBehaviour {
 
 	public bool startImmediately = true;
-	public bool disableAfterOneCycle = false;
+	public bool looping = false;
+	public bool disableGameObjectAfterLoop = false;
+	public bool playInReverseOrder = false;
 
 	[Header ("For Sprite Swap")]
 	public Sprite[] frames;
@@ -59,7 +61,7 @@ public class SpriteAnimator : MonoBehaviour {
 	}
 
 
-	public void AnimateSpriteSwap()
+	void AnimateSpriteSwap()
 	{
 		if(frames.Length == 0)
 		{
@@ -67,26 +69,39 @@ public class SpriteAnimator : MonoBehaviour {
 			return;
 		}
 
-		if (currentFrame >= frames.Length)
+		if ((!playInReverseOrder && currentFrame >= frames.Length) || (playInReverseOrder && currentFrame == 0))
 		{
-			if(disableAfterOneCycle)
-				this.gameObject.SetActive(false);
-			currentFrame = 0;
+			if(!looping)
+			{
+				StopAnimatingSpriteSwap();
+				if(disableGameObjectAfterLoop)
+					this.gameObject.SetActive(false);
+			}
+			if(!playInReverseOrder)
+				currentFrame = 0;
+			else 
+				currentFrame = frames.Length - 1;
 		}
 
 		myRenderer.sprite = frames [currentFrame];
-		currentFrame++;
+
+		if(!playInReverseOrder)
+			currentFrame++;
+		else
+			currentFrame--;
 	}
 
 	public void StartAnimatingSpriteSwap()
 	{
+		if(playInReverseOrder)
+			currentFrame = frames.Length -1;
 		InvokeRepeating("AnimateSpriteSwap", 0, 1/framesPerSecond);
 	}
 
 	public void StopAnimatingSpriteSwap()
 	{
 		currentFrame = 0;
-		if(frames.Length >0)
+		if(frames.Length > 0)
 			myRenderer.sprite = frames [currentFrame];
 		CancelInvoke("AnimateSpriteSwap");
 	}

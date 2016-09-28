@@ -10,7 +10,11 @@ public class Dodge : MonoBehaviour
 	EnginesFighter enginesFighterScript;
 	AIFighter aiFighterScript;
 	HealthFighter healthScript;
+	SpriteAnimator mySpriteAnimator;
 	bool hasAvatar = false;
+
+	public enum AnimationStyle {SpriteSheet, UnityAnimator, RollAModel};
+	public AnimationStyle animationStyle;
 
 	public bool playerControlled = false;
 	public static bool playerIsDodging = false;
@@ -32,7 +36,7 @@ public class Dodge : MonoBehaviour
 	float cantDodgeTime = 0.25f;
 
 	private Animator animator;
-	Transform animationChild;
+	public Transform animationChild;
 	[Tooltip ("If there's extra items you want to rotate.")] public Transform[] alsoRotate;
 	Vector3 rotation;
 	float rotY;
@@ -85,8 +89,10 @@ public class Dodge : MonoBehaviour
 	void Start()
 	{
 		animator = transform.parent.parent.GetComponent<Animator> ();
-		animationChild = transform.parent.parent.FindChild("Effects/Animation");
+		mySpriteAnimator = transform.parent.parent.FindChild("Effects/Animation/roll (sprite swap)").GetComponent<SpriteAnimator>();
 		rollTime = rollDuration;
+		if(mySpriteAnimator)
+			mySpriteAnimator.framesPerSecond = mySpriteAnimator.frames.Length/rollDuration;
 		myAudioSource = GetComponent<AudioSource>();
 		playerMovementScript = transform.parent.transform.parent.GetComponent<PlayerFighterMovement>();
 		enginesFighterScript = transform.parent.transform.parent.GetComponent<EnginesFighter>();
@@ -300,11 +306,23 @@ public class Dodge : MonoBehaviour
 
 		canDodge = false;
 		myAudioSource.Play();
-		rollCooldown = cooldownAmount; 
-		animator.SetTrigger ("Dodging");
+		rollCooldown = cooldownAmount;
 
-		if(!animator.enabled && animationChild != null)
+		//ANIMATIONS
+
+		if(animationStyle == AnimationStyle.SpriteSheet)
+		{
+			mySpriteAnimator.StartAnimatingSpriteSwap();
+			StartCoroutine("RollAnimation"); //in this case, make sure animationChild is blank and just rotate the AlsoRotate objects
+		}
+		else if(animationStyle == AnimationStyle.UnityAnimator)
+		{
+			animator.SetTrigger ("Dodging");
+		}
+		else if(animationStyle == AnimationStyle.RollAModel)
+		{
 			StartCoroutine("RollAnimation"); //used to roll a model with code instead of using the animator
+		}
 
 
 		if(!playerControlled)
@@ -326,7 +344,7 @@ public class Dodge : MonoBehaviour
 		}
 	}
 
-	IEnumerator RollAnimation() //only happens if animator isn't enabled
+	IEnumerator RollAnimation()
 	{	
 		startTime = Time.time;
 
@@ -345,7 +363,9 @@ public class Dodge : MonoBehaviour
 
 			rotY = Mathf.Lerp(0, 360f, t);
 			Vector3 newRot = new Vector3 (0, rotY, 0);
-			animationChild.localRotation = Quaternion.Euler(newRot);
+
+			if(animationChild != null)
+				animationChild.localRotation = Quaternion.Euler(newRot);
 
 			if(alsoRotate.Length > 0)
 			{

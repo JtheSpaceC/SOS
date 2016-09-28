@@ -115,7 +115,7 @@ public class SquadronLeader : MonoBehaviour {
 		{
 			isPlayerSquad = true;
 			PlayerAILogic.instance.squadLeaderScript = this;
-			GameObject.Find("RADIO layout group").GetComponent<RadioCommands>().enabled = true;
+			//GameObject.Find("RADIO layout group").GetComponent<RadioCommands>().enabled = true;
 		}
 		else
 			transform.parent.parent.GetComponent<AIFighter>().flightLeader = transform.parent.parent.gameObject;
