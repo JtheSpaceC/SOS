@@ -8,7 +8,7 @@ public class SpriteAnimator : MonoBehaviour {
 	public bool startImmediately = true;
 	public bool looping = false;
 	public bool disableGameObjectAfterLoop = false;
-	public bool playInReverseOrder = false;
+	[SerializeField] bool playInReverseOrder = false;
 
 	[Header ("For Sprite Swap")]
 	public Sprite[] frames;
@@ -60,6 +60,14 @@ public class SpriteAnimator : MonoBehaviour {
 		AnimateColours();
 	}
 
+	public void SetPlayInReverseOrder(bool doReverse)
+	{
+		playInReverseOrder = doReverse;
+		if(playInReverseOrder)
+			currentFrame = frames.Length -1;
+		else 
+			currentFrame = 0;
+	}
 
 	void AnimateSpriteSwap()
 	{

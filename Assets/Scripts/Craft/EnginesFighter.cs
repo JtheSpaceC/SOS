@@ -4,6 +4,8 @@ using System.Collections;
 
 public class EnginesFighter : MonoBehaviour {
 
+	AIFighter myAIFighterScript;
+
 	[HideInInspector] public Rigidbody2D myRigidBody;
 
 	Vector2 targetLook; 
@@ -89,6 +91,7 @@ public class EnginesFighter : MonoBehaviour {
 
 	void Awake () 
 	{
+		myAIFighterScript = GetComponent<AIFighter>();
 		myRigidBody = GetComponent<Rigidbody2D> ();
 	}
 
@@ -136,7 +139,17 @@ public class EnginesFighter : MonoBehaviour {
 
 		if (target.tag == "Fighter" || target.tag == "PlayerFighter") 
 		{
-			targetMove = target.transform.FindChild("Craft's Six").position;
+			if(myAIFighterScript.currentState == AIFighter.StateMachine.Tailing)
+			{
+				targetMove = target.transform.FindChild("Craft's Six").position;
+			}
+			else if(myAIFighterScript.currentState == AIFighter.StateMachine.Jousting)
+			{
+				targetMove = (Vector2)target.transform.position + (myAIFighterScript.joustingVector * 1000);
+			}
+			else
+				Debug.Log("I think this never happens. Does it? If you read this, make sure to keep the else/if above.");
+				
 			GetMovementSolution (target, targetMove, true, false);
 		}
 		else if(target.tag == "Turret")
@@ -157,6 +170,8 @@ public class EnginesFighter : MonoBehaviour {
 
 		//New complex equation in this function
 		ApplyThrust(newMovementPosition);
+
+		Debug.DrawLine(transform.position, newMovementPosition, Color.red);
 
 		//TODO: add attack patterns that send fighters away from their target at different rates
 		//the higher this force, the less ships will stop and turn on the spot. They'll have wider turning circles
@@ -725,5 +740,11 @@ public class EnginesFighter : MonoBehaviour {
 
 	#endregion
 
+
+	[ContextMenu("Fill Thruster Arrays Automatically")]
+	public void FillThrusterAnimationArrays()
+	{
+		print("test");
+	}
 
 }//Mono

@@ -49,9 +49,8 @@ public class PlayerAILogic : FighterFunctions {
 
 		//Friendly Commander script automatically adds player to known craft
 		enemyCommander.knownEnemyFighters.Add (this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
-	}
-		
 
+	}
 
 	public void TogglePlayerControl(bool healthScriptenabled, bool engineScriptEnabled, bool dodgeScriptEnabled, bool shootScriptEnabled)
 	{

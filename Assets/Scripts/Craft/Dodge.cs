@@ -36,11 +36,12 @@ public class Dodge : MonoBehaviour
 	float cantDodgeTime = 0.25f;
 
 	private Animator animator;
-	public Transform animationChild;
 	[Tooltip ("If there's extra items you want to rotate.")] public Transform[] alsoRotate;
+	bool invertAnimationDirection = false; //to roll left or right
 	Vector3 rotation;
 	float rotY;
 	float t; //time
+	Vector3 newRot;
 
 	public bool dodgingCostsNitro = false;
 
@@ -84,6 +85,7 @@ public class Dodge : MonoBehaviour
 
 	float angle;
 	float diceRoll;
+
 
 
 	void Start()
@@ -275,7 +277,8 @@ public class Dodge : MonoBehaviour
 
 	}//end of UPDATE
 
-	//can probably refactor and remove this once sure it's no longer used
+
+	//REMOVE: can probably refactor and remove this once sure it's no longer used
 	IEnumerator SetDodgingToTrue(/*int frameDelay*/)
 	{
 		dodgeCoroutineStarted = true;
@@ -310,10 +313,13 @@ public class Dodge : MonoBehaviour
 
 		//ANIMATIONS
 
+		invertAnimationDirection = Random.Range(0,2) == 1;
+
 		if(animationStyle == AnimationStyle.SpriteSheet)
 		{
+			mySpriteAnimator.SetPlayInReverseOrder(invertAnimationDirection);
 			mySpriteAnimator.StartAnimatingSpriteSwap();
-			StartCoroutine("RollAnimation"); //in this case, make sure animationChild is blank and just rotate the AlsoRotate objects
+			StartCoroutine("RollAnimation");
 		}
 		else if(animationStyle == AnimationStyle.UnityAnimator)
 		{
@@ -345,7 +351,7 @@ public class Dodge : MonoBehaviour
 	}
 
 	IEnumerator RollAnimation()
-	{	
+	{
 		startTime = Time.time;
 
 		while(Time.time < startTime + rollDuration)
@@ -355,17 +361,17 @@ public class Dodge : MonoBehaviour
 			t = t * t * (3 - (2 * t));*/
 
 			//formula to ease out of animation
-			t = (Time.time - startTime)/ rollDuration;
-			t = Mathf.Sin(t * Mathf.PI * 0.5f);
+			//t = (Time.time - startTime)/ rollDuration;
+			//t = Mathf.Sin(t * Mathf.PI * 0.5f);
 
 			//linear formula
-			//t = (Time.time - startTime)/ rollDuration;
+			t = (Time.time - startTime)/ rollDuration;
 
-			rotY = Mathf.Lerp(0, 360f, t);
-			Vector3 newRot = new Vector3 (0, rotY, 0);
-
-			if(animationChild != null)
-				animationChild.localRotation = Quaternion.Euler(newRot);
+			if(invertAnimationDirection)
+				rotY = Mathf.Lerp(0, 360f, t);
+			else
+				rotY = Mathf.Lerp(360f, 0, t);
+			newRot = new Vector3 (0, rotY, 0);
 
 			if(alsoRotate.Length > 0)
 			{

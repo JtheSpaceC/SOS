@@ -42,8 +42,8 @@ public class AIFighter : FighterFunctions {
 	public Vector2 guardPoint;
 	public Transform escortShip;
 	public bool movingGuardPoint = false;
-	public float guardDistance = 20; //when Patrolling, how close an enemy has to get to break up the patrol
-	public float coveringDistance = 15; //how close to stay to leader when Covering them
+	public float guardDistance = 20f; //when Patrolling, how close an enemy has to get to break up the patrol
+	public float coveringDistance = 15f; //how close to stay to leader when Covering them
 	[Tooltip("Used when Evading to see if nearby people need to be avoided.")]
 	public float dangerRadius = 25f;
 	LayerMask enemyTargets;

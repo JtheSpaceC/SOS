@@ -10,6 +10,12 @@ public class FighterFunctions : TargetableObject {
 	enum JoustingStates {OnApproach, GainingDistance};
 	JoustingStates joustingStates;
 
+	float distanceFromTarget;
+	public float joustingDistance = 20f;
+	Vector2 gainingDistanceWaypoint;
+	[HideInInspector] public Vector2 joustingVector;
+
+
 	// not used
 	protected GameObject CheckLocaleForTargets(Vector3 originPoint, float sensorRadius, LayerMask targetsMask)
 	{
@@ -67,7 +73,6 @@ public class FighterFunctions : TargetableObject {
 		{
 			engineScript.MoveToTarget (target, constantForwardThrustProportion);
 		}
-		
 				
 		if(Time.time > shootScript.nextFire &&
 		   (ReadyAimFire(target, transform, shootScript.weaponsRange) == true || TakePotshot(transform, shootScript.weaponsRange) == true))
@@ -83,20 +88,28 @@ public class FighterFunctions : TargetableObject {
 	{
 		//NB: It's important that we move before look, because the firing solution (in look) requires knowing the new movement position of the target
 
+		distanceFromTarget = Vector2.Distance(transform.position, target.transform.position);
+
 		if(joustingStates == JoustingStates.OnApproach)
-		//then we want to fly towards and look/shoot at the target
+		//we want to fly towards and look/shoot at the target
 		{
-			//once we've passed our target, we want to switch to gaining distance
 			engineScript.LookAtTarget (target);
 
-			if(Vector2.Angle(transform.up, target.transform.position - transform.position)%180 < 165)
+			//so the AI doesn't turn immediately after passing, but there's a slight delay as they turn first. 
+			//this is more like the way a player normally moves, so the AI don't get a turning advantage.
+			if(Vector2.Angle(transform.up, target.transform.position - transform.position)%180 < 30) 
 			{
 				//TODO: work out a new waypoint
 
 				engineScript.MoveToTarget (target, constantForwardThrustProportion);
 			}
+			else //this is where we know we've passed and must gain distance
+			{
+				print(name +" is now Gaining Distance");
+				joustingStates = JoustingStates.GainingDistance;
+			}
 
-
+			//SHOOTING
 			if(Time.time > shootScript.nextFire &&
 				(ReadyAimFire(target, transform, shootScript.weaponsRange) == true || TakePotshot(transform, shootScript.weaponsRange) == true))
 			{
@@ -107,16 +120,28 @@ public class FighterFunctions : TargetableObject {
 			}
 		}
 		else if(joustingStates == JoustingStates.GainingDistance)
-		//then we want to go to a point that
+		//then we want to go to a point away from the target before turning around
 		{
+			if(distanceFromTarget < joustingDistance)
+			{
+				//keep gaining distance
+				gainingDistanceWaypoint = (Vector2)transform.position + gainingDistanceWaypoint;
+
+				engineScript.LookAtTarget(gainingDistanceWaypoint);
+				engineScript.MoveToTarget(gainingDistanceWaypoint, false);
+			}
+			else
+			{
+				//switch switch back to OnApproach
+				print(name +" is now On Approach");
+				joustingStates = JoustingStates.OnApproach;
+
+				//create a line to follow, centred on the target
+				joustingVector = (target.transform.position - transform.position).normalized;
+			}
+
 			//if we can't gain distance because the target is as fast or faster than us and is targeting us
-
-			//then switch to tailing
-
-			//don't LookAt(target), LookAt(waypoint)
 		}
-
-
 	}
 
 
