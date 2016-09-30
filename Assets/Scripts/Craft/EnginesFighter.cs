@@ -145,11 +145,9 @@ public class EnginesFighter : MonoBehaviour {
 			}
 			else if(myAIFighterScript.currentState == AIFighter.StateMachine.Jousting)
 			{
-				targetMove = (Vector2)target.transform.position + (myAIFighterScript.joustingVector * 1000);
+				targetMove = target.transform.position + (target.transform.position - transform.position).normalized*20;
 			}
-			else
-				Debug.Log("I think this never happens. Does it? If you read this, make sure to keep the else/if above.");
-				
+
 			GetMovementSolution (target, targetMove, true, false);
 		}
 		else if(target.tag == "Turret")

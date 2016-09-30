@@ -122,6 +122,7 @@ public class FighterFunctions : TargetableObject {
 		else if(joustingStates == JoustingStates.GainingDistance)
 		//then we want to go to a point away from the target before turning around
 		{
+			//TODO: Start moving away at current velocity so you escape faster, then adjust to turn away from enemy more explicitly?
 			if(distanceFromTarget < joustingDistance)
 			{
 				//keep gaining distance

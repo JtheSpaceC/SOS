@@ -683,7 +683,7 @@ public class HealthFighter : Health {
 			myAIScript.shootScript.transform.parent.gameObject.SetActive(false);
 			myAIScript.missilesScript.targetingPip.SetActive(false);
 			myAIScript.engineScript.enabled = false;
-			RadioCommands.instance.gameObject.SetActive(false);
+			//RadioCommands.instance.gameObject.SetActive(false);
 			GameObject.Find("Consumables Panel").SetActive(false);
 			//dodgeScript.dodgeCooldownImage.gameObject.SetActive(false);
 

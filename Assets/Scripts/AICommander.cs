@@ -73,7 +73,7 @@ public class AICommander : MonoBehaviour {
 	{
 		if(knownEnemyFighters.Count > 0)
 		{
-			askerScript.ChangeToNewState(askerScript.combatStates, new float[]{0, 1});
+			askerScript.ChangeToNewState(askerScript.combatStates, new float[]{1, 0});
 		}
 		else if(knownEnemyTurrets.Count > 0)
 		{
