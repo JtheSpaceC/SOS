@@ -147,6 +147,7 @@ public class EnginesFighter : MonoBehaviour {
 			{
 				targetMove = target.transform.position + (target.transform.position - transform.position).normalized*20;
 			}
+			Debug.DrawLine((Vector2)transform.position, targetMove, Color.green);
 
 			GetMovementSolution (target, targetMove, true, false);
 		}
@@ -214,7 +215,7 @@ public class EnginesFighter : MonoBehaviour {
 
 		Vector2 dirInLocalTerms = transform.InverseTransformDirection(towardsWhere - (Vector2)transform.position);
 
-		//Debug.DrawLine (transform.position, transform.position + transform.TransformVector (dirInLocalTerms), Color.red);
+		//Debug.DrawLine (transform.position, transform.position + transform.TransformVector (dirInLocalTerms), Color.blue);
 
 		//if we're very almost where we want to be, set to zero so more thrust isn't added
 		if(Mathf.Abs(dirInLocalTerms.y) < 0.1f)
@@ -256,6 +257,7 @@ public class EnginesFighter : MonoBehaviour {
 		{
 			ForwardOrBackwardThrust(1, doAnimations);
 		}
+		//old way
 		//myRigidBody.AddForce ((newMovementPosition - (Vector2)transform.position).normalized * currentAccelerationRate * Time.deltaTime);
 	}
 	
@@ -573,6 +575,7 @@ public class EnginesFighter : MonoBehaviour {
 		if(!doAnimations)
 			return;
 
+		//ANIMATIONS
 		if(direction > 0)
 		{
 			TurnOnThrusterGroup(toStrafeRight);
