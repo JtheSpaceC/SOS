@@ -3,6 +3,9 @@ using System.Collections;
 
 public class CameraControllerFighter : MonoBehaviour {
 
+	public enum CameraBehaviour {Normal, PlayerRadar, AsteroidsBox};
+	public CameraBehaviour cameraBehaviour;
+
 	public bool isPlayersRadar = true;
 
 	public float dampTime = 0.2f;
@@ -42,7 +45,7 @@ public class CameraControllerFighter : MonoBehaviour {
 	
 	void FixedUpdate () 
 	{
-		if (target && !isRadarCam)
+		if (cameraBehaviour == CameraBehaviour.Normal && target && !isRadarCam)
 		{
 			Vector3 targetVel = (Vector3)target.transform.parent.GetComponent<Rigidbody2D>().velocity * velocityAffectsCameraAmount;
 			Vector3 lead = target.transform.parent.transform.up * playerLeadDistance;
@@ -57,7 +60,7 @@ public class CameraControllerFighter : MonoBehaviour {
 
 	void LateUpdate()
 	{
-		if (target && isRadarCam)
+		if (cameraBehaviour == CameraBehaviour.PlayerRadar && target && isRadarCam)
 		{
 			//transform.position = target.transform.position + offset; // Will Child this to player. Put this in FixedUpdate if not childed
 			transform.rotation = startingRotation;

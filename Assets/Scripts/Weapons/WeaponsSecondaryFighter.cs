@@ -70,6 +70,20 @@ public class WeaponsSecondaryFighter : MonoBehaviour {
 				}
 			}
 		}
+
+		//REMOVE:
+		//FOR PROTOTYPING ASTEROID SCREEN-LOCK
+		if(target != null)
+		{
+			if(Input.GetKeyDown(KeyCode.E))
+			{
+				//Change the Main Camera's behaviour to Asteroids-box
+				Tools.instance.combatAsteroidsStyleScript.itemsInZone.Add(transform.root.gameObject);
+				Tools.instance.combatAsteroidsStyleScript.itemsInZone.Add(target);
+				Tools.instance.combatAsteroidsStyleScript.enabled = true;
+			}
+
+		}
 	}
 
 	public void LockOn()

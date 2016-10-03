@@ -145,7 +145,8 @@ public class EnginesFighter : MonoBehaviour {
 			}
 			else if(myAIFighterScript.currentState == AIFighter.StateMachine.Jousting)
 			{
-				targetMove = target.transform.position + (target.transform.position - transform.position).normalized*20;
+				targetMove = target.transform.position + (target.transform.position - transform.position).normalized*20 
+					- (Vector3)myRigidBody.velocity;
 			}
 			Debug.DrawLine((Vector2)transform.position, targetMove, Color.green);
 

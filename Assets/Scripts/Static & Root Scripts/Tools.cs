@@ -17,6 +17,8 @@ public class Tools: MonoBehaviour
 	[HideInInspector] public ObjectPoolerScript asteroidPoofPoolerScript;
 	[HideInInspector] public ObjectPoolerScript asteroidPoofBigPoolerScript;
 
+	[HideInInspector] public CombatAsteroidsStyle combatAsteroidsStyleScript;
+
 	public Environment environments;
 
 	public Text killsText;
@@ -78,6 +80,8 @@ public class Tools: MonoBehaviour
 		explosionMiniPoolerScript = GameObject.FindGameObjectWithTag ("ObjectPooler").transform.FindChild ("ExplosionMini Pooler").GetComponent<ObjectPoolerScript> ();
 		asteroidPoofPoolerScript = GameObject.Find ("asteroidPoof Pooler").GetComponent<ObjectPoolerScript> ();
 		asteroidPoofBigPoolerScript = GameObject.Find ("asteroidPoofBig Pooler").GetComponent<ObjectPoolerScript> ();
+
+		combatAsteroidsStyleScript = FindObjectOfType<CombatAsteroidsStyle>();
 
 		if(GameObject.FindGameObjectWithTag("PlayerFighter") == null)
 		{

@@ -167,6 +167,9 @@ public class Missile : MonoBehaviour {
 	
 	public void LookAtTarget(Vector2 pos)
 	{
+		if(Vector2.Angle(transform.up, (Vector3)pos - transform.position) > 60)
+			return;
+		
 		Vector3 dir = (Vector3)pos - transform.position; 
 		float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
 		Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
