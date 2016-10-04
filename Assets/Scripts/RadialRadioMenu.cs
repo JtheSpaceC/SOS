@@ -37,7 +37,7 @@ public class RadialRadioMenu : MonoBehaviour {
 	public Text headerText; //for instruction like "pick the craft"
 	public Text centralText; //for detail on the currently selected option
 
-	bool radialMenuShown = false;
+	[HideInInspector] public bool radialMenuShown = false;
 	RadialOption selectedOption;
 	GameObject radialGuideArrow;
 	Vector2 cursorPos;

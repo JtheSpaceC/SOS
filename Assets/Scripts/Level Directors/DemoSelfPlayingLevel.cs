@@ -84,7 +84,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		radarCamera.transform.SetParent(Camera.main.transform);
 
 		cameraZPos = levelCamera.transform.position.z;
-		Camera.main.GetComponent<ClickToPlay>().escGivesQuitMenu = false;
+		levelCamera.GetComponent<ClickToPlay>().escGivesQuitMenu = false;
+		levelCamera.GetComponent<CameraControllerFighter>().cameraBehaviour = CameraControllerFighter.CameraBehaviour.SelfPlayScene;
 
 		originalSceneResetTime = sceneResetTime;
 

@@ -149,6 +149,11 @@ public class Tools: MonoBehaviour
 		AudioMasterScript.instance.ZeroSFX();
 
 		normalFixedDeltaTime = Time.fixedDeltaTime;
+	}//end of AWAKE
+
+	void OnDisable()
+	{
+		VibrationStop();
 	}
 		
 

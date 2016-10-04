@@ -38,6 +38,13 @@ public class CombatAsteroidsStyle : MonoBehaviour {
 		boxSize.x = maxX - minX;
 		boxSize.y = maxY - minY;
 		boxCol.size = boxSize;
+		boxCol.enabled = true;
+	}
+
+	void OnDisable()
+	{
+		boxCol.enabled = false;
+		GetComponentInParent<CameraControllerFighter>().cameraBehaviour = CameraControllerFighter.CameraBehaviour.Normal;
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -63,12 +70,11 @@ public class CombatAsteroidsStyle : MonoBehaviour {
 		itemsToRemove.Clear();
 
 		//if there's only the player left, return camera to normal
-		if(itemsInZone.Count == 1 && itemsInZone[0].tag == "PlayerFighter")
+	/*	if(itemsInZone.Count == 1 && itemsInZone[0].tag == "PlayerFighter")
 		{
-			GetComponentInParent<CameraControllerFighter>().cameraBehaviour = CameraControllerFighter.CameraBehaviour.Normal;
 			this.enabled = false;
 			return;
-		}
+		}*/
 
 		//check up on all ships that are locked in, and keep them in the box
 		for(int i = 0; i < itemsInZone.Count; i++)

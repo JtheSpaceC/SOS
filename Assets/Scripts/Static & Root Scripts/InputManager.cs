@@ -106,12 +106,12 @@ public class InputManager : MonoBehaviour {
 		if(newType == InputFrom.keyboardMouse)
 		{
 			Cursor.visible = true;
-			RadioCommands.instance.SwitchHelperButtons("keyboard"); 
+		//	RadioCommands.instance.SwitchHelperButtons("keyboard"); 
 		}
 		else
 		{
 			Cursor.visible = false;
-			RadioCommands.instance.SwitchHelperButtons("gamepad");
+		//	RadioCommands.instance.SwitchHelperButtons("gamepad");
 		}
 	}
 

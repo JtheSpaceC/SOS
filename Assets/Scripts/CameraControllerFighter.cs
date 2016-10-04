@@ -3,10 +3,8 @@ using System.Collections;
 
 public class CameraControllerFighter : MonoBehaviour {
 
-	public enum CameraBehaviour {Normal, PlayerRadar, AsteroidsBox};
+	public enum CameraBehaviour {Normal, Radar, AsteroidsBox, SelfPlayScene};
 	public CameraBehaviour cameraBehaviour;
-
-	public bool isPlayersRadar = true;
 
 	public float dampTime = 0.2f;
 	public float playerLeadDistance = 4.0f;
@@ -15,18 +13,17 @@ public class CameraControllerFighter : MonoBehaviour {
 	public Transform target;
 	float startingSize;
 
-	bool isRadarCam = false;
-	//Vector3 offset = new Vector3(0,0,-50);
 	Quaternion startingRotation;
+
+	bool takeDPadInput = true;
 
 
 	void Awake()
 	{
-		if (gameObject.name == "Camera (Radar)")
+		if (cameraBehaviour == CameraBehaviour.Radar)
 		{
-			isRadarCam = true;
-			if(isPlayersRadar)
-				target = GameObject.FindGameObjectWithTag ("PlayerFighter").transform;
+			GameObject player = GameObject.FindGameObjectWithTag ("PlayerFighter");
+			if(player) target = player.transform;
 			startingSize = GetComponent<Camera>().orthographicSize;
 			AdjustRadarCamSize();
 			startingRotation = transform.rotation;
@@ -45,7 +42,7 @@ public class CameraControllerFighter : MonoBehaviour {
 	
 	void FixedUpdate () 
 	{
-		if (cameraBehaviour == CameraBehaviour.Normal && target && !isRadarCam)
+		if ((cameraBehaviour == CameraBehaviour.Normal || cameraBehaviour == CameraBehaviour.SelfPlayScene) && target)
 		{
 			Vector3 targetVel = (Vector3)target.transform.parent.GetComponent<Rigidbody2D>().velocity * velocityAffectsCameraAmount;
 			Vector3 lead = target.transform.parent.transform.up * playerLeadDistance;
@@ -60,11 +57,28 @@ public class CameraControllerFighter : MonoBehaviour {
 
 	void LateUpdate()
 	{
-		if (cameraBehaviour == CameraBehaviour.PlayerRadar && target && isRadarCam)
+		if (cameraBehaviour == CameraBehaviour.Radar && target)
 		{
 			//transform.position = target.transform.position + offset; // Will Child this to player. Put this in FixedUpdate if not childed
 			transform.rotation = startingRotation;
 		}
+		else if(cameraBehaviour == CameraBehaviour.Normal || cameraBehaviour == CameraBehaviour.AsteroidsBox)
+		{
+			if(!ClickToPlay.instance.paused && !RadialRadioMenu.instance.radialMenuShown && 
+				(Input.GetKeyDown(KeyCode.E) || (takeDPadInput && Input.GetAxis("Orders Horizontal") < -0.5f)))
+			{
+				StartCoroutine("DPadInputWait");
+				Tools.instance.combatAsteroidsStyleScript.itemsInZone.Clear();
+				Tools.instance.combatAsteroidsStyleScript.enabled = !Tools.instance.combatAsteroidsStyleScript.enabled;
+			}
+		}
+	}
+
+	IEnumerator DPadInputWait()
+	{
+		takeDPadInput = false;
+		yield return new WaitForSecondsRealtime(0.4f);
+		takeDPadInput = true;
 	}
 	
 	void AdjustRadarCamSize()
