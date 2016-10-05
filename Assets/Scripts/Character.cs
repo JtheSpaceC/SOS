@@ -239,13 +239,32 @@ public class Character : MonoBehaviour {
 
 	public void GenerateName()
 	{
-		firstName = NameGenerator.Instance.getRandomFirstName(gender.ToString().ToCharArray()[0]);
-		lastName = NameGenerator.Instance.getRandomLastName();
-		callsign = NameGenerator.Instance.getRandomCallsign();
+		GetFirstAndLastName();
+		string fullName = firstName+lastName;
+
+		if(Tools.instance)
+		{		
+			while(Tools.instance.fullNamesInUse.Contains(fullName))
+			{
+				GetFirstAndLastName();
+			}
+			Tools.instance.fullNamesInUse.Add(fullName);
+
+			callsign = StaticTools.PopRandomElement(Tools.instance.availableCallsigns);
+		}
+		else callsign = NameGenerator.Instance.getRandomCallsign();
+
+
 		if(myAIFighterScript != null)
 		{
 			myAIFighterScript.nameHUDText.text = callsign;
 		}
+	}
+
+	void GetFirstAndLastName()
+	{
+		firstName = NameGenerator.Instance.getRandomFirstName(gender.ToString().ToCharArray()[0]);
+		lastName = NameGenerator.Instance.getRandomLastName();
 	}
 
 	int NewSeed(int arrayLength) //this function adds its result to the string recording the seed of this appearance

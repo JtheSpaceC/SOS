@@ -16,11 +16,10 @@ namespace AssemblyCSharp
 {
 	public class NameGenerator
 	{
-		private string[] maleNames;
-		private string[] femaleNames;
-		private string[] lastNames;
-		private string[] callsigns;
-
+		string[] maleNames;
+		string[] femaleNames;
+		string[] lastNames;
+		public string[] callsigns;
 
 		private static NameGenerator instance;
 		private NameGenerator() {}
@@ -46,7 +45,7 @@ namespace AssemblyCSharp
 			TextAsset bindata = Resources.Load(file) as TextAsset;
 			string namesString = bindata.ToString();
 			Resources.UnloadAsset(bindata);
-			names = namesString.Split('\n');
+			names = namesString.Split(new char[]{'\n'}, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		public string getRandomFirstName(char gender)

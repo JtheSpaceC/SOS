@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using XInputDotNetPure;
+using AssemblyCSharp;
 
 public class Tools: MonoBehaviour
 {
@@ -63,6 +64,10 @@ public class Tools: MonoBehaviour
 
 	[Tooltip ("If a camera were to follow a ship, what stuff should it normally see?")]
 	public LayerMask normalCameraViewingLayers;
+
+	[HideInInspector] public List<string> availableCallsigns = new List<string>();
+	[HideInInspector] public List<string> fullNamesInUse = new List<string>();
+
 
 
 	void Awake()
@@ -149,6 +154,9 @@ public class Tools: MonoBehaviour
 		AudioMasterScript.instance.ZeroSFX();
 
 		normalFixedDeltaTime = Time.fixedDeltaTime;
+
+		availableCallsigns = new List<string>(NameGenerator.Instance.callsigns);
+
 	}//end of AWAKE
 
 	void OnDisable()
@@ -429,6 +437,5 @@ public class Tools: MonoBehaviour
 		Time.timeScale = newTimescale;
 		Time.fixedDeltaTime = normalFixedDeltaTime * newTimescale;
 	}
-
 
 }
