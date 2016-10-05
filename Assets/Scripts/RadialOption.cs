@@ -12,7 +12,7 @@ public class RadialOption : MonoBehaviour {
 	public float maxRotation;
 
 	public string displayText = "This option";
-	public RadialRadioMenu.CurrentRadialScreen myRadialScreen;
+	public RadialRadioMenu.RadialScreens myRadialScreen;
 
 	public bool containsFinalCommand = false;
 
@@ -34,11 +34,11 @@ public class RadialOption : MonoBehaviour {
 
 	public void RunMySelection()
 	{
-		if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.Squadron)
+		if(myRadialScreen == RadialRadioMenu.RadialScreens.Squadron)
 		{
 			
 		}
-		else if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.AllWingmen)
+		else if(myRadialScreen == RadialRadioMenu.RadialScreens.AllWingmen)
 		{
 			RadialRadioMenu.instance.selectedWingmen.Clear();
 			foreach(GameObject fighter in PlayerAILogic.instance.squadLeaderScript.activeWingmen)
@@ -46,19 +46,19 @@ public class RadialOption : MonoBehaviour {
 				RadialRadioMenu.instance.selectedWingmen.Add(fighter.GetComponent<AIFighter>());
 			}
 		}
-		else if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.FirstWingman)
+		else if(myRadialScreen == RadialRadioMenu.RadialScreens.FirstWingman)
 		{
 			RadialRadioMenu.instance.selectedWingmen.Clear();
 			RadialRadioMenu.instance.selectedWingmen.Add(
 				PlayerAILogic.instance.squadLeaderScript.activeWingmen[0].GetComponent<AIFighter>());
 		}
-		else if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.SecondWingman)
+		else if(myRadialScreen == RadialRadioMenu.RadialScreens.SecondWingman)
 		{
 			RadialRadioMenu.instance.selectedWingmen.Clear();
 			RadialRadioMenu.instance.selectedWingmen.Add(
 				PlayerAILogic.instance.squadLeaderScript.activeWingmen[1].GetComponent<AIFighter>());
 		}
-		else if(myRadialScreen == RadialRadioMenu.CurrentRadialScreen.Tactical)
+		else if(myRadialScreen == RadialRadioMenu.RadialScreens.Tactical)
 		{
 
 		}

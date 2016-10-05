@@ -9,14 +9,16 @@ public class RadialRadioMenu : MonoBehaviour {
 
 	AudioSource myAudioSource;
 
-	public enum CurrentRadialScreen 
+	public enum RadialScreens 
 	{
 		Default,
 		OpenAChannel,
 		Squadron, AllWingmen, FirstWingman, SecondWingman,
 		Tactical, Extraction
 	};
-	public CurrentRadialScreen currentRadialScreen;
+	public RadialScreens currentRadialScreen;
+
+	public List<RadialScreens> screenProgression = new List<RadialScreens>();
 
 	// these are matched in a switch statement in RadialOption
 	public string[] Orders = new string[] {"Form Up", "Cover Me", "Fall Back", "Return To Base", "Engage At Will"}; 
@@ -73,6 +75,7 @@ public class RadialRadioMenu : MonoBehaviour {
 				((Input.GetAxis("Orders Vertical")) > 0.5f) && takeDPadInput ) )
 		{
 			StartCoroutine("DPadInputWait");
+			screenProgression.Clear();
 			Tools.instance.StopCoroutine("FadeScreen");
 			Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
 			Tools.instance.MoveCanvasToFront(radialMenuCanvas);
@@ -82,7 +85,8 @@ public class RadialRadioMenu : MonoBehaviour {
 			PlayerAILogic.instance.TogglePlayerControl(true, false, false, false);
 			CameraTactical.instance.canAccessTacticalMap = false;
 
-			currentRadialScreen = CurrentRadialScreen.OpenAChannel;
+			currentRadialScreen = RadialScreens.OpenAChannel;
+			screenProgression.Add(currentRadialScreen);
 
 			headerText.enabled = true;
 			centralText.enabled = true;
@@ -148,9 +152,12 @@ public class RadialRadioMenu : MonoBehaviour {
 				CalculateZone();
 			}
 
+			//for SELECTING
 			if(selectedOption && (Input.GetButtonDown("FirePrimary")))
 			{
 				currentRadialScreen = selectedOption.myRadialScreen;
+				screenProgression.Add(currentRadialScreen);
+
 				selectedOption.RunMySelection();
 				ClearRadialMenu();
 				if(selectedOption.containsFinalCommand)
@@ -158,20 +165,36 @@ public class RadialRadioMenu : MonoBehaviour {
 				else
 					PopulateRadialMenuOptions(currentRadialScreen);
 			}
+
+			//for GO BACK
+			if((Input.GetButtonDown("Dodge")))
+			{
+				if(currentRadialScreen == RadialScreens.OpenAChannel)
+				{
+					DeactivateRadialMenu();
+				}
+				else
+				{
+					screenProgression.RemoveAt(screenProgression.Count - 1); //remove the last screen
+					currentRadialScreen = screenProgression[screenProgression.Count - 1]; //move to the new last screen on the list (shoudl be previous)
+					ClearRadialMenu();
+					PopulateRadialMenuOptions(currentRadialScreen);
+				}
+			}
 		}
 	}//end of UPDATE
 
 
-	void PopulateRadialMenuOptions(CurrentRadialScreen currentScreen)
+	void PopulateRadialMenuOptions(RadialScreens currentScreen)
 	{
 		int radialOptions = 0;
 
-		if(currentRadialScreen == CurrentRadialScreen.OpenAChannel)
+		if(currentRadialScreen == RadialScreens.OpenAChannel)
 		{
 			radialOptions = 2; //TODO: Add channel for nearby ships
 			headerText.text = "Open a Channel to..";
 		}
-		else if(currentRadialScreen == CurrentRadialScreen.Squadron)
+		else if(currentRadialScreen == RadialScreens.Squadron)
 		{
 			if(PlayerAILogic.instance.squadLeaderScript.activeWingmen.Count == 0)
 			{
@@ -188,16 +211,16 @@ public class RadialRadioMenu : MonoBehaviour {
 					radialOptions += 1; //for an 'all' option
 			}
 		}
-		else if(currentRadialScreen == CurrentRadialScreen.Tactical)
+		else if(currentRadialScreen == RadialScreens.Tactical)
 		{
 			//TODO: Detect how many options we have
 			radialOptions = 1;
 		}
-		else if(currentScreen == CurrentRadialScreen.FirstWingman || currentScreen == CurrentRadialScreen.SecondWingman
-			|| currentScreen == CurrentRadialScreen.AllWingmen)
+		else if(currentScreen == RadialScreens.FirstWingman || currentScreen == RadialScreens.SecondWingman
+			|| currentScreen == RadialScreens.AllWingmen)
 		{
 			radialOptions = Orders.Length;
-			if(currentScreen == CurrentRadialScreen.AllWingmen)
+			if(currentScreen == RadialScreens.AllWingmen)
 				headerText.text = "..to All Wingmen..";
 			else
 				headerText.text = "..to " + selectedWingmen[0].name + "..";
@@ -325,19 +348,19 @@ public class RadialRadioMenu : MonoBehaviour {
 
 	void AssignCommandsToEachOption()
 	{
-		if(currentRadialScreen == CurrentRadialScreen.OpenAChannel)
+		if(currentRadialScreen == RadialScreens.OpenAChannel)
 		{
 			activeRadialOptions[0].displayText = "Squadron";
-			activeRadialOptions[0].myRadialScreen = CurrentRadialScreen.Squadron;
+			activeRadialOptions[0].myRadialScreen = RadialScreens.Squadron;
 			activeRadialOptions[1].displayText = "Tactical";
-			activeRadialOptions[1].myRadialScreen = CurrentRadialScreen.Tactical;
+			activeRadialOptions[1].myRadialScreen = RadialScreens.Tactical;
 		}
-		else if(currentRadialScreen == CurrentRadialScreen.Squadron)
+		else if(currentRadialScreen == RadialScreens.Squadron)
 		{
 			if(activeRadialOptions.Count == 1) //if there's only the one wingman
 			{
 				activeRadialOptions[0].displayText = PlayerAILogic.instance.squadLeaderScript.activeWingmen[0].name;
-				activeRadialOptions[0].myRadialScreen = CurrentRadialScreen.FirstWingman;
+				activeRadialOptions[0].myRadialScreen = RadialScreens.FirstWingman;
 				return;
 			}
 
@@ -347,23 +370,23 @@ public class RadialRadioMenu : MonoBehaviour {
 				if(i == 0)
 				{
 					activeRadialOptions[i].displayText = "All Squad Members";
-					activeRadialOptions[i].myRadialScreen = CurrentRadialScreen.AllWingmen;
+					activeRadialOptions[i].myRadialScreen = RadialScreens.AllWingmen;
 				}
 				else if(i == 1)
 				{
 					activeRadialOptions[i].displayText = PlayerAILogic.instance.squadLeaderScript.activeWingmen[1].name;
-					activeRadialOptions[i].myRadialScreen = CurrentRadialScreen.SecondWingman;
+					activeRadialOptions[i].myRadialScreen = RadialScreens.SecondWingman;
 				}
 				else if(i == 2)
 				{
 					activeRadialOptions[i].displayText = PlayerAILogic.instance.squadLeaderScript.activeWingmen[0].name;
-					activeRadialOptions[i].myRadialScreen = CurrentRadialScreen.FirstWingman;
+					activeRadialOptions[i].myRadialScreen = RadialScreens.FirstWingman;
 				}
 			}
 			return;
 		}
-		else if(currentRadialScreen == CurrentRadialScreen.FirstWingman || currentRadialScreen == CurrentRadialScreen.SecondWingman
-			|| currentRadialScreen == CurrentRadialScreen.AllWingmen)
+		else if(currentRadialScreen == RadialScreens.FirstWingman || currentRadialScreen == RadialScreens.SecondWingman
+			|| currentRadialScreen == RadialScreens.AllWingmen)
 		{
 			for(int i = 0; i < activeRadialOptions.Count; i++)  
 			{
@@ -371,7 +394,7 @@ public class RadialRadioMenu : MonoBehaviour {
 				activeRadialOptions[i].containsFinalCommand = true;
 			}
 		}
-		else if(currentRadialScreen == CurrentRadialScreen.Tactical)
+		else if(currentRadialScreen == RadialScreens.Tactical)
 		{
 			activeRadialOptions[0].displayText = "Extraction";
 			activeRadialOptions[0].containsFinalCommand = true;
