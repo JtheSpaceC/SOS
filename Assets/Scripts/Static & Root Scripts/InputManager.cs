@@ -74,24 +74,29 @@ public class InputManager : MonoBehaviour {
 			}
 		}
 
-		if(!Mathf.Approximately(Input.GetAxis("Mouse X"), 0) || !Mathf.Approximately(Input.GetAxis("Mouse Y"), 0) ||
-			Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
-			Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)||
-			Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Space))
+		if(inputFrom == InputFrom.controller) //if we're on controller, do the checks for keyboard
 		{
-			ChangeTo(InputFrom.keyboardMouse);
-			restartTimer = 0;
+			if(!Mathf.Approximately(Input.GetAxis("Mouse X"), 0) || !Mathf.Approximately(Input.GetAxis("Mouse Y"), 0) ||
+				Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
+				Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)||
+				Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Space))
+			{
+				ChangeTo(InputFrom.keyboardMouse);
+				restartTimer = 0;
+			}
 		}
-
-		else if (!Mathf.Approximately(Input.GetAxis("Gamepad Left Horizontal"), 0) || 
-			!Mathf.Approximately(Input.GetAxis("Gamepad Left Vertical"), 0) ||
-			!Mathf.Approximately(Input.GetAxis("Gamepad Right Horizontal"), 0) ||
-			!Mathf.Approximately(Input.GetAxis("Gamepad Right Vertical"), 0)||
-			!Mathf.Approximately(Input.GetAxis("Orders Vertical"), 0)||
-			!Mathf.Approximately(Input.GetAxis("Orders Horizontal"), 0))
+		else if(inputFrom == InputFrom.keyboardMouse) //if we're on key/mouse, do checks for gamepad
 		{
-			ChangeTo(InputFrom.controller);
-			restartTimer = 0;
+			if (!Mathf.Approximately(Input.GetAxis("Gamepad Left Horizontal"), 0) || 
+				!Mathf.Approximately(Input.GetAxis("Gamepad Left Vertical"), 0) ||
+				!Mathf.Approximately(Input.GetAxis("Gamepad Right Horizontal"), 0) ||
+				!Mathf.Approximately(Input.GetAxis("Gamepad Right Vertical"), 0)||
+				!Mathf.Approximately(Input.GetAxis("Orders Vertical"), 0)||
+				!Mathf.Approximately(Input.GetAxis("Orders Horizontal"), 0))
+			{
+				ChangeTo(InputFrom.controller);
+				restartTimer = 0;
+			}
 		}
 
 	}

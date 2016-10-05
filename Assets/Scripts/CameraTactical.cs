@@ -91,6 +91,9 @@ public class CameraTactical : MonoBehaviour {
 
 
 	void Update(){
+		
+		if(ClickToPlay.instance.escMenuIsShown) //if esc menu is shown don't update
+			return;
 
 		if(mapIsShown)
 			Cursor.visible = false;
@@ -308,6 +311,9 @@ public class CameraTactical : MonoBehaviour {
 
 	void LateUpdate()
 	{
+		if(ClickToPlay.instance.escMenuIsShown) //don't update if we're on esc menu
+			return;
+		
 		if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 		{
 			tacticalCursor.position = tacticalCamera.ScreenToWorldPoint (Input.mousePosition) - offset;

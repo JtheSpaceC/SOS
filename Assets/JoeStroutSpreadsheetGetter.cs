@@ -6,30 +6,38 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Events;
-using UnityEngine.Experimental.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
+public static class QA {
+	public static void Assert(bool condition, string optionalMsg=null) {
+		if (!condition) {
+			if (optionalMsg == null) Debug.LogError("Assertion failed");
+			else Debug.LogError("Assertion failed: " + optionalMsg);
+		}
+	}
+}
+
 public static class JoeStroutSpreadsheetGetter {
-	/*
+	
 	// Here's the "exec" URL for actually running the web service...
-	public static string serviceURL = "https://script.google.com/macros/s/blahblahblahYourURLHere/exec";
+	public static string serviceURL = "https://script.google.com/macros/s/AKfycbwWvDmr_G2Fmev6jiqVuiU8N3Pfo9szThYYmmowQJYVCcXJfkU/exec";
 	// And the source code is at:
 	// https://script.google.com/a/macros/somedomain/d/blahblahblahYourURLHere/edit
 
-	public static UnityWebRequest BuildRequestForSheet(string sheetName) {
+	public static UnityEngine.Networking.UnityWebRequest BuildRequestForSheet(string sheetName) {
 
 		Dictionary<string, string> form = new Dictionary<string, string>();
-		form["ssid"] = "yourSSIDhere";
-		form["pass"] = "yourPassword";
+		form["ssid"] = "1tgQ6yv681BjJJmCd9eLZOyC6hVdsEXba1zY1aDpbyuE";
+		form["pass"] = "SoS2012";
 		form["sheet"] = sheetName;
 
-		UnityWebRequest request = UnityWebRequest.Post(serviceURL, form);
+		UnityEngine.Networking.UnityWebRequest request = UnityEngine.Networking.UnityWebRequest.Post(serviceURL, form);
 		return request;
 	}
 
-	public static List<List<string>> ParseResult(UnityWebRequest completedRequest) {
-		UnityEngine.Assertions.Assert(completedRequest.isDone);
+	public static List<List<string>> ParseResult(UnityEngine.Networking.UnityWebRequest completedRequest) {
+		QA.Assert(completedRequest.isDone);
 		return ParseTable(completedRequest.downloadHandler.text);
 	}
 
@@ -61,7 +69,6 @@ public static class JoeStroutSpreadsheetGetter {
 		List<string> result = new List<string>();
 
 		// Check for the open bracket; then parse inner stuff, until we get to a close bracket
-		int beforePos = pos;
 		QA.Assert(NextAfterWhitespace(jsonData, ref pos) == '[');
 		while (jsonData[pos] != ']') {
 			result.Add(ParseOneItem(jsonData, ref pos));
@@ -120,7 +127,7 @@ public static class JoeStroutSpreadsheetGetter {
 			if (c > ' ') return c;
 		}
 		return (char)0;
-	}*/
+	}
 }
 
 /*

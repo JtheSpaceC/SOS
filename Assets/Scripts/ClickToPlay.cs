@@ -120,6 +120,9 @@ public class ClickToPlay : MonoBehaviour
 		if (disablePlayerSelectButtonForMenu && GameObject.FindGameObjectWithTag("PlayerFighter") != null && playerShootScript)
 			playerShootScript.allowedToFire = false;
 
+		if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+			Cursor.visible = true;
+
 		CameraTactical.instance.canAccessTacticalMap = false;
 
 		Tools.instance.VibrationStop();
