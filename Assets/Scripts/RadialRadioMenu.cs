@@ -165,7 +165,9 @@ public class RadialRadioMenu : MonoBehaviour {
 				else
 					PopulateRadialMenuOptions(currentRadialScreen);
 			}
-
+		}
+		else if(radialMenuShown)
+		{
 			//for GO BACK
 			if((Input.GetButtonDown("Dodge")))
 			{

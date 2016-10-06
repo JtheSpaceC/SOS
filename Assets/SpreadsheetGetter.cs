@@ -59,7 +59,7 @@ public class SpreadsheetGetter : MonoBehaviour {
 				shipInfo = shipInfos[0];
 
 				SpreadsheetGetter.instance.info = "jsonData (" + jsonData.Count +")\n\n";
-				SpreadsheetGetter.instance.info += jsonData +"\n";
+				SpreadsheetGetter.instance.info += jsonData[0] +"\n";
 				SpreadsheetGetter.instance.info += shipInfo.shipType + "\n";
 				SpreadsheetGetter.instance.info += shipInfo.startingAwareness + "\n";
 				SpreadsheetGetter.instance.info += shipInfo.maxHealth + "\n";
