@@ -167,13 +167,15 @@ public class AITransport : SupportShipFunctions {
 
 		if(other.tag == "PlayerFighter")
 		{
-			if(!RadioCommands.instance.buttonsShown)
+			//set up a hailing icon
+			Tools.instance.CreateWaypoint(Tools.WaypointTypes.Comms, this.transform);
+			/*if(!RadioCommands.instance.buttonsShown)
 			{
 				RadioCommands.instance.communicatingGameObject = this.gameObject;
 				RadioCommands.instance.activeButtons = new Button[]{RadioCommands.instance.button1};
 				RadioCommands.instance.ContextualTurnOnRadio ("DOCKING", new string[]{"DOCK", "", "", ""}, false);
 				sentRadioMessageToPlayerGroup = true;
-			}
+			}*/
 		}
 	}
 

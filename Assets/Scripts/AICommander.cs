@@ -102,9 +102,13 @@ public class AICommander : MonoBehaviour {
 		}
 
 		if (i == 0)
+		{
 			return Vector2.zero;
+		}
 		else 
+		{
 			return (avgPos /= i);
+		}
 	}
 
 	public string RequestSquadronName()

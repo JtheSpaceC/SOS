@@ -90,7 +90,10 @@ public class RadialOption : MonoBehaviour {
 			break;
 
 		case "Fall Back":
-			Subtitles.instance.PostHint(new string[]{"FALL BACK BEHAVIOUR NOT IMPLEMENTED YET"});
+			foreach(AIFighter wingman in RadialRadioMenu.instance.selectedWingmen)
+			{
+				PlayerAILogic.instance.squadLeaderScript.FallBack(wingman);
+			}
 			break;
 
 		case "Return To Base":

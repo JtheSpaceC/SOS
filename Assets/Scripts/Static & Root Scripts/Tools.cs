@@ -50,7 +50,7 @@ public class Tools: MonoBehaviour
 	public Toggle useHintsToggleSwitch;
 	[HideInInspector] public bool useHintsThisSession = true;
 
-	[HideInInspector] public enum WaypointTypes {Extraction, Move, Escort, SearchAndDestroy, Follow, Support};
+	[HideInInspector] public enum WaypointTypes {Extraction, Move, Escort, SearchAndDestroy, Follow, Support, Comms};
 
 	[Header("Waypoint Prefabs")]
 	public GameObject waypointPrefab;
@@ -242,6 +242,8 @@ public class Tools: MonoBehaviour
 		{
 			GameObject wp = Instantiate(waypointPrefab, positions[0], Quaternion.identity) as GameObject;
 			wp.GetComponent<PointerHUDElement>().targetWP = positions[0];
+			wp.GetComponent<PointerHUDElement>().myWaypointType = wpType;
+			wp.GetComponent<PointerHUDElement>().Awake();
 		}
 	}
 
@@ -251,10 +253,12 @@ public class Tools: MonoBehaviour
 		{
 			
 		}
-		else if(wpType == WaypointTypes.Escort)
+		else if(wpType == WaypointTypes.Escort || (wpType == WaypointTypes.Comms))
 		{
 			GameObject wp = Instantiate(waypointPrefab, target.position, Quaternion.identity) as GameObject;
 			wp.GetComponent<PointerHUDElement>().target = target;
+			wp.GetComponent<PointerHUDElement>().myWaypointType = wpType;
+			wp.GetComponent<PointerHUDElement>().Awake();
 		}
 	}
 

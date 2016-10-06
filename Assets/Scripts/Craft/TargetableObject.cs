@@ -40,7 +40,6 @@ public class TargetableObject : MonoBehaviour {
 		{
 			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
 			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-
 		}
 		else if (whichSide == WhichSide.Enemy)
 		{
@@ -51,9 +50,6 @@ public class TargetableObject : MonoBehaviour {
 		friendlyFireMask = myCommander.fighterFriendlyFireMask;
 		potshotAtEnemiesMask = myCommander.fighterPotshotMask;
 		potshotsPlusFriendliesMask = friendlyFireMask + potshotAtEnemiesMask;
-
-		myCommander.myTurrets.Add(this.gameObject);
-		enemyCommander.knownEnemyTurrets.Add(this.gameObject);
 	}
 
 

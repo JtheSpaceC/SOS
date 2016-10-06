@@ -380,7 +380,7 @@ public class SquadronLeader : MonoBehaviour {
 			}
 		}
 
-		string[] acknowledgments = new string[] {"Acknowledged. Got your back!"};
+		string[] acknowledgments = new string[] {"Acknowledged. Got your back!", "Got you covered!"};
 		AcknowledgeOrderIfWingmenAlive (acknowledgments);
 	}
 
@@ -401,7 +401,29 @@ public class SquadronLeader : MonoBehaviour {
 			}
 		}
 
-		string[] acknowledgments = new string[] {"Roger. Breaking off!"};
+		string[] acknowledgments = new string[] {"Roger. Breaking off!", "Heading Home!"};
+		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+	}
+
+
+	public void FallBack(AIFighter fighter)
+	{
+		CheckActiveMateStatus ();
+
+		if (firstFlightOrders == Orders.Extraction)
+			return;
+
+		if (activeWingmen.Contains(fighter.gameObject)) 
+		{
+			fighter.ChangeToNewState (fighter.fallbackStates, new float[]{1});
+			if(transform.parent.parent.gameObject.layer == LayerMask.NameToLayer("PMCFighters"))
+			{
+				fighter.GetComponentInChildren<RadarSignatures>().GetComponent<Animator>().SetTrigger("Flashing");
+				fighter.SendMessage("HUDPointerOn", toolTipDuration);
+			}
+		}
+
+		string[] acknowledgments = new string[] {"Roger. Backing off!", "Acknowledged. They're all yours."};
 		AcknowledgeOrderIfWingmenAlive (acknowledgments);
 	}
 

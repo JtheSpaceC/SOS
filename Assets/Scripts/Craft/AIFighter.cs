@@ -13,7 +13,7 @@ public class AIFighter : FighterFunctions {
 	public enum Orders {FighterSuperiority, Patrol, Escort, Wingman, RTB, FullRetreat, NA}; //set by commander //TODO: not used yet
 	public Orders orders;
 
-	public enum StateMachine {Patroling, Tailing, Jousting, Evade, Retreat, FormUp, Covering, Docking, NA};
+	public enum StateMachine {Patroling, Tailing, Jousting, Evade, Retreat, FallBack, FormUp, Covering, Docking, NA};
 	public StateMachine currentState;
 	public StateMachine formerState;
 	[HideInInspector] public StateMachine[] normalStates;
@@ -22,6 +22,7 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector] public StateMachine[] coverMeStates;
 	[HideInInspector] public StateMachine[] retreatStates;
 	[HideInInspector] public StateMachine[] deathStates;
+	[HideInInspector] public StateMachine[] fallbackStates;
 
 	public GameObject target;
 	GameObject targetCheck;
@@ -48,8 +49,9 @@ public class AIFighter : FighterFunctions {
 	public float dangerRadius = 25f;
 	LayerMask enemyTargets;
 	LayerMask dangerSources; //Any layers that could do this fighter harm. Fighter will stay away if retreating
-	public Vector2 evadePosition;
-	public Vector2 retreatPosition;
+	Vector2 evadePosition;
+	Vector2 retreatPosition;
+	public Vector2 fallbackPosition;
 
 	float timer = 0;
 	float nextTime = 0;
@@ -94,6 +96,7 @@ public class AIFighter : FighterFunctions {
 		coverMeStates = new StateMachine[]{StateMachine.Covering};
 		retreatStates = new StateMachine[] {StateMachine.Evade, StateMachine.Retreat};
 		deathStates = new StateMachine[] {StateMachine.NA};
+		fallbackStates = new StateMachine[]{StateMachine.FallBack};
 
 		if(GetComponentInChildren<Character>())
 		{
@@ -283,6 +286,10 @@ public class AIFighter : FighterFunctions {
 		else if(currentState == StateMachine.Retreat)
 		{
 			Retreat();
+		}
+		else if(currentState == StateMachine.FallBack)
+		{
+			FallBack();
 		}
 		else if(currentState == StateMachine.Docking)
 		{
@@ -768,6 +775,7 @@ public class AIFighter : FighterFunctions {
 
 			evadePosition = ChooseRetreatPosition(myRigidbody, potshotAtEnemiesMask, enemyCommander);
 
+			//for despawning
 			if(Vector2.Distance(transform.position, Camera.main.transform.position) > 250f)
 				healthScript.RetreatAndRetrieval();
 		}
@@ -785,6 +793,40 @@ public class AIFighter : FighterFunctions {
 	}//end of RETREAT()
 
 
+	void FallBack()
+	{
+		if(switchingStates)
+		{
+			shootScript.enabled = true;
+
+			//TODO: Give a defensive boost
+
+			timer = 1.5f;
+			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
+			switchingStates = false;
+		}
+		timer += Time.deltaTime;
+
+		if(timer >= nextTime)
+		{
+			timer = 0;
+			nextTime = Random.Range (0.5f, 1.5f);
+
+			fallbackPosition = ChooseFallbackPosition(myRigidbody, flightLeader.transform.position, dangerRadius, potshotAtEnemiesMask, enemyCommander);
+		}
+
+		engineScript.LookAtTarget (fallbackPosition);
+		engineScript.MoveToTarget (fallbackPosition, false);
+
+		//for Potshots
+		if(Time.time > shootScript.nextFire && TakePotshot(transform, shootScript.weaponsRange) == true)
+		{
+			if(shootScript.enabled)
+			{
+				shootScript.FirePrimary(false);
+			}
+		}
+	}
 
 	//MECHANICAL-TYPE FUNCTIONS BELOW HERE
 	

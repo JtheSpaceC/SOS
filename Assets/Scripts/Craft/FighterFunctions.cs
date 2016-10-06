@@ -162,8 +162,8 @@ public class FighterFunctions : TargetableObject {
 		{
 			Vector2 dir = ((Vector2)transform.position - enemyCommanderScript.AverageForcesPosition()).normalized*20;
 			return  ((Vector2)transform.position + myRigidbody.velocity) + dir;
-		}		
-		else
+		}	
+		else //run from enemies
 		{
 			foreach(Collider2D col in enemies)
 			{
@@ -174,6 +174,36 @@ public class FighterFunctions : TargetableObject {
 			}
 			averagePos /= enemies.Length;
 			
+			Vector2 dir = ((Vector2)transform.position + myRigidbody.velocity - averagePos).normalized*20;
+			return  ((Vector2)transform.position + myRigidbody.velocity) + dir;
+		}
+	}
+
+	protected Vector2 ChooseFallbackPosition(Rigidbody2D myRigidbody, Vector2 leaderPosition,
+		float fallbackDistance, LayerMask mask, AICommander enemyCommanderScript)
+	{
+		Collider2D[] enemies = Physics2D.OverlapCircleAll (transform.position, 40f, mask);
+		Vector2 averagePos = Vector2.zero;
+
+		if(enemies.Length == 0)
+		{
+			//stick near(ish) the player
+			Vector2 dir = enemyCommanderScript.AverageForcesPosition() == Vector2.zero? 
+				leaderPosition - ((Vector2)enemyCommanderScript.transform.position.normalized * fallbackDistance)
+				: leaderPosition - (enemyCommanderScript.AverageForcesPosition().normalized*fallbackDistance);
+			return  dir	+ Random.insideUnitCircle * 5f;
+		}	
+		else //run from enemies
+		{
+			foreach(Collider2D col in enemies)
+			{
+				Vector2 enemyVel = col.tag == "Turret"? 
+					col.transform.parent.parent.GetComponent<Rigidbody2D>().velocity : 
+					col.GetComponent<Rigidbody2D>().velocity;
+				averagePos += ((Vector2)col.transform.position + enemyVel);
+			}
+			averagePos /= enemies.Length;
+
 			Vector2 dir = ((Vector2)transform.position + myRigidbody.velocity - averagePos).normalized*20;
 			return  ((Vector2)transform.position + myRigidbody.velocity) + dir;
 		}
