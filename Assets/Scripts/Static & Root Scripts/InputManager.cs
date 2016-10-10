@@ -59,7 +59,7 @@ public class InputManager : MonoBehaviour {
 				Time.timeScale = 1;
 				if(!ClickToPlay.instance.paused)
 				{
-					ClickToPlay.instance.escGivesQuitMenu = false;
+					ClickToPlay.instance.escCanGiveQuitMenu = false;
 					FindObjectOfType<CameraTactical>().enabled = false;
 					StartCoroutine(ClickToPlay.instance.LoadScene(0, 1));
 				}

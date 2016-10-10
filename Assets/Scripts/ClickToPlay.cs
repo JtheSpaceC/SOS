@@ -8,8 +8,8 @@ public class ClickToPlay : MonoBehaviour
 	public static ClickToPlay instance;
 
 	public bool pCanPause = false;
-	public bool escCanQuit = false;
-	public bool escGivesQuitMenu = false;
+	[SerializeField] bool escKeyCanQuitDirectly = false;
+	 public bool escCanGiveQuitMenu = false;
 	[HideInInspector]public bool escMenuIsShown = false;
 	public bool disablePlayerSelectButtonForMenu = false;
 	public WeaponsPrimaryFighter playerShootScript; 
@@ -63,7 +63,7 @@ public class ClickToPlay : MonoBehaviour
 			TogglePause();    
 		}
 
-		if (escCanQuit && Input.GetKeyDown(KeyCode.Escape))
+		if (escKeyCanQuitDirectly && Input.GetKeyDown(KeyCode.Escape))
 			QuitGame();
 
 		if (rCanRestart && Input.GetKeyDown(KeyCode.R))
@@ -71,11 +71,11 @@ public class ClickToPlay : MonoBehaviour
 			RestartLevel();
 		}
 
-		if(escGivesQuitMenu && !escMenuIsShown && Input.GetButtonDown("Cancel"))
+		if(escCanGiveQuitMenu && !escMenuIsShown && Input.GetButtonDown("Cancel"))
 		{
 			EscMenu();
 		}
-		else if(escGivesQuitMenu && escMenuIsShown && Input.GetButtonDown("Cancel"))
+		else if(escCanGiveQuitMenu && escMenuIsShown && Input.GetButtonDown("Cancel"))
 		{
 			ResumeFromEscMenu();
 		}

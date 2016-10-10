@@ -47,6 +47,7 @@ public class RadialRadioMenu : MonoBehaviour {
 	float keyboardLedRotation; //for rotatin on the radial menu with arrow keys
 	bool takeDPadInput = true;
 
+	bool shouldToggleEscMenu = false;
 
 
 	void Awake()
@@ -61,6 +62,13 @@ public class RadialRadioMenu : MonoBehaviour {
 
 		radialMenuCanvas = GetComponent<Canvas>();
 		myAudioSource = GetComponent<AudioSource>();
+	}
+
+
+	void Start()
+	{
+		if(ClickToPlay.instance.escCanGiveQuitMenu)
+			shouldToggleEscMenu = true;
 	}
 
 
@@ -92,6 +100,9 @@ public class RadialRadioMenu : MonoBehaviour {
 			centralText.enabled = true;
 			PopulateRadialMenuOptions(currentRadialScreen);
 			myAudioSource.Play();
+			if(shouldToggleEscMenu)
+				ClickToPlay.instance.escCanGiveQuitMenu = false;
+
 			radialMenuShown = true;
 		}
 
@@ -166,10 +177,11 @@ public class RadialRadioMenu : MonoBehaviour {
 					PopulateRadialMenuOptions(currentRadialScreen);
 			}
 		}
-		else if(radialMenuShown)
+		//outside the above loop necessary so you can go back from a blank screen (like no wingmen available)
+		if(radialMenuShown)
 		{
 			//for GO BACK
-			if((Input.GetButtonDown("Dodge")))
+			if(Input.GetButtonDown("Dodge"))
 			{
 				if(currentRadialScreen == RadialScreens.OpenAChannel)
 				{
@@ -280,6 +292,9 @@ public class RadialRadioMenu : MonoBehaviour {
 		keyboardLedRotation = 0;
 		radialGuideArrowPrefab.SetActive(true);
 
+		if(shouldToggleEscMenu)
+			ClickToPlay.instance.escCanGiveQuitMenu = false;
+
 	}//end of PopulateRadialMenuOptions()
 
 
@@ -305,6 +320,9 @@ public class RadialRadioMenu : MonoBehaviour {
 		headerText.enabled = false;
 		centralText.enabled = false;
 		ClearRadialMenu ();
+		if(shouldToggleEscMenu)
+			ClickToPlay.instance.escCanGiveQuitMenu = true;
+
 		radialMenuShown = false;
 	}
 

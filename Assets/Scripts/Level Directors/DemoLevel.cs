@@ -181,7 +181,7 @@ public class DemoLevel : MonoBehaviour {
 	void Start()
 	{
 		AudioMasterScript.instance.MuteSFX ();
-		ClickToPlay.instance.escGivesQuitMenu = false;
+		ClickToPlay.instance.escCanGiveQuitMenu = false;
 		instructionsPanel.SetActive (true);
 		Time.timeScale = 0;
 		ClickToPlay.instance.paused = true;
@@ -223,7 +223,7 @@ public class DemoLevel : MonoBehaviour {
 
 		//for other
 		equipPanel.SetActive (false);
-		ClickToPlay.instance.escGivesQuitMenu = true;
+		ClickToPlay.instance.escCanGiveQuitMenu = true;
 		instructionsPanel.SetActive (false);
 		Time.timeScale = 1;
 		ClickToPlay.instance.paused = false;
