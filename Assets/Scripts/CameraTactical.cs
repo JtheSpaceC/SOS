@@ -90,8 +90,8 @@ public class CameraTactical : MonoBehaviour {
 	}
 
 
-	void Update(){
-		
+	void Update()
+	{
 		if(ClickToPlay.instance.escMenuIsShown) //if esc menu is shown don't update
 			return;
 
@@ -197,6 +197,7 @@ public class CameraTactical : MonoBehaviour {
 		{
 			AudioMasterScript.instance.MuteSFX();
 			Director.instance.tacMapUses ++;
+			Tools.instance.blackoutPanel.color = Color.clear;
 			//SetUpShipLists(pmcCommander);
 		}
 
@@ -329,6 +330,5 @@ public class CameraTactical : MonoBehaviour {
 		pipPosition.x = tacticalCamera.transform.position.x + (tacticalCamera.orthographicSize * Screen.width/Screen.height);
 		pipPosition.y = tacticalCamera.transform.position.y + tacticalCamera.orthographicSize;
 		pipDisplay.position = pipPosition;
-
 	}
 }//Mono

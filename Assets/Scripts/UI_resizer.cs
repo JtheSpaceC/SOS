@@ -16,7 +16,7 @@ public class UI_resizer : MonoBehaviour {
 	float previousOrthoSize;
 
 
-	void Awake () 
+	void Start () 
 	{
 		if (GameObject.Find ("Camera (Tactical Map)") != null) {
 			mainCam = GameObject.Find ("Camera (Tactical Map)").GetComponent<Camera> ();
