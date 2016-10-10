@@ -34,8 +34,6 @@ public class Tools: MonoBehaviour
 	public Slider nitroRemainingSlider;
 	public Text nitroRemainingText;
 
-	public enum FadeScreenMode {RestClear, RestBlack, FadeIn, FadeOut};
-	public FadeScreenMode fadeScreenMode;
 	public Canvas blackoutCanvas;
 	public Image blackoutPanel;
 	float fadeDelay;

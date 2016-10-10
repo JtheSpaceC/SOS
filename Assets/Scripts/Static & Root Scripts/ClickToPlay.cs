@@ -116,6 +116,7 @@ public class ClickToPlay : MonoBehaviour
 
 	public void EscMenu()
 	{
+		//this next part prevents the player ship from firing if you 'Resume' from the Escape menu with a fire button (spacebar, A)
 		if (disablePlayerSelectButtonForMenu && GameObject.FindGameObjectWithTag("PlayerFighter") != null && playerShootScript)
 			playerShootScript.allowedToFire = false;
 
@@ -128,8 +129,9 @@ public class ClickToPlay : MonoBehaviour
 		AudioMasterScript.instance.MuteSFX();
 		escCanvas.SetActive(true);
 		escMenuPanel.SetActive(true);
+		Tools.instance.blackoutPanel.color = Color.Lerp(Color.clear, Color.black, 0.8f);
 		Tools.instance.MoveCanvasToFront(escCanvas.GetComponent<Canvas>());
-		Time.timeScale = 0;
+		Tools.instance.AlterTimeScale(0);
 		paused = true;
 
 		escMenuIsShown = true;
@@ -144,13 +146,14 @@ public class ClickToPlay : MonoBehaviour
 		{
 			screen.SetActive(false);
 		}
+		Tools.instance.blackoutPanel.color = Color.clear;
 
 		CameraTactical.instance.canAccessTacticalMap = true;
 		AudioMasterScript.instance.ZeroSFX();
 
 		if(!CameraTactical.instance.mapIsShown)
 		{
-			Time.timeScale = 1;
+			Tools.instance.AlterTimeScale(1);
 			paused = false;
 		}
 
