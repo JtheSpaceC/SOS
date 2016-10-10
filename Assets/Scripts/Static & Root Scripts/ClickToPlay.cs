@@ -47,7 +47,6 @@ public class ClickToPlay : MonoBehaviour
 		Cursor.visible = true;
 
 		ChangeControlsImage();
-
 	}
 
 	void Start()

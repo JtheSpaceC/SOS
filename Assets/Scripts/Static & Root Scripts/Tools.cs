@@ -162,6 +162,7 @@ public class Tools: MonoBehaviour
 	void OnDisable()
 	{
 		VibrationStop();
+		AlterTimeScale(1);
 	}
 		
 
