@@ -13,10 +13,24 @@ public class Names : ScriptableObject {
 	[ContextMenu("Sort")]
 	public void SortAlphabetical()
 	{
+		RemoveEmpties(maleNames);
+		RemoveEmpties(femaleNames);
+		RemoveEmpties(lastNames);
+		RemoveEmpties(callsigns);
+
 		maleNames.Sort();
 		femaleNames.Sort();
 		lastNames.Sort();
 		callsigns.Sort();
+	}
+
+	void RemoveEmpties(List<string> whichList)
+	{
+		for(int i = whichList.Count -1; i >= 0; i--)
+		{
+			if(whichList[i] == "")
+				whichList.RemoveAt(i);
+		}
 	}
 
 	[ContextMenu("Import")]
