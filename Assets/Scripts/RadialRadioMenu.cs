@@ -253,6 +253,7 @@ public class RadialRadioMenu : MonoBehaviour {
 			newOption.transform.SetParent(radialMenuCentralPanel);
 			newOption.transform.localPosition = Vector3.zero;
 			newOption.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 360 - rotation));
+			newOption.transform.localScale = Vector3.one;
 			RadialOption newScript = newOption.GetComponent<RadialOption>();
 
 			newScript.enabled = true;
@@ -279,6 +280,7 @@ public class RadialRadioMenu : MonoBehaviour {
 				newDivider.transform.SetParent(radialMenuCentralPanel);
 				newDivider.transform.localPosition = Vector3.zero;
 				newDivider.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+				newDivider.transform.localScale = Vector3.one;
 
 				rotation += degreesEach;
 			}
@@ -288,6 +290,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		radialGuideArrow = Instantiate(radialGuideArrowPrefab) as GameObject;
 		radialGuideArrow.transform.SetParent(radialMenuCentralPanel);
 		radialGuideArrow.transform.localPosition = Vector3.zero;
+		radialGuideArrow.transform.localScale = Vector3.one;
 
 		keyboardLedRotation = 0;
 		radialGuideArrowPrefab.SetActive(true);
