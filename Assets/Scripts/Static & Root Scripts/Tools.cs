@@ -63,7 +63,7 @@ public class Tools: MonoBehaviour
 	[Tooltip ("If a camera were to follow a ship, what stuff should it normally see?")]
 	public LayerMask normalCameraViewingLayers;
 
-	[HideInInspector] public List<string> availableCallsigns = new List<string>();
+	[HideInInspector] public List<string> callsignsInUse = new List<string>();
 	[HideInInspector] public List<string> fullNamesInUse = new List<string>();
 
 
@@ -153,7 +153,7 @@ public class Tools: MonoBehaviour
 
 		normalFixedDeltaTime = Time.fixedDeltaTime;
 
-		availableCallsigns = new List<string>(NameGenerator.Instance.callsigns);
+		callsignsInUse = new List<string>();
 
 	}//end of AWAKE
 

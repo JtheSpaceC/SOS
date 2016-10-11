@@ -31,7 +31,7 @@ public class SpreadsheetGetter : MonoBehaviour {
 		SpreadsheetGetter.GetShipInfo();
 	}
 
-	[MenuItem("Project/Import Ship Info")]
+	//[MenuItem("SOS Crow's Nest/Import Ship Info")]
 	public static void GetShipInfo() //from Google Sheets
 	{
 		CloudConnectorCore.processedResponseCallback.AddListener(SpreadsheetGetter.ParseData);

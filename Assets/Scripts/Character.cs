@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Character : MonoBehaviour {
@@ -30,6 +31,7 @@ public class Character : MonoBehaviour {
 	public bool inSpace = true;
 
 	public Appearance appearances;
+	public Names names;
 	public GameObject avatarOutputPrefab;
 	RenderTexture myRenderTexture;
 
@@ -239,21 +241,34 @@ public class Character : MonoBehaviour {
 
 	public void GenerateName()
 	{
+		//Get a first and last name. We may check this against names in use later, so we don't have the same names in a campaign
 		GetFirstAndLastName();
 		string fullName = firstName+lastName;
 
+		//Do the same for callsigns
+		GetCallsign ();
+
+		//next we check for duplicated names, if appropriate
 		if(Tools.instance)
-		{		
+		{
 			while(Tools.instance.fullNamesInUse.Contains(fullName))
 			{
+				print("Contained full names. Getting new one.");
 				GetFirstAndLastName();
 			}
+
 			Tools.instance.fullNamesInUse.Add(fullName);
 
-			callsign = StaticTools.PopRandomElement(Tools.instance.availableCallsigns);
+			while(Tools.instance.callsignsInUse.Contains(callsign))
+			{
+				print("Contained Callsign " + callsign);
+				GetCallsign();	
+			}
+			Tools.instance.callsignsInUse.Add(callsign);
 		}
-		else callsign = NameGenerator.Instance.getRandomCallsign();
-
+		//OLD WAY
+		//else callsign = NameGenerator.Instance.getRandomCallsign(); 
+		//OR callsign = StaticTools.PopRandomElement(Tools.instance.availableCallsigns);
 
 		if(myAIFighterScript != null)
 		{
@@ -263,8 +278,35 @@ public class Character : MonoBehaviour {
 
 	void GetFirstAndLastName()
 	{
-		firstName = NameGenerator.Instance.getRandomFirstName(gender.ToString().ToCharArray()[0]);
-		lastName = NameGenerator.Instance.getRandomLastName();
+		//firstName = NameGenerator.Instance.getRandomFirstName(gender.ToString().ToCharArray()[0]);
+		//lastName = NameGenerator.Instance.getRandomLastName();
+
+		if(gender == Gender.Male)	
+		{
+			firstName = names.maleNames[UnityEngine.Random.Range(0, names.maleNames.Count)];
+		}
+		else if(gender == Gender.Female)
+		{
+			firstName = names.femaleNames[UnityEngine.Random.Range(0, names.femaleNames.Count)];
+		}
+
+		lastName = names.lastNames[UnityEngine.Random.Range(0, names.lastNames.Count)];
+	}
+
+	void GetCallsign ()
+	{
+		List<string> possibleCallsigns = new List<string>();
+		possibleCallsigns.AddRange(names.callsigns);
+
+		if (gender == Gender.Male) 
+		{
+			possibleCallsigns.AddRange (names.callsignsMaleOnly);
+		}
+		else if (gender == Gender.Female) 
+		{
+			possibleCallsigns.AddRange (names.callsignsFemaleOnly);
+		}
+		callsign = possibleCallsigns [UnityEngine.Random.Range (0, possibleCallsigns.Count)];
 	}
 
 	int NewSeed(int arrayLength) //this function adds its result to the string recording the seed of this appearance

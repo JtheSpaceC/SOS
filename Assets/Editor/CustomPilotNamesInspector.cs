@@ -14,7 +14,8 @@ public class CustomPilotNamesInspector : Editor {
 	void OnEnable()
 	{
 		myNames = (Names)target;
-		allNames = new List<List<string>>{myNames.maleNames, myNames.femaleNames, myNames.lastNames, myNames.callsigns};
+		allNames = new List<List<string>>{myNames.maleNames, myNames.femaleNames, myNames.lastNames, 
+			myNames.callsigns, myNames.callsignsMaleOnly, myNames.callsignsFemaleOnly};
 		myNames.SortAlphabetical();
 	}
 
@@ -26,7 +27,7 @@ public class CustomPilotNamesInspector : Editor {
 
 	public override void OnInspectorGUI()
 	{
-		string[] options = new string[]{"Male Names", "Female Names", "Last Names", "Callsigns"};
+		string[] options = new string[]{"Male Names", "Female Names", "Last Names", "Callsigns", "Callsigns (male only)", "Callsigns (female only)"};
 
 		if(GUILayout.Button("Tidy All Lists"))
 		{
@@ -52,7 +53,12 @@ public class CustomPilotNamesInspector : Editor {
 		GUILayout.EndVertical();
 		GUILayout.Space(5);
 
-		ShowList(allNames[index]);	
+		GUILayout.BeginVertical("box");	
+		GUILayout.Space(5);
+
+			ShowList(allNames[index]);	
+
+		GUILayout.EndVertical();
 
 		//DrawDefaultInspector();
 	}
@@ -66,7 +72,7 @@ public class CustomPilotNamesInspector : Editor {
 		{
 			EditorGUILayout.BeginHorizontal();
 
-			namesList[i] = EditorGUILayout.DelayedTextField(namesList[i], GUILayout.Width(250));
+			namesList[i] = EditorGUILayout.TextField(namesList[i], GUILayout.Width(250));
 
 			if(GUILayout.Button("Delete", GUILayout.Width(50)))
 			{

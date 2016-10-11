@@ -5,13 +5,13 @@ using System.Collections;
 public static class KevinsCustomEditor : object {
 
 
-	[MenuItem("Project/Player Prefs/Clear Player Prefs")]
+	[MenuItem("SOS Crow's Nest/Player Prefs/Clear Player Prefs")]
 	public static void ClearPlayerPrefs()
 	{
 		PlayerPrefs.DeleteAll();
 	}
 
-	[MenuItem("Project/Checklist Before Public Build")]
+	[MenuItem("SOS Crow's Nest/Checklist Before Public Build")]
 	public static void PrintBuildChecklist()
 	{
 		string checklist = 
@@ -23,7 +23,8 @@ public static class KevinsCustomEditor : object {
 			"Set Self-Play reset timer.." +
 			"Check AI Healths.." +
 			"Turn off Manual Spawns.." +
-			"Set Canvas Resolutions to 1920 x 1080, from 1580 x 889";
+			"Set Canvas Resolutions to 1920 x 1080, from 1580 x 889.." +
+			"Turn off Asteroid Combat ability";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)
