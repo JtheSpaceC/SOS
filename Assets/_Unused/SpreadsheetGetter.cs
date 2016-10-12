@@ -2,9 +2,11 @@
 using UnityEditor;
 using System.Collections.Generic;
 
+namespace UnusedOldCode{
+
 public class SpreadsheetGetter : MonoBehaviour {
 
-	public static SpreadsheetGetter instance;
+	/*public static SpreadsheetGetter instance;
 
 	//will output info here for debugging
 	[TextArea(4, 10)]
@@ -110,5 +112,6 @@ public class SpreadsheetGetter : MonoBehaviour {
 //			}
 //			Debug.Log(logMsg);
 		}
-	}
+	}*/
+}
 }
