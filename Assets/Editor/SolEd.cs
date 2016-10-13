@@ -13,6 +13,9 @@ public class SolEd : EditorWindow {
 
 	public ShipStats shipStats;
 
+	public int toolbarInt = 0;
+	public string[] toolbarStrings = new string[]{"Fighters", "Bombers", "Support", "Capital", "Pilots"};
+
 
 	//Show The Window possible
 	[MenuItem("SOS Crow's Nest/Sol Ed")]
@@ -26,17 +29,50 @@ public class SolEd : EditorWindow {
 	{
 		shipStats = (ShipStats)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/ShipStatsHolder.asset", typeof(ShipStats));
 
-		GUILayout.Label ("Base Settings", EditorStyles.boldLabel);
-		unitName = EditorGUILayout.TextField ("Text Field", unitName);
+		GUILayout.Space(10);
+		toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
 
-		groupEnabled = EditorGUILayout.BeginToggleGroup ("Optional Settings", groupEnabled);
-		myBool = EditorGUILayout.Toggle ("Toggle", myBool);
-		myFloat = EditorGUILayout.Slider ("Slider", myFloat, -3, 3);
-		EditorGUILayout.EndToggleGroup ();
-
-		if(GUILayout.Button("Create Unit"))
+		if(toolbarInt == 0) //SHIPS
 		{
-			Debug.Log(shipStats.allFighters[0].level);
+			GUILayout.Label ("Arrow", EditorStyles.boldLabel);
+
+			EditorGUILayout.BeginVertical("box");
+			{
+				foreach(Fighter fighter in shipStats.allFighters)
+				{
+					if(fighter.myShipType == Fighter.ShipType.Arrow)
+					{
+						EditorGUILayout.BeginHorizontal();
+						{
+							GUILayout.Label("Level: " + fighter.level);
+							fighter.maxHealth = EditorGUILayout.IntField(fighter.maxHealth);
+						}
+						EditorGUILayout.EndHorizontal();
+					}
+				}
+			}
+			EditorGUILayout.EndVertical();
+
+
+			GUILayout.Label ("Mantis", EditorStyles.boldLabel);
+
+
+			//SAMPLE CODE
+			unitName = EditorGUILayout.TextField ("Text Field", unitName);
+
+			groupEnabled = EditorGUILayout.BeginToggleGroup ("Optional Settings", groupEnabled);
+			myBool = EditorGUILayout.Toggle ("Toggle", myBool);
+			myFloat = EditorGUILayout.Slider ("Slider", myFloat, -3, 3);
+			EditorGUILayout.EndToggleGroup ();
+
+			if(GUILayout.Button("Create Unit"))
+			{
+				Debug.Log(shipStats.allFighters[0].level);
+			}
+		}
+		else //PILOTS AND OTHER
+		{
+			EditorGUILayout.LabelField("Nothing available for this option. Hurry up and finish making it!");
 		}
 
 		//ShowList(allNames[0]);

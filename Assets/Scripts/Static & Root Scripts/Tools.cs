@@ -21,6 +21,7 @@ public class Tools: MonoBehaviour
 	[HideInInspector] public CombatAsteroidsStyle combatAsteroidsStyleScript;
 
 	public Environment environments;
+	public ShipStats shipStats;
 
 	public Text killsText;
 
