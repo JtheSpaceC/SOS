@@ -12,7 +12,10 @@ public class SpawnerGroup : MonoBehaviour {
 	[Tooltip("If ApproachFromDepth is selected, what is the positive value Z depth to be used?")]
 	public float depth;
 	[Tooltip("If ApproachFromDepth is selected, what is the negative value speed of approach?")]
-	public float speed = -20f;
+	public float approachSpeed = 20f;
+	public float approachFromDepthSpawnRadius = 15f;
+	float approachTime;
+	float startTime;
 
 	public enum WhichSide {Enemy, Ally};
 	public WhichSide whichSide;
@@ -20,10 +23,17 @@ public class SpawnerGroup : MonoBehaviour {
 	public GameObject objectPrefab;
 	public GameObject squadLeaderPrefab;
 
+	[Tooltip("If in Normal spawn mode, spawn this many ships. Otherwise spawn 1.")]
 	[Range(1, 12)] public int numberToSpawn = 3;
 
 	[HideInInspector] public List<GameObject> craft;
 
+	Vector3 pos;
+	Vector3 destination;
+	Vector3 startPos;
+	Vector2 dir;
+
+	bool alreadySpawned = false;
 
 
 	void Start()
@@ -45,24 +55,36 @@ public class SpawnerGroup : MonoBehaviour {
 		else if (spawnMode == SpawnMode.ApproachFromDepth)
 		{
 			GetComponent<TrailRenderer>().enabled = true;
-			GetComponent<moverBasic>().enabled = true;
-			GetComponent<moverBasic>().speed.z = speed;
 
-			Vector3 pos = transform.position;
+			numberToSpawn = 1;
+
+			pos = transform.position;
 			pos.z = depth;
 			transform.position = pos;
+
+			startPos = pos;
+			dir = Random.insideUnitCircle.normalized;
+
+			approachTime = depth/approachSpeed;
+			startTime = Time.time;
 		}
-
-
 	}
 
 	void Update()
 	{
 		if(spawnMode == SpawnMode.ApproachFromDepth)
 		{
-			if(transform.position.z < 0)
+			if(transform.position.z > 0) //move up
 			{
-				Vector3 pos = transform.position;
+				//recheck destination
+				destination = (Vector2)Camera.main.transform.position + (dir * approachFromDepthSpawnRadius);
+
+				//move towards it
+				transform.position = Vector3.Lerp(startPos, destination, (Time.time - startTime)/approachTime);
+			}
+			else if(transform.position.z <= 0 && !alreadySpawned) //we've moved far enough. Spawn now.
+			{
+				pos = transform.position;
 				pos.z = 0;
 				transform.position = pos;
 
@@ -103,7 +125,21 @@ public class SpawnerGroup : MonoBehaviour {
 		else if(whichSide == WhichSide.Enemy)
 			_battleEventManager.instance.CallEnemyFightersSpawned();
 
-			Destroy (gameObject);
+		alreadySpawned = true;
+
+		if(spawnMode == SpawnMode.Normal)
+			Destroy(gameObject);
+		else StartCoroutine("ShrinkTrail");
+	}
+
+	IEnumerator ShrinkTrail()
+	{		
+		while(GetComponent<TrailRenderer>().startWidth > 0)
+		{
+			GetComponent<TrailRenderer>().startWidth -= (.5f/3 * Time.deltaTime);
+			//shrink it a little
+			yield return new WaitForEndOfFrame();
+		}
 	}
 
 }

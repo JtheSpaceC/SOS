@@ -3,9 +3,13 @@ using System.Collections.Generic;
 
 
 [System.Serializable]
-public class ShipStats : ScriptableObject {
+public class ShipStats : ScriptableObject 
+{
 
 	/*[HideInInspector]*/ public List<Fighter> allFighters = new List<Fighter>();
+	[HideInInspector] public List<Fighter> arrowFighters = new List<Fighter>();
+	[HideInInspector] public List<Fighter> mantisFighters = new List<Fighter>();
+
 }
 
 [System.Serializable]
