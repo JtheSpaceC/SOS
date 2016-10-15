@@ -14,7 +14,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		Default,
 		OpenAChannel,
 		Squadron, AllWingmen, FirstWingman, SecondWingman,
-		Tactical, Extraction
+		Support, Extraction
 	};
 	public RadialScreens currentRadialScreen;
 
@@ -225,7 +225,7 @@ public class RadialRadioMenu : MonoBehaviour {
 					radialOptions += 1; //for an 'all' option
 			}
 		}
-		else if(currentRadialScreen == RadialScreens.Tactical)
+		else if(currentRadialScreen == RadialScreens.Support)
 		{
 			//TODO: Detect how many options we have
 			radialOptions = 1;
@@ -375,8 +375,8 @@ public class RadialRadioMenu : MonoBehaviour {
 		{
 			activeRadialOptions[0].displayText = "Squadron";
 			activeRadialOptions[0].myRadialScreen = RadialScreens.Squadron;
-			activeRadialOptions[1].displayText = "Tactical";
-			activeRadialOptions[1].myRadialScreen = RadialScreens.Tactical;
+			activeRadialOptions[1].displayText = "Support";
+			activeRadialOptions[1].myRadialScreen = RadialScreens.Support;
 		}
 		else if(currentRadialScreen == RadialScreens.Squadron)
 		{
@@ -417,7 +417,7 @@ public class RadialRadioMenu : MonoBehaviour {
 				activeRadialOptions[i].containsFinalCommand = true;
 			}
 		}
-		else if(currentRadialScreen == RadialScreens.Tactical)
+		else if(currentRadialScreen == RadialScreens.Support)
 		{
 			activeRadialOptions[0].displayText = "Extraction";
 			activeRadialOptions[0].containsFinalCommand = true;

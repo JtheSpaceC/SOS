@@ -58,7 +58,7 @@ public class RadialOption : MonoBehaviour {
 			RadialRadioMenu.instance.selectedWingmen.Add(
 				PlayerAILogic.instance.squadLeaderScript.activeWingmen[1].GetComponent<AIFighter>());
 		}
-		else if(myRadialScreen == RadialRadioMenu.RadialScreens.Tactical)
+		else if(myRadialScreen == RadialRadioMenu.RadialScreens.Support)
 		{
 
 		}
