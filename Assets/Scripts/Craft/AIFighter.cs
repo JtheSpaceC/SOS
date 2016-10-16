@@ -284,10 +284,13 @@ public class AIFighter : FighterFunctions {
 				ChangeToNewState(retreatStates, new float[]{2,1});
 				healthScript.awareness += (int)(healthScript.maxAwareness/2f);
 				inRetreatState = true;
-				if(flightLeadSquadronScript.activeWingmen.Contains(this.gameObject))
-					flightLeadSquadronScript.activeWingmen.Remove(this.gameObject);
-				if(!flightLeadSquadronScript.retreatingWingmen.Contains(this.gameObject))
-					flightLeadSquadronScript.retreatingWingmen.Add(this.gameObject);
+				if(flightLeadSquadronScript)
+				{
+					if(flightLeadSquadronScript.activeWingmen.Contains(this.gameObject))
+						flightLeadSquadronScript.activeWingmen.Remove(this.gameObject);
+					if(!flightLeadSquadronScript.retreatingWingmen.Contains(this.gameObject))
+						flightLeadSquadronScript.retreatingWingmen.Add(this.gameObject);
+				}
 
 				if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")
 				{
@@ -702,7 +705,8 @@ public class AIFighter : FighterFunctions {
 
 				if(targetCheck != null) //if someone's attacking my Leader
 				{
-					if(!Tools.instance.CheckTargetIsLegit(targetCheck) || Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "first. timer > 1. targetCheck != null"))
+					if(!Tools.instance.CheckTargetIsLegit(targetCheck) || 
+						Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "first. timer > 1. targetCheck != null"))
 					{
 						RemoveBadTargetFromLeadersAttackers(flightLeader, targetCheck);
 						return;
@@ -743,6 +747,7 @@ public class AIFighter : FighterFunctions {
 			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
 			if(Tools.instance.CheckTargetIsLegit(target) == true)
 			{
+				print(name);
 				TailingFunction (engineScript, target, shootScript, constantThrustProportion); //WARNING: This function can result in target being set to null
 			}
 			//This section should be excessive, but is still the only way to stop craft targeting dead enemies and shooting at their death spots
