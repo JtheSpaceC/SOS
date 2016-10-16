@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AIFighter : FighterFunctions {
 
@@ -10,7 +11,20 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
 	public Character myCharacterAvatarScript;
 
+	[Header("Sol Ed")]
+	[Tooltip("Ignore certain stats like health & dodge skill, and pull them from SolEd.")] 
+	public bool useSolEdStatsToOverride = true;
+	public enum ShipType {Arrow, Mantis};
+	public ShipType myShipType;
+	[Tooltip("If this matches a special ship in SolEd, ignore the level below.")]
+	public string specialShip = "";
+	[Tooltip("What level stats to pull down.")]
+	public int myLevel = 1;
+
+	Fighter myStats;
+
 	public enum Orders {FighterSuperiority, Patrol, Escort, Wingman, RTB, FullRetreat, NA}; //set by commander //TODO: not used yet
+	[Header("Orders")]
 	public Orders orders;
 
 	public enum StateMachine {Patroling, Tailing, Jousting, Evade, Retreat, FallBack, FormUp, Covering, Docking, NA};
@@ -24,6 +38,7 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector] public StateMachine[] deathStates;
 	[HideInInspector] public StateMachine[] fallbackStates;
 
+	[Header("Misc")]
 	public GameObject target;
 	GameObject targetCheck;
 	GameObject localTarget;
@@ -109,12 +124,61 @@ public class AIFighter : FighterFunctions {
 
 	void Start () 
 	{
+		if(useSolEdStatsToOverride)
+			PullStatsFromSolEd();
+		
 		if(whichSide == WhichSide.Enemy)
 			cowardice = Mathf.Clamp(cowardice *= Random.Range (0.25f, 1.5f), 0, 99); //TODO: based on character stats for PMC?
 		else
 			cowardice = 100/healthScript.maxHealth;
 
 		StartCoroutine(SetUpAvatarBars());
+	}
+
+	void PullStatsFromSolEd()
+	{
+		List<Fighter> fighterList = new List<Fighter>();
+		if(myShipType == ShipType.Arrow)
+			fighterList = Tools.instance.shipStats.arrowFighters;
+		else if(myShipType == ShipType.Mantis)
+			fighterList = Tools.instance.shipStats.mantisFighters;
+
+		foreach(Fighter fighter in fighterList)
+		{
+			if(specialShip != "" && fighter.specialShip == specialShip)
+			{
+				myStats = fighter;
+				break;
+			}
+			else if(specialShip == "" && fighter.level == myLevel)
+			{
+				if(fighter.specialShip == "")
+				{
+					myStats = fighter;
+					break;
+				}
+			}
+		}
+		if(myStats == null)
+		{
+			Debug.LogError(name + " couldn't find stats in SolEd");
+			return;
+		}
+		else
+		{
+			healthScript.maxHealth = myStats.maxHealth;
+			healthScript.health = healthScript.maxHealth;
+			healthScript.awareness = myStats.startingAwareness;
+			healthScript.maxAwareness = myStats.maxAwareness;
+			healthScript.snapFocusAmount = myStats.snapFocus;
+			healthScript.awarenessRechargeTime = myStats.awarenessRecharge;
+
+			healthScript.dodgeScript.frontDodgeSkill = myStats.dodgeSkillFront;
+			healthScript.dodgeScript.sideDodgeSkill = myStats.dodgeSkillSide;
+			healthScript.dodgeScript.rearDodgeSkill = myStats.dodgeSkillRear;
+			healthScript.dodgeScript.missileMultiplier = myStats.missileMultiplier;
+			healthScript.dodgeScript.asteroidMultiplier = myStats.asteroidMultiplier;
+		}
 	}
 
 	IEnumerator SetUpAvatarBars()

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class SolEd : EditorWindow {
 
-	string unitName = "New Unit";
 	bool groupEnabled;
 	bool myBool = true;
 	float myFloat = 1.23f;
@@ -32,7 +31,7 @@ public class SolEd : EditorWindow {
 	void OnFocus()
 	{
 		shipStats = (ShipStats)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/ShipStatsHolder.asset", typeof(ShipStats));
-		numOfColumns = 7;
+		numOfColumns = 12;
 		/*foreach(Fighter fighter in shipStats.allFighters)
 		{
 			if(fighter.myShipType == Fighter.ShipType.Arrow)
@@ -69,6 +68,12 @@ public class SolEd : EditorWindow {
 				GUILayout.Label("Snap Focus", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 				GUILayout.Label("Awareness Recharge", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 
+				GUILayout.Label("Dodge Front", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+				GUILayout.Label("Dodge Side", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+				GUILayout.Label("Dodge Rear", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+				GUILayout.Label("Missile Mult.", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+				GUILayout.Label("Asteroid Mult. ", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+
 				GUILayout.Label("Special Ship Code", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 			}
 
@@ -81,14 +86,6 @@ public class SolEd : EditorWindow {
 				ListLayout("Mantis", shipStats.mantisFighters);
 			}
 			EditorGUILayout.EndScrollView();
-
-			//SAMPLE CODE
-			GUILayout.Space(30);
-
-			groupEnabled = EditorGUILayout.BeginToggleGroup ("Optional Settings", groupEnabled);
-			myBool = EditorGUILayout.Toggle ("Toggle", myBool);
-			myFloat = EditorGUILayout.Slider ("Slider", myFloat, -3, 3);
-			EditorGUILayout.EndToggleGroup();
 		}
 		#endregion
 
@@ -102,7 +99,7 @@ public class SolEd : EditorWindow {
 
 		if(fighterInfoWindow.width != 0)
 		{
-			headerWidth = (fighterInfoWindow.width - 25)/numOfColumns;
+			headerWidth = (fighterInfoWindow.width - 45)/numOfColumns;
 		}
 	}
 
@@ -119,12 +116,21 @@ public class SolEd : EditorWindow {
 				{
 					//whichList[i].myShipType = (Fighter.ShipType)EditorGUILayout.EnumPopup(whichList[i].myShipType);
 					whichList[i].level = i+1; 
-					EditorGUILayout.LabelField("Level: " + whichList[i].level, GUILayout.Width(headerWidth));
+					if(whichList[i].specialShip == "")
+						EditorGUILayout.LabelField("Level: " + whichList[i].level, GUILayout.Width(headerWidth));
+					else
+						EditorGUILayout.LabelField("Special: ", GUILayout.Width(headerWidth));					
 					whichList[i].maxHealth = EditorGUILayout.IntField(whichList[i].maxHealth);
 					whichList[i].startingAwareness = EditorGUILayout.IntField(whichList[i].startingAwareness);
 					whichList[i].maxAwareness = EditorGUILayout.IntField(whichList[i].maxAwareness);
 					whichList[i].snapFocus = EditorGUILayout.IntField(whichList[i].snapFocus);
 					whichList[i].awarenessRecharge = EditorGUILayout.FloatField(whichList[i].awarenessRecharge);
+
+					whichList[i].dodgeSkillFront = EditorGUILayout.FloatField(whichList[i].dodgeSkillFront);
+					whichList[i].dodgeSkillSide = EditorGUILayout.FloatField(whichList[i].dodgeSkillSide);
+					whichList[i].dodgeSkillRear = EditorGUILayout.FloatField(whichList[i].dodgeSkillRear);
+					whichList[i].missileMultiplier = EditorGUILayout.FloatField(whichList[i].missileMultiplier);
+					whichList[i].asteroidMultiplier = EditorGUILayout.FloatField(whichList[i].asteroidMultiplier);
 
 					whichList[i].specialShip = EditorGUILayout.TextField(whichList[i].specialShip);
 				}
@@ -132,11 +138,11 @@ public class SolEd : EditorWindow {
 			}	
 			EditorGUILayout.BeginHorizontal(); //Add/Remove buttons
 			{
-				if(GUILayout.Button("Add", GUILayout.Width(headerWidth/2)))
+				if(GUILayout.Button("Add", GUILayout.Width(headerWidth)))
 				{
 					whichList.Add(new Fighter());
 				}
-				if(GUILayout.Button("Remove", GUILayout.Width(headerWidth/2)))
+				if(GUILayout.Button("Remove", GUILayout.Width(headerWidth)))
 				{
 					if(whichList.Count > 0)
 						whichList.Remove(whichList[whichList.Count-1]);

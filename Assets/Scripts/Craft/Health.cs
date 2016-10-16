@@ -74,7 +74,7 @@ public class Health : MonoBehaviour {
 				newBox.transform.SetParent(healthBarDividingBox.transform.parent);
 				newBox.transform.localScale = Vector3.one;
 			}
-			for(int i = 0; i < healthBarDividingBox.transform.parent.childCount; i++)
+			for(int i = 0; i < maxHealth; i++)
 			{
 				healthBarDividingBox.transform.parent.GetChild(i).gameObject.SetActive(true);
 			}

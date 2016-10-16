@@ -7,7 +7,7 @@ using System.Collections;
 public class HealthFighter : Health {
 
 	AIFighter myAIScript;
-	Dodge dodgeScript;
+	[HideInInspector] public Dodge dodgeScript;
 
 	bool thisIsPlayer = false;
 
