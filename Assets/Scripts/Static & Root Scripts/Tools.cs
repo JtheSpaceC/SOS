@@ -22,6 +22,7 @@ public class Tools: MonoBehaviour
 
 	public Environment environments;
 	public ShipStats shipStats;
+	public Icons icons;
 
 	public Text killsText;
 

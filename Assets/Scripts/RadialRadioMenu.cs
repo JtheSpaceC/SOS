@@ -22,6 +22,8 @@ public class RadialRadioMenu : MonoBehaviour {
 
 	// these are matched in a switch statement in RadialOption
 	public string[] Orders = new string[] {"Form Up", "Cover Me", "Fall Back", "Return To Base", "Engage At Will"}; 
+	public Sprite[] OrdersIcons;
+	public Sprite[] OrdersIconsHighlighted;
 
 	public GameObject radialOptionPrefab;
 	public GameObject radialDivideBarPrefab;
@@ -69,6 +71,23 @@ public class RadialRadioMenu : MonoBehaviour {
 	{
 		if(ClickToPlay.instance.escCanGiveQuitMenu)
 			shouldToggleEscMenu = true;
+
+		OrdersIcons = new Sprite[]
+		{
+			Tools.instance.icons.formUpIcon,
+			Tools.instance.icons.coverMeIcon,
+			Tools.instance.icons.fallBackIcon,
+			Tools.instance.icons.returnToBaseIcon,
+			Tools.instance.icons.engageAtWillIcon
+		};
+		OrdersIconsHighlighted = new Sprite[]
+		{
+			Tools.instance.icons.formUpIconHighlighted,
+			Tools.instance.icons.coverMeIconHighlighted,
+			Tools.instance.icons.fallBackIconHighlighted,
+			Tools.instance.icons.returnToBaseIconHighlighted,
+			Tools.instance.icons.engageAtWillIconHighlighted
+		};
 	}
 
 
@@ -137,7 +156,7 @@ public class RadialRadioMenu : MonoBehaviour {
 				}
 				else if(selectedOption)
 				{
-					selectedOption.myImage.color = Color.white;
+					selectedOption.myImage.sprite = selectedOption.myIcon;
 					selectedOption = null;
 					centralText.text = "";
 				}
@@ -331,9 +350,9 @@ public class RadialRadioMenu : MonoBehaviour {
 
 	void CalculateZone()
 	{
-		//set the old option white. New option might be the same or different, and we'll highlight it when found below
+		//set the old option to un-highlighter. New option might be the same or different, and we'll highlight it when found below
 		if(selectedOption)
-			selectedOption.myImage.color = Color.white;
+			selectedOption.myImage.sprite = selectedOption.myIcon;
 
 		//which zone is the cursor in? go through all zones to check if current cursorRotation is between min and max
 		for(int i = 0; i < activeRadialOptions.Count; i++)
@@ -355,7 +374,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		if(selectedOption != null)
 		{
 			if(selectedOption.myImage != null)
-				selectedOption.myImage.color = Color.red;
+				selectedOption.myImage.sprite = selectedOption.myHighlightedIcon;
 			
 			centralText.text = selectedOption.displayText;
 		}
@@ -375,8 +394,13 @@ public class RadialRadioMenu : MonoBehaviour {
 		{
 			activeRadialOptions[0].displayText = "Squadron";
 			activeRadialOptions[0].myRadialScreen = RadialScreens.Squadron;
+			activeRadialOptions[0].myIcon = Tools.instance.icons.squadronIcon;
+			activeRadialOptions[0].myHighlightedIcon = Tools.instance.icons.squadronIconHighlighted;
+
 			activeRadialOptions[1].displayText = "Support";
 			activeRadialOptions[1].myRadialScreen = RadialScreens.Support;
+			activeRadialOptions[1].myIcon = Tools.instance.icons.supportIcon;
+			activeRadialOptions[1].myHighlightedIcon = Tools.instance.icons.supportIconHighlighted;
 		}
 		else if(currentRadialScreen == RadialScreens.Squadron)
 		{
@@ -384,6 +408,8 @@ public class RadialRadioMenu : MonoBehaviour {
 			{
 				activeRadialOptions[0].displayText = PlayerAILogic.instance.squadLeaderScript.activeWingmen[0].name;
 				activeRadialOptions[0].myRadialScreen = RadialScreens.FirstWingman;
+				activeRadialOptions[0].myIcon = Tools.instance.icons.twoIcon; //TODO: What if it's Arrow 3, and 2 died or retreated?
+				activeRadialOptions[0].myHighlightedIcon = Tools.instance.icons.twoIconHighlighted;
 				return;
 			}
 
@@ -394,19 +420,24 @@ public class RadialRadioMenu : MonoBehaviour {
 				{
 					activeRadialOptions[i].displayText = "All Squad Members";
 					activeRadialOptions[i].myRadialScreen = RadialScreens.AllWingmen;
+					activeRadialOptions[i].myIcon = Tools.instance.icons.allShipsIcon;
+					activeRadialOptions[i].myHighlightedIcon = Tools.instance.icons.allShipsIconHighlighted;
 				}
 				else if(i == 1)
 				{
 					activeRadialOptions[i].displayText = PlayerAILogic.instance.squadLeaderScript.activeWingmen[1].name;
 					activeRadialOptions[i].myRadialScreen = RadialScreens.SecondWingman;
+					activeRadialOptions[i].myIcon = Tools.instance.icons.threeIcon;
+					activeRadialOptions[i].myHighlightedIcon = Tools.instance.icons.threeIconHighlighted;
 				}
 				else if(i == 2)
 				{
 					activeRadialOptions[i].displayText = PlayerAILogic.instance.squadLeaderScript.activeWingmen[0].name;
 					activeRadialOptions[i].myRadialScreen = RadialScreens.FirstWingman;
+					activeRadialOptions[i].myIcon = Tools.instance.icons.twoIcon;
+					activeRadialOptions[i].myHighlightedIcon = Tools.instance.icons.twoIconHighlighted;
 				}
 			}
-			return;
 		}
 		else if(currentRadialScreen == RadialScreens.FirstWingman || currentRadialScreen == RadialScreens.SecondWingman
 			|| currentRadialScreen == RadialScreens.AllWingmen)
@@ -415,14 +446,25 @@ public class RadialRadioMenu : MonoBehaviour {
 			{
 				activeRadialOptions[i].displayText = Orders[i];
 				activeRadialOptions[i].containsFinalCommand = true;
+				activeRadialOptions[i].myIcon = OrdersIcons[i];
+				activeRadialOptions[i].myHighlightedIcon = OrdersIconsHighlighted[i];
 			}
 		}
 		else if(currentRadialScreen == RadialScreens.Support)
 		{
 			activeRadialOptions[0].displayText = "Extraction";
 			activeRadialOptions[0].containsFinalCommand = true;
+			activeRadialOptions[0].myIcon = Tools.instance.icons.extractionIcon;
+			activeRadialOptions[0].myHighlightedIcon = Tools.instance.icons.extractionIconHighlighted;
 		}
-	}
+
+		//display icons
+		for(int i = 0; i < activeRadialOptions.Count; i++)
+		{
+			activeRadialOptions[i].myImage.sprite = activeRadialOptions[i].myIcon;
+		}
+
+	}//end of AssignCommandsToEachOption()
 
 }
 

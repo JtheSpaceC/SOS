@@ -7,8 +7,9 @@ public class UI_NonRotate : MonoBehaviour {
 	public bool rotationShouldBeZero = false;
 	public bool keepRelativePosition = false;
 
-	private Quaternion rotation;
-	private Vector3 position;
+	Quaternion rotation;
+	Vector3 position;
+
 
 	void Start ()
 	{

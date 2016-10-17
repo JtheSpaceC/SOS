@@ -7,6 +7,9 @@ public class RadialOption : MonoBehaviour {
 	public Image myImage;
 	public float realRotation;
 
+	 public Sprite myIcon;
+	 public Sprite myHighlightedIcon;
+
 	//these two are for 'owning' a zone of the cursor's rotation
 	public float minRotation;
 	public float maxRotation;
@@ -16,11 +19,6 @@ public class RadialOption : MonoBehaviour {
 
 	public bool containsFinalCommand = false;
 
-
-	void Start()
-	{
-		myImage = GetComponent<Image>();
-	}
 
 	public void GetRealRotation()
 	{
