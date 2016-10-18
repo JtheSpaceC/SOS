@@ -19,7 +19,9 @@ public class SolEd : EditorWindow {
 	public string[] toolbarStrings = new string[]{"Fighters", "Bombers", "Support", "Capital", "Pilots"};
 	Vector2 scrollPos = Vector2.zero;
 	Rect fighterInfoWindow = new Rect(Vector2.zero, s_WindowsMinSize);
+	Rect copyAndDeleteButtonsSpace = new Rect(Vector2.zero, s_WindowsMinSize);
 	float headerWidth = 131f;
+	float copyAndDeleteButtonsHeaderWidth = 90f;
 	int numOfColumns;
 
 	//Show The Window possible
@@ -34,18 +36,7 @@ public class SolEd : EditorWindow {
 		shipStats = (ShipStats)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/ShipStatsHolder.asset", typeof(ShipStats));
 		icons = (Icons)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/Icons.asset", typeof(Icons));
 
-		numOfColumns = 12;
-		/*foreach(Fighter fighter in shipStats.allFighters)
-		{
-			if(fighter.myShipType == Fighter.ShipType.Arrow)
-			{
-				shipStats.arrowFighters.Add(fighter);
-			}
-			else if(fighter.myShipType == Fighter.ShipType.Mantis)
-			{
-				shipStats.mantisFighters.Add(fighter);
-			}
-		}*/
+		numOfColumns = 12; //excludes the delete & copy column
 	}
 
 	//actual Window Code
@@ -65,13 +56,13 @@ public class SolEd : EditorWindow {
 			//HEADERS for fields
 			GUILayout.BeginHorizontal("box");
 			{
-				GUILayout.Label("Delete & Copy", EditorStyles.wordWrappedLabel, GUILayout.Width(45));
+				GUILayout.Label("Delete & Copy", EditorStyles.wordWrappedLabel, GUILayout.Width(copyAndDeleteButtonsHeaderWidth));
 				GUILayout.Label("Level", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 				GUILayout.Label("Max Health", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
-				GUILayout.Label("Starting Awareness", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
-				GUILayout.Label("Max Awareness", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+				GUILayout.Label("Starting S.A.", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+				GUILayout.Label("Max S.A.", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 				GUILayout.Label("Snap Focus", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
-				GUILayout.Label("Awareness Recharge", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
+				GUILayout.Label("S.A. Recharge", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 
 				GUILayout.Label("Dodge Front", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 				GUILayout.Label("Dodge Side", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
@@ -106,6 +97,10 @@ public class SolEd : EditorWindow {
 		{
 			headerWidth = (fighterInfoWindow.width - 45)/numOfColumns;
 		}
+		if(copyAndDeleteButtonsSpace.width != 0)
+		{
+			copyAndDeleteButtonsHeaderWidth = copyAndDeleteButtonsSpace.width;
+		}
 	}
 
 	void ListLayout(string heading, List<Fighter> whichList)
@@ -117,43 +112,53 @@ public class SolEd : EditorWindow {
 
 			for(int i = 0; i < whichList.Count; i++)
 			{
-				fighterInfoWindow = EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.BeginHorizontal(); //this joins the Horizontals for copy/del buttons & other fighter stats
 				{
-					//DELETE BUTTON
-					if(GUILayout.Button("X"))
+					copyAndDeleteButtonsSpace = EditorGUILayout.BeginHorizontal();
 					{
-						whichList.RemoveAt(i);
-						return;
+						//DELETE BUTTON
+						if(GUILayout.Button("X"))
+						{
+							whichList.RemoveAt(i);
+							return;
+						}
+						//COPY BUTTON
+						if(GUILayout.Button("C"))
+						{
+							Fighter copiedFighter = Fighter.CopyFighter(whichList[i]);
+							whichList.Insert(i+1, copiedFighter);
+							return;
+						}
 					}
-					//COPY BUTTON
-					if(GUILayout.Button("D"))
+					EditorGUILayout.EndHorizontal();
+
+					fighterInfoWindow = EditorGUILayout.BeginHorizontal();
 					{
-						Fighter copiedFighter = Fighter.CopyFighter(whichList[i]);
-						whichList.Insert(i+1, copiedFighter);
-						return;
+						//ALL STATS
+						whichList[i].level = i+1; 
+						if(whichList[i].specialShip == "")
+							EditorGUILayout.LabelField("Level: " + whichList[i].level, GUILayout.Width(headerWidth));
+						else
+							EditorGUILayout.LabelField("Special: ", GUILayout.Width(headerWidth));					
+						whichList[i].maxHealth = EditorGUILayout.IntField(whichList[i].maxHealth);
+						whichList[i].startingAwareness = EditorGUILayout.IntField(whichList[i].startingAwareness);
+						whichList[i].maxAwareness = EditorGUILayout.IntField(whichList[i].maxAwareness);
+						whichList[i].snapFocus = EditorGUILayout.IntField(whichList[i].snapFocus);
+						whichList[i].awarenessRecharge = EditorGUILayout.FloatField(whichList[i].awarenessRecharge);
+
+						whichList[i].dodgeSkillFront = EditorGUILayout.FloatField(whichList[i].dodgeSkillFront);
+						whichList[i].dodgeSkillSide = EditorGUILayout.FloatField(whichList[i].dodgeSkillSide);
+						whichList[i].dodgeSkillRear = EditorGUILayout.FloatField(whichList[i].dodgeSkillRear);
+						whichList[i].missileMultiplier = EditorGUILayout.FloatField(whichList[i].missileMultiplier);
+						whichList[i].asteroidMultiplier = EditorGUILayout.FloatField(whichList[i].asteroidMultiplier);
+
+						whichList[i].specialShip = EditorGUILayout.TextField(whichList[i].specialShip);
 					}
-					//ALL STATS
-					whichList[i].level = i+1; 
-					if(whichList[i].specialShip == "")
-						EditorGUILayout.LabelField("Level: " + whichList[i].level, GUILayout.Width(headerWidth));
-					else
-						EditorGUILayout.LabelField("Special: ", GUILayout.Width(headerWidth));					
-					whichList[i].maxHealth = EditorGUILayout.IntField(whichList[i].maxHealth);
-					whichList[i].startingAwareness = EditorGUILayout.IntField(whichList[i].startingAwareness);
-					whichList[i].maxAwareness = EditorGUILayout.IntField(whichList[i].maxAwareness);
-					whichList[i].snapFocus = EditorGUILayout.IntField(whichList[i].snapFocus);
-					whichList[i].awarenessRecharge = EditorGUILayout.FloatField(whichList[i].awarenessRecharge);
-
-					whichList[i].dodgeSkillFront = EditorGUILayout.FloatField(whichList[i].dodgeSkillFront);
-					whichList[i].dodgeSkillSide = EditorGUILayout.FloatField(whichList[i].dodgeSkillSide);
-					whichList[i].dodgeSkillRear = EditorGUILayout.FloatField(whichList[i].dodgeSkillRear);
-					whichList[i].missileMultiplier = EditorGUILayout.FloatField(whichList[i].missileMultiplier);
-					whichList[i].asteroidMultiplier = EditorGUILayout.FloatField(whichList[i].asteroidMultiplier);
-
-					whichList[i].specialShip = EditorGUILayout.TextField(whichList[i].specialShip);
+					EditorGUILayout.EndHorizontal();
 				}
-				EditorGUILayout.EndHorizontal();
-			}	
+			EditorGUILayout.EndHorizontal();
+			}
+
 			EditorGUILayout.BeginHorizontal(); //Add/Remove buttons
 			{
 				if(GUILayout.Button("Add", GUILayout.Width(headerWidth)))
@@ -172,4 +177,4 @@ public class SolEd : EditorWindow {
 		GUILayout.Space(5);
 	}//end of List Layout
 }
-
+		
