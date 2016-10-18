@@ -13,6 +13,7 @@ public class SolEd : EditorWindow {
 	static Vector2 s_WindowsMinSize = Vector2.one * 300.0f;
 
 	public ShipStats shipStats;
+	public Icons icons;
 
 	public int toolbarInt = 0;
 	public string[] toolbarStrings = new string[]{"Fighters", "Bombers", "Support", "Capital", "Pilots"};
@@ -31,6 +32,8 @@ public class SolEd : EditorWindow {
 	void OnFocus()
 	{
 		shipStats = (ShipStats)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/ShipStatsHolder.asset", typeof(ShipStats));
+		icons = (Icons)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/Icons.asset", typeof(Icons));
+
 		numOfColumns = 12;
 		/*foreach(Fighter fighter in shipStats.allFighters)
 		{
@@ -49,6 +52,7 @@ public class SolEd : EditorWindow {
 	void OnGUI()
 	{
 		shipStats = (ShipStats)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/ShipStatsHolder.asset", typeof(ShipStats));
+		icons = (Icons)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/Icons.asset", typeof(Icons));
 
 		GUILayout.Space(10);
 		toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
@@ -61,6 +65,7 @@ public class SolEd : EditorWindow {
 			//HEADERS for fields
 			GUILayout.BeginHorizontal("box");
 			{
+				GUILayout.Label("Delete & Copy", EditorStyles.wordWrappedLabel, GUILayout.Width(45));
 				GUILayout.Label("Level", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 				GUILayout.Label("Max Health", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
 				GUILayout.Label("Starting Awareness", EditorStyles.wordWrappedLabel, GUILayout.Width(headerWidth));
@@ -114,7 +119,20 @@ public class SolEd : EditorWindow {
 			{
 				fighterInfoWindow = EditorGUILayout.BeginHorizontal();
 				{
-					//whichList[i].myShipType = (Fighter.ShipType)EditorGUILayout.EnumPopup(whichList[i].myShipType);
+					//DELETE BUTTON
+					if(GUILayout.Button("X"))
+					{
+						whichList.RemoveAt(i);
+						return;
+					}
+					//COPY BUTTON
+					if(GUILayout.Button("D"))
+					{
+						Fighter copiedFighter = Fighter.CopyFighter(whichList[i]);
+						whichList.Insert(i+1, copiedFighter);
+						return;
+					}
+					//ALL STATS
 					whichList[i].level = i+1; 
 					if(whichList[i].specialShip == "")
 						EditorGUILayout.LabelField("Level: " + whichList[i].level, GUILayout.Width(headerWidth));

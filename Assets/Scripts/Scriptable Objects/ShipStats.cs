@@ -26,4 +26,27 @@ public class Fighter
 	public float asteroidMultiplier = 10;
 
 	public string specialShip = ""; //eg. "demo Arrow 1" to give special stats for a demo or story-based ship
+
+
+	public static Fighter CopyFighter(Fighter fighterToCopy)
+	{
+		Fighter returnFighter = new Fighter();
+
+		returnFighter.level = fighterToCopy.level;
+		returnFighter.maxHealth = fighterToCopy.maxHealth;
+		returnFighter.startingAwareness = fighterToCopy.startingAwareness;
+		returnFighter.maxAwareness = fighterToCopy.maxAwareness;
+		returnFighter.snapFocus = fighterToCopy.snapFocus;
+		returnFighter.awarenessRecharge = fighterToCopy.awarenessRecharge;
+
+		returnFighter.dodgeSkillFront = fighterToCopy.dodgeSkillFront;
+		returnFighter.dodgeSkillSide = fighterToCopy.dodgeSkillSide;
+		returnFighter.dodgeSkillRear = fighterToCopy.dodgeSkillRear;
+		returnFighter.missileMultiplier = fighterToCopy.missileMultiplier;
+		returnFighter.asteroidMultiplier = fighterToCopy.asteroidMultiplier;
+
+		returnFighter.specialShip = fighterToCopy.specialShip;
+
+		return returnFighter;
+	}
 }

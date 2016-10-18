@@ -3,6 +3,7 @@
 [System.Serializable]
 public class Icons : ScriptableObject {
 
+	[Header("Radial Orders Menu")]
 	public Sprite squadronIcon;
 	public Sprite supportIcon;
 	public Sprite allShipsIcon;
@@ -26,6 +27,8 @@ public class Icons : ScriptableObject {
 	public Sprite fallBackIconHighlighted;
 	public Sprite returnToBaseIconHighlighted;
 	public Sprite engageAtWillIconHighlighted;
+
+	//[Header("Other")]
 }
 
 
