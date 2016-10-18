@@ -5,11 +5,6 @@ using System.Collections.Generic;
 
 public class SolEd : EditorWindow {
 
-	bool groupEnabled;
-	bool myBool = true;
-	float myFloat = 1.23f;
-	string myString;
-
 	static Vector2 s_WindowsMinSize = Vector2.one * 300.0f;
 
 	public ShipStats shipStats;
