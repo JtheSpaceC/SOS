@@ -743,11 +743,9 @@ public class AIFighter : FighterFunctions {
 
 		else if(target != null)
 		{
-
 			engineScript.currentMaxVelocityAllowed = engineScript.maxAfterburnerVelocity;
 			if(Tools.instance.CheckTargetIsLegit(target) == true)
 			{
-				print(name);
 				TailingFunction (engineScript, target, shootScript, constantThrustProportion); //WARNING: This function can result in target being set to null
 			}
 			//This section should be excessive, but is still the only way to stop craft targeting dead enemies and shooting at their death spots

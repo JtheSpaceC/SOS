@@ -66,7 +66,6 @@ public class FighterFunctions : TargetableObject {
 	protected void TailingFunction(EnginesFighter engineScript, GameObject target, WeaponsPrimaryFighter shootScript, float constantForwardThrustProportion)
 	{
 		//NB: It's important that we move before look, because the firing solution (in look) requires knowing the new movement position of the target
-
 		engineScript.LookAtTarget (target);
 
 		if(Vector2.Angle(transform.up, target.transform.position - transform.position)%180 < 165)

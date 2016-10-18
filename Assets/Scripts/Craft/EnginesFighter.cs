@@ -139,16 +139,17 @@ public class EnginesFighter : MonoBehaviour {
 
 		if (target.tag == "Fighter" || target.tag == "PlayerFighter") 
 		{
-			if(myAIFighterScript.currentState == AIFighter.StateMachine.Tailing)
-			{
-				targetMove = target.transform.FindChild("Craft's Six").position;
-			}
-			else if(myAIFighterScript.currentState == AIFighter.StateMachine.Jousting)
+			if(myAIFighterScript.currentState == AIFighter.StateMachine.Jousting)
 			{
 				targetMove = target.transform.position + (target.transform.position - transform.position).normalized*20 
 					- (Vector3)myRigidBody.velocity;
 			}
-			Debug.DrawLine((Vector2)transform.position, targetMove, Color.green);
+			else if(myAIFighterScript.currentState == AIFighter.StateMachine.Tailing || 
+				myAIFighterScript.currentState == AIFighter.StateMachine.Covering)
+			{
+				targetMove = target.transform.FindChild("Craft's Six").position;
+				Debug.DrawLine(transform.position, targetMove, Color.yellow);
+			}
 
 			GetMovementSolution (target, targetMove, true, false);
 		}
@@ -176,7 +177,6 @@ public class EnginesFighter : MonoBehaviour {
 		//TODO: add attack patterns that send fighters away from their target at different rates
 		//the higher this force, the less ships will stop and turn on the spot. They'll have wider turning circles
 		//myRigidBody.AddForce (transform.up * currentAccelerationRate * Time.deltaTime * constantForwardThrustProportion);
-
 	}
 	public void MoveToTarget(Vector2 waypoint, bool stopAtWaypoint)
 	{
