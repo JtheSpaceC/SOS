@@ -28,7 +28,10 @@ public class Icons : ScriptableObject {
 	public Sprite returnToBaseIconHighlighted;
 	public Sprite engageAtWillIconHighlighted;
 
-	//[Header("Other")]
+	[Header("Other")]
+	public Sprite fighterArrow;
+	public Sprite fighterMantis;
+	public Sprite solEdBackground;
 }
 
 

@@ -9,6 +9,7 @@ public class SolEd : EditorWindow {
 
 	public ShipStats shipStats;
 	public Icons icons;
+	Texture tex;
 
 	public int toolbarInt = 0;
 	public string[] toolbarStrings = new string[]{"Fighters", "Bombers", "Support", "Capital", "Pilots"};
@@ -39,6 +40,13 @@ public class SolEd : EditorWindow {
 	{
 		shipStats = (ShipStats)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/ShipStatsHolder.asset", typeof(ShipStats));
 		icons = (Icons)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/Icons.asset", typeof(Icons));
+		tex = icons.solEdBackground.texture;
+
+		//Get window size and set background texture
+		var window = this;
+		float width = window.position.width;
+		float height = window.position.height;
+		GUI.DrawTexture(new Rect(0, 0, width, height), tex, ScaleMode.ScaleAndCrop);
 
 		GUILayout.Space(10);
 		toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
@@ -73,8 +81,8 @@ public class SolEd : EditorWindow {
 			//scroll bar for editing section
 			scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 			{
-				ListLayout("Arrow", shipStats.arrowFighters);
-				ListLayout("Mantis", shipStats.mantisFighters);
+				ListLayout("Arrow", shipStats.arrowFighters, icons.fighterArrow);
+				ListLayout("Mantis", shipStats.mantisFighters, icons.fighterMantis);
 			}
 			EditorGUILayout.EndScrollView();
 		}
@@ -84,7 +92,11 @@ public class SolEd : EditorWindow {
 		#region Pilots And Other
 		else //PILOTS AND OTHER
 		{
-			EditorGUILayout.LabelField("Nothing available for this option. Hurry up and finish making it!");
+			GUILayout.BeginHorizontal("box");
+			{
+				EditorGUILayout.LabelField("Nothing available for this option. Hurry up and finish making it!");
+			}
+			GUILayout.EndVertical();
 		}
 		#endregion
 
@@ -98,13 +110,16 @@ public class SolEd : EditorWindow {
 		}
 	}
 
-	void ListLayout(string heading, List<Fighter> whichList)
-	{		
-
+	void ListLayout(string heading, List<Fighter> whichList, Sprite shipImage)
+	{
 		EditorGUILayout.BeginVertical("box");
 		{
-			GUILayout.Label(heading, EditorStyles.boldLabel, GUILayout.Width(headerWidth));
-
+			EditorGUILayout.BeginHorizontal();
+			{
+				GUILayout.Label(shipImage.texture, GUILayout.Width(35), GUILayout.Height(35));
+				GUILayout.Label(heading, EditorStyles.boldLabel);
+			}
+			EditorGUILayout.EndHorizontal();
 			for(int i = 0; i < whichList.Count; i++)
 			{
 				EditorGUILayout.BeginHorizontal(); //this joins the Horizontals for copy/del buttons & other fighter stats
