@@ -8,7 +8,7 @@ public class TacticalObject : MonoBehaviour {
 
 	public void SelectMe()
 	{
-		CameraTactical.instance.rtsCamControls.SetAutoMoveTarget (whoDoIRepresent.transform.position);
+		CameraTactical.instance.rtsCamControls.SetAutoMoveTarget (whoDoIRepresent.transform.position, 0.5f);
 		InputManager.instance.inputFrom = InputManager.InputFrom.controller;
 
 		CameraTactical.instance.pipCamera.transform.position = 

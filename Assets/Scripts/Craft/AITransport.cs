@@ -421,7 +421,7 @@ public class AITransport : SupportShipFunctions {
 			}
 			if(reelingInPlayerGroup)
 			{
-				RadioCommands.instance.canAccessRadio = false;
+				//RadioCommands.instance.canAccessRadio = false;
 				RadialRadioMenu.instance.canAccessRadialRadio = false;
 				CameraTactical.instance.canAccessTacticalMap = false;
 
@@ -591,7 +591,7 @@ public class AITransport : SupportShipFunctions {
 		
 		if(reelingInPlayerGroup)
 		{
-			RadioCommands.instance.canAccessRadio = true;
+			//RadioCommands.instance.canAccessRadio = true;
 			RadialRadioMenu.instance.canAccessRadialRadio = true;
 			CameraTactical.instance.canAccessTacticalMap = true;
 			PlayerFighterMovement carryFighter1Movement = carryFighter1.GetComponent<PlayerFighterMovement>();

@@ -46,7 +46,7 @@ public class RTSCamera : MonoBehaviour {
 
 	bool autoMoving = false;
 	float autoMoveStartTime;
-	public float autoMoveLength = 0.5f;
+	public float autoMoveDuration = 0.5f;
 	Vector3 autoMoveStartPos;
 	Vector3 autoMoveDestination;
 
@@ -74,9 +74,11 @@ public class RTSCamera : MonoBehaviour {
 
 		if (autoMoving) 
 		{
-			transform.position = Vector3.Lerp (autoMoveStartPos, autoMoveDestination, (Time.unscaledTime - autoMoveStartTime) / autoMoveLength);
+			transform.position = Vector3.Lerp (autoMoveStartPos, autoMoveDestination, (Time.time - autoMoveStartTime) / autoMoveDuration);
 			if (transform.position == autoMoveDestination)
 				autoMoving = false;
+
+			return;
 		}
 
 		if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
@@ -107,7 +109,8 @@ public class RTSCamera : MonoBehaviour {
 		}
 
 		//FOR LEFT-CLICK DRAGGING
-		if (Input.GetMouseButtonDown (0) || Input.GetMouseButtonDown (2)) {
+		if (Input.GetMouseButtonDown (0) || Input.GetMouseButtonDown (2)) 
+		{
 			PosOnClick = transform.position; //of the camera object, not the mouse
 			xPosOnClick = Input.mousePosition.x; //of the mouse when clicked
 			yPosOnClick = Input.mousePosition.y;
@@ -115,13 +118,15 @@ public class RTSCamera : MonoBehaviour {
 			autoMoving = false;
 		}
 
-		if (Input.GetMouseButton (0) || Input.GetMouseButton (2)) {
+		if (Input.GetMouseButton (0) || Input.GetMouseButton (2)) 
+		{
 			float xPos = (Input.mousePosition.x - xPosOnClick) * cameraToControl.orthographicSize * 2 / Screen.height;
 			float yPos = (Input.mousePosition.y - yPosOnClick) * cameraToControl.orthographicSize * 2 / Screen.height;
 
-			transform.position = new Vector3 (PosOnClick.x - xPos, PosOnClick.y - yPos, -50);
+			transform.position = new Vector3 (PosOnClick.x - xPos, PosOnClick.y - yPos, transform.position.z);
 
-			if (Vector3.Distance (transform.position, PosOnClick) >= 0.1f) {
+			if (Vector3.Distance (transform.position, PosOnClick) >= 0.1f) 
+			{
 				cameraIsPanning = true;
 			}
 		}
@@ -318,12 +323,13 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 
-	public void SetAutoMoveTarget(Vector3 newTargetPos)
+	public void SetAutoMoveTarget(Vector3 newTargetPos, float zoomDuration)
 	{
 		autoMoving = true;
-		autoMoveStartTime = Time.unscaledTime;
+		autoMoveStartTime = Time.time;
 		autoMoveStartPos = transform.position;
-		autoMoveDestination = new Vector3 (newTargetPos.x, newTargetPos.y, -50);
+		autoMoveDuration = zoomDuration;
+		autoMoveDestination = newTargetPos;
 	}
 
 

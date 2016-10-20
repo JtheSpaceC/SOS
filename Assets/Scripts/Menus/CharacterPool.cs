@@ -11,7 +11,8 @@ public class CharacterPool : MonoBehaviour {
 
 	public static CharacterPool instance;
 
-	NameGenerator ng;
+	//NameGenerator ng;
+	public Names namesSO;
 
 	/*[HideInInspector] */ public CharacterPoolEntry selectedCharacter;
 	[HideInInspector] public CharacterPoolGroupEntry selectedCharacterGroup;
@@ -131,8 +132,6 @@ public class CharacterPool : MonoBehaviour {
 		avatar = FindObjectOfType<Character>();
 
 		CheckAvatarOutput();
-
-		ng = NameGenerator.Instance;
 
 		DestroyChildEntries ();
 	}
@@ -294,14 +293,12 @@ public class CharacterPool : MonoBehaviour {
 		else
 			selectedFacialHairText.transform.parent.gameObject.SetActive(true);		
 
-		if(ng == null)
-			print("Test");
 		if(selectedCharacter == null)
 			print("Fuck");
 
-		selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
-		selectedCharacter.lastName = ng.getRandomLastName();
-		selectedCharacter.callsign = ng.getRandomCallsign();
+		//selectedCharacter.firstName = namesSO.maleNames[]; ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
+		selectedCharacter.lastName = namesSO.lastNames[UnityEngine.Random.Range(0, namesSO.lastNames.Count)];
+		selectedCharacter.callsign = namesSO.lastNames[UnityEngine.Random.Range(0, namesSO.lastNames.Count)];
 		selectedCharacter.appearanceSeed = avatar.appearanceSeed;
 		currentBio = "";
 
@@ -791,6 +788,7 @@ public class CharacterPool : MonoBehaviour {
 		if(avatar.gender == Character.Gender.Male)
 		{
 			avatar.gender = Character.Gender.Female;
+			selectedCharacter.firstName = namesSO.femaleNames[UnityEngine.Random.Range(0, namesSO.femaleNames.Count)];				
 			selectedGenderText.text = "1";
 			avatar.eyes.sprite = avatar.appearances.eyesFemale[0];
 			selectedEyesText.text = "0";
@@ -803,7 +801,7 @@ public class CharacterPool : MonoBehaviour {
 		else 
 		{
 			avatar.gender = Character.Gender.Male;
-			selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
+			selectedCharacter.firstName = namesSO.maleNames[UnityEngine.Random.Range(0, namesSO.maleNames.Count)];
 			selectedGenderText.text = "0";
 			avatar.eyes.sprite = avatar.appearances.eyesMale[0];
 			selectedEyesText.text = "0";
@@ -813,7 +811,6 @@ public class CharacterPool : MonoBehaviour {
 			avatar.hair.sprite = avatar.appearances.hairMale[0];
 			avatar.body.sprite = avatar.appearances.baseBody[Int32.Parse(selectedBodyText.text)];
 		}
-		selectedCharacter.firstName = ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
 		firstNameEntryText.text = "First Name: " + selectedCharacter.firstName;
 		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
 		avatar.originalEyes = avatar.eyes.sprite;

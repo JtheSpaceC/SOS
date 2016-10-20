@@ -13,6 +13,8 @@ public class Director : MonoBehaviour {
 	float mins;
 	float seconds;
 
+	public float fadeInFromBlackTime = 2;
+
 	Text gameTimeText;
 	Text playerKillsText;
 
@@ -86,19 +88,10 @@ public class Director : MonoBehaviour {
 		sceneTint = Tools.instance.environments.GetASceneColour();
 	}
 
-	void Start()
-	{
-		if(!FindObjectOfType<MissionSetup>())
-		{
-			//REMOVE: when mission setup dresses the scene always
-			DressTheScene();
-		}
-			
-		Tools.instance.CommenceFade(0, 2, Color.black, Color.clear);
-	}
-
 	void OnEnable()
 	{
+		Tools.instance.CommenceFade(0, fadeInFromBlackTime, Color.black, Color.clear);
+
 		_battleEventManager.playerRescued += WarpPlayerToSafety;
 		_battleEventManager.playerGotKill += PlayerGotAKill;
 		_battleEventManager.pmcFightersSpawned += AlliesSpawned;
@@ -111,6 +104,15 @@ public class Director : MonoBehaviour {
 		_battleEventManager.playerGotKill -= PlayerGotAKill;
 		_battleEventManager.pmcFightersSpawned -= AlliesSpawned;
 		_battleEventManager.enemyFightersSpawned -= EnemiesSpawned;
+	}
+
+	void Start()
+	{
+		if(!FindObjectOfType<MissionSetup>())
+		{
+			//REMOVE: when mission setup dresses the scene always
+			DressTheScene();
+		}
 	}
 		
 	void SetUpMission()

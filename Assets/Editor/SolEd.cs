@@ -18,6 +18,7 @@ public class SolEd : EditorWindow {
 	Rect copyAndDeleteButtonsSpace = new Rect(Vector2.zero, s_WindowsMinSize);
 	float headerWidth = 131f;
 	float copyAndDeleteButtonsHeaderWidth = 90f;
+
 	int numOfColumns;
 
 	//Show The Window possible

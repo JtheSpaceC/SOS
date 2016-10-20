@@ -2,7 +2,19 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class FighterFunctions : TargetableObject {
-	
+
+	[Header("Sol Ed")]
+	[Tooltip("Ignore certain stats like health & dodge skill, and pull them from SolEd.")] 
+	public bool useSolEdStatsToOverride = true;
+	public enum ShipType {Arrow, Mantis};
+	public ShipType myShipType;
+	[Tooltip("If this matches a special ship in SolEd, ignore the level below.")]
+	public string specialShip = "";
+	[Tooltip("What level stats to pull down.")]
+	public int myLevel = 1;
+
+	protected Fighter myStats;
+
 	protected float constantThrustProportion;
 	protected int killsThisBattle;
 	protected int totalKills;
@@ -11,6 +23,8 @@ public class FighterFunctions : TargetableObject {
 	JoustingStates joustingStates;
 
 	float distanceFromTarget;
+
+	[Header("Combat-Specific Distances")]
 	public float joustingDistance = 20f;
 	Vector2 gainingDistanceWaypoint;
 	[HideInInspector] public Vector2 joustingVector;

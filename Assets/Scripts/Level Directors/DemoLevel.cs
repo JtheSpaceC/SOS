@@ -22,7 +22,6 @@ public class DemoLevel : MonoBehaviour {
 	public Transform convoy;
 	public CircleCollider2D asteroidField;
 
-	public Text missileAmmoText;
 	public Text objectiveText;
 	public Button feedbackButton;
 	public Button controlsButton;
@@ -33,18 +32,6 @@ public class DemoLevel : MonoBehaviour {
 	public PlayerAILogic playerLogicScript;
 	GameObject player;
 	float timer;
-
-	[Header("Difficulty Stuff")]
-	[Tooltip("Do we replace prefab health with ones we specifically want for demo?")] 
-	public bool overridePrefabHealths = true;
-	public int enemyStartingAwareness = 0;
-	public int enemyMaxAwareness = 2;
-	public int enemySnapFocus = 0;
-	public int enemyAwarenessRecharge = 3;
-	public int PMCStartingAwareness = 4;
-	public int PMCMaxAwareness = 4;
-	public int PMCSnapFocus = 1;
-	public int PMCAwarenessRecharge = 2;
 	
 	[Header("Start, End & Death Menu stuff")]
 	public Text keyboardControlsText;
@@ -57,6 +44,7 @@ public class DemoLevel : MonoBehaviour {
 	public Button restartAtDeathButton;
 	public Button buttonToStartOn;
 	public Text instructionsText;
+	public Canvas demoStuffCanvas;
 	public Canvas playerUICanvas;
 	public Canvas playerWorldspaceUI;
 	public Canvas arrow2WorldspaceUI;
@@ -156,12 +144,6 @@ public class DemoLevel : MonoBehaviour {
 		_battleEventManager.playerShotDown += PlayerWasShotDown;
 		_battleEventManager.playerRescued += PlayerWasRescued;
 		_battleEventManager.playerBeganDocking += PlayerBeganDocking;
-
-		if(overridePrefabHealths)
-		{
-			_battleEventManager.pmcFightersSpawned += FixDemoSpecificConcerns;
-			_battleEventManager.enemyFightersSpawned += FixDemoSpecificConcerns;
-		}
 	}
 
 	void OnDisable()
@@ -170,12 +152,6 @@ public class DemoLevel : MonoBehaviour {
 		_battleEventManager.playerShotDown -= PlayerWasShotDown;
 		_battleEventManager.playerRescued -= PlayerWasRescued;
 		_battleEventManager.playerBeganDocking -= PlayerBeganDocking;
-
-		if(overridePrefabHealths)
-		{
-			_battleEventManager.pmcFightersSpawned -= FixDemoSpecificConcerns;
-			_battleEventManager.enemyFightersSpawned -= FixDemoSpecificConcerns;
-		}
 	}
 
 	void Start()
@@ -183,18 +159,12 @@ public class DemoLevel : MonoBehaviour {
 		AudioMasterScript.instance.MuteSFX ();
 		ClickToPlay.instance.escCanGiveQuitMenu = false;
 		instructionsPanel.SetActive (true);
-		Time.timeScale = 0;
+		Tools.instance.AlterTimeScale(0);
 		ClickToPlay.instance.paused = true;
-
-		if(GameObject.FindGameObjectWithTag("PlayerFighter").GetComponentInChildren<WeaponsSecondaryFighter>() == null)
-		{
-			missileAmmoText.gameObject.SetActive(false);
-		}
 
 		convoyPointerArrow.SetActive(false);
 
-		Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = -1;
-		Tools.instance.CommenceFade (0, 2, Color.black, Color.clear);
+		Tools.instance.MoveCanvasToFront(demoStuffCanvas);
 	}
 
 
@@ -215,17 +185,11 @@ public class DemoLevel : MonoBehaviour {
 
 		AITrans.InstantAttachFighters (playerGroup.ToArray());
 
-		FixDemoSpecificConcerns();
-		playerHealth.awareness = PMCStartingAwareness;
-		playerHealth.maxAwareness = PMCMaxAwareness;
-		playerHealth.snapFocusAmount = PMCSnapFocus;
-		playerHealth.awarenessRechargeTime = PMCAwarenessRecharge;
-
 		//for other
 		equipPanel.SetActive (false);
 		ClickToPlay.instance.escCanGiveQuitMenu = true;
 		instructionsPanel.SetActive (false);
-		Time.timeScale = 1;
+		Tools.instance.AlterTimeScale(1);
 		ClickToPlay.instance.paused = false;
 		playerWeapons.InvokeAllowedToFire ();
 		objectiveText.enabled = true;
@@ -370,30 +334,6 @@ public class DemoLevel : MonoBehaviour {
 		}
 	}
 
-	void FixDemoSpecificConcerns()
-	{
-		AIFighter[] fighterscripts = FindObjectsOfType<AIFighter>();
-		foreach(AIFighter fighter in fighterscripts)
-		{
-			if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Ally)
-			{				
-				fighter.healthScript.awareness = PMCStartingAwareness;
-				fighter.healthScript.maxAwareness = PMCMaxAwareness;
-				fighter.healthScript.snapFocusAmount = PMCSnapFocus;
-				fighter.healthScript.awarenessRechargeTime = PMCAwarenessRecharge;
-				fighter.statsAlreadyAdjusted = true;
-			}
-			else if(!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Enemy)
-			{
-				fighter.healthScript.awareness = enemyStartingAwareness;
-				fighter.healthScript.maxAwareness = enemyMaxAwareness;
-				fighter.healthScript.snapFocusAmount = enemySnapFocus;
-				fighter.healthScript.awarenessRechargeTime = enemyAwarenessRecharge;
-				fighter.statsAlreadyAdjusted = true;
-			}				
-		}
-	}
-
 	void Update () 
 	{
 		if(!playerHealth.dead)
@@ -487,7 +427,7 @@ public class DemoLevel : MonoBehaviour {
 			playerKnowsHowToDodge = true;
 		if (!playerKnowsHowToAfterburn && Input.GetButton ("Afterburners"))
 			playerKnowsHowToAfterburn = true;
-		if (!playerKnowsOrders && RadioCommands.instance.buttonsShown)
+		if (!playerKnowsOrders && RadialRadioMenu.instance.radialMenuShown)
 			playerKnowsOrders = true;
 		if (!playerKnowsMap && tacMapCamera.enabled)
 			playerKnowsMap = true;

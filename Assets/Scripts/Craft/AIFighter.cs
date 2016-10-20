@@ -9,19 +9,7 @@ public class AIFighter : FighterFunctions {
 	[HideInInspector]public EnginesFighter engineScript;
 	[HideInInspector]public WeaponsPrimaryFighter shootScript;
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
-	public Character myCharacterAvatarScript;
-
-	[Header("Sol Ed")]
-	[Tooltip("Ignore certain stats like health & dodge skill, and pull them from SolEd.")] 
-	public bool useSolEdStatsToOverride = true;
-	public enum ShipType {Arrow, Mantis};
-	public ShipType myShipType;
-	[Tooltip("If this matches a special ship in SolEd, ignore the level below.")]
-	public string specialShip = "";
-	[Tooltip("What level stats to pull down.")]
-	public int myLevel = 1;
-
-	Fighter myStats;
+	[HideInInspector] public Character myCharacterAvatarScript;
 
 	public enum Orders {FighterSuperiority, Patrol, Escort, Wingman, RTB, FullRetreat, NA}; //set by commander //TODO: not used yet
 	[Header("Orders")]
