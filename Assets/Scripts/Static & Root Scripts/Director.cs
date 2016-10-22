@@ -236,13 +236,16 @@ public class Director : MonoBehaviour {
 			if(renderer.name != "sun shaft")
 				renderer.color = AdjustColour(renderer.color, sceneTint);
 		}
-		if(GameObject.Find("Asteroid Field"))
+		AsteroidField[] asteroidFields = FindObjectsOfType<AsteroidField>();
+				
+		foreach(AsteroidField af in asteroidFields)
 		{
-			ParticleSystem ps = GameObject.Find("Asteroid Field").GetComponentInChildren<ParticleSystem>();
+			ParticleSystem ps = af.GetComponentInChildren<ParticleSystem>();
 			ps.startColor = AdjustColour(ps.startColor, sceneTint);
 			ps.gameObject.SetActive(false);
 			ps.gameObject.SetActive(true);
 		}
+
 	}
 	Color AdjustColour(Color oldColour, Color sceneTint)
 	{

@@ -17,7 +17,7 @@ public class AsteroidSpawner : MonoBehaviour {
 	void Awake()
 	{
 		asteroidPoolerScript = GameObject.Find ("asteroid Pooler").GetComponent<ObjectPoolerScript> ();
-		asteroidField = GameObject.Find ("Asteroid Field").GetComponent<CircleCollider2D>();
+		asteroidField = GetComponent<CircleCollider2D>();
 		asteroidCount = 0;
 	}
 	

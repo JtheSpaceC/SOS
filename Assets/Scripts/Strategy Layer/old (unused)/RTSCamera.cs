@@ -50,6 +50,8 @@ public class RTSCamera : MonoBehaviour {
 	Vector3 autoMoveStartPos;
 	Vector3 autoMoveDestination;
 
+	float t;
+
 
 	void Awake()
 	{
@@ -74,7 +76,12 @@ public class RTSCamera : MonoBehaviour {
 
 		if (autoMoving) 
 		{
-			transform.position = Vector3.Lerp (autoMoveStartPos, autoMoveDestination, (Time.time - autoMoveStartTime) / autoMoveDuration);
+			//smooth out 't' first to slow the zoom near the end
+			t = (Time.time - autoMoveStartTime) / autoMoveDuration;
+			t = Mathf.Sin(t * Mathf.PI * 0.5f);
+
+			//then apply
+			transform.position = Vector3.Lerp (autoMoveStartPos, autoMoveDestination, t);
 			if (transform.position == autoMoveDestination)
 				autoMoving = false;
 

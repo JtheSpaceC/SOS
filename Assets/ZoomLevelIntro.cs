@@ -11,12 +11,14 @@ public class ZoomLevelIntro : MonoBehaviour {
 	GameObject speedParticles;
 
 	public List<GameObject> objectsToToggleAfterApproach;
+	[Tooltip("The first x number of objects from the list will toggle off at start, then come on with all the rest later")] 
+	public int toggleFirst = 4;
 
 
 	void Start () 
 	{
 		//turn off UI
-		for(int i = 0; i < 3; i++)
+		for(int i = 0; i < toggleFirst; i++)
 		{
 			objectsToToggleAfterApproach[i].SetActive(false);
 		}
