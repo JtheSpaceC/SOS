@@ -12,7 +12,7 @@ public class HealthTransport : Health {
 
 	void Awake ()
 	{
-		AwakeBaseClass ();
+		StartBaseClass ();
 
 		myAIScript = GetComponent<AITransport> ();
 		engineScript = GetComponent<EnginesFighter> ();

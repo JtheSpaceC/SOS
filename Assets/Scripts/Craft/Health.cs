@@ -49,7 +49,7 @@ public class Health : MonoBehaviour {
 	float healthColourAValue;
 
 
-	protected void AwakeBaseClass()
+	protected void StartBaseClass()
 	{
 		dead = false;
 		health = Mathf.Clamp(health, 0, maxHealth);

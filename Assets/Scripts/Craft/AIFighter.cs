@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class AIFighter : FighterFunctions {
 
-	[HideInInspector]public HealthFighter healthScript;
 	[HideInInspector]public EnginesFighter engineScript;
 	[HideInInspector]public WeaponsPrimaryFighter shootScript;
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
@@ -86,6 +85,9 @@ public class AIFighter : FighterFunctions {
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
 
+		if(useSolEdStatsToOverride)
+			PullStatsFromSolEd();
+
 		SetUpSideInfo();
 		enemyTargets = myCommander.fighterEnemyTargets;
 		dangerSources = myCommander.fighterEnemyDangerSources;
@@ -111,10 +113,7 @@ public class AIFighter : FighterFunctions {
 	}
 
 	void Start () 
-	{
-		if(useSolEdStatsToOverride)
-			PullStatsFromSolEd();
-		
+	{		
 		if(whichSide == WhichSide.Enemy)
 			cowardice = Mathf.Clamp(cowardice *= Random.Range (0.25f, 1.5f), 0, 99); //TODO: based on character stats for PMC?
 		else
@@ -122,52 +121,7 @@ public class AIFighter : FighterFunctions {
 
 		StartCoroutine(SetUpAvatarBars());
 	}
-
-	void PullStatsFromSolEd()
-	{
-		List<Fighter> fighterList = new List<Fighter>();
-		if(myShipType == ShipType.Arrow)
-			fighterList = Tools.instance.shipStats.arrowFighters;
-		else if(myShipType == ShipType.Mantis)
-			fighterList = Tools.instance.shipStats.mantisFighters;
-
-		foreach(Fighter fighter in fighterList)
-		{
-			if(specialShip != "" && fighter.specialShip == specialShip)
-			{
-				myStats = fighter;
-				break;
-			}
-			else if(specialShip == "" && fighter.level == myLevel)
-			{
-				if(fighter.specialShip == "")
-				{
-					myStats = fighter;
-					break;
-				}
-			}
-		}
-		if(myStats == null)
-		{
-			Debug.LogError(name + " couldn't find stats in SolEd");
-			return;
-		}
-		else
-		{
-			healthScript.maxHealth = myStats.maxHealth;
-			healthScript.health = healthScript.maxHealth;
-			healthScript.awareness = myStats.startingAwareness;
-			healthScript.maxAwareness = myStats.maxAwareness;
-			healthScript.snapFocusAmount = myStats.snapFocus;
-			healthScript.awarenessRechargeTime = myStats.awarenessRecharge;
-
-			healthScript.dodgeScript.frontDodgeSkill = myStats.dodgeSkillFront;
-			healthScript.dodgeScript.sideDodgeSkill = myStats.dodgeSkillSide;
-			healthScript.dodgeScript.rearDodgeSkill = myStats.dodgeSkillRear;
-			healthScript.dodgeScript.missileMultiplier = myStats.missileMultiplier;
-			healthScript.dodgeScript.asteroidMultiplier = myStats.asteroidMultiplier;
-		}
-	}
+		
 
 	IEnumerator SetUpAvatarBars()
 	{

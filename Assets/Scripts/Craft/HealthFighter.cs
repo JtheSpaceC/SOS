@@ -45,8 +45,6 @@ public class HealthFighter : Health {
 
 	void Awake()
 	{
-		AwakeBaseClass ();
-
 		myAIScript = GetComponent<AIFighter> ();
 
 		startSprite = GetComponent<SpriteRenderer> ().sprite;
@@ -55,6 +53,11 @@ public class HealthFighter : Health {
 			thisIsPlayer = true;
 
 		dodgeScript = GetComponentInChildren<Dodge>();
+	}
+
+	void Start()
+	{
+		StartBaseClass ();
 	}
 
 	public void SetUpAvatarBars()
@@ -87,6 +90,8 @@ public class HealthFighter : Health {
 			newBar.transform.SetParent(avatarAwarenessBars);
 			newBar.SetActive(true);
 		}*/
+
+		//NEW SYSTEM IS IN 'HEALTH' SCRIPT
 
 		UpdateAvatarHealthBars();
 		UpdateAvatarAwarenessBars();

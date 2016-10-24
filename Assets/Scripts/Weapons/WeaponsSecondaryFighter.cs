@@ -19,7 +19,7 @@ public class WeaponsSecondaryFighter : MonoBehaviour {
 	GameObject theFirer;
 
 
-	void Start()
+	void Awake()
 	{
 		theFirer = this.transform.parent.parent.gameObject;
 

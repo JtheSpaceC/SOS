@@ -13,7 +13,7 @@ public class HealthTurret : Health {
 	
 	void Awake()
 	{
-		AwakeBaseClass ();
+		StartBaseClass ();
 		turretScript = GetComponent<WeaponsTurret> ();		
 		myRenderer = GetComponent<SpriteRenderer> ();
 		

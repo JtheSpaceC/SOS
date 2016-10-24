@@ -5,7 +5,6 @@ public class PlayerAILogic : FighterFunctions {
 
 	public static PlayerAILogic instance;
 
-	[HideInInspector]public HealthFighter healthScript;
 	[HideInInspector]public PlayerFighterMovement engineScript;
 	[HideInInspector]public WeaponsPrimaryFighter shootScript;
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
@@ -39,6 +38,9 @@ public class PlayerAILogic : FighterFunctions {
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
 		dodgeScript = GetComponentInChildren<Dodge>();
 		myRigidbody = GetComponent<Rigidbody2D>();
+
+		if(useSolEdStatsToOverride)
+			PullStatsFromSolEd();
 
 		if(transform.FindChild("Effects/GUI"))
 		{

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class FighterFunctions : TargetableObject {
 
+	[HideInInspector]public HealthFighter healthScript;
+
 	[Header("Sol Ed")]
 	[Tooltip("Ignore certain stats like health & dodge skill, and pull them from SolEd.")] 
 	public bool useSolEdStatsToOverride = true;
@@ -242,6 +244,53 @@ public class FighterFunctions : TargetableObject {
 
 		if(GetComponentInChildren<WeaponsTurret>() != null)
 			GetComponentInChildren<WeaponsTurret>().enabled = turnOn;
+	}
+
+
+	protected void PullStatsFromSolEd()
+	{
+		List<Fighter> fighterList = new List<Fighter>();
+		if(myShipType == ShipType.Arrow)
+			fighterList = Tools.instance.shipStats.arrowFighters;
+		else if(myShipType == ShipType.Mantis)
+			fighterList = Tools.instance.shipStats.mantisFighters;
+
+		foreach(Fighter fighter in fighterList)
+		{
+			if(specialShip != "" && fighter.specialShip == specialShip)
+			{
+				myStats = fighter;
+				break;
+			}
+			else if(specialShip == "" && fighter.level == myLevel)
+			{
+				if(fighter.specialShip == "")
+				{
+					myStats = fighter;
+					break;
+				}
+			}
+		}
+		if(myStats == null)
+		{
+			Debug.LogError(name + " couldn't find stats in SolEd");
+			return;
+		}
+		else
+		{
+			healthScript.maxHealth = myStats.maxHealth;
+			healthScript.health = healthScript.maxHealth;
+			healthScript.awareness = myStats.startingAwareness;
+			healthScript.maxAwareness = myStats.maxAwareness;
+			healthScript.snapFocusAmount = myStats.snapFocus;
+			healthScript.awarenessRechargeTime = myStats.awarenessRecharge;
+
+			healthScript.dodgeScript.frontDodgeSkill = myStats.dodgeSkillFront;
+			healthScript.dodgeScript.sideDodgeSkill = myStats.dodgeSkillSide;
+			healthScript.dodgeScript.rearDodgeSkill = myStats.dodgeSkillRear;
+			healthScript.dodgeScript.missileMultiplier = myStats.missileMultiplier;
+			healthScript.dodgeScript.asteroidMultiplier = myStats.asteroidMultiplier;
+		}
 	}
 
 }//MONO
