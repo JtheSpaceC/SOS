@@ -7,6 +7,33 @@ public class ShipStats : ScriptableObject
 {
 	/*[HideInInspector]*/ public List<Fighter> arrowFighters = new List<Fighter>();
 	/*[HideInInspector] */public List<Fighter> mantisFighters = new List<Fighter>();
+
+
+	public void ReorderFighterList(List<Fighter> whichList)
+	{
+		List<Fighter> craftWithLevels = new List<Fighter>();
+		List<Fighter> specialCraft = new List<Fighter>();
+
+		foreach(Fighter fighter in whichList)
+		{
+			if(fighter.specialShip == "")
+			{
+				craftWithLevels.Add(fighter);
+			}
+			else
+			{
+				specialCraft.Add(fighter);
+			}
+		}
+		whichList.Clear();
+		whichList.AddRange(craftWithLevels);
+
+		for(int i = 0; i < whichList.Count; i++)
+		{
+			whichList[i].level = i+1;
+		}
+		whichList.AddRange(specialCraft);
+	}
 }
 
 [System.Serializable]

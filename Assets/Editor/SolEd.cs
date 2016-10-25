@@ -113,6 +113,8 @@ public class SolEd : EditorWindow {
 
 	void ListLayout(string heading, List<Fighter> whichList, Sprite shipImage)
 	{
+		shipStats.ReorderFighterList(whichList);
+
 		EditorGUILayout.BeginVertical("box");
 		{
 			EditorGUILayout.BeginHorizontal();
@@ -163,7 +165,7 @@ public class SolEd : EditorWindow {
 						whichList[i].missileMultiplier = EditorGUILayout.FloatField(whichList[i].missileMultiplier);
 						whichList[i].asteroidMultiplier = EditorGUILayout.FloatField(whichList[i].asteroidMultiplier);
 
-						whichList[i].specialShip = EditorGUILayout.TextField(whichList[i].specialShip);
+						whichList[i].specialShip = EditorGUILayout.DelayedTextField(whichList[i].specialShip);
 					}
 					EditorGUILayout.EndHorizontal();
 				}
