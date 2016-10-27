@@ -49,8 +49,6 @@ public class RadialRadioMenu : MonoBehaviour {
 	float keyboardLedRotation; //for rotatin on the radial menu with arrow keys
 	bool takeDPadInput = true;
 
-	bool shouldToggleEscMenu = false;
-
 
 	void Awake()
 	{
@@ -69,9 +67,6 @@ public class RadialRadioMenu : MonoBehaviour {
 
 	void Start()
 	{
-		if(ClickToPlay.instance.escCanGiveQuitMenu)
-			shouldToggleEscMenu = true;
-
 		OrdersIcons = new Sprite[]
 		{
 			Tools.instance.icons.formUpIcon,
@@ -109,8 +104,7 @@ public class RadialRadioMenu : MonoBehaviour {
 			Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
 			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
 			Tools.instance.AlterTimeScale(0.1f);
-			PlayerAILogic.instance.TogglePlayerControl(true, false, false, false);
-			CameraTactical.instance.canAccessTacticalMap = false;
+			PlayerAILogic.instance.TogglePlayerControl(true, false, false, false, true, false, false);
 
 			currentRadialScreen = RadialScreens.OpenAChannel;
 			screenProgression.Add(currentRadialScreen);
@@ -119,8 +113,6 @@ public class RadialRadioMenu : MonoBehaviour {
 			centralText.enabled = true;
 			PopulateRadialMenuOptions(currentRadialScreen);
 			myAudioSource.Play();
-			if(shouldToggleEscMenu)
-				ClickToPlay.instance.escCanGiveQuitMenu = false;
 
 			radialMenuShown = true;
 		}
@@ -314,8 +306,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		keyboardLedRotation = 0;
 		radialGuideArrowPrefab.SetActive(true);
 
-		if(shouldToggleEscMenu)
-			ClickToPlay.instance.escCanGiveQuitMenu = false;
+		ClickToPlay.instance.escCanGiveQuitMenu = false;
 
 	}//end of PopulateRadialMenuOptions()
 
@@ -337,13 +328,10 @@ public class RadialRadioMenu : MonoBehaviour {
 		AudioMasterScript.instance.masterMixer.SetFloat ("Master vol", 0f);
 		Tools.instance.AlterTimeScale (1f);
 		bool[] bools = PlayerAILogic.instance.previousPlayerControlBools;
-		PlayerAILogic.instance.TogglePlayerControl (bools[0], bools[1], bools[2], bools[3]);
-		CameraTactical.instance.canAccessTacticalMap = true;
+		PlayerAILogic.instance.TogglePlayerControl (bools[0], bools[1], bools[2], bools[3], bools[4], bools[5], bools[6]);
 		headerText.enabled = false;
 		centralText.enabled = false;
 		ClearRadialMenu ();
-		if(shouldToggleEscMenu)
-			ClickToPlay.instance.escCanGiveQuitMenu = true;
 
 		radialMenuShown = false;
 	}

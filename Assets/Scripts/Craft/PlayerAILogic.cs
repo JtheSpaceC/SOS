@@ -54,13 +54,20 @@ public class PlayerAILogic : FighterFunctions {
 
 	}
 
-	public void TogglePlayerControl(bool healthScriptenabled, bool engineScriptEnabled, bool dodgeScriptEnabled, bool shootScriptEnabled)
+	public void TogglePlayerControl(bool healthScriptenabled, bool engineScriptEnabled,
+		bool dodgeScriptEnabled, bool shootScriptEnabled, bool radioEnabled, bool tacMapEnabled, bool escMenuEnabled)
 	{
-		previousPlayerControlBools = new bool[]{healthScript.enabled, engineScript.enabled, dodgeScript.enabled, shootScript.enabled};
+		previousPlayerControlBools = new bool[]
+		{healthScript.enabled, engineScript.enabled, dodgeScript.enabled, shootScript.enabled, 
+			RadialRadioMenu.instance.canAccessRadialRadio, CameraTactical.instance.canAccessTacticalMap, ClickToPlay.instance.escCanGiveQuitMenu};
+
 		healthScript.enabled = healthScriptenabled;
 		engineScript.enabled = engineScriptEnabled;
 		dodgeScript.enabled = dodgeScriptEnabled;
 		shootScript.enabled = shootScriptEnabled;
+		RadialRadioMenu.instance.canAccessRadialRadio = radioEnabled;
+		CameraTactical.instance.canAccessTacticalMap = tacMapEnabled;
+		ClickToPlay.instance.escCanGiveQuitMenu = escMenuEnabled;
 	}
 
 

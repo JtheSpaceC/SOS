@@ -285,7 +285,7 @@ public class Director : MonoBehaviour {
 
 	IEnumerator PlayerShipLaunchFromHangar()
 	{
-		player.GetComponent<PlayerAILogic>().TogglePlayerControl(false, false, false, false);
+		player.GetComponent<PlayerAILogic>().TogglePlayerControl(false, false, false, false, false, false, true);
 		float startingZ = player.transform.position.z;
 
 		yield return new WaitForSeconds(2);
@@ -308,7 +308,7 @@ public class Director : MonoBehaviour {
 		position.z = 0;
 		player.transform.position = position;
 
-		player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true);
+		player.GetComponent<PlayerAILogic>().TogglePlayerControl(true, true, true, true, true, true, true);
 
 		for(int i = 0; i < PlayerAILogic.instance.squadLeaderScript.activeWingmen.Count; i++)
 		{

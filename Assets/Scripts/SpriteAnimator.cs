@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
-
-[RequireComponent(typeof(SpriteRenderer))]
 
 public class SpriteAnimator : MonoBehaviour {
 
@@ -10,9 +9,15 @@ public class SpriteAnimator : MonoBehaviour {
 	public bool disableGameObjectAfterLoop = false;
 	[SerializeField] bool playInReverseOrder = false;
 
+	public enum RendererType {SpriteRenderer, ImageUI};
+
 	[Header ("For Sprite Swap")]
+
+	public RendererType myRendererType;
+
 	public Sprite[] frames;
-	SpriteRenderer myRenderer;
+	SpriteRenderer mySpriteRenderer;
+	Image myImage;
 	public float framesPerSecond = 4f;
 
 	int currentFrame = 0;
@@ -35,8 +40,14 @@ public class SpriteAnimator : MonoBehaviour {
 
 	void OnEnable () 
 	{
-		myRenderer = GetComponent<SpriteRenderer> ();
-		originalColour = myRenderer.color;
+		if(myRendererType == RendererType.SpriteRenderer)
+		{
+			mySpriteRenderer = GetComponent<SpriteRenderer> ();
+			originalColour = mySpriteRenderer.color;
+		}
+		else if(myRendererType == RendererType.ImageUI)
+			myImage = GetComponent<Image>();
+			
 		currentFrame = 0;
 
 		if(startImmediately)
@@ -91,7 +102,10 @@ public class SpriteAnimator : MonoBehaviour {
 				currentFrame = frames.Length - 1;
 		}
 
-		myRenderer.sprite = frames [currentFrame];
+		if(myRendererType == RendererType.SpriteRenderer)
+			mySpriteRenderer.sprite = frames [currentFrame];
+		else if(myRendererType == RendererType.ImageUI)
+			myImage.sprite = frames [currentFrame];
 
 		if(!playInReverseOrder)
 			currentFrame++;
@@ -110,7 +124,12 @@ public class SpriteAnimator : MonoBehaviour {
 	{
 		currentFrame = 0;
 		if(frames.Length > 0)
-			myRenderer.sprite = frames [currentFrame];
+		{
+			if(myRendererType == RendererType.SpriteRenderer)
+				mySpriteRenderer.sprite = frames [currentFrame];
+			else if(myRendererType == RendererType.ImageUI)
+				myImage.sprite = frames [currentFrame];
+		}
 		CancelInvoke("AnimateSpriteSwap");
 	}
 
@@ -139,7 +158,12 @@ public class SpriteAnimator : MonoBehaviour {
 			newColour = Color.Lerp(myColors[currentColourInt], myColors[currentColourInt+1], (Time.time - colourReachedTime)/ timePerColour);
 		}
 
-		myRenderer.color = Color.Lerp(originalColour, newColour, newColourBalance);
+		mySpriteRenderer.color = Color.Lerp(originalColour, newColour, newColourBalance);
+
+		if(myRendererType == RendererType.SpriteRenderer)
+			mySpriteRenderer.color = Color.Lerp(originalColour, newColour, newColourBalance);
+		else if(myRendererType == RendererType.ImageUI)
+			myImage.color = Color.Lerp(originalColour, newColour, newColourBalance);
 	}
 
 
