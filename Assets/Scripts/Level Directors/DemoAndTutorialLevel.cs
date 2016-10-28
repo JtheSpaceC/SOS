@@ -91,10 +91,10 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
 		Tools.instance.MoveCanvasToFront(demoCanvas);
 		Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
-
-		//Tools.instance.AlterTimeScale(0);
-		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
 		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
+
+		Tools.instance.AlterTimeScale(0);
+		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
 
 		tutorialImage.GetComponent<SpriteAnimator>().frames = dodgeTutorialFrames;
 		tutorialImage.GetComponent<SpriteAnimator>().framesPerSecond = framesPerSecond;
@@ -104,10 +104,14 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	public void CloseTutorialWindow()
 	{
+		Tools.instance.MoveCanvasToRear (Tools.instance.blackoutCanvas);
+		Tools.instance.MoveCanvasToRear (demoCanvas);
+		Tools.instance.blackoutPanel.color = Color.clear;
+		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", 0);
+
 		bool[] bools = PlayerAILogic.instance.previousPlayerControlBools;
 		PlayerAILogic.instance.TogglePlayerControl (bools[0], bools[1], bools[2], bools[3], bools[4], bools[5], bools[6]);
 		Tools.instance.AlterTimeScale(1);
-		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", 0);
 
 		tutorialWindow.SetActive(false);
 	}
