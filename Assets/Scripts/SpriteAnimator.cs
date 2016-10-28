@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using System.Collections;
 
 public class SpriteAnimator : MonoBehaviour {
 
@@ -14,6 +15,8 @@ public class SpriteAnimator : MonoBehaviour {
 	[Header ("For Sprite Swap")]
 
 	public RendererType myRendererType;
+	[Tooltip("Will the animation play the same even if TimeScale is slowed?")] 
+	public bool framerateIndependent = false;
 
 	public Sprite[] frames;
 	SpriteRenderer mySpriteRenderer;
@@ -36,6 +39,10 @@ public class SpriteAnimator : MonoBehaviour {
 	public UnityEvent myOnEnableEvents;
 	public UnityEvent myOnDisableEvents;
 
+	//for coroutine animation
+	bool doAnimation = false;
+	float timeOfNextFrame;
+
 
 
 	void OnEnable () 
@@ -52,7 +59,10 @@ public class SpriteAnimator : MonoBehaviour {
 
 		if(startImmediately)
 		{
-			StartAnimatingSpriteSwap();
+			if(!framerateIndependent)
+				StartAnimatingSpriteSwap();
+			else
+				StartCoroutine("AnimateFramerateIndependentSpriteSwap");
 		}
 
 		timePerColour = colourCycleTime/myColors.Length;
@@ -88,6 +98,27 @@ public class SpriteAnimator : MonoBehaviour {
 			return;
 		}
 
+		SelectCorrectFrame();
+	}
+
+	IEnumerator AnimateFramerateIndependentSpriteSwap()
+	{
+		doAnimation = true;
+		timeOfNextFrame = Time.unscaledTime;
+			
+		while(doAnimation)
+		{
+			if(Time.unscaledTime >= timeOfNextFrame)
+			{
+				SelectCorrectFrame();
+				timeOfNextFrame += 1/framesPerSecond;
+			}
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
+	void SelectCorrectFrame()
+	{
 		if ((!playInReverseOrder && currentFrame >= frames.Length) || (playInReverseOrder && currentFrame == 0))
 		{
 			if(!looping)
@@ -122,6 +153,8 @@ public class SpriteAnimator : MonoBehaviour {
 
 	public void StopAnimatingSpriteSwap()
 	{
+		doAnimation = false;
+
 		currentFrame = 0;
 		if(frames.Length > 0)
 		{

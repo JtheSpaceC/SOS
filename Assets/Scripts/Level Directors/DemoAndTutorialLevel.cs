@@ -96,6 +96,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		Tools.instance.AlterTimeScale(0);
 		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
 
+		//TODO: Change which tutorial
 		tutorialImage.GetComponent<SpriteAnimator>().frames = dodgeTutorialFrames;
 		tutorialImage.GetComponent<SpriteAnimator>().framesPerSecond = framesPerSecond;
 
