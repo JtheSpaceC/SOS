@@ -117,6 +117,7 @@ public class PointerHUDElement : MonoBehaviour {
 	[ContextMenu("TripleFontSize")]
 	void TripleTextSize()
 	{
+		print("test");
 		distanceText.fontSize = distanceText.fontSize * 3;
 	}
 

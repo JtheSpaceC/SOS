@@ -2,6 +2,7 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
+using Fungus;
 
 public class Director : MonoBehaviour {
 
@@ -35,6 +36,7 @@ public class Director : MonoBehaviour {
 	[HideInInspector] public int radioButtonPresses = 0;
 	[HideInInspector] public int tacMapUses = 0;
 
+	[HideInInspector] public Flowchart flowchart;
 
 	[Tooltip("Just for turning something on/of in the scene for testing. Like a background or spawner. Just one object.")]
 	public bool screenshotMode = false;
@@ -86,6 +88,8 @@ public class Director : MonoBehaviour {
 
 		//TODO: More dynamic system, based on world map location
 		sceneTint = Tools.instance.environments.GetASceneColour();
+
+		flowchart = FindObjectOfType<Flowchart>();
 	}
 
 	void OnEnable()

@@ -28,6 +28,11 @@ public class InputManager : MonoBehaviour {
 	public Sprite imgGamepadRS;
 	public Sprite imgGamepadDpad;
 
+	[HideInInspector] public bool DpadUpDown;
+	[HideInInspector] public bool DpadDownDown;
+	[HideInInspector] public bool DpadLeftDown;
+	[HideInInspector] public bool DpadRightDown;
+
 
 	void Awake()
 	{
@@ -84,6 +89,36 @@ public class InputManager : MonoBehaviour {
 				ChangeTo(InputFrom.keyboardMouse);
 				restartTimer = 0;
 			}
+
+			//check for DpadInput
+			if(Input.GetAxisRaw("Dpad Vertical") == 0 || DpadUpDown || DpadDownDown)
+			{
+				DpadUpDown = false;
+				DpadDownDown = false;
+			}
+			if(Input.GetAxisRaw("Dpad Horizontal") == 0 || DpadLeftDown || DpadRightDown)
+			{
+				DpadLeftDown = false;
+				DpadRightDown = false;
+			}
+
+			if(Input.GetAxisRaw("Dpad Vertical") > 0)
+			{
+				DpadUpDown = true;
+			}
+			else if(Input.GetAxisRaw("Dpad Vertical") < 0)
+			{
+				DpadDownDown = true;
+			}
+			if(Input.GetAxisRaw("Dpad Horizontal") < 0)
+			{
+				DpadLeftDown = true;
+				Invoke("FungusSubmit", 0);
+			}
+			else if(Input.GetAxisRaw("Dpad Horizontal") > 0)
+			{
+				DpadRightDown = true;
+			}
 		}
 		else if(inputFrom == InputFrom.keyboardMouse) //if we're on key/mouse, do checks for gamepad
 		{
@@ -91,15 +126,15 @@ public class InputManager : MonoBehaviour {
 				!Mathf.Approximately(Input.GetAxis("Gamepad Left Vertical"), 0) ||
 				!Mathf.Approximately(Input.GetAxis("Gamepad Right Horizontal"), 0) ||
 				!Mathf.Approximately(Input.GetAxis("Gamepad Right Vertical"), 0)||
-				!Mathf.Approximately(Input.GetAxis("Orders Vertical"), 0)||
-				!Mathf.Approximately(Input.GetAxis("Orders Horizontal"), 0))
+				!Mathf.Approximately(Input.GetAxis("Dpad Vertical"), 0)||
+				!Mathf.Approximately(Input.GetAxis("Dpad Horizontal"), 0))
 			{
 				ChangeTo(InputFrom.controller);
 				restartTimer = 0;
 			}
 		}
 
-	}
+	}//end of UPDATE()
 
 	public void ChangeTo(InputFrom newType)
 	{

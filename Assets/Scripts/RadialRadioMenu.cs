@@ -94,7 +94,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		//ACTIVATE the Radial menu
 		if(!radialMenuShown && 
 			(Input.GetKeyDown(KeyCode.Q) || 
-				((Input.GetAxis("Orders Vertical")) > 0.5f) && takeDPadInput ) )
+				((Input.GetAxis("Dpad Vertical")) > 0.5f) && takeDPadInput ) )
 		{
 			StartCoroutine("DPadInputWait");
 			screenProgression.Clear();
@@ -119,7 +119,7 @@ public class RadialRadioMenu : MonoBehaviour {
 
 		//DEACTIVATE the Radial menu
 		else if(radialMenuShown && 
-			(Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Orders Vertical")) > 0.5f && takeDPadInput))
+			(Input.GetKeyDown(KeyCode.Q) || (Input.GetAxis("Dpad Vertical")) > 0.5f && takeDPadInput))
 		{
 			StartCoroutine("DPadInputWait");
 			DeactivateRadialMenu ();

@@ -65,7 +65,7 @@ public class CameraControllerFighter : MonoBehaviour {
 		else if(cameraBehaviour == CameraBehaviour.Normal || cameraBehaviour == CameraBehaviour.AsteroidsBox)
 		{
 			if(!ClickToPlay.instance.paused && !RadialRadioMenu.instance.radialMenuShown && 
-				(Input.GetKeyDown(KeyCode.E) || (takeDPadInput && Input.GetAxis("Orders Horizontal") < -0.5f)))
+				(Input.GetKeyDown(KeyCode.E) || (takeDPadInput && Input.GetAxis("Dpad Horizontal") < -0.5f)))
 			{
 				StartCoroutine("DPadInputWait");
 				Tools.instance.combatAsteroidsStyleScript.itemsInZone.Clear();
