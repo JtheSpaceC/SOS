@@ -75,11 +75,6 @@ public class Director : MonoBehaviour {
 			Destroy(this.gameObject);
 		}
 
-		try{
-		gameTimeText = GameObject.Find("GUI Mission Time").GetComponent<Text>();
-		playerKillsText = GameObject.Find("GUI Kills").GetComponent<Text>();
-		}catch{}
-
 		if(FindObjectOfType<MissionSetup>())
 		{
 			missionSetupScript = FindObjectOfType<MissionSetup>();
@@ -112,6 +107,13 @@ public class Director : MonoBehaviour {
 
 	void Start()
 	{
+		GameObject go = GameObject.Find("GUI Mission Time");
+		if(go)
+			gameTimeText = go.GetComponent<Text>();
+		go = GameObject.Find("GUI Kills");
+		if(go)
+			playerKillsText = go.GetComponent<Text>();
+
 		if(!FindObjectOfType<MissionSetup>())
 		{
 			//REMOVE: when mission setup dresses the scene always
@@ -324,7 +326,7 @@ public class Director : MonoBehaviour {
 	void Update () 
 	{
 		if(!ClickToPlay.instance.paused)
-		{								
+		{		
 			if(gameTimeText && playerKillsText)
 			{
 				//Mission Clock Stuff

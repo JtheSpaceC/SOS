@@ -60,7 +60,7 @@ public class SpriteAnimator : MonoBehaviour {
 		if(startImmediately)
 		{
 			if(!framerateIndependent)
-				StartAnimatingSpriteSwap();
+				StartAnimatingSpriteSwap();			
 			else
 				StartCoroutine("AnimateFramerateIndependentSpriteSwap");
 		}
@@ -198,6 +198,5 @@ public class SpriteAnimator : MonoBehaviour {
 		else if(myRendererType == RendererType.ImageUI)
 			myImage.color = Color.Lerp(originalColour, newColour, newColourBalance);
 	}
-
 
 }//Mono

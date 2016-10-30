@@ -705,8 +705,13 @@ public class EnginesFighter : MonoBehaviour {
 
 		for(int i = 0; i < whichGroup.Length; i++)
 		{
+			try{
 			whichGroup[i].myRenderer.enabled = true;
 			whichGroup[i].lastTurnedOnTime = Time.time;
+			}
+			catch{
+				Debug.LogError("check " + name + ". Dead = " + myAIFighterScript.healthScript.dead);
+			}
 		}
 	}
 

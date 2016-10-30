@@ -260,7 +260,7 @@ public class Character : MonoBehaviour {
 
 			while(Tools.instance.callsignsInUse.Contains(callsign))
 			{
-				print("Contained Callsign " + callsign);
+				print("Pilot already exists with Callsign " + callsign);
 				GetCallsign();	
 			}
 			Tools.instance.callsignsInUse.Add(callsign);

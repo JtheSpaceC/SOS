@@ -25,7 +25,8 @@ public static class KevinsCustomEditor : object {
 			"Turn off Manual Spawns.." +
 			"Set Canvas Resolutions to 1920 x 1080, from 1580 x 889.." +
 			"Turn off Asteroid Combat ability.." +
-			"Remove Listener from Menu Scene";
+			"Remove Listener from Menu Scene.." +
+			"Turn Music back on";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)

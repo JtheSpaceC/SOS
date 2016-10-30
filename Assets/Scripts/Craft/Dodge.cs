@@ -10,7 +10,7 @@ public class Dodge : MonoBehaviour
 	EnginesFighter enginesFighterScript;
 	AIFighter aiFighterScript;
 	HealthFighter healthScript;
-	SpriteAnimator mySpriteAnimator;
+	[HideInInspector] public SpriteAnimator mySpriteAnimator;
 	bool hasAvatar = false;
 
 	public enum AnimationStyle {SpriteSheet, UnityAnimator, RollAModel};
@@ -241,7 +241,8 @@ public class Dodge : MonoBehaviour
 
 	void CanDodgeAgain()
 	{
-		canDodge = true;
+		if(!healthScript.dead)
+			canDodge = true;
 	}
 
 	
@@ -313,13 +314,10 @@ public class Dodge : MonoBehaviour
 
 		//ANIMATIONS
 
-		invertAnimationDirection = Random.Range(0,2) == 1;
 
 		if(animationStyle == AnimationStyle.SpriteSheet)
 		{
-			mySpriteAnimator.SetPlayInReverseOrder(invertAnimationDirection);
-			mySpriteAnimator.StartAnimatingSpriteSwap();
-			StartCoroutine("RollAnimation");
+			RollSpriteAnimation ();
 		}
 		else if(animationStyle == AnimationStyle.UnityAnimator)
 		{
@@ -350,8 +348,16 @@ public class Dodge : MonoBehaviour
 		}
 	}
 
+	public void RollSpriteAnimation ()
+	{		
+		invertAnimationDirection = Random.Range (0, 2) == 1;
+		mySpriteAnimator.SetPlayInReverseOrder (invertAnimationDirection);
+		mySpriteAnimator.StartAnimatingSpriteSwap ();
+		StartCoroutine ("RollAnimation");
+	}
+
 	IEnumerator RollAnimation()
-	{
+	{		
 		startTime = Time.time;
 
 		while(Time.time < startTime + rollDuration)
@@ -538,5 +544,10 @@ public class Dodge : MonoBehaviour
 
 			yield return new WaitForEndOfFrame();
 		}
+	}
+
+	void OnDisable()
+	{
+		CancelRollForDeath();
 	}
 }//Mono

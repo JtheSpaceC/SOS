@@ -28,6 +28,11 @@ public class SolEd : EditorWindow {
 		EditorWindow.GetWindow(typeof(SolEd));
 	}
 
+	void OnEnable()
+	{
+		shipStats = (ShipStats)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/ShipStatsHolder.asset", typeof(ShipStats));
+		icons = (Icons)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/Icons.asset", typeof(Icons));
+	}
 
 	void OnFocus()
 	{
@@ -110,6 +115,9 @@ public class SolEd : EditorWindow {
 		{
 			copyAndDeleteButtonsHeaderWidth = copyAndDeleteButtonsSpace.width;
 		}
+
+		//saves Data
+		EditorUtility.SetDirty(shipStats);
 	}
 
 	void ListLayout(string heading, List<Fighter> whichList, Sprite shipImage)

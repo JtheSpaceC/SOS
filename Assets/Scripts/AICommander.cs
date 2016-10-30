@@ -62,7 +62,10 @@ public class AICommander : MonoBehaviour {
 					closestDist = thisDist;
 				}
 			}
-			else print(target.name + " is not legit");
+			else if(target)
+				print("AICommander reports: "+ target.name + " is not legit");
+			else
+				print("AICommander reports: a target in "+ whichTargetList.ToString() +" was NULL");
 		}
 		if(resultingTarget != null)
 			return resultingTarget;

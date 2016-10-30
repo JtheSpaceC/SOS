@@ -23,11 +23,7 @@ public class HealthFighter : Health {
 	Sprite startSprite;
 
 	[Header("For turning off at Death")]
-	public SpriteRenderer shadow;
-	public SpriteRenderer effectAnimation;
-	public SpriteRenderer sideOnSprite;
-	public GameObject radarSig;
-	public AudioSource engineNoise;
+	public GameObject[] turnOffAtDeath;
 
 	[Header("Other. (Look for debugging. Don't touch!)")]
 	public GameObject previousAttacker;
@@ -41,6 +37,8 @@ public class HealthFighter : Health {
 	 public Image avatarRadialAwarenessBar;
 	float maxFill = 0.25f;
 	bool updateAvatarBars = false;
+
+	float deathSpinoutTime = 2;
 
 
 	void Awake()
@@ -650,7 +648,11 @@ public class HealthFighter : Health {
 	public void Death()
 	{
 		// collider is turned off by SpriteExploder
-
+		if(dead)
+		{
+			Debug.LogError(name + " already DEAD"); //I've never seen this. Good
+			return;
+		}
 		dead = true;
 
 		GetComponent<SpriteRenderer>().enabled = true;
@@ -662,12 +664,8 @@ public class HealthFighter : Health {
 			Subtitles.instance.PostSubtitle(new string[]{this.name + " HAS BEEN DESTROYED!!!"});
 			_battleEventManager.instance.CallWingmanDied();
 		}
-			
-		if (dodgeScript)
-		{
-			dodgeScript.CancelRollForDeath ();
-			dodgeScript.enabled = false;
-		}
+
+		dodgeScript.canDodge = false;
 
 		awareness = 0;
 		CancelInvoke("AwarenessRecharge");
@@ -675,8 +673,12 @@ public class HealthFighter : Health {
 		Tools.instance.SpawnExplosion (this.gameObject, transform.position, true);
 
 		GetComponent<Animator>().enabled = false;
-		if(radarSig)
-			radarSig.SetActive (false);
+
+		if(turnOffAtDeath.Length > 0)
+		{
+			for(int i = 0; i < turnOffAtDeath.Length; i++)
+				turnOffAtDeath[i].SetActive (false);
+		}
 
 		//Player-specific death
 		if(thisIsPlayer)
@@ -748,6 +750,7 @@ public class HealthFighter : Health {
 			myAIScript.orders = AIFighter.Orders.NA;
 			myAIScript.ChangeToNewState(myAIScript.deathStates, new float[]{1});
 			myAIScript.myCommander.losses ++;
+			myAIScript.enabled = false;
 	
 			if(previousAttacker != null)
 			{
@@ -761,9 +764,26 @@ public class HealthFighter : Health {
 
 			Invoke("FinalDeactivation", 10);
 
+			//for two stage death
 			if(Random.Range(0, 2) == 1)
 			{
-				//for two stage death
+				//thrusters not always aligning well on this spin animation, so turn them off
+				myAIScript.engineScript.allThruster[0].transform.parent.gameObject.SetActive(false);
+
+				//set a chance to roll as well as spin
+				if(Random.Range(0, 3) > 0) //2:1 chance that we roll
+				{
+					dodgeScript.mySpriteAnimator.looping = true;
+					dodgeScript.rollDuration *= Random.Range(0.75f, 1.2f);
+					if(dodgeScript.mySpriteAnimator)
+					{
+						dodgeScript.mySpriteAnimator.framesPerSecond = dodgeScript.mySpriteAnimator.frames.Length/dodgeScript.rollDuration;
+					}
+					dodgeScript.rollDuration = deathSpinoutTime;
+					dodgeScript.RollSpriteAnimation();
+				}
+
+				//set a lateral spin and other effects
 				gameObject.AddComponent<Rotator>();
 				GetComponent<Rotator>().Mode = Rotator.myMode.RandomizedAtStart;
 				GetComponent<Rotator>().randomizeDirection = true;
@@ -775,10 +795,13 @@ public class HealthFighter : Health {
 				flames.startLifetime *= 3;
 				temporarilyInvincible = true;
 
-				Invoke("Explode", 2);
+				//spin animation ends in normal death after this time
+				Invoke("Explode", deathSpinoutTime);
 			}
 			else 
+			{
 				Explode();
+			}
 
 			//check if the object is on screen away from the edges
 			Vector2 screenPoint = (Vector2)Camera.main.WorldToViewportPoint(transform.position); 
@@ -799,9 +822,10 @@ public class HealthFighter : Health {
 	{
 		Tools.instance.SpawnExplosion (this.gameObject, transform.position, true);
 
+		dodgeScript.enabled = false;
+
 		GameObject effects = transform.FindChild("Effects").gameObject;
 
-		//transform.FindChild("Effects").gameObject.SetActive(false);
 		effects.transform.FindChild("Animation").gameObject.SetActive(false);
 		effects.AddComponent<DestroyAfterTime>();
 		effects.GetComponent<DestroyAfterTime>().enabled = false;
@@ -810,6 +834,9 @@ public class HealthFighter : Health {
 		smoke.startLifetime = 2;
 		flames.startLifetime = 2;
 		Invoke("StopParticles", 0);
+
+		if(GetComponent<Rotator>())
+			GetComponent<Rotator>().enabled = false;
 
 		effects.transform.SetParent(null);
 		Rigidbody2D effectsRB = effects.AddComponent<Rigidbody2D>();
