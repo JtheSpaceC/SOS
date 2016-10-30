@@ -28,6 +28,10 @@ public class SpawnerGroup : MonoBehaviour {
 
 	[HideInInspector] public List<GameObject> craft;
 
+	[Header("SolEd")]
+	public int level;
+	public string specialTag;
+
 	Vector3 pos;
 	Vector3 destination;
 	Vector3 startPos;
@@ -98,10 +102,13 @@ public class SpawnerGroup : MonoBehaviour {
 		string squadronName = myCommander.RequestSquadronName ();
 
 		//spawn the required number of craft
-		for (int i = 0; i < numberToSpawn; i++) {
+		for (int i = 0; i < numberToSpawn; i++) 
+		{
 			GameObject obj = Instantiate (objectPrefab, (Vector2)transform.position + Random.insideUnitCircle.normalized *2f, 
 				Quaternion.identity) as GameObject;
 			obj.name = squadronName + " " + (i + 1);
+			obj.GetComponent<AIFighter>().myLevel = level;
+			obj.GetComponent<AIFighter>().specialShip = specialTag;
 			craft.Add (obj);
 		}
 		//create SquadLeader object and put it on the leader

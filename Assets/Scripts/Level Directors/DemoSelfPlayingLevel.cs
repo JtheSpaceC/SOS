@@ -24,6 +24,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public GameObject PMCFighterTrioPrefab;
 	public GameObject EnemyFighterTrioPrefab;
+	GameObject pmcSpawn;
+	GameObject enemySpawn;
 	public Transform theFleet;
 
 	private Vector3 velocity = Vector3.zero;
@@ -45,17 +47,9 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public bool cameraAutoChanges = true;
 	public bool showEnemyUI = true;
 
-	[Header("Difficulty Stuff")]
-	[Tooltip("Do we replace prefab health with ones we specifically want for demo?")] 
-	public bool overridePrefabHealths = true;
-	public int enemyStartingAwareness = 0;
-	public int enemyMaxAwareness = 2;
-	public int enemySnapFocus = 0;
-	public int enemyAwarenessRecharge = 3;
-	public int PMCStartingAwareness = 4;
-	public int PMCMaxAwareness = 4;
-	public int PMCSnapFocus = 1;
-	public int PMCAwarenessRecharge = 2;
+	[Header("SolEd Stuff")]
+	public string arrowSpecialString;
+	public string mantisSpecialString;
 
 
 
@@ -97,20 +91,14 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	void OnEnable()
 	{
-		if(overridePrefabHealths)
-		{
-			_battleEventManager.pmcFightersSpawned += FixDemoSpecificConcerns;
-			_battleEventManager.enemyFightersSpawned += FixDemoSpecificConcerns;
-		}
+		_battleEventManager.pmcFightersSpawned += FixDemoSpecificConcerns;
+		_battleEventManager.enemyFightersSpawned += FixDemoSpecificConcerns;
 	}
 
 	void OnDisable()
-	{
-		if(overridePrefabHealths)
-		{
-			_battleEventManager.pmcFightersSpawned -= FixDemoSpecificConcerns;
-			_battleEventManager.enemyFightersSpawned -= FixDemoSpecificConcerns;
-		}
+	{		
+		_battleEventManager.pmcFightersSpawned -= FixDemoSpecificConcerns;
+		_battleEventManager.enemyFightersSpawned -= FixDemoSpecificConcerns;
 	}
 
 
@@ -293,8 +281,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	{
 		if (CountFighters(LayerMask.NameToLayer("PMCFighters")) >= maxPMCFighters)
 			return;
-
-		Instantiate (PMCFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 55), Quaternion.identity);
+		pmcSpawn = 
+			Instantiate (PMCFighterTrioPrefab, 
+				((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 55), Quaternion.identity) as GameObject;
+		pmcSpawn.GetComponent<SpawnerGroup>().specialTag = arrowSpecialString;
 	}
 	void SpawnEnemy()
 	{
@@ -303,8 +293,12 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			return;
 		}
 		
-		Instantiate (EnemyFighterTrioPrefab, ((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 100), Quaternion.identity);
+		enemySpawn = 
+			Instantiate (EnemyFighterTrioPrefab, 
+				((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 100), Quaternion.identity) as GameObject;
+		enemySpawn.GetComponent<SpawnerGroup>().specialTag = mantisSpecialString;
 	}
+
 	void FixDemoSpecificConcerns()
 	{
 		AIFighter[] fighterscripts = FindObjectsOfType<AIFighter>();
@@ -312,14 +306,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		{
 			if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Ally)
 			{
-				if(overridePrefabHealths)
-				{
-					fighter.healthScript.awareness = PMCStartingAwareness;
-					fighter.healthScript.maxAwareness = PMCMaxAwareness;
-					fighter.healthScript.snapFocusAmount = PMCSnapFocus;
-					fighter.healthScript.awarenessRechargeTime = PMCAwarenessRecharge;
-				}
-
 				if(fighter.GetComponentInChildren<SquadronLeader>())
 				{
 					fighter.GetComponent<AIFighter>().escortShip = theFleet;
@@ -332,13 +318,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 				{
 					fighter.healthScript.healthSlider.gameObject.SetActive(false);
 					fighter.healthScript.awarenessSlider.gameObject.SetActive(false);
-				}
-				if(overridePrefabHealths)
-				{
-					fighter.healthScript.awareness = enemyStartingAwareness;
-					fighter.healthScript.maxAwareness = enemyMaxAwareness;
-					fighter.healthScript.snapFocusAmount = enemySnapFocus;
-					fighter.healthScript.awarenessRechargeTime = enemyAwarenessRecharge;
 				}
 				fighter.statsAlreadyAdjusted = true;
 			}

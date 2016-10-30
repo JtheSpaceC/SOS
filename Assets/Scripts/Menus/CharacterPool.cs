@@ -246,6 +246,7 @@ public class CharacterPool : MonoBehaviour {
 	{
 		selectedCharacters.Clear();
 
+		print("AllCharacters Length: " + allCharacters.Length);
 		for(int i = 0; i < allCharacters.Length; i++)
 		{
 			if(allCharacters[i].GetComponentInChildren<Toggle>().isOn)
@@ -285,7 +286,8 @@ public class CharacterPool : MonoBehaviour {
 		
 	public void CreateNewCharacter()
 	{
-		selectedCharacter = new CharacterPoolEntry();
+		GameObject go = new GameObject("tempGO");
+		selectedCharacter = go.AddComponent<CharacterPoolEntry>();
 
 		avatar.GenerateRandomNewAppearance();
 		if(avatar.gender == Character.Gender.Female)
@@ -294,15 +296,21 @@ public class CharacterPool : MonoBehaviour {
 			selectedFacialHairText.transform.parent.gameObject.SetActive(true);		
 
 		if(selectedCharacter == null)
-			print("Fuck");
+			Debug.LogError("Fuck");
 
-		//selectedCharacter.firstName = namesSO.maleNames[]; ng.getRandomFirstName(avatar.gender.ToString().ToCharArray()[0]);
+
+		selectedCharacter.firstName = 
+			avatar.gender == Character.Gender.Male? 
+			namesSO.maleNames[UnityEngine.Random.Range(0, namesSO.maleNames.Count)] : 
+			namesSO.femaleNames[UnityEngine.Random.Range(0, namesSO.femaleNames.Count)];
 		selectedCharacter.lastName = namesSO.lastNames[UnityEngine.Random.Range(0, namesSO.lastNames.Count)];
 		selectedCharacter.callsign = namesSO.lastNames[UnityEngine.Random.Range(0, namesSO.lastNames.Count)];
 		selectedCharacter.appearanceSeed = avatar.appearanceSeed;
 		currentBio = "";
 
 		ActivateCharacterEditScreen(selectedCharacter, false);
+
+		Destroy(go);
 	}
 
 

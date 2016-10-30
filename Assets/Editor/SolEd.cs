@@ -7,7 +7,7 @@ public class SolEd : EditorWindow {
 
 	static Vector2 s_WindowsMinSize = Vector2.one * 300.0f;
 
-	public ShipStats shipStats;
+	ShipStats shipStats;
 	public Icons icons;
 	Texture tex;
 
@@ -27,6 +27,7 @@ public class SolEd : EditorWindow {
 	{
 		EditorWindow.GetWindow(typeof(SolEd));
 	}
+
 
 	void OnFocus()
 	{

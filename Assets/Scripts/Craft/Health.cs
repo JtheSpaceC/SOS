@@ -63,6 +63,7 @@ public class Health : MonoBehaviour {
 		bloodSplashImage = GameObject.FindGameObjectWithTag ("Manager Tools").transform.FindChild 
 			("Canvas (Effects, screen)/Blood Splash").GetComponent<Image>();
 
+		//set up HUD health bars
 		if(healthSlider != null)
 		{
 			healthSliderFill = healthSlider.GetComponentInChildren<Image> ();

@@ -78,8 +78,6 @@ public class CameraTactical : MonoBehaviour {
 
 	void Start()
 	{
-		Invoke ("AllowTacCam", 0.5f);
-
 		pipDisplayScaleAtStart = pipDisplay.localScale;
 	}
 

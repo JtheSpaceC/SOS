@@ -69,8 +69,6 @@ public class AIFighter : FighterFunctions {
 
 	[HideInInspector] public bool statsAlreadyAdjusted = false;
 
-	public int mySkillLevel = 2;
-	
 
 	void Awake()
 	{
@@ -84,16 +82,6 @@ public class AIFighter : FighterFunctions {
 		}
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
-
-		if(useSolEdStatsToOverride)
-			PullStatsFromSolEd();
-
-		SetUpSideInfo();
-		enemyTargets = myCommander.fighterEnemyTargets;
-		dangerSources = myCommander.fighterEnemyDangerSources;
-
-		myCommander.myFighters.Add (this.gameObject);
-		enemyCommander.AddEnemyFighters(this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
 
 		normalStates = new StateMachine[]{StateMachine.Patroling};
 		combatStates = new StateMachine[]{StateMachine.Tailing, StateMachine.Jousting};
@@ -113,11 +101,21 @@ public class AIFighter : FighterFunctions {
 	}
 
 	void Start () 
-	{		
+	{
 		if(whichSide == WhichSide.Enemy)
 			cowardice = Mathf.Clamp(cowardice *= Random.Range (0.25f, 1.5f), 0, 99); //TODO: based on character stats for PMC?
 		else
 			cowardice = 100/healthScript.maxHealth;
+
+		if(useSolEdStatsToOverride)
+			PullStatsFromSolEd();
+
+		SetUpSideInfo();
+		enemyTargets = myCommander.fighterEnemyTargets;
+		dangerSources = myCommander.fighterEnemyDangerSources;
+
+		myCommander.myFighters.Add (this.gameObject);
+		enemyCommander.AddEnemyFighters(this.gameObject); //TODO; AI Commander instantly knows all enemies. Make more complex
 
 		StartCoroutine(SetUpAvatarBars());
 	}
