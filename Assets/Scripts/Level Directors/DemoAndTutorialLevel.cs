@@ -77,7 +77,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 				CloseTutorialWindow();
 		}
 
-		if(Director.instance.timer > 1 && Director.instance.timer < 2)
+		if(Director.instance.timer > 1 && Director.instance.timer < 1.1f)
 		{
 			Director.instance.flowchart.SendFungusMessage("wd");
 		}

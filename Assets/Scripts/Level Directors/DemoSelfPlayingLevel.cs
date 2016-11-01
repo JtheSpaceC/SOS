@@ -77,6 +77,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		foreach(GameObject obj in itemsToTurnOff)
 			obj.SetActive(false);
 
+		RadialRadioMenu.instance.enabled = false;
+
 		radarCamera.transform.SetParent(Camera.main.transform);
 
 		cameraZPos = levelCamera.transform.position.z;
