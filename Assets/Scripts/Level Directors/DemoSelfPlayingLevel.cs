@@ -13,6 +13,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public Text followCamText;
 	public Text pressStartText;
 	public Text scoresText;
+	public Text versionText;
+	public Text controlsText;
 	public bool keepScores = false;
 	public AICommander pmcCommander;
 	public AICommander enemyCommander;
@@ -135,6 +137,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 				mainMenu = FindObjectOfType<MainMenu>().gameObject;	
 			}
 
+			//first time, if there's no Main Menu, load it
 			if(!haveLoadedMenu && FindObjectOfType<MainMenu>() == null)
 			{
 				SceneManager.LoadScene("Main Menu", LoadSceneMode.Additive);
@@ -142,7 +145,11 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 				sceneResetTime = Mathf.Infinity;
 				AudioMasterScript.instance.FadeChannel("Master vol", -10, 0, 0.3f);
+
+				//turn off the text elements that are in the way, inc subtitles
+				ToggleTextElements(false);
 			}
+			//if Menu's been loaded and it's on, turn it off
 			else if(haveLoadedMenu && mainMenu.activeSelf && 
 				!CharacterPool.instance.characterPoolPanel.activeInHierarchy &&
 				!CharacterPool.instance.characterCreationPanel.activeInHierarchy && 
@@ -151,12 +158,19 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 				mainMenu.SetActive(false);
 				sceneResetTime = Director.instance.timer + originalSceneResetTime;
 				AudioMasterScript.instance.FadeChannel("Master vol", 0, 0, 0.3f);
+
+				//Turn back on the text elements
+				ToggleTextElements(true);
 			}
+			//if it's been on before, turn it on again
 			else if(haveLoadedMenu && !mainMenu.activeSelf)
 			{
 				mainMenu.SetActive(true);
 				sceneResetTime = Mathf.Infinity;
 				AudioMasterScript.instance.FadeChannel("Master vol", -10, 0, 0.3f);
+
+				//turn off the text elements that are in the way, inc subtitles
+				ToggleTextElements(false);
 			}
 		}
 
@@ -355,6 +369,15 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	{
 		Tools.instance.CommenceFade(0, blackoutTime, Color.clear, Color.black);
 		Invoke("LoadMainLevel", 1.6f);
+	}
+
+
+	public void ToggleTextElements(bool shouldEnable)
+	{
+		controlsText.enabled = shouldEnable;
+		versionText.enabled = shouldEnable;
+		pressStartText.enabled = shouldEnable;
+		Subtitles.instance.enabled = shouldEnable;
 	}
 		
 }//Mono
