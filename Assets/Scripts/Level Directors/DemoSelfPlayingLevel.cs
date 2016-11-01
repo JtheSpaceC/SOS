@@ -143,6 +143,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			{
 				mainMenu = FindObjectOfType<MainMenu>().gameObject;	
 			}
+			print(mainMenu);
 
 			//first time, if there's no Main Menu, load it
 			if(!haveLoadedMenu && FindObjectOfType<MainMenu>() == null)
