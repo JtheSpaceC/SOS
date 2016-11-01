@@ -26,7 +26,8 @@ public static class KevinsCustomEditor : object {
 			"Set Canvas Resolutions to 1920 x 1080, from 1580 x 889.." +
 			"Turn off Asteroid Combat ability.." +
 			"Remove Listener from Menu Scene.." +
-			"Turn Music back on";
+			"Turn Music back on.." +
+			"Enable/Disable website link & Character Pool";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)
