@@ -53,6 +53,7 @@ public class AIFighter : FighterFunctions {
 	LayerMask dangerSources; //Any layers that could do this fighter harm. Fighter will stay away if retreating
 	Vector2 evadePosition;
 	Vector2 retreatPosition;
+
 	public Vector2 fallbackPosition;
 
 	float timer = 0;
@@ -636,7 +637,13 @@ public class AIFighter : FighterFunctions {
 			if(timer >= 1)
 			{
 				timer = 0;
-				GameObject targetCheck;
+
+				//REMOVE this once it doesn't happen anymore
+				if(flightLeader.GetComponent<HealthFighter>().dead)
+				{
+					Debug.LogError(name + " was protecting a dead leader.");
+					flightLeadSquadronScript.AssignNewLeader(true);
+				}
 
 				if(flightLeader.tag == "PlayerFighter")
 					targetCheck = myCommander.ClosestPriorityTarget(flightLeader.GetComponent<PlayerAILogic>().myAttackers, transform.position);

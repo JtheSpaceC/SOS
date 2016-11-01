@@ -63,9 +63,9 @@ public class AICommander : MonoBehaviour {
 				}
 			}
 			else if(target)
-				print("AICommander reports: "+ target.name + " is not legit");
+				Debug.LogWarning(name + " reports: "+ target.name + " is not legit");
 			else
-				print("AICommander reports: a target in "+ whichTargetList.ToString() +" was NULL");
+				Debug.LogWarning("AICommander reports: a target in "+ whichTargetList.ToString() +" was NULL");
 		}
 		if(resultingTarget != null)
 			return resultingTarget;

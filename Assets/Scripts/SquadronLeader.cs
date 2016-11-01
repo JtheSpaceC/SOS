@@ -33,6 +33,8 @@ public class SquadronLeader : MonoBehaviour {
 	public GameObject mate11;
 	public GameObject mate12;
 
+	List<GameObject> mates = new List<GameObject>();
+
 	[HideInInspector] public Animator mate01RadarAnimator;
 	[HideInInspector] public Animator mate02RadarAnimator;
 	[HideInInspector] public Animator mate03RadarAnimator;
@@ -99,6 +101,18 @@ public class SquadronLeader : MonoBehaviour {
 		foreach (GameObject go in capturedWingmen) {
 			allWingmen.Add (go);
 		}
+		mates.Add(mate01);
+		mates.Add(mate02);
+		mates.Add(mate03);
+		mates.Add(mate04);
+		mates.Add(mate05);
+		mates.Add(mate06);
+		mates.Add(mate07);
+		mates.Add(mate08);
+		mates.Add(mate09);
+		mates.Add(mate10);
+		mates.Add(mate11);
+		mates.Add(mate12);
 
 		GenerateWingmanFormationPositions ();
 		ReassignWingmen ();
@@ -119,6 +133,11 @@ public class SquadronLeader : MonoBehaviour {
 		}
 		else
 			transform.parent.parent.GetComponent<AIFighter>().flightLeader = transform.parent.parent.gameObject;
+
+		for(int i = 0; i < mates.Count; i++)
+		{
+			mates[i] = null;
+		}
 		
 		try{
 			mate01 = transform.parent.parent.gameObject;
@@ -480,29 +499,29 @@ public class SquadronLeader : MonoBehaviour {
 	}
 
 
-	public void AssignNewLeader(bool leaderIsDead)
+	public void AssignNewLeader(bool leaderIsDeadOrLeaving)
 	{
 		//if leader is still alive but everyone else is dead
-		if(!leaderIsDead && activeWingmen.Count == 0)
+		if(!leaderIsDeadOrLeaving && activeWingmen.Count == 0)
 		{
 			FindMeANewLeader(mate01);
 			return;
 		}
-		else if(!leaderIsDead && activeWingmen.Count >= 1) //leader alive with 1 or more wingmen left
+		else if(!leaderIsDeadOrLeaving && activeWingmen.Count >= 1) //leader alive with 1 or more wingmen left
 			return; //don't make changes
 
 		//if there are no other available wingmen, do nothing. Leader was the last survivor and is now dead/retreating
-		if(leaderIsDead && activeWingmen.Count == 0)
+		if(leaderIsDeadOrLeaving && activeWingmen.Count == 0)
 		{
 			mate01.GetComponent<AIFighter>().myCommander.mySquadrons.Remove(this);
 			return;
 		}
 		//if only one ship left, first check if the Commander would rather assign you to a different squad
-		else if(leaderIsDead && activeWingmen.Count == 1)
+		else if(leaderIsDeadOrLeaving && activeWingmen.Count == 1)
 		{
 			FindMeANewLeader(activeWingmen[0]);
 		}
-		else if(leaderIsDead && activeWingmen.Count > 1)
+		else if(leaderIsDeadOrLeaving && activeWingmen.Count > 1)
 		{
 			//otherwise assign a new leader, the first in the active wingmen
 			MakeExistingWingmanIntoThisSquadsLeader();
@@ -522,6 +541,7 @@ public class SquadronLeader : MonoBehaviour {
 			potentialNewLeader.ReassignWingmen();
 			potentialNewLeader.AddStarsToCallsign();
 			who.GetComponent<AIFighter>().ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
+			this.gameObject.SetActive(false);
 
 			return;
 		}

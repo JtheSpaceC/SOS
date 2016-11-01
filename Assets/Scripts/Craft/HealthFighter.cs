@@ -614,6 +614,17 @@ public class HealthFighter : Health {
 			//don't require receiver
 			go.SendMessage("TargetDestroyed", SendMessageOptions.DontRequireReceiver);
 		}
+
+		//handle SQUADRON concerns
+		if(myAIScript.flightLeader == this.gameObject)
+		{
+			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(this.gameObject);
+			myAIScript.flightLeadSquadronScript.AssignNewLeader(true);
+		}
+		else if(myAIScript.flightLeader != null)
+		{
+			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(this.gameObject);
+		}
 	}
 
 
@@ -717,7 +728,7 @@ public class HealthFighter : Health {
 			_battleEventManager.instance.CallPlayerShotDown();
 			Director.instance.SpawnPilotEVA(transform.position, transform.rotation, true);
 
-			//TODO: Decide what wingmen whould really do in a battle
+			//TODO: Decide what wingmen would really do in a battle
 			//tell wingmen to resume fighting on their own if Player dies
 			SquadronLeader squadLeadScript = GetComponentInChildren<SquadronLeader>();
 			if(squadLeadScript != null && squadLeadScript.firstFlightOrders != SquadronLeader.Orders.Extraction)
@@ -758,7 +769,7 @@ public class HealthFighter : Health {
 			}
 
 			try{
-				if(myAIScript.flightLeadSquadronScript.deadWingmen.Contains(gameObject))
+				if(!myAIScript.flightLeadSquadronScript.deadWingmen.Contains(gameObject))
 					myAIScript.flightLeadSquadronScript.deadWingmen.Add(gameObject);
 			}catch{} 
 
@@ -803,11 +814,12 @@ public class HealthFighter : Health {
 				Explode();
 			}
 
+			//FOR SLOW-MO DEATH
 			//check if the object is on screen away from the edges
 			Vector2 screenPoint = (Vector2)Camera.main.WorldToViewportPoint(transform.position); 
 			if(screenPoint.x > 0.2f && screenPoint.x < 0.8f && screenPoint.y > 0.2f && screenPoint.y < 0.8f)
 			{
-				//run a chance to slow-mo death
+				//run a chance to slow-mo
 				if(Time.timeScale == 1f && Random.Range(0, 100f) < Director.instance.chanceOfSlowMoDeath)
 				{
 					Tools.instance.AlterTimeScale(0.4f);
