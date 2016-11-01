@@ -10,7 +10,9 @@ public class ButtonSelectAuto : MonoBehaviour {
 	public Button myButton;
 	[Tooltip("Should work better with this on, but delays the visual selection.")] public bool waitOneFrame = true;
 
-	[Tooltip("Choose a key to activate this button.")] public KeyCode selectButtonWith;
+	[Tooltip("Choose a key to activate this button.")] 
+	public KeyCode selectButtonWith;
+	public KeyCode alternateSelectButton;
 
 
 	void Awake()
@@ -38,7 +40,7 @@ public class ButtonSelectAuto : MonoBehaviour {
 
 	void Update()
 	{
-		if(Input.GetKeyDown(selectButtonWith))
+		if(Input.GetKeyDown(selectButtonWith) || Input.GetKeyDown(alternateSelectButton))
 		{
 			DoTheClick();
 		}

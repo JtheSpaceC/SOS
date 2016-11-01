@@ -221,4 +221,13 @@ public class Subtitles : MonoBehaviour {
 			fadeOutHints = true;
 		}
 	}
+
+
+	void OnDisable()
+	{
+		subtitlesPanel.color = Color.clear;
+		subtitlesText.color = Color.clear;
+		hintsPanel.color = Color.clear;
+		hintsText.color = Color.clear;
+	}
 }
