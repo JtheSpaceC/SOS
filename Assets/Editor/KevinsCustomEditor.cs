@@ -27,7 +27,7 @@ public static class KevinsCustomEditor : object {
 			"Turn off Asteroid Combat ability.." +
 			"Remove Listener from Menu Scene.." +
 			"Turn Music back on.." +
-			"Enable/Disable website link & Character Pool";
+			"Enable/Disable website link & Character Pool(+AudioSource)";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)

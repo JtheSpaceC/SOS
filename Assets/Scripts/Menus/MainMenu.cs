@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class MainMenu : MonoBehaviour {
 
 	public GameObject quitConfirmationWindow;
+	public GameObject eventSystem;
 
-
+	void Awake()
+	{
+		EventSystem[] es = FindObjectsOfType<EventSystem>();
+		if(es.Length > 1)
+		{
+			Destroy(eventSystem);
+		}
+	}
 
 	public void GoToWebsite(string website)
 	{
@@ -52,5 +61,10 @@ public class MainMenu : MonoBehaviour {
 			AudioMasterScript.instance.FadeChannel("Master vol", 0, 0, 0.3f);
 			this.gameObject.SetActive(false);
 		}
+	}
+
+	void OnDisable()
+	{
+		quitConfirmationWindow.SetActive(false);
 	}
 }
