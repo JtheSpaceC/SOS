@@ -465,7 +465,10 @@ public class EnginesFighter : MonoBehaviour {
 					//this artificially slows the current velocity so we can add a new one
 					myRigidBody.AddForce (myRigidBody.velocity.normalized * -direction * currentAccelerationRate * Time.deltaTime);
 				}
-				else return;
+				else
+				{
+					return;
+				}
 			}
 		}
 	

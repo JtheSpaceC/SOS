@@ -62,6 +62,26 @@ public class PlayerFighterMovement : EnginesFighter {
 		if (ClickToPlay.instance.paused)
 			return;
 
+
+		//FOR CAPPING PLAYER SPEED
+		mySpeed = myRigidBody.velocity.magnitude;
+
+		if(!Input.GetButton("Afterburners") && !stillHaveAfterburnMomentum)
+		{
+			currentMaxVelocityAllowed = maxNormalVelocity;
+		}
+		else if(!Input.GetButton("Afterburners") && stillHaveAfterburnMomentum)
+		{
+			if(mySpeed <= maxNormalVelocity)
+			{
+				currentMaxVelocityAllowed = maxNormalVelocity;
+				stillHaveAfterburnMomentum = false;
+			}
+			else
+			{	
+				currentMaxVelocityAllowed = mySpeed;
+			}
+		}	
 		//set the velocity to the max allowed
 		if(mySpeed >= currentMaxVelocityAllowed)
 		{
@@ -192,27 +212,6 @@ public class PlayerFighterMovement : EnginesFighter {
 			if (Input.GetButton("StrafeRight"))
 			{
 				LateralThrust(1, true);
-			}
-		}
-
-		//FOR CAPPING PLAYER SPEED
-
-		mySpeed = myRigidBody.velocity.magnitude;
-
-		if(!Input.GetButton("Afterburners") && !stillHaveAfterburnMomentum)
-		{
-			currentMaxVelocityAllowed = maxNormalVelocity;
-		}
-		else if(!Input.GetButton("Afterburners") && stillHaveAfterburnMomentum)
-		{
-			if(mySpeed <= maxNormalVelocity)
-			{
-				currentMaxVelocityAllowed = maxNormalVelocity;
-				stillHaveAfterburnMomentum = false;
-			}
-			else
-			{
-				currentMaxVelocityAllowed = mySpeed;
 			}
 		}
 
