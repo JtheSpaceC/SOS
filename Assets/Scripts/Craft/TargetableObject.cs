@@ -9,7 +9,7 @@ public class TargetableObject : MonoBehaviour {
 
 	[HideInInspector] public Rigidbody2D myRigidbody;
 
-	public enum WhichSide {Enemy, Ally};
+	public enum WhichSide {Enemy, Ally, Civilian};
 	public WhichSide whichSide;
 	[HideInInspector] public LayerMask friendlyFireMask;
 	protected LayerMask potshotAtEnemiesMask;

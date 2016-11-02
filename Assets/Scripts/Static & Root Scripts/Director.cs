@@ -236,26 +236,20 @@ public class Director : MonoBehaviour {
 
 	void DressTheScene()
 	{
-		SpriteRenderer[] renderers = GameObject.Find("Fancy Background").GetComponentsInChildren<SpriteRenderer>();
-		foreach(SpriteRenderer renderer in renderers)
-		{
-			if(renderer.name != "sun shaft")
-				renderer.color = AdjustColour(renderer.color, sceneTint);
-		}
 		AsteroidField[] asteroidFields = FindObjectsOfType<AsteroidField>();
 				
 		foreach(AsteroidField af in asteroidFields)
 		{
 			ParticleSystem ps = af.GetComponentInChildren<ParticleSystem>();
-			ps.startColor = AdjustColour(ps.startColor, sceneTint);
+			ps.startColor = AdjustColour(ps.startColor, sceneTint, .8f);
 			ps.gameObject.SetActive(false);
 			ps.gameObject.SetActive(true);
 		}
 
 	}
-	Color AdjustColour(Color oldColour, Color sceneTint)
+	public Color AdjustColour(Color oldColour, Color sceneTint, float amount)
 	{
-		return sceneTint * oldColour;
+		return Color.Lerp(Color.white, sceneTint, amount) * oldColour;
 	}
 
 	IEnumerator ShipLaunchFromHangar(AIFighter shipAI)

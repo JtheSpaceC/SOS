@@ -109,9 +109,10 @@ public class CharacterPool : MonoBehaviour {
 			avatar.avatarOutput = avatarOutputForCharacterCreationScreen;
 
 			if(GetComponent<AudioSource>().enabled)
+			{
 				StartCoroutine("PlayAudio", 6);
-
-			Subtitles.instance.PostHint(new string[] {avatar.avatarOutput.name});
+				Subtitles.instance.PostHint(new string[] {avatar.avatarOutput.name});
+			}
 		}
 
 	}
