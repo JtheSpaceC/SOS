@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 44ba67755e5ef9242806815dab138446
-timeCreated: 1478088114
+timeCreated: 1478102989
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -18,6 +18,20 @@ TextureImporter:
     21300022: SoS-capitalship-Transport-spritesheet-colour-1_11
     21300024: SoS-capitalship-Transport-spritesheet-colour-1_12
     21300026: SoS-capitalship-Transport-spritesheet-colour-1_13
+    21300028: SoS-capitalship-Cargo Transport_0
+    21300030: SoS-capitalship-Cargo Transport_1
+    21300032: SoS-capitalship-Cargo Transport_2
+    21300034: SoS-capitalship-Cargo Transport_3
+    21300036: SoS-capitalship-Cargo Transport_4
+    21300038: SoS-capitalship-Cargo Transport_5
+    21300040: SoS-capitalship-Cargo Transport_6
+    21300042: SoS-capitalship-Cargo Transport_7
+    21300044: SoS-capitalship-Cargo Transport_8
+    21300046: SoS-capitalship-Cargo Transport_9
+    21300048: SoS-capitalship-Cargo Transport_10
+    21300050: SoS-capitalship-Cargo Transport_11
+    21300052: SoS-capitalship-Cargo Transport_12
+    21300054: SoS-capitalship-Cargo Transport_13
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -67,7 +81,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_0
+      name: SoS-capitalship-Cargo Transport_0
       rect:
         serializedVersion: 2
         x: 0
@@ -80,7 +94,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_1
+      name: SoS-capitalship-Cargo Transport_1
       rect:
         serializedVersion: 2
         x: 346
@@ -93,158 +107,158 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_2
+      name: SoS-capitalship-Cargo Transport_2
       rect:
         serializedVersion: 2
         x: 822
         y: 1838
         width: 129
         height: 82
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_3
+      name: SoS-capitalship-Cargo Transport_3
       rect:
         serializedVersion: 2
         x: 753
         y: 1749
         width: 198
         height: 82
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_4
+      name: SoS-capitalship-Cargo Transport_4
       rect:
         serializedVersion: 2
         x: 752
         y: 1573
         width: 199
         height: 170
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_5
+      name: SoS-capitalship-Cargo Transport_5
       rect:
         serializedVersion: 2
         x: 692
         y: 1485
         width: 259
         height: 82
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_6
+      name: SoS-capitalship-Cargo Transport_6
       rect:
         serializedVersion: 2
         x: 692
         y: 1309
         width: 259
         height: 169
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_7
+      name: SoS-capitalship-Cargo Transport_7
       rect:
         serializedVersion: 2
         x: 848
         y: 1220
         width: 103
         height: 82
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_8
+      name: SoS-capitalship-Cargo Transport_8
       rect:
         serializedVersion: 2
         x: 791
         y: 1130
         width: 160
         height: 83
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_9
+      name: SoS-capitalship-Cargo Transport_9
       rect:
         serializedVersion: 2
         x: 794
         y: 955
         width: 157
         height: 170
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_10
+      name: SoS-capitalship-Cargo Transport_10
       rect:
         serializedVersion: 2
         x: 748
         y: 867
         width: 203
         height: 82
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_11
+      name: SoS-capitalship-Cargo Transport_11
       rect:
         serializedVersion: 2
         x: 753
         y: 689
         width: 198
         height: 171
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_12
+      name: SoS-capitalship-Cargo Transport_12
       rect:
         serializedVersion: 2
         x: 813
         y: 589
         width: 138
         height: 90
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-capitalship-Transport-spritesheet-colour-1_13
+      name: SoS-capitalship-Cargo Transport_13
       rect:
         serializedVersion: 2
         x: 786
         y: 400
         width: 165
         height: 172
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -108,6 +108,7 @@ public class PlayerFighterMovement : EnginesFighter {
 			braking = true;
 			SpaceBrake();
 		}
+		//normal acceleration
 		else if(Input.GetAxis("Accelerate")>0)
 		{
 			ForwardOrBackwardThrust(Input.GetAxis("Accelerate"), true);
