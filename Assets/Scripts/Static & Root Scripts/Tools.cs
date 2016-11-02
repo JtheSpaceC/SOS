@@ -69,7 +69,6 @@ public class Tools: MonoBehaviour
 	[HideInInspector] public List<string> fullNamesInUse = new List<string>();
 
 
-
 	void Awake()
 	{
 		if(instance == null)

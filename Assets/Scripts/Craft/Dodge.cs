@@ -453,7 +453,6 @@ public class Dodge : MonoBehaviour
 		originalBarFill = healthScript.awarenessSlider.value;
 		//logoScale = powerupReadyImage.transform.localScale.x;
 
-		healthScript.awareness -= howMany;
 		if(healthScript.awareness < 0)
 			healthScript.awareness = 0;
 

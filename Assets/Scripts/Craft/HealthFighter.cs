@@ -39,7 +39,8 @@ public class HealthFighter : Health {
 	bool updateAvatarBars = false;
 
 	float deathSpinoutTime = 2;
-
+	int diceRoll;
+	float damage;
 
 	void Awake()
 	{
@@ -150,8 +151,8 @@ public class HealthFighter : Health {
 
 	public void YouveBeenHit(GameObject theAttacker, GameObject theBullet, float baseDamage, float critChance, float accuracy)
 	{
-		int diceRoll = 0;
-		float damage = baseDamage;
+		diceRoll = 0;
+		damage = baseDamage;
 
 		if(theAttacker == previousAttacker && theAttacker == previousPreviousAttacker)
 		{
