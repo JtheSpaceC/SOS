@@ -4,7 +4,7 @@ using System.Collections;
 public class DebrisLogic : MonoBehaviour {
 
 	public bool destroyAfterTime = true;
-	public float time = 12;
+	public float time = 8;
 
 	void OnBecameInvisible()
 	{

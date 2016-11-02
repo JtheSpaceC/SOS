@@ -1,0 +1,52 @@
+Generate a campaign of 5 missions or so. Win/lose them. Persist your forces through each campaign.
+You essentially beat a nemesis/Lieutenant in each campaign, but each Lieutenant can contribute to a major attack by the enemy, so you have a time limit.
+You get paid at the end of a campaign, but can take an advance for 10% (or so) less overall payout.
+
+Perks of the enemy could include:
+* Listening station. Jamming is ineffective across all missions in this sector.
+* Factory. Sends +1 to the war effort every day, by ship (can intercept or steal ship).
+* Missile defense ship (shoots down missiles)
+* Refinery. Near the main mining operation. Gives bounty hunters confidence in the ability to pay. Enables bounty hunters
+* Repair Facilities. Repairs fighter hull damage at a greater rate
+* Arms cache. Missiles, etc are stored here and enable missiles
+* Mine field. Offers a back way in to the main base
+* Plutonium mine. Can manke nukes/EMP
+* Drone Factory
+
+Radar/Comms jamming. A shuttle can equip jamming equipment and jam 1 ship. Lv1 is noisy, so the ship might launch a drone or shuttle. Lv2 is silent so if you approach silenty you could catch them by surprise.
+
+Enemy (or gas cloud) could jam your radar, fuzzing it up, but with a squad upgrade you could all see what's in line of sight of each other.
+
+If you kill a nemesis with a bombing run on their station, you'll kill civilians and generate another 1-2 nemeses (of a lower level)
+
+Choose roles for up to 12 pilots (1 for fighter, 2 - 3 for Shuttle, 2 for Bomber)
+
+You can send a shuttle or Stealth Fighter in (by sublight) a day before a mission to give you a better chance to ambush, or better intel.
+
+You can invest a pilot (or agent) as a spy early in the campaign. They've a chance to be captured (not killed) in which case you can resuce them randomly in a mission. If they live they'll be placed in a random position after a few days (including as an enemy fighter) and you can activate them at will.
+Activation Powers Include:
+* Disable a ship's systems
+* Find another Cell
+* Reduce enemy campaign progress
+* Steal a ship/technology
+
+If you lure in an enemy ship and damage its engines, it will be at that location for the next couple of days, which you could exploit.
+
+The present campaign/nemesis is your primary concern at a given time, but if left too long (and a progress bar fills) then either there'll be an attack on your home base, or on a civilian base, resulting in an evac mission, and pirates establishing a base in that sector.
+
+Early NPC relation needs to be better than you and help you, so you feel their loss.
+
+Scouting an enemy installation without a stealth fighter will raise its defenses (meaning more enemies on the map initially, before reinforcements).
+
+When entering a new sector, enemy isn't aware of you. If you make no enemies survive your first engagements you'll have the advantage for longer.
+This could mean choosing not to attack a well defended convoy just to maintain the element of surprise.
+
+Enemy ship names vs your own is the first clue that you're the bad guy
+
+Find a base, supply route, or mini-base randomly
+
+
+
+
+DECK CREW
+Can repair x amount of hull damage per day
