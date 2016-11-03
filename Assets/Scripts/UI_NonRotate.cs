@@ -11,7 +11,7 @@ public class UI_NonRotate : MonoBehaviour {
 	Vector3 position;
 
 
-	void Start ()
+	void OnEnable ()
 	{
 		if(rotationShouldBeZero)
 			rotation = Quaternion.identity;

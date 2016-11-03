@@ -110,12 +110,13 @@ public class CameraTactical : MonoBehaviour {
 				lastHit = hit.collider;
 
 				pipDisplay.gameObject.SetActive(true);
+				pipCamera.orthographicSize = 1;
 
 				if(hit.collider.transform.parent != null)
 				{
 					pipCamera.transform.position = hit.collider.transform.parent.position + offset;
 
-					if(hit.collider.transform.parent.tag != "Asteroid")
+					if(hit.collider.transform.parent.tag == "Fighter" || hit.collider.transform.parent.tag == "PlayerFighter")
 					{
 						lr1.enabled = true;
 						lr1.SetPosition(0, pipCamera.transform.position - offset);	

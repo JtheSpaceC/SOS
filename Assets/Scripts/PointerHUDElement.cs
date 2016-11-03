@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class PointerHUDElement : MonoBehaviour {
 
-	public Tools.WaypointTypes myWaypointType;
 	public Transform sourceObject;
 	public Transform target;
 	Transform movableCanvas;
@@ -29,13 +28,10 @@ public class PointerHUDElement : MonoBehaviour {
 	Vector2 directionToTarget;
 	Vector3 centreScreen;
 
-	int awakes = 0;
 
-	public void Awake()
+	void Start()
 	{
-		awakes++;
-		print(awakes + " " + Time.time + " " + myWaypointType.ToString());
-		
+
 		if (target == null)
 		{			
 			if(transform.root.gameObject != this.gameObject)
@@ -49,10 +45,6 @@ public class PointerHUDElement : MonoBehaviour {
 		centreScreen = new Vector3 (0.5f, 0.5f, -Camera.main.transform.position.z);
 
 		movableCanvas = transform.GetChild(0);
-	}
-
-	void Start()
-	{
 		//TripleTextSize ();
 		ChooseImage (transform.root.name);
 	}
@@ -117,7 +109,7 @@ public class PointerHUDElement : MonoBehaviour {
 	[ContextMenu("TripleFontSize")]
 	void TripleTextSize()
 	{
-		print("test");
+		print("Tripling Text Size on " + name);
 		distanceText.fontSize = distanceText.fontSize * 3;
 	}
 

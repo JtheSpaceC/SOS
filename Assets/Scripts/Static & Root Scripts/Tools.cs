@@ -51,8 +51,6 @@ public class Tools: MonoBehaviour
 	public Toggle useHintsToggleSwitch;
 	[HideInInspector] public bool useHintsThisSession = true;
 
-	[HideInInspector] public enum WaypointTypes {Extraction, Move, Escort, SearchAndDestroy, Follow, Support, Comms};
-
 	[Header("Waypoint Prefabs")]
 	public GameObject waypointPrefab;
 
@@ -250,29 +248,34 @@ public class Tools: MonoBehaviour
 		obj.GetComponent<Rigidbody2D>().velocity = velocity;
 	}
 
-	public void CreateWaypoint(WaypointTypes wpType, Vector2[] positions)
+	public Waypoint CreateWaypoint(Waypoint.WaypointType wpType, Vector2[] positions, float activationRadius)
 	{
-		if(wpType == WaypointTypes.Extraction || wpType == WaypointTypes.SearchAndDestroy || wpType == WaypointTypes.Move)
+		GameObject wp;
+
+		if(wpType == Waypoint.WaypointType.Extraction || wpType == Waypoint.WaypointType.SearchAndDestroy || 
+			wpType == Waypoint.WaypointType.Move)
 		{
-			GameObject wp = Instantiate(waypointPrefab, positions[0], Quaternion.identity) as GameObject;
+			wp = Instantiate(waypointPrefab, positions[0], Quaternion.identity) as GameObject;
 			wp.GetComponent<PointerHUDElement>().targetWP = positions[0];
-			wp.GetComponent<PointerHUDElement>().myWaypointType = wpType;
-			wp.GetComponent<PointerHUDElement>().Awake();
+			wp.GetComponent<Waypoint>().waypointType = wpType;
+			wp.GetComponent<CircleCollider2D>().radius = activationRadius;
 		}
+		else return null;
+
+		return wp.GetComponent<Waypoint>();
 	}
 
-	public void CreateWaypoint(WaypointTypes wpType, Transform target)
+	public void CreateWaypoint(Waypoint.WaypointType wpType, Transform target)
 	{
-		if(wpType == WaypointTypes.Follow)
+		if(wpType == Waypoint.WaypointType.Follow)
 		{
 			
 		}
-		else if(wpType == WaypointTypes.Escort || (wpType == WaypointTypes.Comms))
+		else if(wpType == Waypoint.WaypointType.Escort || (wpType == Waypoint.WaypointType.Comms))
 		{
 			GameObject wp = Instantiate(waypointPrefab, target.position, Quaternion.identity) as GameObject;
 			wp.GetComponent<PointerHUDElement>().target = target;
-			wp.GetComponent<PointerHUDElement>().myWaypointType = wpType;
-			wp.GetComponent<PointerHUDElement>().Awake();
+			wp.GetComponent<Waypoint>().waypointType = wpType;
 		}
 	}
 

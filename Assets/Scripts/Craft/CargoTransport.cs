@@ -155,5 +155,12 @@ public class CargoTransport : TargetableObject {
 		}
 	}
 
+	void ReportActivity()
+	{
+		CameraTactical.reportedInfo = this.name + "\n";
+		CameraTactical.reportedInfo += "\n";
 
-}
+		CameraTactical.instance.pipCamera.orthographicSize = 10;
+	}
+
+}//Mono

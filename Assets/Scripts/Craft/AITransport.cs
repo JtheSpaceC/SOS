@@ -168,7 +168,7 @@ public class AITransport : SupportShipFunctions {
 		if(other.tag == "PlayerFighter")
 		{
 			//set up a hailing icon
-			Tools.instance.CreateWaypoint(Tools.WaypointTypes.Comms, this.transform);
+			Tools.instance.CreateWaypoint(Waypoint.WaypointType.Comms, this.transform);
 			/*if(!RadioCommands.instance.buttonsShown)
 			{
 				RadioCommands.instance.communicatingGameObject = this.gameObject;

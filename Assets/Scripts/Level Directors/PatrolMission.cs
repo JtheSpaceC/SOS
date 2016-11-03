@@ -11,7 +11,7 @@ public class PatrolMission : MonoBehaviour {
 
 	void Start () 
 	{
-		Tools.instance.CreateWaypoint(Tools.WaypointTypes.SearchAndDestroy, new Vector2[]{nav1, nav2, nav3, nav4});
+		Tools.instance.CreateWaypoint(Waypoint.WaypointType.SearchAndDestroy, new Vector2[]{nav1, nav2, nav3, nav4}, 10);
 	}
 
 }

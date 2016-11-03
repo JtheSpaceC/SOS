@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public Canvas demoCanvas;
 	public Slider skipIntroSlider;
 	public Text skipIntroText;
+	public UnityEvent wreckReachedEvents;
 
 	[Header("Progression")]
 	bool firstMessagePlayed = false;
@@ -160,7 +162,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 				Director.instance.flowchart.SendFungusMessage("wd");
 			}
 		}
-	}
+	}//end of UPDATE()
 
 
 	public void TurnOnAsteroids()
@@ -178,7 +180,15 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			wreck.transform.position = (Vector3.zero - player.transform.position).normalized * 250;
 
 		wreck.SetActive(true);
-		Tools.instance.CreateWaypoint(Tools.WaypointTypes.Move, new Vector2[]{wreck.transform.position});
+		Waypoint wp = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{wreck.transform.position}, 5);
+		wp.OnReachedEvents = wreckReachedEvents;
+		wp.destroyWhenReached = true;
+	}
+
+	public void ReachedWreck()
+	{
+		wreck.name = "Wrecked Transport";
+		Director.instance.flowchart.SendFungusMessage("wr");
 	}
 
 
