@@ -18,7 +18,11 @@ public class SpriteAnimator : MonoBehaviour {
 	[Tooltip("Will the animation play the same even if TimeScale is slowed?")] 
 	public bool framerateIndependent = false;
 
-	public Sprite[] frames;
+	public bool switchToSecondaryForControllerInput = false;
+	[HideInInspector] public Sprite[] frames;
+	public Sprite[] framesPrimary;
+	[Tooltip("Only used in conjunction with bool above, if it's True.")] 
+	public Sprite[] framesSecondary;
 	SpriteRenderer mySpriteRenderer;
 	Image myImage;
 	public float framesPerSecond = 4f;
@@ -47,6 +51,11 @@ public class SpriteAnimator : MonoBehaviour {
 
 	void OnEnable () 
 	{
+		if(switchToSecondaryForControllerInput && InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+			frames = framesSecondary;
+		else
+			frames = framesPrimary;
+
 		if(myRendererType == RendererType.SpriteRenderer)
 		{
 			mySpriteRenderer = GetComponent<SpriteRenderer> ();
@@ -79,6 +88,14 @@ public class SpriteAnimator : MonoBehaviour {
 	void Update()
 	{
 		AnimateColours();
+
+		if(switchToSecondaryForControllerInput)
+		{
+			if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+				frames = framesSecondary;
+			else if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+				frames = framesPrimary;				
+		}
 	}
 
 	public void SetPlayInReverseOrder(bool doReverse)

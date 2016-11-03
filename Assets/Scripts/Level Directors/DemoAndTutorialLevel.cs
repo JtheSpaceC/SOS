@@ -13,9 +13,12 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	RTSCamera rtsCam;
 	GameObject speedParticles;
 
+	GameObject player;
+
 	public List<GameObject> objectsToToggleAtStart;
 	public List<GameObject> objectsToToggleAfterApproach;
 	public CircleCollider2D asteroidFieldCollider;
+	public GameObject wreck;
 
 	[Header("Tutorial Stuff")]
 	public GameObject tutorialWindow;
@@ -28,11 +31,41 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public Slider skipIntroSlider;
 	public Text skipIntroText;
 
+	[Header("Progression")]
+	bool firstMessagePlayed = false;
+
+	[Header("Hints Stuff")]
+	WeaponsPrimaryFighter playerWeapons;
+
+	public Camera tacMapCamera;
+	bool playerKnowsHowToMove = false;
+	bool playerKnowsHowToShoot = false;
+	bool playerKnowsHowToDodge = false;
+	bool playerKnowsHowToAfterburn = false;
+	bool playerKnowsMenu = false;
+	bool playerKnowsOrders = false;
+	bool playerKnowsMap = false;
+	bool postedEndMessage = false;
+
 
 	void Start () 
 	{
 		if(playIntro)
 			DoZoomIntro();
+		else //only really for when I skip in editor
+		{
+			foreach(GameObject go in objectsToToggleAtStart)
+			{
+				go.SetActive(!go.activeInHierarchy);
+			}
+			foreach(GameObject obj in objectsToToggleAfterApproach)
+			{
+				obj.SetActive(!obj.activeSelf);
+			}
+		}
+
+		player = GameObject.FindGameObjectWithTag("PlayerFighter");
+		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
 	}
 
 	void DoZoomIntro()
@@ -78,6 +111,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void Update()
 	{
+		//FOR HINTS
+		DoHints();
+
 		//FOR SKIPPING INTRO
 		if(currentlyPlayingIntro)
 		{
@@ -115,9 +151,14 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		}
 
 		//FIRST FUNGUS MESSAGE
-		if(Director.instance.timer > 10 && Director.instance.timer < 10.1f)
+		if(!firstMessagePlayed && playerKnowsHowToMove)
 		{
-			Director.instance.flowchart.SendFungusMessage("wd");
+			if((Director.instance.timer > 10 && Vector2.Distance(player.transform.position, Vector3.zero) > 50)
+				|| Input.GetKeyDown(KeyCode.Y) || Director.instance.timer > 60)
+			{
+				firstMessagePlayed = true;
+				Director.instance.flowchart.SendFungusMessage("wd");
+			}
 		}
 	}
 
@@ -125,6 +166,19 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public void TurnOnAsteroids()
 	{
 		asteroidFieldCollider.enabled = true;
+	}
+
+	void SpawnWreck()
+	{
+		float playerDistance = Vector2.Distance(player.transform.position, Vector2.zero);
+
+		if(playerDistance < 100 || playerDistance > 350)
+			wreck.transform.position = (player.transform.position - Vector3.zero).normalized * 250;
+		else
+			wreck.transform.position = (Vector3.zero - player.transform.position).normalized * 250;
+
+		wreck.SetActive(true);
+		Tools.instance.CreateWaypoint(Tools.WaypointTypes.Move, new Vector2[]{wreck.transform.position});
 	}
 
 
@@ -160,5 +214,127 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		tutorialWindow.SetActive(false);
 	}
 	
+	void DoHints ()
+	{
+		if(!Tools.instance.useHintsThisSession)
+		{
+			return;
+		}
 
+		//these set the hints to KNOWN
+		if (!playerKnowsHowToMove && Mathf.Approximately(Time.timeScale, 1) && Input.GetAxis ("Accelerate") != 0)
+			playerKnowsHowToMove = true;
+		if (!playerKnowsHowToShoot && playerWeapons.enabled && playerWeapons.allowedToFire &&  Input.GetButtonDown ("FirePrimary"))
+			playerKnowsHowToShoot = true;
+		if (!playerKnowsHowToDodge && Input.GetButton ("Dodge"))
+			playerKnowsHowToDodge = true;
+		if (!playerKnowsHowToAfterburn && Input.GetButton ("Afterburners"))
+			playerKnowsHowToAfterburn = true;
+		if (!playerKnowsOrders && RadialRadioMenu.instance.radialMenuShown)
+			playerKnowsOrders = true;
+		if (!playerKnowsMap && tacMapCamera.enabled)
+			playerKnowsMap = true;
+		if (!playerKnowsMenu && ClickToPlay.instance.escMenuIsShown)
+			playerKnowsMenu = true;
+
+		//this checks and activates the next relevant hint
+//		if (!missionIsOver && !objectivesComplete && !playerKnowsHowToMove && timer > 9) 
+//		{
+//			if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+//				Subtitles.instance.PostHint (new string[] {
+//					"Press UP ARROW to ACCELERATE"
+//				});
+//			else
+//				if (InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+//					Subtitles.instance.PostHint (new string[] {
+//						"Press RIGHT TRIGGER to ACCELERATE"
+//					});
+//			Subtitles.instance.CoolDownHintNoise ();
+//			Subtitles.instance.CoolDownHintHighlight ();
+//		}
+//		else if (!missionIsOver && !objectivesComplete  && playerKnowsHowToMove && !playerKnowsHowToShoot && timer > 14) 
+//		{
+//			if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+//				Subtitles.instance.PostHint (new string[] {
+//					"Press SPACEBAR to SHOOT"
+//				});
+//			else
+//				if (InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+//					Subtitles.instance.PostHint (new string[] {
+//						"Press A to SHOOT"
+//					});
+//			Subtitles.instance.CoolDownHintNoise ();
+//			Subtitles.instance.CoolDownHintHighlight ();
+//		}
+//		else if (!missionIsOver && !objectivesComplete  && playerKnowsHowToMove && playerKnowsHowToShoot && !playerKnowsHowToDodge && timer > 21) 
+//		{
+//			if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+//				Subtitles.instance.PostHint (new string[] {
+//					"Press LEFT CTRL to DODGE"
+//				});
+//			else
+//				if (InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+//					Subtitles.instance.PostHint (new string[] {
+//						"Press B to DODGE"
+//					});
+//			Subtitles.instance.CoolDownHintNoise ();
+//			Subtitles.instance.CoolDownHintHighlight ();
+//		}
+		/*else if (!missionComplete && !playerKnowsMenu && timer > 30 && Subtitles.instance.hintsPanel.color == Color.clear) {
+						if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+							Subtitles.instance.PostHint (new string[] {
+								"View controls and more on the START MENU. Press ESC"
+							});
+						else
+							if (InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+								Subtitles.instance.PostHint (new string[] {
+									"View controls and more on the START MENU. Press START"
+								});
+						Subtitles.instance.CoolDownHintNoise ();
+						Subtitles.instance.CoolDownHintHighlight ();
+					}*/
+		/*else if (!missionComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge && !playerKnowsHowToAfterburn && timer > 27)
+		{
+			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+				Subtitles.instance.PostHint(new string[] {"Hold LEFT SHIFT for AFTERBURNERS (uses Nitro)"});
+			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+				Subtitles.instance.PostHint(new string[] {"Hold X for AFTERBURNERS (uses Nitro)"});
+			Subtitles.instance.CoolDownHintNoise();
+			Subtitles.instance.CoolDownHintHighlight();
+		}
+		else if(!missionComplete && !playerKnowsOrders && timer > 60 && Subtitles.instance.hintsPanel.color == Color.clear)
+		{
+			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+				Subtitles.instance.PostHint(new string[] {"Experiment with the RADIO to give orders to wingmen or call for EXTRACTION.",
+					"Use NUMBER KEYS 1,2,3,4 for RADIO commands."});
+			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+				Subtitles.instance.PostHint(new string[] {"Experiment with the RADIO to give orders to wingmen or call for EXTRACTION.",
+					"Use the D-PAD for RADIO commands."});	
+			Subtitles.instance.CoolDownHintNoise();
+			Subtitles.instance.CoolDownHintHighlight();
+		}
+		else if(!missionComplete && !playerKnowsMap && timer > 90)
+		{
+			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
+				Subtitles.instance.PostHint(new string[] {"Press TAB or M to view the TACTICAL MAP"});
+			else if(InputManager.instance.inputFrom == InputManager.InputFrom.controller)
+				Subtitles.instance.PostHint(new string[] {"Press BACK to view the TACTICAL MAP"});				
+			Subtitles.instance.CoolDownHintNoise();
+			Subtitles.instance.CoolDownHintHighlight();
+		}*/
+//		else if (!missionIsOver && !playerKnowsDocking && 
+//			timeWhenFirstSawFighterTransportPickup > 0 && timer > timeWhenFirstSawFighterTransportPickup + 7) 
+//		{
+//			Subtitles.instance.PostHint (new string[]
+//				{"To DOCK, fly over the Transport and then respond to the new RADIO command." + " This is timed. Try again if you miss."});
+//			Subtitles.instance.CoolDownHintNoise ();
+//			Subtitles.instance.CoolDownHintHighlight ();
+//		}
+//
+//		//to start the enemies spawning once you know how to move
+//		if (!spawnerScript.enabled && !objectivesComplete && playerKnowsHowToMove && playerKnowsHowToShoot && playerKnowsHowToDodge) {
+//			spawnerScript.enabled = true;
+//		}
+
+	}//end of DOHINTS()
 }

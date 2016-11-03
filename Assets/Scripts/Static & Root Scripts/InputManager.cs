@@ -84,7 +84,10 @@ public class InputManager : MonoBehaviour {
 			if(!Mathf.Approximately(Input.GetAxis("Mouse X"), 0) || !Mathf.Approximately(Input.GetAxis("Mouse Y"), 0) ||
 				Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
 				Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)||
-				Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Space))
+				Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Space)||
+				Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Q) ||
+				Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) ||
+				Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.LeftShift))
 			{
 				ChangeTo(InputFrom.keyboardMouse);
 				restartTimer = 0;
@@ -127,7 +130,16 @@ public class InputManager : MonoBehaviour {
 				!Mathf.Approximately(Input.GetAxis("Gamepad Right Horizontal"), 0) ||
 				!Mathf.Approximately(Input.GetAxis("Gamepad Right Vertical"), 0)||
 				!Mathf.Approximately(Input.GetAxis("Dpad Vertical"), 0)||
-				!Mathf.Approximately(Input.GetAxis("Dpad Horizontal"), 0))
+				!Mathf.Approximately(Input.GetAxis("Dpad Horizontal"), 0)||
+				!Mathf.Approximately(Input.GetAxis("Gamepad Triggers"), 0) ||
+				Input.GetKeyDown(KeyCode.JoystickButton0)||
+				Input.GetKeyDown(KeyCode.JoystickButton1)||
+				Input.GetKeyDown(KeyCode.JoystickButton2)||
+				Input.GetKeyDown(KeyCode.JoystickButton3)||
+				Input.GetKeyDown(KeyCode.JoystickButton4)||
+				Input.GetKeyDown(KeyCode.JoystickButton5)||
+				Input.GetKeyDown(KeyCode.JoystickButton6)||
+				Input.GetKeyDown(KeyCode.JoystickButton7) )
 			{
 				ChangeTo(InputFrom.controller);
 				restartTimer = 0;

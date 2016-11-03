@@ -5,6 +5,7 @@ public class CameraControllerFighter : MonoBehaviour {
 
 	public enum CameraBehaviour {Normal, Radar, AsteroidsBox, SelfPlayScene};
 	public CameraBehaviour cameraBehaviour;
+	public bool canUseAsteroidsBox = false;
 
 	public float dampTime = 0.2f;
 	public float playerLeadDistance = 4.0f;
@@ -62,7 +63,8 @@ public class CameraControllerFighter : MonoBehaviour {
 			//transform.position = target.transform.position + offset; // Will Child this to player. Put this in FixedUpdate if not childed
 			transform.rotation = startingRotation;
 		}
-		else if(cameraBehaviour == CameraBehaviour.Normal || cameraBehaviour == CameraBehaviour.AsteroidsBox)
+		//TOGGLE ASTEROIDS STYLE COMBAT
+		else if(canUseAsteroidsBox && (cameraBehaviour == CameraBehaviour.Normal || cameraBehaviour == CameraBehaviour.AsteroidsBox))
 		{
 			if(!ClickToPlay.instance.paused && !RadialRadioMenu.instance.radialMenuShown && 
 				(Input.GetKeyDown(KeyCode.E) || (takeDPadInput && Input.GetAxis("Dpad Horizontal") < -0.5f)))

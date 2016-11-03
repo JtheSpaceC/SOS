@@ -1,31 +1,42 @@
 ﻿using UnityEngine;
 
+[ExecuteInEditMode]
 public class SpriteDepthAndSortingOrder : MonoBehaviour {
 
-	public bool changeSortingOrder = false;
 	SpriteRenderer myRenderer;
 	int startingOrderInLayer;
 
+	public enum SortingOrderMode {DontChange, ChangeAtStart, Continuous};
+	public SortingOrderMode sortingOrderMode;
+
 	[Tooltip("Lerp between White and Black by Z distance?")] public bool darkenWithDepth = true;
 	[Tooltip("How far away is absolute black?")] public float blackDistance = 500f;
+
 
 	void Awake()
 	{
 		myRenderer = GetComponent<SpriteRenderer>();
 		startingOrderInLayer = myRenderer.sortingOrder;
+
+		if(sortingOrderMode == SortingOrderMode.ChangeAtStart)
+			ChangeSortingOrder();			
 	}
 
 	void Update () 
 	{
-		if(changeSortingOrder)
-			myRenderer.sortingOrder = -Mathf.RoundToInt(100 * transform.position.z) + startingOrderInLayer;
+		if(sortingOrderMode == SortingOrderMode.Continuous)
+			ChangeSortingOrder();
 		if(darkenWithDepth)
 			DepthDarkening();			
 	}
 
-	[ContextMenu("Darken With Depth")]
 	void DepthDarkening()
 	{
 		myRenderer.color = Color.Lerp(Color.white, Color.black, transform.position.z / blackDistance);
+	}
+
+	void ChangeSortingOrder()
+	{
+		myRenderer.sortingOrder = -Mathf.RoundToInt(100 * transform.position.z) + startingOrderInLayer;
 	}
 }

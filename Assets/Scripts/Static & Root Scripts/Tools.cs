@@ -252,7 +252,7 @@ public class Tools: MonoBehaviour
 
 	public void CreateWaypoint(WaypointTypes wpType, Vector2[] positions)
 	{
-		if(wpType == WaypointTypes.Extraction || wpType == WaypointTypes.SearchAndDestroy)
+		if(wpType == WaypointTypes.Extraction || wpType == WaypointTypes.SearchAndDestroy || wpType == WaypointTypes.Move)
 		{
 			GameObject wp = Instantiate(waypointPrefab, positions[0], Quaternion.identity) as GameObject;
 			wp.GetComponent<PointerHUDElement>().targetWP = positions[0];

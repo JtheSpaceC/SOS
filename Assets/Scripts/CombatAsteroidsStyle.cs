@@ -44,7 +44,8 @@ public class CombatAsteroidsStyle : MonoBehaviour {
 	void OnDisable()
 	{
 		boxCol.enabled = false;
-		GetComponentInParent<CameraControllerFighter>().cameraBehaviour = CameraControllerFighter.CameraBehaviour.Normal;
+		if(GetComponentInParent<CameraControllerFighter>())
+			GetComponentInParent<CameraControllerFighter>().cameraBehaviour = CameraControllerFighter.CameraBehaviour.Normal;
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
