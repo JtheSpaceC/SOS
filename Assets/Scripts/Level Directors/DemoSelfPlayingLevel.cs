@@ -184,7 +184,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		if(Director.instance.timer > sceneResetTime && sceneResetTime > 0)
 		{
 			Director.instance.timer = -999;
-			Tools.instance.CommenceFade(0, 2.5f, Color.clear, Color.black);
+			Tools.instance.CommenceFade(0, 2.5f, Color.clear, Color.black, true);
 			Invoke("RestartScene", 2.5f);
 		}
 
@@ -374,7 +374,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public void LoadDemo()
 	{
-		Tools.instance.CommenceFade(0, blackoutTime, Color.clear, Color.black);
+		Tools.instance.CommenceFade(0, blackoutTime, Color.clear, Color.black, true);
 		Invoke("LoadMainLevel", 1.6f);
 	}
 

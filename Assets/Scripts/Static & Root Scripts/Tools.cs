@@ -43,6 +43,7 @@ public class Tools: MonoBehaviour
 	Color fadeFromColour;
 	Color fadeToColour;
 	public Color whiteOutColour;
+	List<FadeStats> fadeStatsList = new List<FadeStats>();
 
 	public Toggle allowVibrationToggleSwitch;
 	bool allowVibrationThisSession = true;
@@ -165,26 +166,39 @@ public class Tools: MonoBehaviour
 	}
 		
 
-	public void CommenceFade(float delay, float dur, Color fromColour, Color toColour)
+	public void CommenceFade(float delay, float dur, Color fromColour, Color toColour, bool cancelOldCoroutine)
 	{
-		fadeDelay = delay;
-		fadeDuration = dur;
-		fadeFromColour = fromColour;
-		fadeToColour = toColour;
+		if(cancelOldCoroutine)
+		{
+			StopCoroutine("FadeScreen");
+			fadeStatsList.Clear();
+		}
+
+		FadeStats newFadeStats = new FadeStats();
+		newFadeStats.fadeDelay = delay;
+		newFadeStats.fadeDuration = dur;
+		newFadeStats.fadeFromColour = fromColour;
+		newFadeStats.fadeToColour = toColour;
+		fadeStatsList.Add(newFadeStats);
+
 		StartCoroutine("FadeScreen");
 		MoveCanvasToFront(blackoutPanel.GetComponentInParent<Canvas>());
 	}
 	IEnumerator FadeScreen()
 	{
-		yield return new WaitForSeconds(fadeDelay);
-		float fadeStartTime = Time.time;
-		blackoutPanel.color = fadeFromColour;
+		FadeStats myFadeStats = fadeStatsList[fadeStatsList.Count-1];
+		yield return new WaitForSeconds(myFadeStats.fadeDelay);
 
-		while(blackoutPanel.color != fadeToColour)
+		float fadeStartTime = Time.time;
+		blackoutPanel.color = myFadeStats.fadeFromColour;
+
+		while(blackoutPanel.color != myFadeStats.fadeToColour)
 		{
-			blackoutPanel.color = Color.Lerp(fadeFromColour, fadeToColour, (Time.time - fadeStartTime)/fadeDuration);
+			blackoutPanel.color = 
+				Color.Lerp(myFadeStats.fadeFromColour, myFadeStats.fadeToColour, (Time.time - fadeStartTime)/myFadeStats.fadeDuration);
 			yield return new WaitForEndOfFrame();
 		}
+		fadeStatsList.Remove(myFadeStats);
 	}
 
 
@@ -442,4 +456,12 @@ public class Tools: MonoBehaviour
 		Time.fixedDeltaTime = normalFixedDeltaTime * newTimescale;
 	}
 
+}
+
+class FadeStats
+{
+	public float fadeDelay;
+	public float fadeDuration;
+	public Color fadeFromColour;
+	public Color fadeToColour;
 }

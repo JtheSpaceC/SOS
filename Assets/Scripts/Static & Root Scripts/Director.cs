@@ -16,8 +16,8 @@ public class Director : MonoBehaviour {
 
 	public float fadeInFromBlackTime = 2;
 
-	Text gameTimeText;
-	Text playerKillsText;
+	public Text gameTimeText;
+	public Text playerKillsText;
 
 	[Range(0, 100f)]
 	public float chanceOfSlowMoDeath = 20f;
@@ -85,11 +85,19 @@ public class Director : MonoBehaviour {
 		sceneTint = Tools.instance.environments.GetASceneColour();
 
 		flowchart = FindObjectOfType<Flowchart>();
+
+
+		GameObject go = GameObject.Find("GUI Mission Time");
+		if(go)
+			gameTimeText = go.GetComponent<Text>();
+		go = GameObject.Find("GUI Kills");
+		if(go)
+			playerKillsText = go.GetComponent<Text>();
 	}
 
 	void OnEnable()
 	{
-		Tools.instance.CommenceFade(0, fadeInFromBlackTime, Color.black, Color.clear);
+		Tools.instance.CommenceFade(0, fadeInFromBlackTime, Color.black, Color.clear, true);
 
 		_battleEventManager.playerRescued += WarpPlayerToSafety;
 		_battleEventManager.playerGotKill += PlayerGotAKill;
@@ -107,12 +115,6 @@ public class Director : MonoBehaviour {
 
 	void Start()
 	{
-		GameObject go = GameObject.Find("GUI Mission Time");
-		if(go)
-			gameTimeText = go.GetComponent<Text>();
-		go = GameObject.Find("GUI Kills");
-		if(go)
-			playerKillsText = go.GetComponent<Text>();
 
 		if(!FindObjectOfType<MissionSetup>())
 		{

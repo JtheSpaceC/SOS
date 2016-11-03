@@ -537,7 +537,7 @@ public class DemoLevel : MonoBehaviour {
 	void CommenceFadeout()
 	{
 		AudioMasterScript.instance.MuteMusic ();
-		Tools.instance.CommenceFade (0, 3, Color.clear, Color.black);
+		Tools.instance.CommenceFade (0, 3, Color.clear, Color.black, true);
 	}
 
 	void PostMissionCompleteMessage()

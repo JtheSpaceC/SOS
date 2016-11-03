@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class DemoAndTutorialLevel : MonoBehaviour {
 
 	public bool playIntro = true;
+	bool currentlyPlayingIntro = false;
 	public Vector3 farPoint;
 	public float zoomDuration = 15;
 	Vector3 cameraStartPoint;
@@ -24,6 +25,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	[Header("Demo Stuff")]
 	public Canvas demoCanvas;
+	public Slider skipIntroSlider;
+	public Text skipIntroText;
 
 
 	void Start () 
@@ -34,6 +37,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void DoZoomIntro()
 	{
+		currentlyPlayingIntro = true;
 		//turn off UI
 		foreach(GameObject go in objectsToToggleAtStart)
 		{
@@ -55,8 +59,12 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void FinishedZoom()
 	{
+		CancelInvoke("FinishedZoom"); //only needs cancelling if the intro was skipped, but can call it anyway
+
+		Director.instance.timer = 0;
 		speedParticles.SetActive(true);
 		rtsCam.enabled = false;
+		Camera.main.transform.position = cameraStartPoint;
 
 		foreach(GameObject obj in objectsToToggleAfterApproach)
 		{
@@ -69,6 +77,34 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void Update()
 	{
+		//FOR SKIPPING INTRO
+		if(currentlyPlayingIntro)
+		{
+			if(Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.JoystickButton0)
+				|| Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.JoystickButton7))
+			{
+				skipIntroSlider.value += Time.deltaTime;
+				skipIntroText.enabled = true;
+
+				if(skipIntroSlider.value >= 1)
+				{
+					currentlyPlayingIntro = false;
+					skipIntroSlider.transform.parent.gameObject.SetActive(false);
+					CancelInvoke("FinishedZoom");
+
+					Tools.instance.CommenceFade(0, .5f, Color.clear, Color.black, true);
+					Invoke("FinishedZoom", .6f);
+					Tools.instance.CommenceFade(.75f, .5f, Color.black, Color.clear, false);
+				}
+			}
+			else
+			{
+				skipIntroSlider.value = 0;
+				skipIntroText.enabled = false;
+			}
+		}
+
+		//REMOVE: FOR SHOWING TUTORIAL
 		if(Input.GetKeyDown(KeyCode.T))
 		{
 			if(!tutorialWindow.activeInHierarchy)
@@ -79,6 +115,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		if(Director.instance.timer > 1 && Director.instance.timer < 1.1f)
 		{
+			print("Fungus message sent");
 			Director.instance.flowchart.SendFungusMessage("wd");
 		}
 	}

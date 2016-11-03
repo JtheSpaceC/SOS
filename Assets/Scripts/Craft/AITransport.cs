@@ -501,7 +501,7 @@ public class AITransport : SupportShipFunctions {
 				RadialRadioMenu.instance.canAccessRadialRadio = false;
 				Tools.instance.blackoutPanel.GetComponentInParent<Canvas> ().sortingOrder = 10;
 				_battleEventManager.instance.CallPlayerLeaving();
-				Tools.instance.CommenceFade(6, 3, Color.clear, Color.black);
+				Tools.instance.CommenceFade(6, 3, Color.clear, Color.black, true);
 				carryFighter1.GetComponent<PlayerAILogic>().orders = PlayerAILogic.Orders.RTB;
 				Tools.instance.ClearWaypoints();
 

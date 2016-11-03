@@ -398,7 +398,8 @@ public class Dodge : MonoBehaviour
 	public void CancelRollForDeath()
 	{
 		StopAllCoroutines();
-		animator.SetTrigger("Death");
+		if(animator)
+			animator.SetTrigger("Death");
 	}
 
 	
