@@ -40,6 +40,18 @@ public class SpriteAnimator : MonoBehaviour {
 	float colourReachedTime;
 	int currentColourInt;
 
+	public enum ScaleAnimationType {None, Looping, PlayOnce, PlayOnceAndReturn, PlayOnceAndSetInactive, BounceLooping, BounceOnce};
+
+	[Header("For Scale Animation")]
+	public ScaleAnimationType scaleAnimationType;
+	public Vector3 startScale = Vector3.one;
+	public Vector3 endScale = Vector3.one;
+	[Tooltip("Length of time to complete one loop (or half a bounce loop).")]
+	public float scaleAnimationDuration = 1;
+	bool bouncedOnce = false;
+
+
+	[Header("Events")]
 	public UnityEvent myOnEnableEvents;
 	public UnityEvent myOnDisableEvents;
 
@@ -77,6 +89,11 @@ public class SpriteAnimator : MonoBehaviour {
 		timePerColour = colourCycleTime/myColors.Length;
 
 		myOnEnableEvents.Invoke();
+
+		if(scaleAnimationType != ScaleAnimationType.None)
+		{
+			StartCoroutine("ScaleAnimation");
+		}
 	}
 
 	void OnDisable()
@@ -116,6 +133,55 @@ public class SpriteAnimator : MonoBehaviour {
 		}
 
 		SelectCorrectFrame();
+	}
+
+	IEnumerator ScaleAnimation()
+	{
+		//do the checks
+		
+		if(transform.localScale == endScale)
+		{
+			if((scaleAnimationType == ScaleAnimationType.BounceOnce && !bouncedOnce) ||
+				scaleAnimationType == ScaleAnimationType.BounceLooping)
+			{
+				bouncedOnce = true;
+				endScale = startScale;
+				startScale = transform.localScale;
+			}
+			//superfluous check
+			/*else if(scaleAnimationType == ScaleAnimationType.Looping)
+			{
+				
+			}*/
+		}
+
+		//set starting constants
+		transform.localScale = startScale;
+		float startTime = Time.time;
+
+		//do the animation
+		while(transform.localScale != endScale)
+		{
+			transform.localScale = Vector3.Lerp(startScale, endScale, (Time.time - startTime)/scaleAnimationDuration);
+			yield return new WaitForEndOfFrame();
+		}
+		//unless we're done with a loop, call again
+		if(scaleAnimationType == ScaleAnimationType.PlayOnce || (scaleAnimationType == ScaleAnimationType.BounceOnce && bouncedOnce))
+		{
+			//do nothing. ends loop
+		}
+		else if(scaleAnimationType == ScaleAnimationType.PlayOnceAndReturn)
+		{
+			transform.localScale = startScale;
+		}
+		else if(scaleAnimationType == ScaleAnimationType.PlayOnceAndSetInactive)
+		{
+			this.gameObject.SetActive(false);
+		}
+		else
+		{
+			StartCoroutine("ScaleAnimation");
+		}			
 	}
 
 	IEnumerator AnimateFramerateIndependentSpriteSwap()

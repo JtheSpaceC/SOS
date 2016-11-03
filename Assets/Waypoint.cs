@@ -8,6 +8,7 @@ public class Waypoint : MonoBehaviour {
 	public WaypointType waypointType;
 
 	[HideInInspector] public Vector2[] waypoints;
+	public GameObject zoneBoxAnimation;
 
 	public enum BehaviourType {Constant, Checkpoint, ClearArea};
 	[HideInInspector] public BehaviourType behaviourType;
