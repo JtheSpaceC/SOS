@@ -115,7 +115,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		}
 
 		//FIRST FUNGUS MESSAGE
-		if(Director.instance.timer > 1 && Director.instance.timer < 1.1f)
+		if(Director.instance.timer > 10 && Director.instance.timer < 10.1f)
 		{
 			Director.instance.flowchart.SendFungusMessage("wd");
 		}
