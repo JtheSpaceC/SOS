@@ -68,6 +68,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		player = GameObject.FindGameObjectWithTag("PlayerFighter");
 		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
+
+		Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, GameObject.Find("BridgeView").transform);
 	}
 
 	void DoZoomIntro()
@@ -190,6 +192,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		wreck.name = "Wrecked Transport";
 		Director.instance.flowchart.SendFungusMessage("wr");
 	}
+
 
 
 	public void OpenTutorialWindowPopup()

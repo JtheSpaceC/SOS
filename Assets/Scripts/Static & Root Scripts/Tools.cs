@@ -271,7 +271,8 @@ public class Tools: MonoBehaviour
 		{
 			
 		}
-		else if(wpType == Waypoint.WaypointType.Escort || (wpType == Waypoint.WaypointType.Comms))
+		else if(wpType == Waypoint.WaypointType.Escort || (wpType == Waypoint.WaypointType.Comms) || 
+			wpType == Waypoint.WaypointType.Move)
 		{
 			GameObject wp = Instantiate(waypointPrefab, target.position, Quaternion.identity) as GameObject;
 			wp.GetComponent<PointerHUDElement>().target = target;
