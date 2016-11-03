@@ -8,7 +8,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public bool playIntro = true;
 	bool currentlyPlayingIntro = false;
 	public Vector3 farPoint;
-	public float zoomDuration = 15;
+	public float introDuration = 15;
 	Vector3 cameraStartPoint;
 	RTSCamera rtsCam;
 	GameObject speedParticles;
@@ -46,15 +46,16 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
 
+		Director.instance.timer = -introDuration;
 		speedParticles = GameObject.Find("Particles for Speed");
 		speedParticles.SetActive(false);
 		cameraStartPoint = Camera.main.transform.position;
 		Camera.main.transform.position = farPoint;
 		rtsCam = Camera.main.GetComponent<RTSCamera>();
 		rtsCam.enabled = true;
-		rtsCam.SetAutoMoveTarget(cameraStartPoint, zoomDuration);
+		rtsCam.SetAutoMoveTarget(cameraStartPoint, introDuration);
 
-		Invoke("FinishedZoom", zoomDuration);
+		Invoke("FinishedZoom", introDuration);
 	}
 
 	void FinishedZoom()
@@ -113,9 +114,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 				CloseTutorialWindow();
 		}
 
+		//FIRST FUNGUS MESSAGE
 		if(Director.instance.timer > 1 && Director.instance.timer < 1.1f)
 		{
-			print("Fungus message sent");
 			Director.instance.flowchart.SendFungusMessage("wd");
 		}
 	}
