@@ -10,7 +10,7 @@ public class SpawnerGroup : MonoBehaviour {
 	public SpawnMode spawnMode;
 
 	[Tooltip("If ApproachFromDepth is selected, what is the positive value Z depth to be used?")]
-	public float depth;
+	public float depth = 250f;
 	[Tooltip("If ApproachFromDepth is selected, what is the negative value speed of approach?")]
 	public float approachSpeed = 20f;
 	public float approachFromDepthSpawnRadius = 15f;

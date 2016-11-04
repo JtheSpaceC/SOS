@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class DemoAndTutorialLevel : MonoBehaviour {
 
 	public bool playIntro = true;
-	bool currentlyPlayingIntro = false;
+	public bool skipToFirstEnemy = false;
 	public Vector3 farPoint;
 	public float introDuration = 15;
 	Vector3 cameraStartPoint;
@@ -20,6 +20,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public List<GameObject> objectsToToggleAfterApproach;
 	public CircleCollider2D asteroidFieldCollider;
 	public GameObject wreck;
+	Transform bridgeView;
+	public Slider bridgeViewSlider;
 
 	[Header("Tutorial Stuff")]
 	public GameObject tutorialWindow;
@@ -28,10 +30,16 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public Sprite[] dodgeTutorialFrames;
 
 	[Header("Demo Stuff")]
+	public GameObject firstEnemy;
+	AIFighter firstEnemyAI;
 	public Canvas demoCanvas;
 	public Slider skipIntroSlider;
 	public Text skipIntroText;
 	public UnityEvent wreckReachedEvents;
+	public float bridgeCheckoutDistance = 2;
+	public float bridgeCheckoutTime = 4;
+	Waypoint toWreckWaypoint;
+	Waypoint bridgeCheckoutWaypoint;
 
 	[Header("Progression")]
 	bool firstMessagePlayed = false;
@@ -49,27 +57,67 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	bool playerKnowsMap = false;
 	bool postedEndMessage = false;
 
+	bool currentlyPlayingIntro = false;
+	bool timeToCheckOutBridge = false;
+	bool checkedOutBridge = false;
+	bool firstEnemySpawned = false;
+	bool firstEnemyDefeated = false; //for retreating or death
+	bool calledEnemyRetreating = false;
+
+	void OnEnable()
+	{
+		//not intended use, but it'll suffice to let us known an enemy spawned
+		_battleEventManager.wingmanFirstClash += SetEnemyHasSpawnedBool;
+		_battleEventManager.playerGotKill += FirstEnemyKilled;
+	}
+	void OnDisable()
+	{
+		_battleEventManager.wingmanFirstClash -= SetEnemyHasSpawnedBool;
+		_battleEventManager.playerGotKill -= FirstEnemyKilled;
+	}
 
 	void Start () 
 	{
-		if(playIntro)
-			DoZoomIntro();
-		else //only really for when I skip in editor
-		{
-			foreach(GameObject go in objectsToToggleAtStart)
-			{
-				go.SetActive(!go.activeInHierarchy);
-			}
-			foreach(GameObject obj in objectsToToggleAfterApproach)
-			{
-				obj.SetActive(!obj.activeSelf);
-			}
-		}
-
 		player = GameObject.FindGameObjectWithTag("PlayerFighter");
 		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
+		bridgeView = bridgeViewSlider.transform.parent.parent;
 
-		Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, GameObject.Find("BridgeView").transform);
+		if(skipToFirstEnemy)
+		{
+			SkipToFirstEnemy();
+		}
+		else if(playIntro)
+		{
+			DoZoomIntro();
+		}
+		else //only really for when I skip in editor
+		{
+			DoObjectToggles();
+		}
+	}
+
+	void DoObjectToggles()
+	{
+		foreach(GameObject go in objectsToToggleAtStart)
+		{
+			go.SetActive(!go.activeInHierarchy);
+		}
+		foreach(GameObject obj in objectsToToggleAfterApproach)
+		{
+			obj.SetActive(!obj.activeSelf);
+		}
+	}
+
+	void SkipToFirstEnemy()
+	{
+		DoObjectToggles();
+		SpawnWreck();
+		Destroy(toWreckWaypoint.gameObject);
+		wreck.transform.position = player.transform.position;
+		firstMessagePlayed = true;
+		timeToCheckOutBridge = true;
+		checkedOutBridge = true;
+		SpawnFirstEnemy();
 	}
 
 	void DoZoomIntro()
@@ -110,7 +158,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		}
 
 		PlayerAILogic.instance.TogglePlayerControl(true, true, true, true, true, true, true);
-
 	}
 
 	void Update()
@@ -164,6 +211,42 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 				Director.instance.flowchart.SendFungusMessage("wd");
 			}
 		}
+		//CHECK OUT THE BRIDGE
+		if(timeToCheckOutBridge && !checkedOutBridge)
+		{
+			if(Vector2.Distance(player.transform.position, bridgeView.position) <= bridgeCheckoutDistance)
+			{
+				bridgeViewSlider.value += Time.deltaTime/bridgeCheckoutTime;
+				if(bridgeViewSlider.value == 1)
+				{
+					BridgeCheckoutComplete();
+				}
+			}
+			else
+			{
+				bridgeViewSlider.value = 0;
+			}
+		}
+
+		//MONITOR FIRST ENEMY
+		if(firstEnemySpawned && !firstEnemyDefeated)
+		{
+			if(Input.GetKey(KeyCode.L))
+			{
+				firstEnemyAI.healthScript.health = 1;
+			}
+			if(!firstEnemy.activeInHierarchy)
+			{
+				print("retreated and gone");
+				FirstEnemyRetreatedSuccessfully();
+			}
+			else if(!calledEnemyRetreating && firstEnemyAI.inRetreatState)
+			{
+				FirstEnemyRetreating();
+			}
+		}
+
+
 	}//end of UPDATE()
 
 
@@ -172,19 +255,21 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		asteroidFieldCollider.enabled = true;
 	}
 
+	#region Demo Functions In Story Sequence
+
 	void SpawnWreck()
 	{
 		float playerDistance = Vector2.Distance(player.transform.position, Vector2.zero);
 
 		if(playerDistance < 100 || playerDistance > 350)
-			wreck.transform.position = (player.transform.position - Vector3.zero).normalized * 250;
+			wreck.transform.position = (player.transform.position - Vector3.zero).normalized * 250; //250
 		else
-			wreck.transform.position = (Vector3.zero - player.transform.position).normalized * 250;
+			wreck.transform.position = (Vector3.zero - player.transform.position).normalized * 250; //250
 
 		wreck.SetActive(true);
-		Waypoint wp = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{wreck.transform.position}, 5);
-		wp.OnReachedEvents = wreckReachedEvents;
-		wp.destroyWhenReached = true;
+		toWreckWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{wreck.transform.position}, 5);
+		toWreckWaypoint.OnReachedEvents = wreckReachedEvents;
+		toWreckWaypoint.destroyWhenReached = true;
 	}
 
 	public void ReachedWreck()
@@ -193,7 +278,56 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		Director.instance.flowchart.SendFungusMessage("wr");
 	}
 
+	void CheckoutBridge()
+	{
+		timeToCheckOutBridge = true;
+		bridgeCheckoutWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, bridgeView);
+	}
 
+	void BridgeCheckoutComplete()
+	{
+		checkedOutBridge = true;
+		wreck.name = "\"Endeavour\" Wreck";
+		bridgeView.gameObject.SetActive(false);
+		Destroy(bridgeCheckoutWaypoint.gameObject);
+		Director.instance.flowchart.SendFungusMessage("bc");
+	}
+
+	void SpawnFirstEnemy()
+	{
+		Director.instance.flowchart.SendFungusMessage("sf");
+		firstEnemy.transform.position = player.transform.position + (Vector3)(Random.insideUnitCircle.normalized * 10);
+		firstEnemy.SetActive(true);
+	}
+	void SetEnemyHasSpawnedBool()
+	{
+		firstEnemySpawned = true;
+		firstEnemyAI = FindObjectOfType<AIFighter>();
+		firstEnemy = firstEnemyAI.gameObject;
+		firstEnemyAI.cowardice = 30;
+	}
+	void FirstEnemyKilled()
+	{
+		firstEnemyDefeated = true;
+		Director.instance.flowchart.SendFungusMessage("eKilled");
+	}
+	void FirstEnemyRetreating()
+	{
+		calledEnemyRetreating = true;
+		Director.instance.flowchart.SendFungusMessage("eRetreating");
+	}
+	void FirstEnemyRetreatedSuccessfully()
+	{
+		firstEnemyDefeated = true;
+		Director.instance.flowchart.SendFungusMessage("eRetreatSuccess");
+	}
+
+	void RegroupWithWingmen()
+	{
+		print("REGROUP WITH WINGMEN");
+	}
+
+	#endregion
 
 	public void OpenTutorialWindowPopup()
 	{

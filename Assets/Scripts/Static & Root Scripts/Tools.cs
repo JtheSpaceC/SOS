@@ -265,11 +265,11 @@ public class Tools: MonoBehaviour
 		return wp.GetComponent<Waypoint>();
 	}
 
-	public void CreateWaypoint(Waypoint.WaypointType wpType, Transform target)
+	public Waypoint CreateWaypoint(Waypoint.WaypointType wpType, Transform target)
 	{
 		if(wpType == Waypoint.WaypointType.Follow)
 		{
-			
+			return null;
 		}
 		else if(wpType == Waypoint.WaypointType.Escort || (wpType == Waypoint.WaypointType.Comms) || 
 			wpType == Waypoint.WaypointType.Move)
@@ -277,7 +277,9 @@ public class Tools: MonoBehaviour
 			GameObject wp = Instantiate(waypointPrefab, target.position, Quaternion.identity) as GameObject;
 			wp.GetComponent<PointerHUDElement>().target = target;
 			wp.GetComponent<Waypoint>().waypointType = wpType;
+			return wp.GetComponent<Waypoint>();
 		}
+		else return null;
 	}
 
 	public void ClearWaypoints()
