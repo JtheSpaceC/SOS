@@ -9,6 +9,9 @@ public class SpawnerGroup : MonoBehaviour {
 	public enum SpawnMode {Normal, ApproachFromDepth};
 	public SpawnMode spawnMode;
 
+	public GameObject trailRendererPrefab;
+	List<TrailRenderer> trailRenderersList = new List<TrailRenderer>();
+
 	[Tooltip("If ApproachFromDepth is selected, what is the positive value Z depth to be used?")]
 	public float depth = 250f;
 	[Tooltip("If ApproachFromDepth is selected, what is the negative value speed of approach?")]
@@ -29,7 +32,7 @@ public class SpawnerGroup : MonoBehaviour {
 	[HideInInspector] public List<GameObject> craft;
 
 	[Header("SolEd")]
-	public int level;
+	public int level = 1;
 	public string specialTag;
 
 	Vector3 pos;
@@ -38,6 +41,9 @@ public class SpawnerGroup : MonoBehaviour {
 	Vector2 dir;
 
 	bool alreadySpawned = false;
+
+	float coroutineStartTime;
+	float coroutineDuration;
 
 
 	void Start()
@@ -58,10 +64,6 @@ public class SpawnerGroup : MonoBehaviour {
 		}
 		else if (spawnMode == SpawnMode.ApproachFromDepth)
 		{
-			GetComponent<TrailRenderer>().enabled = true;
-
-			numberToSpawn = 1;
-
 			pos = transform.position;
 			pos.z = depth;
 			transform.position = pos;
@@ -71,6 +73,17 @@ public class SpawnerGroup : MonoBehaviour {
 
 			approachTime = depth/approachSpeed;
 			startTime = Time.time;
+
+			if(numberToSpawn != 0)
+			{
+				for(int i = 0; i < numberToSpawn; i++)
+				{
+					GameObject newChild = Instantiate(trailRendererPrefab);
+					newChild.transform.SetParent(this.transform);
+					newChild.transform.localPosition = Random.insideUnitCircle.normalized*2;
+					trailRenderersList.Add(newChild.GetComponent<TrailRenderer>());
+				}
+			}
 		}
 	}
 
@@ -140,13 +153,21 @@ public class SpawnerGroup : MonoBehaviour {
 	}
 
 	IEnumerator ShrinkTrail()
-	{		
-		while(GetComponent<TrailRenderer>().startWidth > 0)
-		{
-			GetComponent<TrailRenderer>().startWidth -= (.5f/3 * Time.deltaTime);
-			//shrink it a little
-			yield return new WaitForEndOfFrame();
-		}
-	}
+	{
+		coroutineStartTime = Time.time;
+		coroutineDuration = trailRenderersList[0].time - 0.1f;
 
-}
+		while((Time.time - coroutineStartTime) < coroutineDuration)
+		{
+			for(int i = 0; i < trailRenderersList.Count; i++)
+			{
+				trailRenderersList[i].startWidth -= (1/coroutineDuration * Time.deltaTime);
+				//shrink it a little
+				yield return new WaitForEndOfFrame();
+			}
+		}
+		Destroy(gameObject);
+	}
+}//mono
+
+

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class DemoAndTutorialLevel : MonoBehaviour {
 
-	public enum PlayFrom {Intro, AfterIntro, ReachWreck, FirstEnemy, ReachWingmen};
+	public enum PlayFrom {Intro, AfterIntro, ReachWreck, FirstEnemy, ReachWingmen, ReachConvoy};
 	public PlayFrom playFrom;
 
 	public Vector3 farPoint;
@@ -43,6 +43,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	Waypoint bridgeCheckoutWaypoint;
 	Waypoint toWingmenWaypoint;
 	Waypoint toConvoyWaypoint;
+	Waypoint convoyEscortWaypoint;
 	public UnityEvent wingmenReachedEvents;
 	public GameObject arrow2;
 	public GameObject arrow3;
@@ -71,6 +72,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	bool firstEnemySpawned = false;
 	bool firstEnemyDefeated = false; //for retreating or death
 	bool calledEnemyRetreating = false;
+	bool headingForConvoy = false;
+	bool reachedConvoy = false;
+	float convoyReachedRegistrationDistance = 20;
 
 	void OnEnable()
 	{
@@ -115,6 +119,10 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		else if(playFrom == PlayFrom.ReachWingmen)
 		{
 			SkipToReachWingmen();
+		}
+		else if(playFrom == PlayFrom.ReachConvoy)
+		{
+			SkipToReachConvoy();
 		}
 
 	}
@@ -193,6 +201,20 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{player.transform.position}, 20);
 		toWingmenWaypoint.destroyWhenReached = true;
 		toWingmenWaypoint.OnReachedEvents = wingmenReachedEvents;
+	}
+	void SkipToReachConvoy()
+	{
+		SkipToReachWingmen();
+		Invoke("ForceWingmenToCover", 0.001f);
+
+		HeadForConvoy();
+		Destroy(toConvoyWaypoint.gameObject);
+		convoy.transform.position = player.transform.position;
+	}
+	void ForceWingmenToCover()
+	{
+		PlayerAILogic.instance.squadLeaderScript.CoverMe(arrow2.GetComponent<AIFighter>());
+		PlayerAILogic.instance.squadLeaderScript.CoverMe(arrow3.GetComponent<AIFighter>());
 	}
 	#endregion
 
@@ -281,6 +303,15 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			}
 		}
 
+		//SEE IF WE REACHED THE CONVOY YET
+		if(headingForConvoy && !reachedConvoy)
+		{
+			if(Vector2.Distance(player.transform.position, convoy.transform.position) <= convoyReachedRegistrationDistance)
+			{
+				ReachedConvoy();
+			}
+		}
+
 
 	}//end of UPDATE()
 
@@ -356,6 +387,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		firstEnemyDefeated = true;
 		Director.instance.flowchart.SendFungusMessage("eRetreatSuccess");
 	}
+
 	void RegroupWithWingmen()
 	{
 		Vector2 spawnPos = player.transform.position - (player.transform.position.normalized * 250);
@@ -363,6 +395,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		toWingmenWaypoint.destroyWhenReached = true;
 		toWingmenWaypoint.OnReachedEvents = wingmenReachedEvents;
 	}
+
 	public void ReachedWingmen()
 	{
 		arrow2.SetActive(true);
@@ -373,21 +406,52 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(arrow2);
 		player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(arrow3);
 		player.GetComponentInChildren<SquadronLeader>().SetUp();
-		Director.instance.flowchart.SendFungusMessage("mw");
+		if(playFrom != PlayFrom.ReachConvoy) //TODO: Add each subsequent checkpoint here too
+			Director.instance.flowchart.SendFungusMessage("mw");
 	}
+
 	void OrderedWingmenIntoPosition()
 	{
-		Director.instance.flowchart.SendFungusMessage("wif");
+		if(playFrom != PlayFrom.ReachConvoy) //TODO: Add each subsequent checkpoint here too		
+		{
+			Director.instance.flowchart.SendFungusMessage("wif");
+		}
 	}
+
 	void HeadForConvoy()
 	{
-		Vector2 newConvoyPosition = Vector2.zero;
+		headingForConvoy = true;
+
+		Vector2 dir = player.transform.position.normalized;
+		Vector2 newConvoyPosition = dir * 500;
+		if(Vector2.Distance(player.transform.position, newConvoyPosition) < 150)
+		{
+			print("Player was too close");
+			newConvoyPosition += dir * 150;
+		}
+
 		toConvoyWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{newConvoyPosition}, 20);
 		toConvoyWaypoint.destroyWhenReached = true;
 		convoy.transform.localScale = Vector3.one;
 		convoy.transform.position = newConvoyPosition;
 		convoy.GetComponent<moverBasic>().enabled = false;
 		convoy.SetActive(true);
+	}
+
+	void ReachedConvoy()
+	{
+		reachedConvoy = true;
+		convoy.GetComponent<moverBasic>().speed = new Vector3(0, 1.5f, 0);
+		convoy.GetComponent<moverBasic>().enabled = true;
+		Director.instance.flowchart.SendFungusMessage("rc");
+		asteroidFieldCollider.enabled = false;
+	}
+
+	void SetEscortWaypoint()
+	{
+		convoyEscortWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Escort, convoy.transform);
+		convoyEscortWaypoint.zoneBoxAnimation.SetActive(false);
+		convoyEscortWaypoint.playChimeOnEnter = false;
 	}
 	#endregion
 

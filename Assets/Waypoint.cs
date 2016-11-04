@@ -16,11 +16,14 @@ public class Waypoint : MonoBehaviour {
 	public bool destroyWhenReached = false;
 	public UnityEvent OnReachedEvents;
 
+	public bool playChimeOnEnter = true;
+
 
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		AudioMasterScript.instance.PlayChime();
+		if(playChimeOnEnter)
+			AudioMasterScript.instance.PlayChime();
 		OnReachedEvents.Invoke();
 		if(destroyWhenReached)
 			Destroy(gameObject);
