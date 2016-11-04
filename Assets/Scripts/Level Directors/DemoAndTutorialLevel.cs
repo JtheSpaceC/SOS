@@ -237,7 +237,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			}
 			if(!firstEnemy.activeInHierarchy)
 			{
-				print("retreated and gone");
 				FirstEnemyRetreatedSuccessfully();
 			}
 			else if(!calledEnemyRetreating && firstEnemyAI.inRetreatState)
@@ -250,7 +249,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	}//end of UPDATE()
 
 
-	public void TurnOnAsteroids()
+	void TurnOnAsteroids()
 	{
 		asteroidFieldCollider.enabled = true;
 	}
