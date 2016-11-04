@@ -401,6 +401,9 @@ public class SquadronLeader : MonoBehaviour {
 
 		string[] acknowledgments = new string[] {"Acknowledged. Got your back!", "Got you covered!"};
 		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+
+		if(isPlayerSquad)
+			_battleEventManager.instance.CallOrdersCoverMe();
 	}
 
 	public void ReturnToBase(AIFighter fighter)

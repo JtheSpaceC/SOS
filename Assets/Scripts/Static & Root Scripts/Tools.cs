@@ -172,6 +172,12 @@ public class Tools: MonoBehaviour
 			fadeStatsList.Clear();
 		}
 
+		//this prevents a one frame flash of colour before screen goes black. Useful for level fade-ins
+		if(Mathf.Approximately(delay, 0))
+		{
+			blackoutPanel.color = fromColour;
+		}
+
 		FadeStats newFadeStats = new FadeStats();
 		newFadeStats.fadeDelay = delay;
 		newFadeStats.fadeDuration = dur;

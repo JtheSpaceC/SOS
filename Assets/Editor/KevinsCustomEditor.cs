@@ -28,7 +28,8 @@ public static class KevinsCustomEditor : object {
 			"Remove Listener from Menu Scene.." +
 			"Turn Music back on.." +
 			"Enable/Disable website link & Character Pool(+AudioSource).." +
-			"Check that self-play level has automatic camera";
+			"Check that self-play level has automatic camera.." +
+			"Set Quit Behaviour (application or menu)";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)

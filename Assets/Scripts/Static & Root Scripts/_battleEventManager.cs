@@ -56,6 +56,9 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void EnemyFightersSpawned();
 	public static event EnemyFightersSpawned enemyFightersSpawned;
 
+	public delegate void OrdersCoverMe();
+	public static event OrdersCoverMe ordersCoverMe;
+
 	void Awake()
 	{
 		if (instance == null) 
@@ -136,6 +139,10 @@ public class _battleEventManager : MonoBehaviour {
 	public void CallEnemyFightersSpawned()
 	{
 		enemyFightersSpawned();
+	}
+	public void CallOrdersCoverMe()
+	{
+		ordersCoverMe();
 	}
 
 

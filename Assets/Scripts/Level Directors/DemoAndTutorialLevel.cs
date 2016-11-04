@@ -6,8 +6,9 @@ using System.Collections.Generic;
 
 public class DemoAndTutorialLevel : MonoBehaviour {
 
-	public bool playIntro = true;
-	public bool skipToFirstEnemy = false;
+	public enum PlayFrom {Intro, AfterIntro, ReachWreck, FirstEnemy, ReachWingmen};
+	public PlayFrom playFrom;
+
 	public Vector3 farPoint;
 	public float introDuration = 15;
 	Vector3 cameraStartPoint;
@@ -41,10 +42,12 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	Waypoint toWreckWaypoint;
 	Waypoint bridgeCheckoutWaypoint;
 	Waypoint toWingmenWaypoint;
+	Waypoint toConvoyWaypoint;
 	public UnityEvent wingmenReachedEvents;
 	public GameObject arrow2;
 	public GameObject arrow3;
 	public GameObject rightPanel;
+	public GameObject convoy;
 
 	[Header("Progression")]
 	bool firstMessagePlayed = false;
@@ -74,57 +77,48 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		//not intended use, but it'll suffice to let us known an enemy spawned
 		_battleEventManager.wingmanFirstClash += SetEnemyHasSpawnedBool;
 		_battleEventManager.playerGotKill += FirstEnemyKilled;
+		_battleEventManager.ordersCoverMe += OrderedWingmenIntoPosition;
 	}
 	void OnDisable()
 	{
 		_battleEventManager.wingmanFirstClash -= SetEnemyHasSpawnedBool;
 		_battleEventManager.playerGotKill -= FirstEnemyKilled;
+		_battleEventManager.ordersCoverMe -= OrderedWingmenIntoPosition;
 	}
 
 	void Start () 
 	{
 		player = GameObject.FindGameObjectWithTag("PlayerFighter");
+		// prevents Transport spawning at 0,0 if player didn't move
+		player.transform.position += (Vector3)Random.insideUnitCircle.normalized * 0.001f; 
 		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
 		bridgeView = bridgeViewSlider.transform.parent.parent;
 
-		if(skipToFirstEnemy)
-		{
-			SkipToFirstEnemy();
-		}
-		else if(playIntro)
+		if(playFrom == PlayFrom.Intro)
 		{
 			DoZoomIntro();
 		}
-		else //only really for when I skip in editor
+		else if(playFrom == PlayFrom.AfterIntro) //only really for when I skip in editor
 		{
-			DoObjectToggles();
+			SkipToAfterIntro();
 		}
-	}
-
-	void DoObjectToggles()
-	{
-		foreach(GameObject go in objectsToToggleAtStart)
+		else if(playFrom == PlayFrom.ReachWreck)
 		{
-			go.SetActive(!go.activeInHierarchy);
+			SkipToReachWreck();
+			wreckReachedEvents.Invoke();
 		}
-		foreach(GameObject obj in objectsToToggleAfterApproach)
+		else if(playFrom == PlayFrom.FirstEnemy)
 		{
-			obj.SetActive(!obj.activeSelf);
+			SkipToFirstEnemy();
+			SpawnFirstEnemy();
 		}
-	}
+		else if(playFrom == PlayFrom.ReachWingmen)
+		{
+			SkipToReachWingmen();
+		}
 
-	void SkipToFirstEnemy()
-	{
-		DoObjectToggles();
-		SpawnWreck();
-		Destroy(toWreckWaypoint.gameObject);
-		wreck.transform.position = player.transform.position;
-		firstMessagePlayed = true;
-		timeToCheckOutBridge = true;
-		checkedOutBridge = true;
-		SpawnFirstEnemy();
 	}
-
+	#region Checkpoints/Skipping
 	void DoZoomIntro()
 	{
 		currentlyPlayingIntro = true;
@@ -147,11 +141,11 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		Invoke("FinishedZoom", introDuration);
 	}
-
 	void FinishedZoom()
 	{
 		CancelInvoke("FinishedZoom"); //only needs cancelling if the intro was skipped, but can call it anyway
 
+		currentlyPlayingIntro = false;
 		Director.instance.timer = 0;
 		speedParticles.SetActive(true);
 		rtsCam.enabled = false;
@@ -164,6 +158,43 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		PlayerAILogic.instance.TogglePlayerControl(true, true, true, true, true, true, true);
 	}
+	void SkipToAfterIntro()
+	{
+		foreach(GameObject go in objectsToToggleAtStart)
+		{
+			go.SetActive(!go.activeInHierarchy);
+		}
+		foreach(GameObject obj in objectsToToggleAfterApproach)
+		{
+			obj.SetActive(!obj.activeSelf);
+		}
+	}
+	void SkipToReachWreck()
+	{
+		SkipToAfterIntro();
+		SpawnWreck();
+		wreck.transform.position = player.transform.position;
+		Destroy(toWreckWaypoint.gameObject);
+		firstMessagePlayed = true;
+	}
+	void SkipToFirstEnemy()
+	{
+		SkipToReachWreck();
+		timeToCheckOutBridge = true;
+		checkedOutBridge = true;
+	}
+	void SkipToReachWingmen()
+	{
+		SkipToFirstEnemy();
+		Destroy(wreck);
+		firstEnemySpawned = true;
+		firstEnemyDefeated = true;
+		TurnOnAsteroids();
+		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{player.transform.position}, 20);
+		toWingmenWaypoint.destroyWhenReached = true;
+		toWingmenWaypoint.OnReachedEvents = wingmenReachedEvents;
+	}
+	#endregion
 
 	void Update()
 	{
@@ -207,10 +238,10 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		}
 
 		//FIRST FUNGUS MESSAGE
-		if(!firstMessagePlayed && playerKnowsHowToMove)
+		if(!firstMessagePlayed)
 		{
-			if((Director.instance.timer > 10 && Vector2.Distance(player.transform.position, Vector3.zero) > 50)
-				|| Input.GetKeyDown(KeyCode.Y) || Director.instance.timer > 60)
+			if((Director.instance.timer > 8 && Vector2.Distance(player.transform.position, Vector3.zero) > 40)
+				|| Input.GetKeyDown(KeyCode.Y) || Director.instance.timer > 40)
 			{
 				firstMessagePlayed = true;
 				Director.instance.flowchart.SendFungusMessage("wd");
@@ -266,9 +297,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		float playerDistance = Vector2.Distance(player.transform.position, Vector2.zero);
 
 		if(playerDistance < 100 || playerDistance > 350)
-			wreck.transform.position = (player.transform.position - Vector3.zero).normalized * 250; //250
+			wreck.transform.position = (player.transform.position - Vector3.zero).normalized * 250;
 		else
-			wreck.transform.position = (Vector3.zero - player.transform.position).normalized * 250; //250
+			wreck.transform.position = (Vector3.zero - player.transform.position).normalized * 250; 
 
 		wreck.SetActive(true);
 		toWreckWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{wreck.transform.position}, 5);
@@ -325,14 +356,13 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		firstEnemyDefeated = true;
 		Director.instance.flowchart.SendFungusMessage("eRetreatSuccess");
 	}
-
 	void RegroupWithWingmen()
 	{
-		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{Vector2.zero}, 20);
+		Vector2 spawnPos = player.transform.position - (player.transform.position.normalized * 250);
+		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{spawnPos}, 20);
 		toWingmenWaypoint.destroyWhenReached = true;
 		toWingmenWaypoint.OnReachedEvents = wingmenReachedEvents;
 	}
-
 	public void ReachedWingmen()
 	{
 		arrow2.SetActive(true);
@@ -345,7 +375,20 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		player.GetComponentInChildren<SquadronLeader>().SetUp();
 		Director.instance.flowchart.SendFungusMessage("mw");
 	}
-
+	void OrderedWingmenIntoPosition()
+	{
+		Director.instance.flowchart.SendFungusMessage("wif");
+	}
+	void HeadForConvoy()
+	{
+		Vector2 newConvoyPosition = Vector2.zero;
+		toConvoyWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{newConvoyPosition}, 20);
+		toConvoyWaypoint.destroyWhenReached = true;
+		convoy.transform.localScale = Vector3.one;
+		convoy.transform.position = newConvoyPosition;
+		convoy.GetComponent<moverBasic>().enabled = false;
+		convoy.SetActive(true);
+	}
 	#endregion
 
 	public void OpenTutorialWindowPopup()

@@ -15,6 +15,7 @@ public class ClickToPlay : MonoBehaviour
 	public WeaponsPrimaryFighter playerShootScript; 
 	public bool rCanRestart = false;
 	public bool paused = false;
+	public bool quitGoesToMainMenu = false;
 	public GameObject escCanvas;
 	public GameObject escMenuPanel;
 	public GameObject pauseScreen;
@@ -173,21 +174,27 @@ public class ClickToPlay : MonoBehaviour
 		if(Tools.instance)
 			Tools.instance.VibrationStop();
 
-		#if UNITY_STANDALONE
-		//Quit the application
-		Application.Quit();
-		#endif
+		if(quitGoesToMainMenu)		
+		{
+			SceneManager.LoadScene(0);
+		}
+		else{
+			#if UNITY_STANDALONE
+			//Quit the application
+			Application.Quit();
+			#endif
 
-		#if UNITY_WEBPLAYER
-		Destroy(GameObject.Find("_AUDIO MANAGER"));
-		SceneManager.LoadScene(0);		
-		#endif
+			#if UNITY_WEBPLAYER
+			Destroy(GameObject.Find("_AUDIO MANAGER"));
+			SceneManager.LoadScene(0);		
+			#endif
 
-		//If we are running in the editor
-		#if UNITY_EDITOR
-		//Stop playing the scene
-		UnityEditor.EditorApplication.isPlaying = false;
-		#endif		
+			//If we are running in the editor
+			#if UNITY_EDITOR
+			//Stop playing the scene
+			UnityEditor.EditorApplication.isPlaying = false;
+			#endif		
+		}
 	}
 
 	public void QuitGameWithWarning()
