@@ -4,8 +4,7 @@ using System.Collections;
 public class AsteroidField : MonoBehaviour {
 	
 	AsteroidSpawner asteroidSpawner;
-	public bool restrictPlanetApproach = false;
-	
+
 	void Awake () 
 	{
 		asteroidSpawner = GetComponent<AsteroidSpawner> ();

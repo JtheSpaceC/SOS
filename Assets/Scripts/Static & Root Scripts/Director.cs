@@ -38,7 +38,7 @@ public class Director : MonoBehaviour {
 
 	[HideInInspector] public Flowchart flowchart;
 
-	[Tooltip("Just for turning something on/of in the scene for testing. Like a background or spawner. Just one object.")]
+	[Tooltip("Just for turning something on/off in the scene for testing. Like a background or spawner. Just one object.")]
 	public bool screenshotMode = false;
 	public GameObject toggleableObject9;
 	public GameObject toggleableObject8;
