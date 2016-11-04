@@ -16,7 +16,7 @@ public class SpawnerGroup : MonoBehaviour {
 	public float depth = 250f;
 	[Tooltip("If ApproachFromDepth is selected, what is the negative value speed of approach?")]
 	public float approachSpeed = 20f;
-	public float approachFromDepthSpawnRadius = 15f;
+	public float approachFromDepthSpawnRadius = 25f;
 	float approachTime;
 	float startTime;
 
@@ -32,8 +32,8 @@ public class SpawnerGroup : MonoBehaviour {
 	[HideInInspector] public List<GameObject> craft;
 
 	[Header("SolEd")]
-	public int level = 1;
-	public string specialTag;
+	public int solEdLevel = 1;
+	public string solEdSpecialTag;
 
 	Vector3 pos;
 	Vector3 destination;
@@ -120,8 +120,8 @@ public class SpawnerGroup : MonoBehaviour {
 			GameObject obj = Instantiate (objectPrefab, (Vector2)transform.position + Random.insideUnitCircle.normalized *2f, 
 				Quaternion.identity) as GameObject;
 			obj.name = squadronName + " " + (i + 1);
-			obj.GetComponent<AIFighter>().myLevel = level;
-			obj.GetComponent<AIFighter>().specialShip = specialTag;
+			obj.GetComponent<AIFighter>().myLevel = solEdLevel;
+			obj.GetComponent<AIFighter>().specialShip = solEdSpecialTag;
 			craft.Add (obj);
 		}
 		//create SquadLeader object and put it on the leader

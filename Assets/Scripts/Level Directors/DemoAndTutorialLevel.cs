@@ -75,6 +75,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	bool headingForConvoy = false;
 	bool reachedConvoy = false;
 	float convoyReachedRegistrationDistance = 20;
+	bool haveOrderedCoverMeAtLeastOnce = false;
+
 
 	void OnEnable()
 	{
@@ -194,6 +196,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	void SkipToReachWingmen()
 	{
 		SkipToFirstEnemy();
+		firstEnemyDefeated = true;
 		Destroy(wreck);
 		firstEnemySpawned = true;
 		firstEnemyDefeated = true;
@@ -205,6 +208,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	void SkipToReachConvoy()
 	{
 		SkipToReachWingmen();
+		haveOrderedCoverMeAtLeastOnce = true;
 		Invoke("ForceWingmenToCover", 0.001f);
 
 		HeadForConvoy();
@@ -374,8 +378,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	}
 	void FirstEnemyKilled()
 	{
+		if(!firstEnemyDefeated)
+			Director.instance.flowchart.SendFungusMessage("eKilled");
 		firstEnemyDefeated = true;
-		Director.instance.flowchart.SendFungusMessage("eKilled");
 	}
 	void FirstEnemyRetreating()
 	{
@@ -412,8 +417,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void OrderedWingmenIntoPosition()
 	{
-		if(playFrom != PlayFrom.ReachConvoy) //TODO: Add each subsequent checkpoint here too		
+		if(!haveOrderedCoverMeAtLeastOnce && (playFrom != PlayFrom.ReachConvoy)) //TODO: Add each subsequent checkpoint here too		
 		{
+			haveOrderedCoverMeAtLeastOnce = true;
 			Director.instance.flowchart.SendFungusMessage("wif");
 		}
 	}
@@ -453,6 +459,12 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		convoyEscortWaypoint.zoneBoxAnimation.SetActive(false);
 		convoyEscortWaypoint.playChimeOnEnter = false;
 	}
+
+	void ToggleEnemySpawner()
+	{
+		GetComponent<Spawner>().enabled = !GetComponent<Spawner>().enabled;
+	}
+
 	#endregion
 
 	public void OpenTutorialWindowPopup()

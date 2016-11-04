@@ -6,6 +6,8 @@ public class Spawner : MonoBehaviour {
 
 	GameObject player;
 	public GameObject spawnObj;
+	public int numberInGroup = 3;
+	public SpawnerGroup.SpawnMode mySpawnMode;
 	public float spawnTime = 4;
 	public float spawnRadius = 25;
 	public AICommander enemyCommanderScript;
@@ -17,10 +19,13 @@ public class Spawner : MonoBehaviour {
 	public float decreaseAmount = 0.5f;
 	public float minSpawnTime = 3;
 	public float maxSpawnTime = 20;
-	int i = 0;
 
 	public bool automaticSpawning = true;
 	public KeyCode myKey;
+
+	[Header("SolEd")]
+	public int level = 1;
+	public string specialTag;
 
 
 	void Start()
@@ -60,14 +65,21 @@ public class Spawner : MonoBehaviour {
 
 	void DoTheSpawn()
 	{
-		i++;
-
 		Vector3 spawnPoint = player == null ? Vector3.zero : player.transform.position;
 
 		GameObject newFighter =
 			Instantiate (spawnObj, spawnObj.transform.position + spawnPoint + (Vector3)Random.insideUnitCircle.normalized * spawnRadius, 
 				Quaternion.identity) as GameObject;
-		newFighter.name = "Stormwall Fighter " +i;
+
+		newFighter.GetComponent<SpawnerGroup>().spawnMode = mySpawnMode;
+		newFighter.GetComponent<SpawnerGroup>().numberToSpawn = numberInGroup;
+		newFighter.GetComponent<SpawnerGroup>().solEdSpecialTag = specialTag;
+		newFighter.GetComponent<SpawnerGroup>().solEdLevel = level;
 		//Instantiate (spawnObj, newFighter.transform.position + (Vector3)Random.insideUnitCircle, Quaternion.identity);
+	}
+
+	void OnDisable()
+	{
+		CancelInvoke("Spawn");
 	}
 }

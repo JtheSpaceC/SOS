@@ -305,7 +305,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		pmcSpawn = 
 			Instantiate (PMCFighterTrioPrefab, 
 				((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 55), Quaternion.identity) as GameObject;
-		pmcSpawn.GetComponent<SpawnerGroup>().specialTag = arrowSpecialString;
+		pmcSpawn.GetComponent<SpawnerGroup>().solEdSpecialTag = arrowSpecialString;
 	}
 	void SpawnEnemy()
 	{
@@ -317,7 +317,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		enemySpawn = 
 			Instantiate (EnemyFighterTrioPrefab, 
 				((Vector2)levelCamera.transform.position + Random.insideUnitCircle.normalized * 100), Quaternion.identity) as GameObject;
-		enemySpawn.GetComponent<SpawnerGroup>().specialTag = mantisSpecialString;
+		enemySpawn.GetComponent<SpawnerGroup>().solEdSpecialTag = mantisSpecialString;
 	}
 
 	void FixDemoSpecificConcerns()

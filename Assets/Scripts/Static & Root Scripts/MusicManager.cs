@@ -11,8 +11,10 @@ public class MusicManager : MonoBehaviour {
 
 	public AudioSource[] musicClips;
 	private AudioSource turntableA;
+	[Range(0,1)]
 	public float turntableAMaxVolume = 1.0f;
 	private AudioSource turntableB;
+	[Range(0,1)]
 	public float turntableBMaxVolume = 0.5f;
 
 	public float fadeSpeed = 0.25f;
