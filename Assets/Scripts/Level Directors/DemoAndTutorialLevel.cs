@@ -40,6 +40,11 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public float bridgeCheckoutTime = 4;
 	Waypoint toWreckWaypoint;
 	Waypoint bridgeCheckoutWaypoint;
+	Waypoint toWingmenWaypoint;
+	public UnityEvent wingmenReachedEvents;
+	public GameObject arrow2;
+	public GameObject arrow3;
+	public GameObject rightPanel;
 
 	[Header("Progression")]
 	bool firstMessagePlayed = false;
@@ -323,7 +328,22 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void RegroupWithWingmen()
 	{
-		print("REGROUP WITH WINGMEN");
+		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{Vector2.zero}, 20);
+		toWingmenWaypoint.destroyWhenReached = true;
+		toWingmenWaypoint.OnReachedEvents = wingmenReachedEvents;
+	}
+
+	public void ReachedWingmen()
+	{
+		arrow2.SetActive(true);
+		arrow2.transform.position = toWingmenWaypoint.transform.position + (Vector3)(Random.insideUnitCircle.normalized*3);
+		arrow3.SetActive(true);
+		arrow3.transform.position = toWingmenWaypoint.transform.position + (Vector3)(Random.insideUnitCircle.normalized*3);
+		rightPanel.SetActive(true);
+		player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(arrow2);
+		player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(arrow3);
+		player.GetComponentInChildren<SquadronLeader>().SetUp();
+		Director.instance.flowchart.SendFungusMessage("mw");
 	}
 
 	#endregion

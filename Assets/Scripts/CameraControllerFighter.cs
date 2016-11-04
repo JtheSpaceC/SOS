@@ -16,7 +16,7 @@ public class CameraControllerFighter : MonoBehaviour {
 
 	Quaternion startingRotation;
 
-	bool takeDPadInput = true;
+	//bool takeDPadInput = true;
 
 
 	void Awake()
@@ -78,9 +78,9 @@ public class CameraControllerFighter : MonoBehaviour {
 
 	IEnumerator DPadInputWait()
 	{
-		takeDPadInput = false;
+		//takeDPadInput = false;
 		yield return new WaitForSecondsRealtime(0.4f);
-		takeDPadInput = true;
+		//takeDPadInput = true;
 	}
 	
 	void AdjustRadarCamSize()
