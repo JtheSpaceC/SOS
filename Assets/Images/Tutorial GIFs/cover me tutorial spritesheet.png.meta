@@ -1,0 +1,831 @@
+fileFormatVersion: 2
+guid: 6639447afed067044b741911322dd3bc
+timeCreated: 1478296262
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: cover me tutorial spritesheet_0
+    21300002: cover me tutorial spritesheet_1
+    21300004: cover me tutorial spritesheet_2
+    21300006: cover me tutorial spritesheet_3
+    21300008: cover me tutorial spritesheet_4
+    21300010: cover me tutorial spritesheet_5
+    21300012: cover me tutorial spritesheet_6
+    21300014: cover me tutorial spritesheet_7
+    21300016: cover me tutorial spritesheet_8
+    21300018: cover me tutorial spritesheet_9
+    21300020: cover me tutorial spritesheet_10
+    21300022: cover me tutorial spritesheet_11
+    21300024: cover me tutorial spritesheet_12
+    21300026: cover me tutorial spritesheet_13
+    21300028: cover me tutorial spritesheet_14
+    21300030: cover me tutorial spritesheet_15
+    21300032: cover me tutorial spritesheet_16
+    21300034: cover me tutorial spritesheet_17
+    21300036: cover me tutorial spritesheet_18
+    21300038: cover me tutorial spritesheet_19
+    21300040: cover me tutorial spritesheet_20
+    21300042: cover me tutorial spritesheet_21
+    21300044: cover me tutorial spritesheet_22
+    21300046: cover me tutorial spritesheet_23
+    21300048: cover me tutorial spritesheet_24
+    21300050: cover me tutorial spritesheet_25
+    21300052: cover me tutorial spritesheet_26
+    21300054: cover me tutorial spritesheet_27
+    21300056: cover me tutorial spritesheet_28
+    21300058: cover me tutorial spritesheet_29
+    21300060: cover me tutorial spritesheet_30
+    21300062: cover me tutorial spritesheet_31
+    21300064: cover me tutorial spritesheet_32
+    21300066: cover me tutorial spritesheet_33
+    21300068: cover me tutorial spritesheet_34
+    21300070: cover me tutorial spritesheet_35
+    21300072: cover me tutorial spritesheet_36
+    21300074: cover me tutorial spritesheet_37
+    21300076: cover me tutorial spritesheet_38
+    21300078: cover me tutorial spritesheet_39
+    21300080: cover me tutorial spritesheet_40
+    21300082: cover me tutorial spritesheet_41
+    21300084: cover me tutorial spritesheet_42
+    21300086: cover me tutorial spritesheet_43
+    21300088: cover me tutorial spritesheet_44
+    21300090: cover me tutorial spritesheet_45
+    21300092: cover me tutorial spritesheet_46
+    21300094: cover me tutorial spritesheet_47
+    21300096: cover me tutorial spritesheet_48
+    21300098: cover me tutorial spritesheet_49
+    21300100: cover me tutorial spritesheet_50
+    21300102: cover me tutorial spritesheet_51
+    21300104: cover me tutorial spritesheet_52
+    21300106: cover me tutorial spritesheet_53
+    21300108: cover me tutorial spritesheet_54
+    21300110: cover me tutorial spritesheet_55
+    21300112: cover me tutorial spritesheet_56
+    21300114: cover me tutorial spritesheet_57
+    21300116: cover me tutorial spritesheet_58
+    21300118: cover me tutorial spritesheet_59
+    21300120: cover me tutorial spritesheet_60
+    21300122: cover me tutorial spritesheet_61
+    21300124: cover me tutorial spritesheet_62
+    21300126: cover me tutorial spritesheet_63
+    21300128: cover me tutorial spritesheet_64
+    21300130: cover me tutorial spritesheet_65
+    21300132: cover me tutorial spritesheet_66
+    21300134: cover me tutorial spritesheet_67
+    21300136: cover me tutorial spritesheet_68
+    21300138: cover me tutorial spritesheet_69
+    21300140: cover me tutorial spritesheet_70
+    21300142: cover me tutorial spritesheet_71
+    21300144: cover me tutorial spritesheet_72
+    21300146: cover me tutorial spritesheet_73
+    21300148: cover me tutorial spritesheet_74
+    21300150: cover me tutorial spritesheet_75
+    21300152: cover me tutorial spritesheet_76
+    21300154: cover me tutorial spritesheet_77
+    21300156: cover me tutorial spritesheet_78
+    21300158: cover me tutorial spritesheet_79
+    21300160: cover me tutorial spritesheet_80
+    21300162: cover me tutorial spritesheet_81
+    21300164: cover me tutorial spritesheet_82
+    21300166: cover me tutorial spritesheet_83
+    21300168: cover me tutorial spritesheet_84
+    21300170: cover me tutorial spritesheet_85
+    21300172: cover me tutorial spritesheet_86
+    21300174: cover me tutorial spritesheet_87
+    21300176: cover me tutorial spritesheet_88
+    21300178: cover me tutorial spritesheet_89
+    21300180: cover me tutorial spritesheet_90
+    21300182: cover me tutorial spritesheet_91
+    21300184: cover me tutorial spritesheet_92
+    21300186: cover me tutorial spritesheet_93
+    21300188: cover me tutorial spritesheet_94
+    21300190: cover me tutorial spritesheet_95
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 8192
+  textureSettings:
+    filterMode: 2
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4452
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 4452
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 4452
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 4452
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4081
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 4081
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 4081
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 4081
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3710
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 3710
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 3710
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 3710
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3339
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 3339
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 3339
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 3339
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2968
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 2968
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 2968
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 2968
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2597
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_21
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 2597
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 2597
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 2597
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2226
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_25
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 2226
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_26
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 2226
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_27
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 2226
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1855
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_29
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 1855
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_30
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 1855
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_31
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 1855
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1484
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_33
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 1484
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_34
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 1484
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_35
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 1484
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1113
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_37
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 1113
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_38
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 1113
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_39
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 1113
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 742
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_41
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 742
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_42
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 742
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_43
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 742
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_44
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 371
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_45
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 371
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_46
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 371
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_47
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 371
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_49
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 0
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_50
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 0
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: cover me tutorial spritesheet_51
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 0
+        width: 495
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

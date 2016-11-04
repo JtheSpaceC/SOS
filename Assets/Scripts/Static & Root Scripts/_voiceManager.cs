@@ -41,6 +41,8 @@ public class _voiceManager : MonoBehaviour {
 		_battleEventManager.pickupOnTheWay += PickupOnTheWay;
 		_battleEventManager.pickupNegative += PickupNegative;
 
+		_battleEventManager.ordersCoverMe += OrdersCoverMe;
+
 		_battleEventManager.playerLeavingByWarp += PlayerLeaving;
 		_battleEventManager.playerShotDown += PlayerShotDown;
 	}
@@ -55,6 +57,8 @@ public class _voiceManager : MonoBehaviour {
 
 		_battleEventManager.pickupOnTheWay -= PickupOnTheWay;
 		_battleEventManager.pickupNegative -= PickupNegative;
+
+		_battleEventManager.ordersCoverMe -= OrdersCoverMe;
 
 		_battleEventManager.playerLeavingByWarp -= PlayerLeaving;
 		_battleEventManager.playerShotDown -= PlayerShotDown;
@@ -135,6 +139,11 @@ public class _voiceManager : MonoBehaviour {
 	void PickupNegative()
 	{
 		LoadClipAndPlay (pickupNegative);
+	}
+
+	void OrdersCoverMe()
+	{
+		
 	}
 
 	void PlayerLeaving()

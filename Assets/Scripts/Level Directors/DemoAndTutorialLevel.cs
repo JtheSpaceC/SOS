@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class DemoAndTutorialLevel : MonoBehaviour {
 
-	public enum PlayFrom {Intro, AfterIntro, ReachWreck, FirstEnemy, ReachWingmen, ReachConvoy};
+	public enum PlayFrom {Intro, AfterIntro, ReachWreck, FirstEnemy, ReachWingmen, ReachConvoy, EscortComplete};
 	public PlayFrom playFrom;
 
 	public Vector3 farPoint;
@@ -26,9 +26,14 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	[Header("Tutorial Stuff")]
 	public GameObject tutorialWindow;
+	public Text tutorialHeaderText;
 	public Image tutorialImage;
+	public Text tutorialBodyText;
 	public float framesPerSecond = 20;
 	public Sprite[] dodgeTutorialFrames;
+	public Sprite[] ordersCoverMeFrames;
+
+	bool coverMeTutorialActive = false;
 
 	[Header("Demo Stuff")]
 	public GameObject firstEnemy;
@@ -76,6 +81,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	bool reachedConvoy = false;
 	float convoyReachedRegistrationDistance = 20;
 	bool haveOrderedCoverMeAtLeastOnce = false;
+	bool lastOfEmMessagePlayed = false;
+	bool escortComplete = false;
 
 
 	void OnEnable()
@@ -125,6 +132,10 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		else if(playFrom == PlayFrom.ReachConvoy)
 		{
 			SkipToReachConvoy();
+		}
+		else if(playFrom == PlayFrom.EscortComplete)
+		{
+			SkipToEscortComplete();
 		}
 
 	}
@@ -220,6 +231,12 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		PlayerAILogic.instance.squadLeaderScript.CoverMe(arrow2.GetComponent<AIFighter>());
 		PlayerAILogic.instance.squadLeaderScript.CoverMe(arrow3.GetComponent<AIFighter>());
 	}
+	void SkipToEscortComplete()
+	{
+		SkipToReachConvoy();
+		SetEscortWaypoint();
+		TransportsClearedAsteroidField();
+	}
 	#endregion
 
 	void Update()
@@ -227,6 +244,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		//FOR HINTS
 		DoHints();
 
+		#region Game Progress Updates
 		//FOR SKIPPING INTRO
 		if(currentlyPlayingIntro)
 		{
@@ -254,20 +272,11 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			}
 		}
 
-		//REMOVE: FOR SHOWING TUTORIAL
-		if(Input.GetKeyDown(KeyCode.T))
-		{
-			if(!tutorialWindow.activeInHierarchy)
-				OpenTutorialWindowPopup();
-			else if(tutorialWindow.activeInHierarchy)
-				CloseTutorialWindow();
-		}
-
 		//FIRST FUNGUS MESSAGE
 		if(!firstMessagePlayed)
 		{
 			if((Director.instance.timer > 8 && Vector2.Distance(player.transform.position, Vector3.zero) > 40)
-				|| Input.GetKeyDown(KeyCode.Y) || Director.instance.timer > 40)
+				|| Director.instance.timer > 40)
 			{
 				firstMessagePlayed = true;
 				Director.instance.flowchart.SendFungusMessage("wd");
@@ -316,6 +325,48 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			}
 		}
 
+		//SEE IF ALL ENEMIES ARE DEAD
+		if(lastOfEmMessagePlayed && !escortComplete)
+		{
+			if(FindObjectsOfType<SpawnerGroup>().Length == 0) //if no more fighters are about to come in
+			{
+				//see if there's any active fighters
+				if(PlayerAILogic.instance.enemyCommander.myFighters.Count == 0)
+				{
+					//if not, we're done
+					TransportsClearedAsteroidField();
+				}
+			}
+		}
+		#endregion
+
+		#region TutorialUpdates
+
+		//REMOVE: FOR SHOWING TUTORIAL
+		if(Input.GetKeyDown(KeyCode.T))
+		{
+			if(!tutorialWindow.activeInHierarchy)
+				OpenTutorialWindowPopup("Learn something, stupid!",
+					"This is how you will learn the stupid thing you stupid dumbshit god-damn motherfucker! - (The Offspring reference)",
+					dodgeTutorialFrames, true);
+			else if(tutorialWindow.activeInHierarchy)
+				CloseTutorialWindow();
+		}
+
+		if(coverMeTutorialActive)
+		{
+			if(Input.GetKeyDown(KeyCode.Q) || 
+				((Input.GetAxis("Dpad Vertical")) > 0.5f) && RadialRadioMenu.instance.takeDPadInput)
+			{
+				CancelInvoke("CoverMeTutorial");
+				coverMeTutorialActive = false;
+				CloseTutorialWindow();
+				RadialRadioMenu.instance.ActivateRadialMenu();
+			}
+		}
+
+		#endregion
+	
 
 	}//end of UPDATE()
 
@@ -411,13 +462,13 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(arrow2);
 		player.GetComponentInChildren<SquadronLeader>().activeWingmen.Add(arrow3);
 		player.GetComponentInChildren<SquadronLeader>().SetUp();
-		if(playFrom != PlayFrom.ReachConvoy) //TODO: Add each subsequent checkpoint here too
+		if(playFrom != PlayFrom.ReachConvoy && playFrom != PlayFrom.EscortComplete) //TODO: Add each subsequent checkpoint here too
 			Director.instance.flowchart.SendFungusMessage("mw");
 	}
 
 	void OrderedWingmenIntoPosition()
 	{
-		if(!haveOrderedCoverMeAtLeastOnce && (playFrom != PlayFrom.ReachConvoy)) //TODO: Add each subsequent checkpoint here too		
+		if(!haveOrderedCoverMeAtLeastOnce && (playFrom != PlayFrom.ReachConvoy))		
 		{
 			haveOrderedCoverMeAtLeastOnce = true;
 			Director.instance.flowchart.SendFungusMessage("wif");
@@ -449,7 +500,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		reachedConvoy = true;
 		convoy.GetComponent<moverBasic>().speed = new Vector3(0, 1.5f, 0);
 		convoy.GetComponent<moverBasic>().enabled = true;
-		Director.instance.flowchart.SendFungusMessage("rc");
+		if(!escortComplete)
+			Director.instance.flowchart.SendFungusMessage("rc");
 		asteroidFieldCollider.enabled = false;
 	}
 
@@ -465,9 +517,37 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		GetComponent<Spawner>().enabled = !GetComponent<Spawner>().enabled;
 	}
 
+	void LastOfThemMessage()
+	{
+		lastOfEmMessagePlayed = true;
+	}
+
+	void TransportsClearedAsteroidField()
+	{
+		escortComplete = true;
+		Director.instance.flowchart.SendFungusMessage("tcaf");
+		Destroy(convoyEscortWaypoint.gameObject);
+	}
+
+	IEnumerator MissionComplete()
+	{
+		Tools.instance.CommenceFade(0, 4, Color.clear, Color.black, true);
+		AudioMasterScript.instance.FadeChannel("Master vol", -80, 4, 6);
+		yield return new WaitForSeconds(3);
+		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
+		yield return new WaitForSeconds(8);
+		Destroy(AudioMasterScript.instance.gameObject);
+	}
+
+	void PlayerDied()
+	{
+		
+	}
+
 	#endregion
 
-	public void OpenTutorialWindowPopup()
+	#region Tutorials
+	public void OpenTutorialWindowPopup(string header, string body, Sprite[] tutorialFrames, bool setPlayerFullyInactive)
 	{
 		Tools.instance.StopCoroutine("FadeScreen");
 		Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
@@ -476,11 +556,14 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
 
 		Tools.instance.AlterTimeScale(0);
-		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
 
-		//TODO: Change which tutorial
-		tutorialImage.GetComponent<SpriteAnimator>().frames = dodgeTutorialFrames;
+		if(setPlayerFullyInactive)
+			PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
+
+		tutorialHeaderText.text = header;
+		tutorialImage.GetComponent<SpriteAnimator>().framesPrimary = tutorialFrames;
 		tutorialImage.GetComponent<SpriteAnimator>().framesPerSecond = framesPerSecond;
+		tutorialBodyText.text = body;
 
 		tutorialWindow.SetActive(true);
 	}
@@ -498,6 +581,27 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		tutorialWindow.SetActive(false);
 	}
+
+	void CoverMeTutorial()
+	{
+		if(RadialRadioMenu.instance.radialMenuShown)
+		{
+			Invoke("CoverMeTutorial", 0.5f);
+			return;
+		}
+		coverMeTutorialActive = true;
+
+		string header = "Ordering Wingmen";
+		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"D-pad Up\"" : "\"Q\"";
+		string commandInstruction = InputManager.instance.inputFrom == InputManager.InputFrom.controller?
+			"Left Stick" : "Left/Right arrow keys";
+		string body = "To give orders to your wingmen, open the orders menu with " + commandKey + " and use the "
+			+ commandInstruction + " and Fire button to select orders.\n\n" +
+				"Give the \"Cover Me\" order to all wingmen now..";
+		OpenTutorialWindowPopup(header, body, ordersCoverMeFrames, true);
+	}
+
+	#endregion
 	
 	void DoHints ()
 	{

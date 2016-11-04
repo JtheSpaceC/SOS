@@ -47,7 +47,7 @@ public class RadialRadioMenu : MonoBehaviour {
 	Vector2 cursorPos;
 	public float cursorsRotation;
 	float keyboardLedRotation; //for rotatin on the radial menu with arrow keys
-	bool takeDPadInput = true;
+	[HideInInspector] public bool takeDPadInput = true;
 
 
 	void Awake()
@@ -96,25 +96,7 @@ public class RadialRadioMenu : MonoBehaviour {
 			(Input.GetKeyDown(KeyCode.Q) || 
 				((Input.GetAxis("Dpad Vertical")) > 0.5f) && takeDPadInput ) )
 		{
-			StartCoroutine("DPadInputWait");
-			screenProgression.Clear();
-			Tools.instance.StopCoroutine("FadeScreen");
-			Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
-			Tools.instance.MoveCanvasToFront(radialMenuCanvas);
-			Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
-			AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
-			Tools.instance.AlterTimeScale(0.1f);
-			PlayerAILogic.instance.TogglePlayerControl(true, false, false, false, true, false, false);
-
-			currentRadialScreen = RadialScreens.OpenAChannel;
-			screenProgression.Add(currentRadialScreen);
-
-			headerText.enabled = true;
-			centralText.enabled = true;
-			PopulateRadialMenuOptions(currentRadialScreen);
-			myAudioSource.Play();
-
-			radialMenuShown = true;
+			ActivateRadialMenu();
 		}
 
 		//DEACTIVATE the Radial menu
@@ -318,6 +300,29 @@ public class RadialRadioMenu : MonoBehaviour {
 		{
 			DestroyImmediate(radialMenuCentralPanel.GetChild(0).gameObject);
 		}
+	}
+
+	public void ActivateRadialMenu()
+	{
+		StartCoroutine("DPadInputWait");
+		screenProgression.Clear();
+		Tools.instance.StopCoroutine("FadeScreen");
+		Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
+		Tools.instance.MoveCanvasToFront(radialMenuCanvas);
+		Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
+		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
+		Tools.instance.AlterTimeScale(0.1f);
+		PlayerAILogic.instance.TogglePlayerControl(true, false, false, false, true, false, false);
+
+		currentRadialScreen = RadialScreens.OpenAChannel;
+		screenProgression.Add(currentRadialScreen);
+
+		headerText.enabled = true;
+		centralText.enabled = true;
+		PopulateRadialMenuOptions(currentRadialScreen);
+		myAudioSource.Play();
+
+		radialMenuShown = true;
 	}
 
 	public void DeactivateRadialMenu ()
