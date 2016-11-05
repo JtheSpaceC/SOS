@@ -63,6 +63,7 @@ public class AIFighter : FighterFunctions {
 	[Range(0, 100f)]
 	public float cowardice = 30;
 	public bool inRetreatState = false;
+	public float despawnDistance = 250f;
 
 	public GameObject HUDPointer;
 	[HideInInspector] public GameObject dockingWith;
@@ -790,7 +791,7 @@ public class AIFighter : FighterFunctions {
 			evadePosition = ChooseRetreatPosition(myRigidbody, potshotAtEnemiesMask, enemyCommander);
 
 			//for despawning
-			if(Vector2.Distance(transform.position, Camera.main.transform.position) > 250f)
+			if(Vector2.Distance(transform.position, Camera.main.transform.position) > despawnDistance)
 				healthScript.RetreatAndRetrieval();
 		}
 

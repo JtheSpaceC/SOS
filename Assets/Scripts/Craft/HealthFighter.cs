@@ -637,6 +637,7 @@ public class HealthFighter : Health {
 		{
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().enabled = true;
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().text = "R.T.B.";
+			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponentInChildren<Text>().color = Color.white;
 			myAIScript.myCharacterAvatarScript.avatarOutput.GetComponent<Animator>().SetBool("isRTB", true);
 			avatarRadialHealthBar.fillAmount = 0;
 			avatarRadialAwarenessBar.fillAmount = 0;

@@ -54,7 +54,7 @@ public class PlayerPrefsManager: MonoBehaviour {
 
 	public static string GetHintsKey()
 	{
-		return PlayerPrefs.GetString(HINTS_ON_OFF_KEY);
+		return PlayerPrefs.GetString(HINTS_ON_OFF_KEY, "On");
 	}
 	public static void SetHintsKey(string trueOrFalse)
 	{

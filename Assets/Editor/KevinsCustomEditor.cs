@@ -18,6 +18,7 @@ public static class KevinsCustomEditor : object {
 			"Version number in self-play scene.." +
 			"Uncheck 'r' for Restart in all scenes.." +
 			"Uncheck Director Screenshot mode.." +
+			"Convention mode on InputManager.." +
 			"Add all scenes to Build Settings.." +
 			"Set Analytics.." +
 			"Set Self-Play reset timer.." +

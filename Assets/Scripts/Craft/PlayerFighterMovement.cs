@@ -51,10 +51,13 @@ public class PlayerFighterMovement : EnginesFighter {
 			if(!engineNoise.gameObject.activeSelf)
 				engineNoise.gameObject.SetActive(true);
 
-			if (Input.GetButton ("Afterburners") && !afterburnerNoise.isPlaying /*&& Input.GetAxis("Accelerate") != 0 */ && nitroRemaining > 0)
-				afterburnerNoise.Play ();
-			else if(!Input.GetButton("Afterburners")/* || Input.GetAxis("Accelerate") == 0*/ || nitroRemaining <= 0)
-				afterburnerNoise.Stop ();
+			if(hasAfterburner)
+			{
+				if (Input.GetButton ("Afterburners") && !afterburnerNoise.isPlaying /*&& Input.GetAxis("Accelerate") != 0 */ && nitroRemaining > 0)
+					afterburnerNoise.Play ();
+				else if(!Input.GetButton("Afterburners")/* || Input.GetAxis("Accelerate") == 0*/ || nitroRemaining <= 0)
+					afterburnerNoise.Stop ();
+			}
 		}
 		else
 			engineNoise.gameObject.SetActive(false);
@@ -113,7 +116,7 @@ public class PlayerFighterMovement : EnginesFighter {
 		{
 			ForwardOrBackwardThrust(Input.GetAxis("Accelerate"), true);
 		}
-		else if(Input.GetButton("Afterburners")) // added afterburners here to allow them on without accelerator button
+		else if(hasAfterburner && Input.GetButton("Afterburners")) // added afterburners here to allow them on without accelerator button
 		{
 			ForwardOrBackwardThrust(1, true);
 		}
@@ -158,26 +161,29 @@ public class PlayerFighterMovement : EnginesFighter {
 
 		//FOR AFTERBURNERS
 	
-		if(!braking && Input.GetButton("Afterburners") && nitroRemaining > 0 /*&& Input.GetAxis("Accelerate") > 0*/)
+		if(hasAfterburner)
 		{
-			Tools.instance.VibrateController(0, 0.1f, 0.1f, 0.1f);
-			afterburnerIsOn = true;
-
-			nitroRemaining -= nitroBurnRate * Time.deltaTime;
-			UpdateNitroHUDElements();
-
-			currentMaxVelocityAllowed = maxAfterburnerVelocity;
-			currentAccelerationRate = normalAccelerationRate * afterburnerMultiplier;;
-
-			if(mySpeed > maxNormalVelocity)
+			if(!braking && Input.GetButton("Afterburners") && nitroRemaining > 0 /*&& Input.GetAxis("Accelerate") > 0*/)
 			{
-				stillHaveAfterburnMomentum = true;
+				Tools.instance.VibrateController(0, 0.1f, 0.1f, 0.1f);
+				afterburnerIsOn = true;
+
+				nitroRemaining -= nitroBurnRate * Time.deltaTime;
+				UpdateNitroHUDElements();
+
+				currentMaxVelocityAllowed = maxAfterburnerVelocity;
+				currentAccelerationRate = normalAccelerationRate * afterburnerMultiplier;;
+
+				if(mySpeed > maxNormalVelocity)
+				{
+					stillHaveAfterburnMomentum = true;
+				}
 			}
-		}
-		else 
-		{
-			afterburnerIsOn = false;
-			currentAccelerationRate = normalAccelerationRate;
+			else 
+			{
+				afterburnerIsOn = false;
+				currentAccelerationRate = normalAccelerationRate;
+			}
 		}
 
 

@@ -257,12 +257,7 @@ public class Dodge : MonoBehaviour
 
 				if (Input.GetButtonDown("Dodge"))
 				{
-					if(canDodge == true)
-					{
-						Director.instance.numberOfManualDodges++;
-						playerActivatedManualDodge = true;
-						Roll (/*0*/);
-					}
+					DodgePressed();
 				}		
 			}
 			else if(rollCooldown >0 && showRollCooldownImage)
@@ -278,6 +273,15 @@ public class Dodge : MonoBehaviour
 
 	}//end of UPDATE
 
+	public void DodgePressed()
+	{
+		if(canDodge == true)
+		{
+			Director.instance.numberOfManualDodges++;
+			playerActivatedManualDodge = true;
+			Roll (/*0*/);
+		}
+	}
 
 	//REMOVE: can probably refactor and remove this once sure it's no longer used
 	IEnumerator SetDodgingToTrue(/*int frameDelay*/)

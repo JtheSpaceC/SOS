@@ -16,6 +16,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	GameObject speedParticles;
 
 	GameObject player;
+	int playerStartingHealth;
 
 	public List<GameObject> objectsToToggleAtStart;
 	public List<GameObject> objectsToToggleAfterApproach;
@@ -29,7 +30,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public Text tutorialHeaderText;
 	public Image tutorialImage;
 	public Text tutorialBodyText;
-	public float framesPerSecond = 20;
 	public Sprite[] dodgeTutorialFrames;
 	public Sprite[] ordersCoverMeFrames;
 	public Sprite[] afterburnersFuelFrames;
@@ -38,6 +38,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	bool afterburnerTutorialActive = false;
 	bool doneAfterburnerTutorial = false;
 	float afterburnInputDelay = 1;
+	bool dodgeTutorialActive = false;
+	bool doneDodgeTutorial = false;
 
 	[Header("Demo Stuff")]
 	public Text objectiveText;
@@ -61,6 +63,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public GameObject convoy;
 	public GameObject missionCompleteScreen;
 	public GameObject deathScreen;
+	public Button mainRestartButton;
+	public Button.ButtonClickedEvent restartEventsIfPlayerDead;
 
 	[Header("Progression")]
 	bool firstMessagePlayed = false;
@@ -134,10 +138,16 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	void Start () 
 	{
 		player = GameObject.FindGameObjectWithTag("PlayerFighter");
+		playerStartingHealth = (int)PlayerAILogic.instance.healthScript.maxHealth;
 		// prevents Transport spawning at 0,0 if player didn't move
 		player.transform.position += (Vector3)Random.insideUnitCircle.normalized * 0.001f; 
 		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
 		bridgeView = bridgeViewSlider.transform.parent.parent;
+
+		if(Tools.instance.useHintsThisSession)
+		{
+			PlayerAILogic.instance.engineScript.hasAfterburner = false;
+		}
 
 		#if !UNITY_EDITOR
 		CheckPlayerPrefs();
@@ -312,7 +322,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		if(!firstMessagePlayed)
 		{
 			if((Director.instance.timer > 8 && Vector2.Distance(player.transform.position, Vector3.zero) > 40)
-				|| Director.instance.timer > 40)
+				|| Director.instance.timer > 30)
 			{
 				firstMessagePlayed = true;
 				Director.instance.flowchart.SendFungusMessage("wd");
@@ -398,6 +408,24 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			}
 		}
 
+		//if hit twice, do dodge tutorial
+		if(Tools.instance.useHintsThisSession && !doneDodgeTutorial && 
+			(int)PlayerAILogic.instance.healthScript.health <= playerStartingHealth -2)
+		{
+			doneDodgeTutorial = true;
+			Invoke("DodgeTutorial", 1.5f);
+		}
+
+		if(dodgeTutorialActive)
+		{
+			if(Input.GetButtonDown("Dodge"))
+			{
+				dodgeTutorialActive = false;
+				CloseTutorialWindow();
+				PlayerAILogic.instance.dodgeScript.DodgePressed();
+			}	
+		}
+
 		#endregion
 	
 
@@ -474,6 +502,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		firstEnemyAI = FindObjectOfType<AIFighter>();
 		firstEnemy = firstEnemyAI.gameObject;
 		firstEnemyAI.cowardice = 30;
+		firstEnemyAI.despawnDistance = 75f;
 		objectiveText.text = "OBJECTIVES:\n" +
 			"* Defend Yourself";
 	}
@@ -622,6 +651,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	{
 		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, true);
 
+		//means main menu Restart will go to checkpoint, not total restart
+		mainRestartButton.onClick = restartEventsIfPlayerDead;
+
 		yield return new WaitForSeconds(5);
 
 		Tools.instance.CommenceFade(0, 4, Color.clear, Color.black, true);
@@ -642,7 +674,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	#endregion
 
 	#region Tutorials
-	public void OpenTutorialWindowPopup(string header, string body, Sprite[] tutorialFrames, bool setPlayerFullyInactive)
+	public void OpenTutorialWindowPopup(string header, string body, Sprite[] tutorialFrames, float framesPerSecond, bool setPlayerFullyInactive)
 	{
 		Tools.instance.StopCoroutine("FadeScreen");
 		Tools.instance.MoveCanvasToFront(Tools.instance.blackoutCanvas);
@@ -651,6 +683,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
 
 		Tools.instance.AlterTimeScale(0);
+		Tools.instance.VibrationStop();
 
 		if(setPlayerFullyInactive)
 			PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
@@ -679,6 +712,12 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void CoverMeTutorial()
 	{
+		if(!Tools.instance.useHintsThisSession)
+		{
+			Debug.Log("Not Using Hints This Session. Returning..");
+			return;
+		}
+
 		if(haveOrderedCoverMeAtLeastOnce)
 			return;
 		if(RadialRadioMenu.instance.radialMenuShown)
@@ -696,20 +735,52 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			+ commandInstruction + " and Fire button to select orders.\n\n" +
 				"Give the \"Cover Me\" order to all wingmen now..";
 		
-		OpenTutorialWindowPopup(header, body, ordersCoverMeFrames, true);
+		OpenTutorialWindowPopup(header, body, ordersCoverMeFrames, 10, true);
 	}
 
 	void AfterburnerFuelTutorial()
 	{
+		PlayerAILogic.instance.engineScript.hasAfterburner = true;
+
+		if(!Tools.instance.useHintsThisSession)
+		{
+			Debug.Log("Not Using Hints This Session. Returning..");
+			return;
+		}
 		afterburnerTutorialActive = true;
 
-		string header = "Afterburners";
+		const string header = "Afterburners";
 		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"X button\"" : "\"Left Shift\"";
 		string body = "Afterburners can help you to get around faster, or to get behind an enemy.\n" +
 			"Use " + commandKey + " to activate.\n" +
 			"Be careful, though. Afterburners use up nitro, which can't be refueled.";
 		
-		OpenTutorialWindowPopup(header, body, afterburnersFuelFrames, true);
+		OpenTutorialWindowPopup(header, body, afterburnersFuelFrames, 10, true);
+	}
+
+	void DodgeTutorial()
+	{
+		if(!Tools.instance.useHintsThisSession)
+		{
+			Debug.Log("Not Using Hints This Session. Returning..");
+			return;
+		}
+
+		if(tutorialWindow.activeSelf || RadialRadioMenu.instance.radialMenuShown)
+		{
+			Debug.Log("Tutorial Window or Radial Menu Already Up. Waiting..");
+			Invoke("DodgeTutorial", 1.5f);
+			return;
+		}
+
+		string header = "Dodging";
+		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"B Button\"" : "\"Left Ctrl\"";
+		string body = "Press the Dodge button (" + commandKey + ") to dodge bullets or asteroids.\n" +
+			"Enemies can do this too.\n" +
+			"Note: They're easier to hit from the sides or rear.";
+
+		dodgeTutorialActive = true;
+		OpenTutorialWindowPopup(header, body, dodgeTutorialFrames, 15, true);
 	}
 
 	#endregion
