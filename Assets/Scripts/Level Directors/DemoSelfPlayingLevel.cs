@@ -163,7 +163,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 				!CharacterPool.instance.poolImportExportEditPanel.activeInHierarchy)
 			{
 				mainMenu.SetActive(false);
-				sceneResetTime = Director.instance.timer + originalSceneResetTime;
+				sceneResetTime = Time.timeSinceLevelLoad + originalSceneResetTime;
 				AudioMasterScript.instance.FadeChannel("Master vol", 0, 0, 0.3f);
 
 				//Turn back on the text elements
@@ -181,9 +181,9 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 			}
 		}
 
-		if(Director.instance.timer > sceneResetTime && sceneResetTime > 0)
+		if(Time.timeSinceLevelLoad > sceneResetTime && sceneResetTime > 0)
 		{
-			Director.instance.timer = -999;
+			sceneResetTime = Mathf.Infinity;
 			Tools.instance.CommenceFade(0, 2.5f, Color.clear, Color.black, true);
 			Invoke("RestartScene", 2.5f);
 		}

@@ -59,6 +59,9 @@ public class _battleEventManager : MonoBehaviour {
 	public delegate void OrdersCoverMe();
 	public static event OrdersCoverMe ordersCoverMe;
 
+	public delegate void MissionComplete();
+	public static event MissionComplete missionComplete;
+
 	void Awake()
 	{
 		if (instance == null) 
@@ -143,6 +146,10 @@ public class _battleEventManager : MonoBehaviour {
 	public void CallOrdersCoverMe()
 	{
 		ordersCoverMe();
+	}
+	public void CallMissionComplete()
+	{
+		missionComplete();
 	}
 
 

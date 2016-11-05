@@ -607,6 +607,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		objectiveText.text = "";
 		missionCompleteScreen.SetActive(true);
 
+		_battleEventManager.instance.CallMissionComplete();
+
 		yield return new WaitForSeconds(3.5f);
 		Destroy(AudioMasterScript.instance.gameObject);
 	}

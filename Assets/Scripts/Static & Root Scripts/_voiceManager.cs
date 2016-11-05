@@ -43,6 +43,8 @@ public class _voiceManager : MonoBehaviour {
 
 		_battleEventManager.ordersCoverMe += OrdersCoverMe;
 
+		_battleEventManager.missionComplete += MissionComplete;
+
 		_battleEventManager.playerLeavingByWarp += PlayerLeaving;
 		_battleEventManager.playerShotDown += PlayerShotDown;
 	}
@@ -59,6 +61,8 @@ public class _voiceManager : MonoBehaviour {
 		_battleEventManager.pickupNegative -= PickupNegative;
 
 		_battleEventManager.ordersCoverMe -= OrdersCoverMe;
+
+		_battleEventManager.missionComplete -= MissionComplete;
 
 		_battleEventManager.playerLeavingByWarp -= PlayerLeaving;
 		_battleEventManager.playerShotDown -= PlayerShotDown;
@@ -142,6 +146,11 @@ public class _voiceManager : MonoBehaviour {
 	}
 
 	void OrdersCoverMe()
+	{
+		
+	}
+
+	void MissionComplete()
 	{
 		
 	}
