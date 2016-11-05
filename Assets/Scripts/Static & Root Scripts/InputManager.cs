@@ -61,7 +61,7 @@ public class InputManager : MonoBehaviour {
 
 			if(restartTimer >= restartTime)
 			{
-				Time.timeScale = 1;
+				Tools.instance.AlterTimeScale(1);
 				if(!ClickToPlay.instance.paused)
 				{
 					ClickToPlay.instance.escCanGiveQuitMenu = false;
@@ -70,7 +70,7 @@ public class InputManager : MonoBehaviour {
 				}
 				else 
 				{
-					Time.timeScale = 1;
+					Tools.instance.AlterTimeScale(1);
 					ClickToPlay.instance.LoadScene(0);
 				}
 

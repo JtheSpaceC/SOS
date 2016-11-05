@@ -32,10 +32,15 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public float framesPerSecond = 20;
 	public Sprite[] dodgeTutorialFrames;
 	public Sprite[] ordersCoverMeFrames;
+	public Sprite[] afterburnersFuelFrames;
 
 	bool coverMeTutorialActive = false;
+	bool afterburnerTutorialActive = false;
+	bool doneAfterburnerTutorial = false;
+	float afterburnInputDelay = 1;
 
 	[Header("Demo Stuff")]
+	public Text objectiveText;
 	public GameObject firstEnemy;
 	AIFighter firstEnemyAI;
 	public Canvas demoCanvas;
@@ -54,6 +59,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public GameObject arrow3;
 	public GameObject rightPanel;
 	public GameObject convoy;
+	public GameObject missionCompleteScreen;
+	public GameObject deathScreen;
 
 	[Header("Progression")]
 	bool firstMessagePlayed = false;
@@ -91,12 +98,37 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		_battleEventManager.wingmanFirstClash += SetEnemyHasSpawnedBool;
 		_battleEventManager.playerGotKill += FirstEnemyKilled;
 		_battleEventManager.ordersCoverMe += OrderedWingmenIntoPosition;
+		_battleEventManager.playerShotDown += CallPlayerDied;
 	}
 	void OnDisable()
 	{
 		_battleEventManager.wingmanFirstClash -= SetEnemyHasSpawnedBool;
 		_battleEventManager.playerGotKill -= FirstEnemyKilled;
 		_battleEventManager.ordersCoverMe -= OrderedWingmenIntoPosition;
+		_battleEventManager.playerShotDown -= CallPlayerDied;
+	}
+
+	void CheckPlayerPrefs()
+	{
+		Debug.Log("Checking for Checkpoint");
+		int checkpoint = PlayerPrefs.GetInt("checkpoint", 0);
+
+		if(checkpoint == 0)
+			playFrom = PlayFrom.Intro;
+		else if(checkpoint == 1)
+			playFrom = PlayFrom.ReachWreck;
+		else if(checkpoint == 2)
+			playFrom = PlayFrom.FirstEnemy;
+		else if(checkpoint == 3)
+			playFrom = PlayFrom.ReachWingmen;
+		else if(checkpoint == 4)
+			playFrom = PlayFrom.ReachConvoy;		
+	}
+	[ContextMenu("ClearCheckpoints")]
+	public void ClearCheckpoints()
+	{
+		PlayerPrefs.DeleteKey("checkpoint");
+		Debug.Log("Deleting Checkpoint." + PlayerPrefs.GetInt("checkpoint"));
 	}
 
 	void Start () 
@@ -106,6 +138,10 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		player.transform.position += (Vector3)Random.insideUnitCircle.normalized * 0.001f; 
 		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
 		bridgeView = bridgeViewSlider.transform.parent.parent;
+
+		#if !UNITY_EDITOR
+		CheckPlayerPrefs();
+		#endif
 
 		if(playFrom == PlayFrom.Intro)
 		{
@@ -302,10 +338,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		//MONITOR FIRST ENEMY
 		if(firstEnemySpawned && !firstEnemyDefeated)
 		{
-			if(Input.GetKey(KeyCode.L))
-			{
-				firstEnemyAI.healthScript.health = 1;
-			}
 			if(!firstEnemy.activeInHierarchy)
 			{
 				FirstEnemyRetreatedSuccessfully();
@@ -342,17 +374,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		#region TutorialUpdates
 
-		//REMOVE: FOR SHOWING TUTORIAL
-		if(Input.GetKeyDown(KeyCode.T))
-		{
-			if(!tutorialWindow.activeInHierarchy)
-				OpenTutorialWindowPopup("Learn something, stupid!",
-					"This is how you will learn the stupid thing you stupid dumbshit god-damn motherfucker! - (The Offspring reference)",
-					dodgeTutorialFrames, true);
-			else if(tutorialWindow.activeInHierarchy)
-				CloseTutorialWindow();
-		}
-
 		if(coverMeTutorialActive)
 		{
 			if(Input.GetKeyDown(KeyCode.Q) || 
@@ -365,18 +386,32 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			}
 		}
 
+		if(afterburnerTutorialActive && !doneAfterburnerTutorial)
+		{
+			afterburnInputDelay -= Time.unscaledDeltaTime; //don't want to instantly end the tutorial if afterburning
+
+			if(afterburnInputDelay <= 0 && Input.GetButtonDown("Afterburners"))
+			{
+				doneAfterburnerTutorial = true;
+				afterburnerTutorialActive = false;
+				CloseTutorialWindow();
+			}
+		}
+
 		#endregion
 	
 
 	}//end of UPDATE()
 
 
+
+
+	#region Demo Functions In Story Sequence
+
 	void TurnOnAsteroids()
 	{
 		asteroidFieldCollider.enabled = true;
 	}
-
-	#region Demo Functions In Story Sequence
 
 	void SpawnWreck()
 	{
@@ -395,6 +430,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	public void ReachedWreck()
 	{
+		PlayerPrefs.SetInt("checkpoint", 1);
+		print("SET NEW INT 1");
+
 		wreck.name = "Wrecked Transport";
 		Director.instance.flowchart.SendFungusMessage("wr");
 	}
@@ -403,6 +441,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	{
 		timeToCheckOutBridge = true;
 		bridgeCheckoutWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, bridgeView);
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Identify the Wreck";
 	}
 
 	void BridgeCheckoutComplete()
@@ -412,20 +452,30 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		bridgeView.gameObject.SetActive(false);
 		Destroy(bridgeCheckoutWaypoint.gameObject);
 		Director.instance.flowchart.SendFungusMessage("bc");
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Hold Position";
 	}
 
 	void SpawnFirstEnemy()
 	{
+		PlayerPrefs.SetInt("checkpoint", 2);
+		print("SET NEW INT 2");
+
 		Director.instance.flowchart.SendFungusMessage("sf");
 		firstEnemy.transform.position = player.transform.position + (Vector3)(Random.insideUnitCircle.normalized * 10);
 		firstEnemy.SetActive(true);
 	}
 	void SetEnemyHasSpawnedBool()
 	{
+		if(firstEnemySpawned)
+			return;
+		print("Enemy Has Spawned Bool");
 		firstEnemySpawned = true;
 		firstEnemyAI = FindObjectOfType<AIFighter>();
 		firstEnemy = firstEnemyAI.gameObject;
 		firstEnemyAI.cowardice = 30;
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Defend Yourself";
 	}
 	void FirstEnemyKilled()
 	{
@@ -450,6 +500,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{spawnPos}, 20);
 		toWingmenWaypoint.destroyWhenReached = true;
 		toWingmenWaypoint.OnReachedEvents = wingmenReachedEvents;
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Rejoin your squadmates";
 	}
 
 	public void ReachedWingmen()
@@ -464,6 +516,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		player.GetComponentInChildren<SquadronLeader>().SetUp();
 		if(playFrom != PlayFrom.ReachConvoy && playFrom != PlayFrom.EscortComplete) //TODO: Add each subsequent checkpoint here too
 			Director.instance.flowchart.SendFungusMessage("mw");
+		PlayerPrefs.SetInt("checkpoint", 3);
+		print("SET NEW INT 3");
+
 	}
 
 	void OrderedWingmenIntoPosition()
@@ -493,6 +548,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		convoy.transform.position = newConvoyPosition;
 		convoy.GetComponent<moverBasic>().enabled = false;
 		convoy.SetActive(true);
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Rendezvous with Freighters";
 	}
 
 	void ReachedConvoy()
@@ -503,6 +560,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		if(!escortComplete)
 			Director.instance.flowchart.SendFungusMessage("rc");
 		asteroidFieldCollider.enabled = false;
+		PlayerPrefs.SetInt("checkpoint", 4);
+		print("SET NEW INT 4");
 	}
 
 	void SetEscortWaypoint()
@@ -510,6 +569,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		convoyEscortWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Escort, convoy.transform);
 		convoyEscortWaypoint.zoneBoxAnimation.SetActive(false);
 		convoyEscortWaypoint.playChimeOnEnter = false;
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Escort Civilian Convoy";
 	}
 
 	void ToggleEnemySpawner()
@@ -527,21 +588,53 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		escortComplete = true;
 		Director.instance.flowchart.SendFungusMessage("tcaf");
 		Destroy(convoyEscortWaypoint.gameObject);
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Return to base";
 	}
 
 	IEnumerator MissionComplete()
 	{
+		ClearCheckpoints();
+
 		Tools.instance.CommenceFade(0, 4, Color.clear, Color.black, true);
-		AudioMasterScript.instance.FadeChannel("Master vol", -80, 4, 6);
+		AudioMasterScript.instance.FadeChannel("Master vol", -80, 2, 6);
+
 		yield return new WaitForSeconds(3);
 		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
-		yield return new WaitForSeconds(8);
+
+		yield return new WaitForSeconds(1.5f);
+		Tools.instance.MoveCanvasToFront(demoCanvas);
+		objectiveText.text = "";
+		missionCompleteScreen.SetActive(true);
+
+		yield return new WaitForSeconds(3.5f);
 		Destroy(AudioMasterScript.instance.gameObject);
 	}
 
-	void PlayerDied()
+	void CallPlayerDied()
 	{
-		
+		StopCoroutine("MissionComplete");
+		StartCoroutine("PlayerDied");
+	}
+	IEnumerator PlayerDied()
+	{
+		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, true);
+
+		yield return new WaitForSeconds(5);
+
+		Tools.instance.CommenceFade(0, 4, Color.clear, Color.black, true);
+		AudioMasterScript.instance.FadeChannel("Master vol", -80, 2, 6);
+
+		yield return new WaitForSeconds(3);
+		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
+
+		yield return new WaitForSeconds(1.5f);
+		Tools.instance.MoveCanvasToFront(demoCanvas);
+		objectiveText.text = "";
+		deathScreen.SetActive(true);
+
+		yield return new WaitForSeconds(2.5f);
+		Destroy(AudioMasterScript.instance.gameObject);
 	}
 
 	#endregion
@@ -584,9 +677,11 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 	void CoverMeTutorial()
 	{
+		if(haveOrderedCoverMeAtLeastOnce)
+			return;
 		if(RadialRadioMenu.instance.radialMenuShown)
 		{
-			Invoke("CoverMeTutorial", 0.5f);
+			Invoke("CoverMeTutorial", 1.5f);
 			return;
 		}
 		coverMeTutorialActive = true;
@@ -598,7 +693,21 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		string body = "To give orders to your wingmen, open the orders menu with " + commandKey + " and use the "
 			+ commandInstruction + " and Fire button to select orders.\n\n" +
 				"Give the \"Cover Me\" order to all wingmen now..";
+		
 		OpenTutorialWindowPopup(header, body, ordersCoverMeFrames, true);
+	}
+
+	void AfterburnerFuelTutorial()
+	{
+		afterburnerTutorialActive = true;
+
+		string header = "Afterburners";
+		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"X button\"" : "\"Left Shift\"";
+		string body = "Afterburners can help you to get around faster, or to get behind an enemy.\n" +
+			"Use " + commandKey + " to activate.\n" +
+			"Be careful, though. Afterburners use up nitro, which can't be refueled.";
+		
+		OpenTutorialWindowPopup(header, body, afterburnersFuelFrames, true);
 	}
 
 	#endregion

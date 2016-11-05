@@ -167,7 +167,7 @@ public class PlayerFighterMovement : EnginesFighter {
 			UpdateNitroHUDElements();
 
 			currentMaxVelocityAllowed = maxAfterburnerVelocity;
-			currentAccelerationRate = normalAccelerationRate * afterburnerMultiplier;
+			currentAccelerationRate = normalAccelerationRate * afterburnerMultiplier;;
 
 			if(mySpeed > maxNormalVelocity)
 			{

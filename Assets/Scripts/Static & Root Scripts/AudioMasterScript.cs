@@ -23,6 +23,11 @@ public class AudioMasterScript : MonoBehaviour {
 		}
 	}
 
+	void OnLevelWasLoaded()
+	{
+		ClearAll();
+	}
+
 	public void MuteSFX()
 	{
 		masterMixer.SetFloat ("SFX vol", -80);
