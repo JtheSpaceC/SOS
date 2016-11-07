@@ -111,7 +111,7 @@ public class SpriteExploder : MonoBehaviour {
 				//gib.gameObject.AddComponent<FadeAndDestroyMesh>();
 				//gib.gameObject.AddComponent<DeleteAfterInvisible>();
 				gib.gameObject.AddComponent<Rotator>();
-				gib.GetComponent<Rotator>().Mode = Rotator.myMode.RandomizedAtStart;
+				gib.GetComponent<Rotator>().rotationMode = Rotator.RotationMode.RandomizedAtStart;
 				gib.GetComponent<Rotator>().randomizeDirection = true;
 
 			}

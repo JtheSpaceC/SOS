@@ -54,10 +54,13 @@ public class InputManager : MonoBehaviour {
 	{
 		if(conventionMode)
 		{
-			if(Input.anyKey)
+			if(Input.anyKey || !Mathf.Approximately(Input.GetAxis("Gamepad Left Horizontal"), 0) || 
+				!Mathf.Approximately(Input.GetAxis("Gamepad Triggers"), 0) || DpadDownDown)
+			{
 				restartTimer = 0;
+			}
 
-			restartTimer += Time.fixedDeltaTime;
+			restartTimer += Time.unscaledDeltaTime;
 
 			if(restartTimer >= restartTime)
 			{

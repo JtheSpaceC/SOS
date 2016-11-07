@@ -798,7 +798,7 @@ public class HealthFighter : Health {
 
 				//set a lateral spin and other effects
 				gameObject.AddComponent<Rotator>();
-				GetComponent<Rotator>().Mode = Rotator.myMode.RandomizedAtStart;
+				GetComponent<Rotator>().rotationMode = Rotator.RotationMode.RandomizedAtStart;
 				GetComponent<Rotator>().randomizeDirection = true;
 				smoke.gameObject.SetActive(true);
 				smokeEm.rate = 150;

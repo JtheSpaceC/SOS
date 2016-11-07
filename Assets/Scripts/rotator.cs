@@ -6,10 +6,11 @@ public class Rotator : MonoBehaviour {
 	public enum AxisMovement {Z_only};
 	public AxisMovement axisMovement;
 
-	public enum myMode {Constant, RandomizedAtStart, BasedOnStellarTime};
-	public myMode Mode;
+	public enum RotationMode {Constant, RandomizedAtStart, StartingRotationOnly, BasedOnStellarTime};
+	public RotationMode rotationMode;
 
 	float z;
+	Vector3 rot;
 
 	[Header("If Constant")]
 	public float rotSpeed = 10;
@@ -25,7 +26,7 @@ public class Rotator : MonoBehaviour {
 
 	void Start()
 	{
-		if(Mode == myMode.RandomizedAtStart)
+		if(rotationMode == RotationMode.RandomizedAtStart)
 		{
 			rotSpeed = Random.Range(minSpeed, maxSpeed);
 		}
@@ -34,22 +35,29 @@ public class Rotator : MonoBehaviour {
 			rotSpeed *= Mathf.Pow(-1, Random.Range(1, 3));
 
 		z = transform.eulerAngles.z;
+
+		if(rotationMode == RotationMode.StartingRotationOnly)
+		{
+			z = Random.Range(minSpeed, maxSpeed);
+			rot = new Vector3 (0, 0, z);
+			transform.rotation = Quaternion.Euler (rot);		
+		}
 	}
 
 	void FixedUpdate () 
 	{
 		if(axisMovement == AxisMovement.Z_only)
 		{
-			if(Mode == myMode.Constant || Mode == myMode.RandomizedAtStart)
+			if(rotationMode == RotationMode.Constant || rotationMode == RotationMode.RandomizedAtStart)
 			{
 				z += Time.deltaTime * rotSpeed;
-				Vector3 rot = new Vector3 (0, 0, z);
+				rot = new Vector3 (0, 0, z);
 				transform.rotation = Quaternion.Euler (rot);
 			}
-			else if(Mode == myMode.BasedOnStellarTime)
+			else if(rotationMode == RotationMode.BasedOnStellarTime)
 			{
 				z += Time.deltaTime * rotSpeed * RTSDirector.instance.gameSpeed;
-				Vector3 rot = new Vector3 (0, 0, z);
+				rot = new Vector3 (0, 0, z);
 				transform.rotation = Quaternion.Euler (rot);
 			}
 		}			
