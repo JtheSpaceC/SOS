@@ -9,7 +9,7 @@ public class SpriteDepthAndSortingOrder : MonoBehaviour {
 	public enum SortingOrderMode {DontChange, ChangeAtStart, Continuous};
 	public SortingOrderMode sortingOrderMode;
 
-	[Tooltip("Lerp between White and Black by Z distance?")] public bool darkenWithDepth = true;
+	[Tooltip("Lerp between White and Black by Z distance?")] public bool darkenWithDepth = false;
 	[Tooltip("How far away is absolute black?")] public float blackDistance = 500f;
 
 

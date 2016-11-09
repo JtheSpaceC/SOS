@@ -144,9 +144,11 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		playerWeapons = player.GetComponentInChildren<WeaponsPrimaryFighter>();
 		bridgeView = bridgeViewSlider.transform.parent.parent;
 
+		//disable afterburner for the tutorial, unless we're past it
 		if(Tools.instance.useHintsThisSession)
 		{
-			PlayerAILogic.instance.engineScript.hasAfterburner = false;
+			if(playFrom == PlayFrom.AfterIntro || playFrom == PlayFrom.Intro)
+				PlayerAILogic.instance.engineScript.hasAfterburner = false;
 		}
 
 		#if !UNITY_EDITOR
