@@ -80,7 +80,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	bool playerKnowsMenu = false;
 	bool playerKnowsOrders = false;
 	bool playerKnowsMap = false;
-	bool postedEndMessage = false;
 
 	bool currentlyPlayingIntro = false;
 	bool timeToCheckOutBridge = false;

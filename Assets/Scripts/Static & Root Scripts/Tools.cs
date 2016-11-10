@@ -67,6 +67,8 @@ public class Tools: MonoBehaviour
 	[HideInInspector] public List<string> callsignsInUse = new List<string>();
 	[HideInInspector] public List<string> fullNamesInUse = new List<string>();
 
+	GameObject obj;
+
 
 	void Awake()
 	{
@@ -208,12 +210,13 @@ public class Tools: MonoBehaviour
 
 	public void SpawnExplosion (GameObject go, Vector2 where, bool inheritVelocity) 
 	{				
-		GameObject obj = explosionPoolerScript.current.GetPooledObject ();
+		obj = explosionPoolerScript.current.GetPooledObject ();
 		
 		obj.transform.position = where;
 		obj.transform.rotation = go.transform.rotation;
 		obj.SetActive (true);
-		if (inheritVelocity)
+
+		if (inheritVelocity) 
 		{	
 			if(go.tag == "Turret")
 			{

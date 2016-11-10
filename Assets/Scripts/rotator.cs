@@ -3,13 +3,15 @@ using System.Collections;
 
 public class Rotator : MonoBehaviour {
 
-	public enum AxisMovement {Z_only};
+	public enum AxisMovement {Z_only, ThreeAxes};
 	public AxisMovement axisMovement;
 
 	public enum RotationMode {Constant, RandomizedAtStart, StartingRotationOnly, BasedOnStellarTime};
 	public RotationMode rotationMode;
 
-	float z;
+	float x = 0;
+	float y = 0;
+	float z = 0;
 	Vector3 rot;
 
 	[Header("If Constant")]
@@ -38,28 +40,36 @@ public class Rotator : MonoBehaviour {
 
 		if(rotationMode == RotationMode.StartingRotationOnly)
 		{
+			if(axisMovement == AxisMovement.ThreeAxes)
+			{
+				x = Random.Range(minSpeed, maxSpeed);
+				y = Random.Range(minSpeed, maxSpeed);
+			}
 			z = Random.Range(minSpeed, maxSpeed);
-			rot = new Vector3 (0, 0, z);
-			transform.rotation = Quaternion.Euler (rot);		
+			rot = new Vector3 (x, y, z);
+			transform.rotation = Quaternion.Euler (rot);	
+			this.enabled = false;
 		}
 	}
 
 	void FixedUpdate () 
 	{
-		if(axisMovement == AxisMovement.Z_only)
+		if(rotationMode == RotationMode.Constant || rotationMode == RotationMode.RandomizedAtStart)
 		{
-			if(rotationMode == RotationMode.Constant || rotationMode == RotationMode.RandomizedAtStart)
+			if(axisMovement == AxisMovement.ThreeAxes)
 			{
-				z += Time.deltaTime * rotSpeed;
-				rot = new Vector3 (0, 0, z);
-				transform.rotation = Quaternion.Euler (rot);
+				x += Time.deltaTime * rotSpeed;
+				y += Time.deltaTime * rotSpeed;
 			}
-			else if(rotationMode == RotationMode.BasedOnStellarTime)
-			{
-				z += Time.deltaTime * rotSpeed * RTSDirector.instance.gameSpeed;
-				rot = new Vector3 (0, 0, z);
-				transform.rotation = Quaternion.Euler (rot);
-			}
-		}			
+			z += Time.deltaTime * rotSpeed;
+			rot = new Vector3 (x, y, z);
+			transform.rotation = Quaternion.Euler (rot);
+		}
+		else if(rotationMode == RotationMode.BasedOnStellarTime)
+		{
+			z += Time.deltaTime * rotSpeed * RTSDirector.instance.gameSpeed;
+			rot = new Vector3 (x, y, z);
+			transform.rotation = Quaternion.Euler (rot);
+		}				
 	}
 }

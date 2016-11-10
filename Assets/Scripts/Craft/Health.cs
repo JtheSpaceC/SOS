@@ -30,9 +30,9 @@ public class Health : MonoBehaviour {
 	public bool temporarilyInvincible = false; //used instead of flashing the collider on and off. Prevents two shots close together both hitting													
 
 	[Header("For Effects")]
-	public ParticleSystem smoke;
+	protected ParticleSystem smoke;
 	protected ParticleSystem.EmissionModule smokeEm;
-	public ParticleSystem flames;
+	protected ParticleSystem flames;
 	protected ParticleSystem.EmissionModule flamesEm;
 	public Slider healthSlider;
 	public GameObject healthBarDividingBox;
@@ -104,6 +104,14 @@ public class Health : MonoBehaviour {
 		}
 
 		myAudioSource = GetComponent<AudioSource> ();
+
+		GameObject smokeGO = Instantiate(Tools.instance.environments.smokeTrailPrefab, transform.FindChild("Effects")) as GameObject;
+		smokeGO.transform.localPosition = new Vector3(0, -.35f, 0);
+		smoke = smokeGO.GetComponent<ParticleSystem>();
+
+		GameObject flamesGO = Instantiate(Tools.instance.environments.flamesTrailPrefab, transform.FindChild("Effects")) as GameObject;
+		flamesGO.transform.localPosition = new Vector3(0, -.35f, 0);
+		flames = flamesGO.GetComponent<ParticleSystem>();
 
 		smokeEm = smoke.emission;
 		flamesEm = flames.emission;

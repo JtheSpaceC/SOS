@@ -77,6 +77,10 @@ public class InputManager : MonoBehaviour {
 					ClickToPlay.instance.LoadScene(0);
 				}
 
+				//REMOVE: Too specific to just the demo level to be in here
+				if(FindObjectOfType<DemoAndTutorialLevel>())
+					FindObjectOfType<DemoAndTutorialLevel>().ClearCheckpoints();
+
 				try{FindObjectOfType<Analytics_Demo1>().PlayerWalkedAwayFromConsole();}
 				catch{Debug.Log("No Analytics script hooked up to Demo Restart.");}
 			}

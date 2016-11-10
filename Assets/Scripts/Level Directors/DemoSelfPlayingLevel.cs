@@ -108,6 +108,12 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	void Update()
 	{
+		#if UNITY_EDITOR
+
+		if(Input.GetKeyDown(KeyCode.LeftBracket))
+			cameraAutoChanges = !cameraAutoChanges;
+		#endif
+
 		if(target != null)
 		{
 			followCamText.text = "Camera Following: " + target.name + "\n" +

@@ -6,17 +6,26 @@ public class TextureToSpriteLayer : MonoBehaviour {
 
 	public string desiredLayerName;
 	public int desiredSortingOrder = 0;
+	public bool updateSortingOrderByDepth = false;
+
+	Renderer myRenderer;
 
 	[ContextMenu("Change Layer")]
 	void Start () 
 	{
+		myRenderer = GetComponent<Renderer>();
 		ChangeLayer ();
 	}
 
 	void ChangeLayer()
 	{
-		GetComponent<Renderer> ().sortingLayerName = desiredLayerName;
-		GetComponent<Renderer> ().sortingOrder = desiredSortingOrder;
+		myRenderer.sortingLayerName = desiredLayerName;
+		myRenderer.sortingOrder = desiredSortingOrder;
 	}
 
+	void Update()
+	{
+		if(updateSortingOrderByDepth)
+			myRenderer.sortingOrder = -Mathf.RoundToInt(100 * transform.position.z);
+	}
 }

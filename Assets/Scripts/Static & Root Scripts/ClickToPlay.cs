@@ -165,6 +165,7 @@ public class ClickToPlay : MonoBehaviour
 	{
 		ResumeFromEscMenu ();
 		Tools.instance.AlterTimeScale(1);
+		Tools.instance.blackoutPanel.color = Color.black;
 		SceneManager.LoadScene (SceneManager.GetActiveScene().name);
 	}
 

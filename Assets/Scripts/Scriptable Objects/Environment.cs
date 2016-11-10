@@ -3,6 +3,9 @@
 [System.Serializable]
 public class Environment : ScriptableObject {
 
+	public GameObject smokeTrailPrefab;
+	public GameObject flamesTrailPrefab;
+
 	public Sprite[] asteroidsSmall;
 	public Sprite[] asteroidsMedium;
 	public Sprite[] asteroidsLarge;
