@@ -100,4 +100,10 @@ public class PlayerAILogic : FighterFunctions {
 	{
 		StartCoroutine(dodgeScript.DumpPlayerAwarenessMana(howMany));
 	}
+
+	void Update()
+	{
+		if(Input.GetKeyDown(KeyCode.KeypadMinus))
+			healthScript.health--;
+	}
 }//Mono

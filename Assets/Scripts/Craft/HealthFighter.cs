@@ -154,6 +154,18 @@ public class HealthFighter : Health {
 		diceRoll = 0;
 		damage = baseDamage;
 
+		if(dead)
+		{
+			if(theAttacker.tag == "Asteroid" && Random.Range(0, 3) > 0 ) //2:1 chance
+			{
+				Tools.instance.SpawnExplosion(theAttacker, transform.position, false);
+				Explode(false);
+				StartCoroutine(theAttacker.GetComponent<Asteroid>().DestroyAsteroid());
+				return;
+			}
+			else return;
+		}
+
 		if(theAttacker == previousAttacker && theAttacker == previousPreviousAttacker)
 		{
 			gameObject.SendMessage("DefendYourself", theAttacker, SendMessageOptions.DontRequireReceiver);
@@ -297,6 +309,7 @@ public class HealthFighter : Health {
 
 				bloodSplashImage.color = Color.clear;
 
+				//destroy asteroid if we died here
 				if(theAttacker.tag == "Asteroid")
 				{
 					StartCoroutine(theAttacker.GetComponent<Asteroid>().DestroyAsteroid());
@@ -617,12 +630,12 @@ public class HealthFighter : Health {
 		}
 
 		//handle SQUADRON concerns
-		if(myAIScript.flightLeader == this.gameObject)
+		if(myAIScript.flightLeader == this.gameObject && myAIScript.flightLeadSquadronScript)
 		{
 			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(this.gameObject);
 			myAIScript.flightLeadSquadronScript.AssignNewLeader(true);
 		}
-		else if(myAIScript.flightLeader != null)
+		else if(myAIScript.flightLeader != null && myAIScript.flightLeadSquadronScript)
 		{
 			myAIScript.flightLeadSquadronScript.activeWingmen.Remove(this.gameObject);
 		}
@@ -742,7 +755,7 @@ public class HealthFighter : Health {
 				squadLeadScript.gameObject.SetActive(false);
 			}
 
-			Explode();
+			Explode(true);
 		}
 		//any other fighter death
 		else
@@ -778,7 +791,7 @@ public class HealthFighter : Health {
 			Invoke("FinalDeactivation", 10);
 
 			//for two stage death
-			if(Random.Range(0, 2) == 1)
+			if(Random.Range(0, 2) == 1) //50:50 chance
 			{
 				//thrusters not always aligning well on this spin animation, so turn them off
 				myAIScript.engineScript.allThruster[0].transform.parent.gameObject.SetActive(false);
@@ -809,11 +822,11 @@ public class HealthFighter : Health {
 				temporarilyInvincible = true;
 
 				//spin animation ends in normal death after this time
-				Invoke("Explode", deathSpinoutTime);
+				Invoke("TrueExplode", deathSpinoutTime);
 			}
 			else 
 			{
-				Explode();
+				Explode(true);
 			}
 
 			//FOR SLOW-MO DEATH
@@ -832,19 +845,26 @@ public class HealthFighter : Health {
 
 	}//end of Death
 
-	void Explode()
+	void TrueExplode()
 	{
-		Tools.instance.SpawnExplosion (this.gameObject, transform.position, true);
+		Explode(true);
+	}
+	void Explode(bool explosionInheritsVelocity)
+	{
+		CancelInvoke("TrueExplode");
+
+		Tools.instance.SpawnExplosion (this.gameObject, transform.position, explosionInheritsVelocity);
 
 		dodgeScript.enabled = false;
 
 		GameObject effects = transform.FindChild("Effects").gameObject;
 
 		effects.transform.FindChild("Animation").gameObject.SetActive(false);
-		effects.AddComponent<DestroyAfterTime>();
-		effects.GetComponent<DestroyAfterTime>().enabled = false;
-		effects.GetComponent<DestroyAfterTime>().delayTime = 5;
-		effects.GetComponent<DestroyAfterTime>().enabled = true;
+		DestroyAfterTime daf = effects.AddComponent<DestroyAfterTime>();
+		daf.enabled = false;
+		daf.delayTime = 5;
+		daf.setInactiveInsteadOfDestroy = true;
+		daf.enabled = true;
 		smoke.startLifetime = 2;
 		flames.startLifetime = 2;
 		Invoke("StopParticles", 0);
@@ -852,7 +872,7 @@ public class HealthFighter : Health {
 		if(GetComponent<Rotator>())
 			GetComponent<Rotator>().enabled = false;
 
-		effects.transform.SetParent(null);
+		effects.transform.SetParent(Tools.instance.destructionBin);
 		Rigidbody2D effectsRB = effects.AddComponent<Rigidbody2D>();
 		effectsRB.gravityScale = 0;
 

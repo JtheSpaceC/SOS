@@ -44,7 +44,7 @@ public class Armour : Health {
 				(transform.position, 2, LayerMask.GetMask(LayerMask.LayerToName(this.gameObject.layer)));
 			foreach(Collider2D scatterObj in scatterObjects)
 			{
-				scatterObj.transform.SetParent(spriteExploderScript.dontDestroyBin);
+				scatterObj.transform.SetParent(Tools.instance.destructionBin);
 				Rigidbody2D objRB = scatterObj.GetComponent<Rigidbody2D>();
 				objRB.isKinematic = false;
 				objRB.AddForce(Random.insideUnitCircle.normalized * 25, ForceMode2D.Force);

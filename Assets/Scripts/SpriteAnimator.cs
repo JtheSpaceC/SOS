@@ -229,8 +229,11 @@ public class SpriteAnimator : MonoBehaviour {
 
 	public void StartAnimatingSpriteSwap()
 	{
+		CancelInvoke("AnimateSpriteSwap");
+
 		if(playInReverseOrder)
 			currentFrame = frames.Length -1;
+		else currentFrame = 0;
 		InvokeRepeating("AnimateSpriteSwap", 0, 1/framesPerSecond);
 	}
 

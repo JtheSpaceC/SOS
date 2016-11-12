@@ -33,10 +33,11 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public Sprite[] dodgeTutorialFrames;
 	public Sprite[] ordersCoverMeFrames;
 	public Sprite[] afterburnersFuelFrames;
+	public Sprite[] spaceBrakeFrames;
 
 	bool coverMeTutorialActive = false;
 	bool afterburnerTutorialActive = false;
-	bool doneAfterburnerTutorial = false;
+	bool spaceBrakeTutorialActive = false;
 	float afterburnInputDelay = 1;
 	bool dodgeTutorialActive = false;
 	bool doneDodgeTutorial = false;
@@ -397,14 +398,23 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			}
 		}
 
-		if(afterburnerTutorialActive && !doneAfterburnerTutorial)
+		if(afterburnerTutorialActive)
 		{
 			afterburnInputDelay -= Time.unscaledDeltaTime; //don't want to instantly end the tutorial if afterburning
 
 			if(afterburnInputDelay <= 0 && Input.GetButtonDown("Afterburners"))
 			{
-				doneAfterburnerTutorial = true;
 				afterburnerTutorialActive = false;
+				CloseTutorialWindow();
+			}
+		}
+
+		if(spaceBrakeTutorialActive)
+		{
+			if((Input.GetAxis("Accelerate") > 0 && Input.GetAxis("Reverse") >0) || 
+				(Input.GetButton("Accelerate") && Input.GetButton("Reverse")))
+			{
+				spaceBrakeTutorialActive = false;
 				CloseTutorialWindow();
 			}
 		}
@@ -498,7 +508,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	{
 		if(firstEnemySpawned)
 			return;
-		print("Enemy Has Spawned Bool");
 		firstEnemySpawned = true;
 		firstEnemyAI = FindObjectOfType<AIFighter>();
 		firstEnemy = firstEnemyAI.gameObject;
@@ -711,6 +720,79 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		tutorialWindow.SetActive(false);
 	}
 
+	void AfterburnerFuelTutorial()
+	{
+		PlayerAILogic.instance.engineScript.hasAfterburner = true;
+
+		if(!Tools.instance.useHintsThisSession)
+		{
+			Debug.Log("Not Using Hints This Session. Returning..");
+			return;
+		}
+		afterburnerTutorialActive = true;
+
+		const string header = "Afterburners";
+		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"X button\"" : "\"Left Shift\"";
+		string body = "Afterburners can help you to get around faster, or to get behind an enemy.\n" +
+			"Be careful, though. Afterburners use up nitro, which can't be refueled.\n\n" +
+			"Press " + commandKey + " to use Afterburners now..";
+		
+		OpenTutorialWindowPopup(header, body, afterburnersFuelFrames, 10, true);
+	}
+
+	void SpaceBrakeTutorial()
+	{
+		if(!Tools.instance.useHintsThisSession)
+		{
+			Debug.Log("Not Using Hints This Session. Returning..");
+			return;
+		}
+		if(checkedOutBridge)
+		{
+			return;
+		}
+		else if(bridgeViewSlider.value != 0)
+		{
+			Invoke("SpaceBrakeTutorial", bridgeCheckoutTime);
+			return;
+		}
+		spaceBrakeTutorialActive = true;
+
+		const string header = "Space Brake";
+		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? 
+			"\"Left & Right Trigger (together)\"" : "\"Up + Down arrows (together)\"";
+		string body = "Use the Space Brake to come to a complete stop.\n\n" +
+			"Use " + commandKey + " now..";
+
+		OpenTutorialWindowPopup(header, body, spaceBrakeFrames, 10, true);
+	}
+
+	void DodgeTutorial()
+	{
+		if(!Tools.instance.useHintsThisSession)
+		{
+			Debug.Log("Not Using Hints This Session. Returning..");
+			return;
+		}
+
+		if(tutorialWindow.activeSelf || RadialRadioMenu.instance.radialMenuShown)
+		{
+			Debug.Log("Tutorial Window or Radial Menu Already Up. Waiting..");
+			Invoke("DodgeTutorial", 1.5f);
+			return;
+		}
+
+		string header = "Dodging";
+		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"B Button\"" : "\"Left Ctrl\"";
+		string body = "You can dodge bullets or asteroids.\n" +
+			"Enemies can do this too.\n" +
+			"Note: Enemies are easier to hit from the sides or rear.\n\n\"" +
+			"Press the Dodge button (" + commandKey + ") now..";
+
+		dodgeTutorialActive = true;
+		OpenTutorialWindowPopup(header, body, dodgeTutorialFrames, 15, true);
+	}
+
 	void CoverMeTutorial()
 	{
 		if(!Tools.instance.useHintsThisSession)
@@ -731,57 +813,12 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		string header = "Ordering Wingmen";
 		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"D-pad Up\"" : "\"Q\"";
 		string commandInstruction = InputManager.instance.inputFrom == InputManager.InputFrom.controller?
-			"Left Stick" : "Left/Right arrow keys";
+			"\"Left Stick\"" : "\"Left/Right arrow\" keys";
 		string body = "To give orders to your wingmen, open the orders menu with " + commandKey + " and use the "
-			+ commandInstruction + " and Fire button to select orders.\n\n" +
-				"Give the \"Cover Me\" order to all wingmen now..";
-		
+			+ commandInstruction + " and \"Fire\" button to select orders.\n\n" +
+			"To give the \"Cover Me\" order to all wingmen now, first open the Orders Menu ("+ commandKey +")..";
+
 		OpenTutorialWindowPopup(header, body, ordersCoverMeFrames, 10, true);
-	}
-
-	void AfterburnerFuelTutorial()
-	{
-		PlayerAILogic.instance.engineScript.hasAfterburner = true;
-
-		if(!Tools.instance.useHintsThisSession)
-		{
-			Debug.Log("Not Using Hints This Session. Returning..");
-			return;
-		}
-		afterburnerTutorialActive = true;
-
-		const string header = "Afterburners";
-		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"X button\"" : "\"Left Shift\"";
-		string body = "Afterburners can help you to get around faster, or to get behind an enemy.\n" +
-			"Use " + commandKey + " to activate.\n" +
-			"Be careful, though. Afterburners use up nitro, which can't be refueled.";
-		
-		OpenTutorialWindowPopup(header, body, afterburnersFuelFrames, 10, true);
-	}
-
-	void DodgeTutorial()
-	{
-		if(!Tools.instance.useHintsThisSession)
-		{
-			Debug.Log("Not Using Hints This Session. Returning..");
-			return;
-		}
-
-		if(tutorialWindow.activeSelf || RadialRadioMenu.instance.radialMenuShown)
-		{
-			Debug.Log("Tutorial Window or Radial Menu Already Up. Waiting..");
-			Invoke("DodgeTutorial", 1.5f);
-			return;
-		}
-
-		string header = "Dodging";
-		string commandKey = InputManager.instance.inputFrom == InputManager.InputFrom.controller? "\"B Button\"" : "\"Left Ctrl\"";
-		string body = "Press the Dodge button (" + commandKey + ") to dodge bullets or asteroids.\n" +
-			"Enemies can do this too.\n" +
-			"Note: They're easier to hit from the sides or rear.";
-
-		dodgeTutorialActive = true;
-		OpenTutorialWindowPopup(header, body, dodgeTutorialFrames, 15, true);
 	}
 
 	#endregion

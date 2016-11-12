@@ -403,7 +403,7 @@ public class AIFighter : FighterFunctions {
 			TailingFunction (engineScript, target, shootScript, constantThrustProportion);
 
 			//if the target is retreating and there are other active fighters, let this one go.
-			if(Tools.instance.CheckTargetIsRetreating(targetCheck, this.gameObject, "dogfighting"))
+			if(Tools.instance.CheckTargetIsRetreating(target, this.gameObject, "Tailing"))
 			{
 				if(myCommander.ClosestPriorityTarget(myCommander.knownEnemyFighters, transform.position) != null
 					|| (escortShip && Vector2.Distance(target.transform.position, escortShip.position) > (guardDistance * 2)))

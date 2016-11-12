@@ -73,6 +73,7 @@ public class Character : MonoBehaviour {
 	Sprite originalMouth;
 	//bool speaking = false;
 
+	int callsignChecks;
 
 
 
@@ -245,6 +246,7 @@ public class Character : MonoBehaviour {
 		string fullName = firstName+lastName;
 
 		//Do the same for callsigns
+		callsignChecks = 0;
 		GetCallsign ();
 
 		//next we check for duplicated names, if appropriate
@@ -260,8 +262,12 @@ public class Character : MonoBehaviour {
 
 			while(Tools.instance.callsignsInUse.Contains(callsign))
 			{
+				callsignChecks ++;
 				print("Pilot already exists with Callsign " + callsign);
 				GetCallsign();	
+
+				if(callsignChecks == Tools.instance.callsignsInUse.Count)
+					Tools.instance.callsignsInUse.Clear(); //so we don't get stuck on an infinite loop
 			}
 			Tools.instance.callsignsInUse.Add(callsign);
 		}

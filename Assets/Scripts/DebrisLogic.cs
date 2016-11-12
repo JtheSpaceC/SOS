@@ -4,23 +4,35 @@ using System.Collections;
 public class DebrisLogic : MonoBehaviour {
 
 	public bool destroyAfterTime = true;
-	public float time = 8;
+	public float destroyTime = 8;
+
+	public float timeSinceInvisible;
+	public bool isVisible;
 
 	void OnBecameInvisible()
 	{
-		if(destroyAfterTime)
-			Invoke("DestroyThis", time);	
+		isVisible = false;
+		timeSinceInvisible = 0;
 	}
 
 	void OnBecameVisible()
 	{
-		if(destroyAfterTime)
-			CancelInvoke("DestroyThis");
+		isVisible = true;
+		timeSinceInvisible = 0;
+	}
+
+	void Update()
+	{
+		if(isVisible == false)
+			timeSinceInvisible += Time.deltaTime;
+
+		if(destroyAfterTime && timeSinceInvisible >= destroyTime)
+			DestroyThis();
 	}
 
 	void DestroyThis()
 	{
-		Destroy(gameObject);
+		gameObject.SetActive(false);
 	}
 
 	void OnCollisionEnter2D(Collision2D other)

@@ -75,6 +75,12 @@ public class SquadronLeader : MonoBehaviour {
 		SetUp();
 	}
 
+	void OnDisable()
+	{
+		//turn off script when gameobject is off. Might solve some repetitive calls to reassign squad leader, if it fails first time
+		this.enabled = false;
+	}
+
 	public void SetUp()
 	{
 		//this check fixes wingmen errors that prefabs are causing across different test scenes

@@ -67,6 +67,8 @@ public class Tools: MonoBehaviour
 	[HideInInspector] public List<string> callsignsInUse = new List<string>();
 	[HideInInspector] public List<string> fullNamesInUse = new List<string>();
 
+	public Transform destructionBin;
+
 	GameObject obj;
 
 
@@ -156,6 +158,9 @@ public class Tools: MonoBehaviour
 		normalFixedDeltaTime = Time.fixedDeltaTime;
 
 		callsignsInUse = new List<string>();
+
+		StartCoroutine("ClearDeadCraftBin");
+		InvokeRepeating("GarbageCollection", 30, 30);
 
 	}//end of AWAKE
 
@@ -471,7 +476,29 @@ public class Tools: MonoBehaviour
 		Time.fixedDeltaTime = normalFixedDeltaTime * newTimescale;
 	}
 
-}
+	IEnumerator ClearDeadCraftBin()
+	{
+		for(int i = destructionBin.childCount-1; i >= 0; i--)
+		{
+			if(!destructionBin.GetChild(i).gameObject.activeSelf)
+			{
+				Destroy(destructionBin.GetChild(i).gameObject);
+			}
+			yield return new WaitForEndOfFrame();
+		}
+		
+		yield return new WaitForEndOfFrame();
+
+		StartCoroutine(ClearDeadCraftBin());
+	}
+
+	void GarbageCollection()
+	{
+		System.GC.Collect();
+		Debug.LogWarning(Time.time + " Garbage Collection");
+	}
+
+}//Mono
 
 class FadeStats
 {

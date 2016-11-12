@@ -179,7 +179,7 @@ public class Health : MonoBehaviour {
 
 	protected void FinalDeactivation()
 	{
-		transform.SetParent (GameObject.Find ("Dead Craft Bin (doesn't destroy)").transform);
+		transform.SetParent (Tools.instance.destructionBin);
 		gameObject.SetActive (false);
 	}
 

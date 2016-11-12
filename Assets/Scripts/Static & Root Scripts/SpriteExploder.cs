@@ -19,8 +19,7 @@ public class SpriteExploder : MonoBehaviour {
 
 	public Transform destroyBin;
 	public Transform dontDestroyBin;
-	public float binPurgeTime = 30;
-	
+
 
 	void Awake()
 	{
@@ -31,12 +30,6 @@ public class SpriteExploder : MonoBehaviour {
 		else 
 			Destroy(gameObject);
 	}
-
-	void Start()
-	{
-		InvokeRepeating ("ClearBin", binPurgeTime, binPurgeTime);
-	}
-
 
 	public void Explode(GameObject explodeObj, int numCuts, float objRadius)
 	{
@@ -69,12 +62,12 @@ public class SpriteExploder : MonoBehaviour {
 			foreach(SpriteSlicer2DSliceInfo inf in info)
 			{
 				if(inf != info[0])
-					inf.SlicedObject.transform.parent = destroyBin;
+					inf.SlicedObject.transform.parent = Tools.instance.destructionBin;
 
 				//these are the larger, legit fragments
 				foreach(GameObject childObject in inf.ChildObjects)
 				{                    
-					childObject.transform.parent = destroyBin;
+					childObject.transform.parent = Tools.instance.destructionBin;
 					childObject.GetComponent<Collider2D>().isTrigger = true;
 				}
 			}
@@ -99,7 +92,7 @@ public class SpriteExploder : MonoBehaviour {
 				}
 				gib.gameObject.AddComponent<DebrisLogic>();
 				//gib.transform.parent = explodeObj.transform;
-				gib.transform.SetParent(dontDestroyBin);
+				gib.transform.SetParent(Tools.instance.destructionBin);
 
 				//gib.GetComponent<Collider2D>().enabled = false; //I just want them to float instead of bounce off anything
 
@@ -149,12 +142,12 @@ public class SpriteExploder : MonoBehaviour {
 			foreach(SpriteSlicer2DSliceInfo inf in info)
 			{
 				if(inf != info[0])
-					inf.SlicedObject.transform.parent = destroyBin;
+					inf.SlicedObject.transform.parent = Tools.instance.destructionBin;
 				
 				//these are the larger, legit fragments
 				foreach(GameObject childObject in inf.ChildObjects)
 				{                    
-					childObject.transform.parent = destroyBin;
+					childObject.transform.parent = Tools.instance.destructionBin;
 					childObject.GetComponent<Collider2D>().isTrigger = true;
 				}
 			}
@@ -211,13 +204,5 @@ public class SpriteExploder : MonoBehaviour {
 		shadowRenderer.sortingLayerName = "Fighters";
 		shadowRenderer.sortingOrder = -10;
 */
-	}
-
-	void ClearBin()
-	{
-		while(destroyBin.childCount > 0)
-		{
-			DestroyImmediate(destroyBin.GetChild(0).gameObject);
-		}
 	}
 }

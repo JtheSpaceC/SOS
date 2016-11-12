@@ -9,7 +9,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public GameObject levelCamera;
 	float cameraZPos;
 	public GameObject target;
-	public bool changeTargetsAtIntervals = true;
+	public bool followCamOn = true;
+	public bool cameraAutoChanges = true;
 	public Text followCamText;
 	public Text pressStartText;
 	public Text scoresText;
@@ -46,7 +47,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	bool haveLoadedMenu = false;
 	GameObject mainMenu;
 
-	public bool cameraAutoChanges = true;
 	public bool showEnemyUI = true;
 
 	[Header("SolEd Stuff")]
@@ -57,9 +57,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	void Start () 
 	{
-		target = GameObject.FindGameObjectWithTag ("Fighter");
+		if(followCamOn)
+			target = GameObject.FindGameObjectWithTag ("Fighter");
 
-		if(cameraAutoChanges)
+		if(followCamOn && cameraAutoChanges)
 			Invoke("FindATargetFalse", 1);
 
 		followCamText.text = "";
@@ -111,10 +112,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		#if UNITY_EDITOR
 
 		if(Input.GetKeyDown(KeyCode.LeftBracket))
-			cameraAutoChanges = !cameraAutoChanges;
+			followCamOn = !followCamOn;
 		#endif
 
-		if(target != null)
+		if(followCamOn && target != null)
 		{
 			followCamText.text = "Camera Following: " + target.name + "\n" +
 				"Orders: " + StaticTools.SplitCamelCase(target.GetComponent<AIFighter> ().currentState.ToString());
@@ -130,9 +131,13 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 					"Target: N A";
 			}
 		}
+		else followCamText.text = "";
 
 		if (Input.GetKeyDown (KeyCode.C))
+		{
+			followCamOn = true;
 			FindATarget (true);
+		}
 
 		if (Input.GetKeyDown (KeyCode.R))
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -230,9 +235,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	void FindATarget(bool nextTarget)
 	{
-		if(!changeTargetsAtIntervals)
-			return;
-		
 		CancelInvoke("FindATargetFalse");
 		gotNewTarget = false;
 		PMCcraft.Clear ();
@@ -354,7 +356,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		if(target == null)
+		if(target == null || !followCamOn)
 			return;
 		Vector3 pos = target.transform.position;
 		pos.z = cameraZPos;
