@@ -14,6 +14,10 @@ public class Director : MonoBehaviour {
 	float mins;
 	float seconds;
 
+	string minsString;
+	string secsString;
+	[HideInInspector] public string timerString;
+
 	public float fadeInFromBlackTime = 2;
 
 	public Text gameTimeText;
@@ -37,6 +41,7 @@ public class Director : MonoBehaviour {
 	[HideInInspector] public int tacMapUses = 0;
 
 	[HideInInspector] public Flowchart flowchart;
+	public Canvas sayDialogBoxCanvas;
 
 	[Tooltip("Just for turning something on/off in the scene for testing. Like a background or spawner. Just one object.")]
 	public bool screenshotMode = false;
@@ -115,7 +120,6 @@ public class Director : MonoBehaviour {
 
 	void Start()
 	{
-
 		if(!FindObjectOfType<MissionSetup>())
 		{
 			//REMOVE: when mission setup dresses the scene always
@@ -322,22 +326,24 @@ public class Director : MonoBehaviour {
 	void Update () 
 	{
 		if(!ClickToPlay.instance.paused)
-		{		
+		{	
+
+			//Mission Clock Stuff
+
+			timer += Time.deltaTime;
+			mins = Mathf.FloorToInt (timer / 60);
+			seconds = Mathf.FloorToInt(timer);
+
+			while (seconds >= 60)
+			{
+				seconds -= 60;
+			}
+			minsString = mins < 10 ? "0" + mins.ToString () : mins.ToString ();
+			secsString = seconds < 10 ? "0" + seconds.ToString () : seconds.ToString ();
+			timerString = "Time: " + minsString + " : " + secsString;
+
 			if(gameTimeText && playerKillsText)
 			{
-				//Mission Clock Stuff
-
-				timer += Time.deltaTime;
-				mins = Mathf.FloorToInt (timer / 60);
-				seconds = Mathf.FloorToInt(timer);
-
-				while (seconds >= 60)
-				{
-					seconds -= 60;
-				}
-				string minsString = mins < 10 ? "0" + mins.ToString () : mins.ToString ();
-				string secsString = seconds < 10 ? "0" + seconds.ToString () : seconds.ToString ();
-
 				gameTimeText.text = "Time: " + "<color>" + minsString + " : " + secsString + "</color>";
 				playerKillsText.text = "<color=#FFDE65FF>Kills: </color>" + "<color>" + playerKills + "</color>";
 			}

@@ -188,6 +188,7 @@ public class CameraTactical : MonoBehaviour {
 			}
 			rtsCamControls.ResetToDefaultSizes();
 			AudioMasterScript.instance.ZeroSFX();
+			Director.instance.sayDialogBoxCanvas.enabled = true;
 
 			if(InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 				Cursor.visible = true;
@@ -196,6 +197,7 @@ public class CameraTactical : MonoBehaviour {
 		{
 			AudioMasterScript.instance.MuteSFX();
 			Director.instance.tacMapUses ++;
+			Director.instance.sayDialogBoxCanvas.enabled = false;
 			Tools.instance.blackoutPanel.color = Color.clear;
 			//SetUpShipLists(pmcCommander);
 		}

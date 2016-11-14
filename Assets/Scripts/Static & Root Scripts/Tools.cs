@@ -69,6 +69,9 @@ public class Tools: MonoBehaviour
 
 	public Transform destructionBin;
 
+	public bool leaveFeedbackButtonEnabled = false;
+	public GameObject[] leaveFeedbackButtons;
+
 	GameObject obj;
 
 
@@ -159,8 +162,21 @@ public class Tools: MonoBehaviour
 
 		callsignsInUse = new List<string>();
 
-		StartCoroutine("ClearDeadCraftBin");
-		InvokeRepeating("GarbageCollection", 30, 30);
+		if(leaveFeedbackButtonEnabled && leaveFeedbackButtons.Length > 0)
+		{
+			foreach(GameObject leaveFeedbackButton in leaveFeedbackButtons)
+				leaveFeedbackButton.SetActive(true);
+		}
+		else if(!leaveFeedbackButtonEnabled && leaveFeedbackButtons.Length > 0)
+		{
+			foreach(GameObject leaveFeedbackButton in leaveFeedbackButtons)
+				leaveFeedbackButton.SetActive(false);
+		}
+
+		StartCoroutine("ClearDeadCraftBin"); //this sometimes breaks itself. so..
+		InvokeRepeating("KickstartClearDeadCraftBin", 180, 180);
+
+		InvokeRepeating("GarbageCollection", 30, 30); 
 
 	}//end of AWAKE
 
@@ -490,6 +506,13 @@ public class Tools: MonoBehaviour
 		yield return new WaitForEndOfFrame();
 
 		StartCoroutine(ClearDeadCraftBin());
+	}
+
+	void KickstartClearDeadCraftBin()
+	{
+		StopCoroutine("ClearDeadCraftBin");
+		print("Restarting coroutine at " + Time.time + ". Child Count = " + destructionBin.childCount);
+		StartCoroutine("ClearDeadCraftBin");
 	}
 
 	void GarbageCollection()

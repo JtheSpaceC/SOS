@@ -312,6 +312,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		Tools.instance.blackoutPanel.color = Color.Lerp (Color.black, Color.clear, 0.1f);
 		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", -15f);
 		Tools.instance.AlterTimeScale(0.1f);
+		Director.instance.sayDialogBoxCanvas.enabled = false;
 		PlayerAILogic.instance.TogglePlayerControl(true, false, false, false, true, false, false);
 
 		currentRadialScreen = RadialScreens.OpenAChannel;
@@ -332,6 +333,7 @@ public class RadialRadioMenu : MonoBehaviour {
 		Tools.instance.blackoutPanel.color = Color.clear;
 		AudioMasterScript.instance.masterMixer.SetFloat ("Master vol", 0f);
 		Tools.instance.AlterTimeScale (1f);
+		Director.instance.sayDialogBoxCanvas.enabled = true;
 		bool[] bools = PlayerAILogic.instance.previousPlayerControlBools;
 		PlayerAILogic.instance.TogglePlayerControl (bools[0], bools[1], bools[2], bools[3], bools[4], bools[5], bools[6]);
 		headerText.enabled = false;

@@ -539,23 +539,34 @@ public class SquadronLeader : MonoBehaviour {
 
 	void FindMeANewLeader(GameObject who)
 	{
-		SquadronLeader potentialNewLeader = who.GetComponent<TargetableObject>().myCommander.JoinUnderstrengthSquad(this);
-		if(potentialNewLeader != null)
+		if(who != null)
 		{
-			mate01.GetComponent<AIFighter>().myCommander.mySquadrons.Remove(this);
-			RemoveStarsFromCallsign();
+			SquadronLeader potentialNewLeader = who.GetComponent<TargetableObject>().myCommander.JoinUnderstrengthSquad(this);
+			if(potentialNewLeader != null)
+			{
+				mate01.GetComponent<AIFighter>().myCommander.mySquadrons.Remove(this);
+				RemoveStarsFromCallsign();
 
-			potentialNewLeader.activeWingmen.Add(who);
-			potentialNewLeader.allWingmen.Add(who);
-			potentialNewLeader.ReassignWingmen();
-			potentialNewLeader.AddStarsToCallsign();
-			who.GetComponent<AIFighter>().ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
-			this.gameObject.SetActive(false);
+				potentialNewLeader.activeWingmen.Add(who);
+				potentialNewLeader.allWingmen.Add(who);
+				potentialNewLeader.ReassignWingmen();
+				potentialNewLeader.AddStarsToCallsign();
+				who.GetComponent<AIFighter>().ChangeToNewState(new AIFighter.StateMachine[]{AIFighter.StateMachine.Covering}, new float[]{1});
+				this.gameObject.SetActive(false);
 
-			return;
+				return;
+			}
+			else if(who != mate01)
+				MakeExistingWingmanIntoThisSquadsLeader();
 		}
-		else if(who != mate01)
-			MakeExistingWingmanIntoThisSquadsLeader();
+		else //this should prevent a null reference error that occurs when the 'who' is destroyed
+		{
+			this.enabled = false;
+			gameObject.SetActive(false);
+			transform.SetParent(Tools.instance.destructionBin);
+			Debug.LogError("FindMeANewLeader(Gameobject who): 'who' has been destroyed. Setting Squad Leader game object inactive.");
+		}
+			
 	}
 	void MakeExistingWingmanIntoThisSquadsLeader()
 	{

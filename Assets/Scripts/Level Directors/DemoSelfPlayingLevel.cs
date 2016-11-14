@@ -48,6 +48,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	GameObject mainMenu;
 
 	public bool showEnemyUI = true;
+	public bool showTime = true;
 
 	[Header("SolEd Stuff")]
 	public string arrowSpecialString;
@@ -208,6 +209,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 				"Craft Retreated:\n-------\n" + 
 				"PMC: " + pmcCommander.retreated + "\n" +
 				"Enemy:" + enemyCommander.retreated;
+		}
+		if(showTime)
+		{
+			scoresText.text += "\n\n" + Director.instance.timerString;
 		}
 	}
 

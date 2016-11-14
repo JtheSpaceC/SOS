@@ -251,6 +251,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		SkipToReachWreck();
 		timeToCheckOutBridge = true;
 		checkedOutBridge = true;
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Hold Position";
 	}
 	void SkipToReachWingmen()
 	{
@@ -263,6 +265,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{player.transform.position}, 20);
 		toWingmenWaypoint.destroyWhenReached = true;
 		toWingmenWaypoint.OnReachedEvents = wingmenReachedEvents;
+		objectiveText.text = "OBJECTIVES:\n" +
+			"* Rejoin your squadmates";
 	}
 	void SkipToReachConvoy()
 	{
@@ -946,4 +950,9 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 //		}
 
 	}//end of DOHINTS()
+
+	public void LeaveFeedback()
+	{
+		Application.OpenURL("https://goo.gl/forms/eifVi4PmTx2ZnTEk2");
+	}
 }

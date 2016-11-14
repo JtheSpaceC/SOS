@@ -132,6 +132,7 @@ public class ClickToPlay : MonoBehaviour
 		Tools.instance.blackoutPanel.color = Color.Lerp(Color.clear, Color.black, 0.8f);
 		Tools.instance.MoveCanvasToFront(escCanvas.GetComponent<Canvas>());
 		Tools.instance.AlterTimeScale(0);
+		Director.instance.sayDialogBoxCanvas.enabled = false;
 		paused = true;
 
 		escMenuIsShown = true;
@@ -159,6 +160,7 @@ public class ClickToPlay : MonoBehaviour
 
 		escMenuIsShown = false;
 		Tools.instance.MoveCanvasToRear(escCanvas.GetComponent<Canvas>());
+		Director.instance.sayDialogBoxCanvas.enabled = true;
 	}
 
 	public void RestartLevel()

@@ -247,7 +247,9 @@ public class SpriteAnimator : MonoBehaviour {
 			if(myRendererType == RendererType.SpriteRenderer)
 				mySpriteRenderer.sprite = frames [currentFrame];
 			else if(myRendererType == RendererType.ImageUI)
+			{
 				myImage.sprite = frames [currentFrame];
+			}
 		}
 		CancelInvoke("AnimateSpriteSwap");
 	}

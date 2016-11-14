@@ -69,7 +69,7 @@ public class RTSCamera : MonoBehaviour {
 		}
 	}
 
-	void FixedUpdate()
+	void Update()
 	{
 		if (!canMove)
 			return;

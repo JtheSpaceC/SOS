@@ -263,11 +263,15 @@ public class Character : MonoBehaviour {
 			while(Tools.instance.callsignsInUse.Contains(callsign))
 			{
 				callsignChecks ++;
-				print("Pilot already exists with Callsign " + callsign);
-				GetCallsign();	
+				print("Check " + callsignChecks + ". Pilot already exists with Callsign " + callsign);
 
 				if(callsignChecks == Tools.instance.callsignsInUse.Count)
+				{
+					Debug.Log("Clearing out Callsigns list. May reuse.");
 					Tools.instance.callsignsInUse.Clear(); //so we don't get stuck on an infinite loop
+				}
+
+				GetCallsign();	
 			}
 			Tools.instance.callsignsInUse.Add(callsign);
 		}

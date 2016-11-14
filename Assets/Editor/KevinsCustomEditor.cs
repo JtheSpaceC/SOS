@@ -28,9 +28,10 @@ public static class KevinsCustomEditor : object {
 			"Turn off Asteroid Combat ability.." +
 			"Remove Listener from Menu Scene.." +
 			"Turn Music back on.." +
-			"Enable/Disable website link & Character Pool(+AudioSource).." +
+			"Enable/Disable Character Pool(+AudioSource).." +
 			"Check that self-play level has automatic camera.." +
-			"Set Quit Behaviour (application or menu)";
+			"Set Quit Behaviour (application or menu).." +
+			"Website & Feedback links on/off";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)

@@ -17,9 +17,6 @@ public class SpriteExploder : MonoBehaviour {
 
 	public bool createShadows = true;
 
-	public Transform destroyBin;
-	public Transform dontDestroyBin;
-
 
 	void Awake()
 	{
@@ -106,7 +103,7 @@ public class SpriteExploder : MonoBehaviour {
 				gib.gameObject.AddComponent<Rotator>();
 				gib.GetComponent<Rotator>().rotationMode = Rotator.RotationMode.RandomizedAtStart;
 				gib.GetComponent<Rotator>().randomizeDirection = true;
-
+				gib.GetComponent<PolygonCollider2D>().enabled = false; //should prevent further slicing when near another destroyed ship
 			}
 		}
 	}
@@ -136,7 +133,8 @@ public class SpriteExploder : MonoBehaviour {
 			
 			Debug.DrawLine(worldPointLengthened1, worldPointLengthened2, Color.red, 1); //testing
 			
-			SpriteSlicer2D.SliceAllSprites(worldPointLengthened1, worldPointLengthened2, false, ref info, debrisMask); //false meant won't destroy original, but set inactive instead/ 
+			SpriteSlicer2D.SliceAllSprites(worldPointLengthened1, worldPointLengthened2, false, ref info, debrisMask); 
+			//false meant won't destroy original, but set inactive instead/ 
 			//the ref info is required for the Destroy bool to be taken
 			
 			foreach(SpriteSlicer2DSliceInfo inf in info)
