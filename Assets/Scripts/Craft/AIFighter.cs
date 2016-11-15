@@ -126,7 +126,9 @@ public class AIFighter : FighterFunctions {
 	IEnumerator SetUpAvatarBars()
 	{
 		while(flightLeader == null)
+		{
 			yield return new WaitForEndOfFrame();
+		}
 		
 		if(flightLeader != null && flightLeader.tag == "PlayerFighter" && mySquadUnitNumber <= 3)
 		{
