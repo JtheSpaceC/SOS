@@ -165,7 +165,10 @@ public class Tools: MonoBehaviour
 		if(leaveFeedbackButtonEnabled && leaveFeedbackButtons.Length > 0)
 		{
 			foreach(GameObject leaveFeedbackButton in leaveFeedbackButtons)
-				leaveFeedbackButton.SetActive(true);
+			{
+				if(leaveFeedbackButton != null)
+					leaveFeedbackButton.SetActive(true);
+			}
 		}
 		else if(!leaveFeedbackButtonEnabled && leaveFeedbackButtons.Length > 0)
 		{

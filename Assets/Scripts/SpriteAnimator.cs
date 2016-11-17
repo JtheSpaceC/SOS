@@ -15,6 +15,7 @@ public class SpriteAnimator : MonoBehaviour {
 	[Header ("For Sprite Swap")]
 
 	public RendererType myRendererType;
+	public bool rendererIsInParent = false;
 	[Tooltip("Will the animation play the same even if TimeScale is slowed?")] 
 	public bool framerateIndependent = false;
 
@@ -70,11 +71,19 @@ public class SpriteAnimator : MonoBehaviour {
 
 		if(myRendererType == RendererType.SpriteRenderer)
 		{
-			mySpriteRenderer = GetComponent<SpriteRenderer> ();
+			if(rendererIsInParent)
+				mySpriteRenderer = GetComponentInParent<SpriteRenderer>();
+			else
+				mySpriteRenderer = GetComponent<SpriteRenderer> ();
 			originalColour = mySpriteRenderer.color;
 		}
 		else if(myRendererType == RendererType.ImageUI)
-			myImage = GetComponent<Image>();
+		{
+			if(rendererIsInParent)
+				myImage = GetComponentInParent<Image>();
+			else
+				myImage = GetComponent<Image> ();
+		}
 			
 		currentFrame = 0;
 

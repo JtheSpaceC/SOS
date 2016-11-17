@@ -3,6 +3,8 @@
 [System.Serializable]
 public class Appearance : ScriptableObject {
 
+	public GameObject avatarPrefab;
+
 	public Sprite[] baseBody;
 	public Color[] skinTones;
 	public Sprite [] noses;
