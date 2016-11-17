@@ -12,7 +12,7 @@ public class RadarSignatures : MonoBehaviour {
 	bool alreadyResizedForTactical = false;
 
 
-	void Awake () 
+	void Start () 
 	{
 		if(GameObject.Find("Camera (Radar)") == null)
 		{

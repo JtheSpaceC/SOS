@@ -5,6 +5,7 @@ using System.Collections;
 public class EnginesFighter : MonoBehaviour {
 
 	AIFighter myAIFighterScript;
+	TiltAnimation tiltAnimationScript;
 
 	[HideInInspector] public Rigidbody2D myRigidBody;
 
@@ -92,6 +93,8 @@ public class EnginesFighter : MonoBehaviour {
 	void Awake () 
 	{
 		myAIFighterScript = GetComponent<AIFighter>();
+		if(myAIFighterScript)
+			tiltAnimationScript = GetComponentInChildren<TiltAnimation>();
 		myRigidBody = GetComponent<Rigidbody2D> ();
 	}
 
@@ -645,6 +648,9 @@ public class EnginesFighter : MonoBehaviour {
 				TurnOnThrusterGroup(toRotateRight);
 		}
 		previousThrustValue = smoothedRotationalInput;
+
+		if(tiltAnimationScript && tiltAnimationScript.enabled)
+			tiltAnimationScript.targetValue = axisValue;
 	}
 
 

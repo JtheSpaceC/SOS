@@ -10,7 +10,7 @@ Perks of the enemy could include:
 * Repair Facilities. Repairs fighter hull damage at a greater rate
 * Arms cache. Missiles, etc are stored here and enable missiles
 * Mine field. Offers a back way in to the main base
-* Plutonium mine. Can manke nukes/EMP
+* Plutonium mine. Can make nukes/EMP
 * Drone Factory
 
 Radar/Comms jamming. A shuttle can equip jamming equipment and jam 1 ship. Lv1 is noisy, so the ship might launch a drone or shuttle. Lv2 is silent so if you approach silenty you could catch them by surprise.

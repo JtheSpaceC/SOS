@@ -11,6 +11,7 @@ public class Dodge : MonoBehaviour
 	AIFighter aiFighterScript;
 	HealthFighter healthScript;
 	[HideInInspector] public SpriteAnimator mySpriteAnimator;
+	TiltAnimation tiltAnimation;
 	bool hasAvatar = false;
 
 	public enum AnimationStyle {SpriteSheet, UnityAnimator, RollAModel};
@@ -94,7 +95,10 @@ public class Dodge : MonoBehaviour
 		mySpriteAnimator = transform.parent.parent.FindChild("Effects/Animation/roll (sprite swap)").GetComponent<SpriteAnimator>();
 		rollTime = rollDuration;
 		if(mySpriteAnimator)
+		{
 			mySpriteAnimator.framesPerSecond = mySpriteAnimator.frames.Length/rollDuration;
+			tiltAnimation = mySpriteAnimator.transform.parent.GetComponentInChildren<TiltAnimation>();
+		}
 		myAudioSource = GetComponent<AudioSource>();
 		playerMovementScript = transform.parent.transform.parent.GetComponent<PlayerFighterMovement>();
 		enginesFighterScript = transform.parent.transform.parent.GetComponent<EnginesFighter>();
@@ -364,6 +368,11 @@ public class Dodge : MonoBehaviour
 	{		
 		startTime = Time.time;
 
+		if(tiltAnimation)
+		{
+			tiltAnimation.enabled = false;
+		}
+
 		while(Time.time < startTime + rollDuration)
 		{
 			//forumula to smooth in & out
@@ -396,6 +405,9 @@ public class Dodge : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
+		if(tiltAnimation)
+			tiltAnimation.enabled = true;
+		
 		rotY = 0;
 	}
 
