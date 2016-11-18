@@ -120,7 +120,6 @@ public class InputManager : MonoBehaviour {
 			else if(Input.GetAxisRaw("Dpad Vertical") < 0)
 			{
 				DpadDownDown = true;
-				Invoke("FungusSubmit", 0);
 			}
 			if(Input.GetAxisRaw("Dpad Horizontal") < 0)
 			{
