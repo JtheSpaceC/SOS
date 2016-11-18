@@ -9,6 +9,7 @@ public class TiltAnimation : MonoBehaviour {
 	float positiveTiltValue;
 	public float paddingAmount = 2.5f;
 	[HideInInspector] public float targetValue;
+	[HideInInspector] public float accelerationValue;
 	float direction;
 
 	public Sprite[] turnFrames;
@@ -32,7 +33,14 @@ public class TiltAnimation : MonoBehaviour {
 	void Update () 
 	{
 		if(playerControlled)
-			targetValue = Input.GetAxisRaw("Horizontal");
+		{
+			if(Input.GetButton("Afterburners"))
+				accelerationValue = 1;
+			else
+				accelerationValue = 0.25f + (0.45f*Input.GetAxisRaw("Accelerate"));
+
+			targetValue = Input.GetAxisRaw("Horizontal") * accelerationValue;
+		}
 		//else targetValue will be changed in the Engine Scipt of the fighter
 
 		direction = (targetValue - tilt);

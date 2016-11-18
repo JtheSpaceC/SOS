@@ -649,6 +649,7 @@ public class EnginesFighter : MonoBehaviour {
 		}
 		previousThrustValue = smoothedRotationalInput;
 
+		//for Tilt Animation
 		if(tiltAnimationScript && tiltAnimationScript.enabled)
 			tiltAnimationScript.targetValue = axisValue;
 	}

@@ -101,6 +101,7 @@ public class InputManager : MonoBehaviour {
 			}
 
 			//check for DpadInput
+			//first reset anything that was down on previous frame
 			if(Input.GetAxisRaw("Dpad Vertical") == 0 || DpadUpDown || DpadDownDown)
 			{
 				DpadUpDown = false;
@@ -119,11 +120,11 @@ public class InputManager : MonoBehaviour {
 			else if(Input.GetAxisRaw("Dpad Vertical") < 0)
 			{
 				DpadDownDown = true;
+				Invoke("FungusSubmit", 0);
 			}
 			if(Input.GetAxisRaw("Dpad Horizontal") < 0)
 			{
 				DpadLeftDown = true;
-				Invoke("FungusSubmit", 0);
 			}
 			else if(Input.GetAxisRaw("Dpad Horizontal") > 0)
 			{
