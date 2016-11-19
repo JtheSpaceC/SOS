@@ -22,6 +22,12 @@ public class SpriteDepthAndSortingOrder : MonoBehaviour {
 			ChangeSortingOrder();			
 	}
 
+	void OnEnable()
+	{
+		if(sortingOrderMode == SortingOrderMode.ChangeAtStart)
+			ChangeSortingOrder();
+	}
+
 	void Update () 
 	{
 		if(sortingOrderMode == SortingOrderMode.Continuous)
