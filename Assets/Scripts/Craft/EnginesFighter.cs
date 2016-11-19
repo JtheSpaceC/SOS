@@ -651,7 +651,12 @@ public class EnginesFighter : MonoBehaviour {
 
 		//for Tilt Animation
 		if(tiltAnimationScript && tiltAnimationScript.enabled)
-			tiltAnimationScript.targetValue = axisValue;
+		{
+			if(myAIFighterScript.inFormation && myAIFighterScript.flightLeader.tag == "PlayerFighter")
+				tiltAnimationScript.targetValue = PlayerAILogic.instance.tiltAnimationScript.tilt;
+			else
+				tiltAnimationScript.targetValue = axisValue;
+		}
 	}
 
 

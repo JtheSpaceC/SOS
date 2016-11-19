@@ -177,7 +177,7 @@ public class Tools: MonoBehaviour
 		}
 
 		StartCoroutine("ClearDeadCraftBin"); //this sometimes breaks itself. so..
-		InvokeRepeating("KickstartClearDeadCraftBin", 180, 180);
+		//InvokeRepeating("KickstartClearDeadCraftBin", 90, 90);
 
 		InvokeRepeating("GarbageCollection", 30, 30); 
 
@@ -497,16 +497,23 @@ public class Tools: MonoBehaviour
 
 	IEnumerator ClearDeadCraftBin()
 	{
+		
 		for(int i = destructionBin.childCount-1; i >= 0; i--)
 		{
-			if(!destructionBin.GetChild(i).gameObject.activeSelf)
+			try
 			{
-				Destroy(destructionBin.GetChild(i).gameObject);
+				if(!destructionBin.GetChild(i).gameObject.activeSelf)
+				{
+					Destroy(destructionBin.GetChild(i).gameObject);
+				}
 			}
+			catch{KickstartClearDeadCraftBin();}
+
 			yield return new WaitForEndOfFrame();
 		}
 		
 		yield return new WaitForEndOfFrame();
+		
 
 		StartCoroutine(ClearDeadCraftBin());
 	}
@@ -521,7 +528,6 @@ public class Tools: MonoBehaviour
 	void GarbageCollection()
 	{
 		System.GC.Collect();
-		Debug.LogWarning(Time.time + " Garbage Collection");
 	}
 
 }//Mono

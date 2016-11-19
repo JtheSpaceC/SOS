@@ -82,5 +82,10 @@ public class TiltAnimation : MonoBehaviour {
 	void OnDisable()
 	{
 		tilt = 0;
+		myRenderer.sprite = turnFrames[0];
+		foreach(Transform trans in alsoRotate)
+		{
+			trans.localRotation = Quaternion.Euler(Vector3.zero);
+		}
 	}
 }

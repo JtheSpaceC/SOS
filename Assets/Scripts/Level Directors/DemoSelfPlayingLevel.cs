@@ -114,6 +114,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.LeftBracket))
 			followCamOn = !followCamOn;
+		if(Input.GetKeyDown(KeyCode.RightBracket))
+			cameraAutoChanges = !cameraAutoChanges;
 		#endif
 
 		if(followCamOn && target != null)

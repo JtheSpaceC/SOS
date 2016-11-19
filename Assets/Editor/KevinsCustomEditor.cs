@@ -31,7 +31,8 @@ public static class KevinsCustomEditor : object {
 			"Enable/Disable Character Pool(+AudioSource).." +
 			"Check that self-play level has automatic camera.." +
 			"Set Quit Behaviour (application or menu).." +
-			"Website & Feedback links on/off";
+			"Website & Feedback links on/off.." +
+			"Set Correct Checkpoints (first) in scenes that have them.";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)

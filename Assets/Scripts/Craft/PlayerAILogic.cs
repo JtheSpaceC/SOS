@@ -10,6 +10,7 @@ public class PlayerAILogic : FighterFunctions {
 	[HideInInspector]public WeaponsSecondaryFighter missilesScript;
 	[HideInInspector]public Dodge dodgeScript;
 	[HideInInspector]public SquadronLeader squadLeaderScript;
+	[HideInInspector]public TiltAnimation tiltAnimationScript;
 	
 	public enum Orders {FighterSuperiority, Patrol, Escort, RTB, NA}; //set by commander
 	public Orders orders;
@@ -37,6 +38,7 @@ public class PlayerAILogic : FighterFunctions {
 		shootScript = GetComponentInChildren<WeaponsPrimaryFighter> ();
 		missilesScript = GetComponentInChildren<WeaponsSecondaryFighter> ();
 		dodgeScript = GetComponentInChildren<Dodge>();
+		tiltAnimationScript = GetComponentInChildren<TiltAnimation>();
 		myRigidbody = GetComponent<Rigidbody2D>();
 
 		if(useSolEdStatsToOverride)

@@ -70,6 +70,7 @@ public class AIFighter : FighterFunctions {
 	public Text nameHUDText;
 
 	[HideInInspector] public bool statsAlreadyAdjusted = false;
+	[HideInInspector] public bool inFormation = false;
 
 
 	void Awake()
@@ -324,6 +325,7 @@ public class AIFighter : FighterFunctions {
 		timer = 0;
 		nextTime = 0;
 		inRetreatState = false;
+		inFormation = false;
 		CancelInvoke ("LeaveThemAlone");
 		engineScript.currentMaxVelocityAllowed = engineScript.maxNormalVelocity;
 		engineScript.currentAccelerationRate = engineScript.normalAccelerationRate;
@@ -569,19 +571,22 @@ public class AIFighter : FighterFunctions {
 			Mathf.Clamp(engineScript.maxAfterburnerVelocity + Vector2.Distance(target.transform.position, transform.position) * 1.5f,
 				engineScript.maxAfterburnerVelocity + 2, engineScript.maxAfterburnerVelocity + 15);
 
-			
+		//we're in position
 		if(Vector2.Distance(((Vector2)transform.position + myRigidbody.velocity), 
 			(Vector2)target.transform.position + flightLeaderRigidbody.velocity) < 4)
 		{
 			engineScript.LookAtTarget (flightLeader.transform.position + flightLeader.transform.up * 50);
 			engineScript.MoveToTarget (target, 0);
+			inFormation = true;
 		}
+		//we need to approach position
 		else
 		{
 			engineScript.LookAtTarget (engineScript.newMovementPosition);
 
 			if(Vector2.Angle(transform.up, engineScript.newMovementPosition - (Vector2)transform.position) < 10)
-				engineScript.MoveToTarget (target, 0);			
+				engineScript.MoveToTarget (target, 0);		
+			inFormation = false;
 		}
 
 		if(Time.time > shootScript.nextFire && (TakePotshot(transform, shootScript.weaponsRange) == true))
@@ -621,18 +626,22 @@ public class AIFighter : FighterFunctions {
 
 			//if no targets, form up like in Form Up function, but search for enemies like on Patrol
 
+			//we're in position
 			if(Vector2.Distance(((Vector2)transform.position + myRigidbody.velocity), 
 				(Vector2)myFormationPosition.transform.position + flightLeaderRigidbody.velocity) < 4)
 			{
 				engineScript.LookAtTarget (flightLeader.transform.position + flightLeader.transform.up * 50);
 				engineScript.MoveToTarget (myFormationPosition, 0);
+				inFormation = true;
 			}
+			//need to approach position
 			else
 			{
 				engineScript.LookAtTarget (engineScript.newMovementPosition);
 
 				/*if(Vector2.Angle(transform.up, engineScript.newMovementPosition - (Vector2)transform.position) < 10)	*/				
 					engineScript.MoveToTarget (myFormationPosition, 0);
+				inFormation = false;
 			}
 
 			//check for targets every second, instead of every frame
