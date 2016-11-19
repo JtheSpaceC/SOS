@@ -233,6 +233,10 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	void LoadMainLevel()
 	{
 		SceneManager.LoadScene (SceneToGoToFromHere);
+
+		//HACK:messy way to go about it. Ensures the new game doesn't start from an old checkpoint
+		if(SceneToGoToFromHere == "Demo And Tutorial")	
+			PlayerPrefs.DeleteKey("checkpoint");
 	}
 
 	void FindATargetFalse()
