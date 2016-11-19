@@ -13,7 +13,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	public float introDuration = 15;
 	Vector3 cameraStartPoint;
 	RTSCamera rtsCam;
-	GameObject speedParticles;
 
 	GameObject player;
 	int playerStartingHealth;
@@ -200,8 +199,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
 
 		Director.instance.timer = -introDuration;
-		speedParticles = GameObject.Find("Particles for Speed");
-		speedParticles.SetActive(false);
 		cameraStartPoint = Camera.main.transform.position;
 		Camera.main.transform.position = farPoint;
 		rtsCam = Camera.main.GetComponent<RTSCamera>();
@@ -216,7 +213,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 
 		currentlyPlayingIntro = false;
 		Director.instance.timer = 0;
-		speedParticles.SetActive(true);
 		rtsCam.enabled = false;
 		Camera.main.transform.position = cameraStartPoint;
 

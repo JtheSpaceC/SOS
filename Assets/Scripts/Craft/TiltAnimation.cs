@@ -23,7 +23,7 @@ public class TiltAnimation : MonoBehaviour {
 	int alsoRotateLength;
 	public float maxRotation = 85;
 
-	void Start()
+	void OnEnable()
 	{
 		myRenderer = GetComponentInParent<SpriteRenderer>();
 		alsoRotateLength = alsoRotate.Length;
