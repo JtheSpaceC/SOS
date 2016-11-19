@@ -318,7 +318,7 @@ public class CameraTactical : MonoBehaviour {
 		
 		if (InputManager.instance.inputFrom == InputManager.InputFrom.keyboardMouse)
 		{
-			tacticalCursor.position = tacticalCamera.ScreenToWorldPoint (Input.mousePosition) - offset;
+			tacticalCursor.position = tacticalCamera.ScreenToWorldPoint (Input.mousePosition) - offset/2;
 		}
 		else
 		{
