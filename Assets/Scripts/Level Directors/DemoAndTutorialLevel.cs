@@ -256,7 +256,6 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		firstEnemyDefeated = true;
 		Destroy(wreck);
 		firstEnemySpawned = true;
-		firstEnemyDefeated = true;
 		TurnOnAsteroids();
 		toWingmenWaypoint = Tools.instance.CreateWaypoint(Waypoint.WaypointType.Move, new Vector2[]{player.transform.position}, 20);
 		toWingmenWaypoint.destroyWhenReached = true;
@@ -350,7 +349,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		//MONITOR FIRST ENEMY
 		if(firstEnemySpawned && !firstEnemyDefeated)
 		{
-			if(!firstEnemy.activeInHierarchy)
+			if(!firstEnemy)
 			{
 				FirstEnemyRetreatedSuccessfully();
 			}
