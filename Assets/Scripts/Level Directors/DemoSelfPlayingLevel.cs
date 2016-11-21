@@ -45,7 +45,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 	public GameObject radarCamera;
 
 	bool haveLoadedMenu = false;
-	GameObject mainMenu;
+	public GameObject mainMenu;
 
 	public bool showEnemyUI = true;
 	public bool showTime = true;
@@ -153,7 +153,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 		if(Input.GetButtonDown ("Start"))
 		{
-			if(FindObjectOfType<MainMenu>())
+		/*	if(FindObjectOfType<MainMenu>())
 			{
 				mainMenu = FindObjectOfType<MainMenu>().gameObject;	
 			}
@@ -169,6 +169,8 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 				//turn off the text elements that are in the way, inc subtitles
 				ToggleTextElements(false);
+
+				StartCoroutine("CallMenuActivate");
 			}
 			//if Menu's been loaded and it's on, turn it off
 			else if(haveLoadedMenu && mainMenu.activeSelf && 
@@ -182,6 +184,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 				//Turn back on the text elements
 				ToggleTextElements(true);
+				InputManager.instance.CallMenuDeactivaed();
 			}
 			//if it's been on before, turn it on again
 			else if(haveLoadedMenu && !mainMenu.activeSelf)
@@ -192,6 +195,31 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 				//turn off the text elements that are in the way, inc subtitles
 				ToggleTextElements(false);
+				InputManager.instance.CallMenuActivated();
+			}*/
+
+			if(!mainMenu.activeSelf)
+			{
+				mainMenu.SetActive(true);
+				sceneResetTime = Mathf.Infinity;
+				AudioMasterScript.instance.FadeChannel("Master vol", -10, 0, 0.3f);
+
+				//turn off the text elements that are in the way, inc subtitles
+				ToggleTextElements(false);
+				InputManager.instance.CallMenuActivated();
+			}
+			else if(mainMenu.activeSelf && 
+				!CharacterPool.instance.characterPoolPanel.activeInHierarchy &&
+				!CharacterPool.instance.characterCreationPanel.activeInHierarchy && 
+				!CharacterPool.instance.poolImportExportEditPanel.activeInHierarchy)
+			{
+				mainMenu.SetActive(false);
+				sceneResetTime = Time.timeSinceLevelLoad + originalSceneResetTime;
+				AudioMasterScript.instance.FadeChannel("Master vol", 0, 0, 0.3f);
+
+				//Turn back on the text elements
+				ToggleTextElements(true);
+				InputManager.instance.CallMenuDeactivaed();
 			}
 		}
 
@@ -216,6 +244,13 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		{
 			scoresText.text += "\n\n" + Director.instance.timerString;
 		}
+	}//end of UPDATE
+
+	IEnumerator CallMenuActivate()
+	{
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+		InputManager.instance.CallMenuActivated();
 	}
 
 	void RestartScene()

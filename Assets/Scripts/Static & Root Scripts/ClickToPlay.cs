@@ -136,10 +136,13 @@ public class ClickToPlay : MonoBehaviour
 		paused = true;
 
 		escMenuIsShown = true;
+		InputManager.instance.CallMenuActivated();
 	}
 
 	public void ResumeFromEscMenu()
 	{
+		InputManager.instance.CallMenuDeactivaed();
+
 		if (disablePlayerSelectButtonForMenu && GameObject.FindGameObjectWithTag("PlayerFighter") != null && playerShootScript)
 			StartCoroutine (playerShootScript.AllowedToFire ());
 
@@ -161,6 +164,7 @@ public class ClickToPlay : MonoBehaviour
 		escMenuIsShown = false;
 		Tools.instance.MoveCanvasToRear(escCanvas.GetComponent<Canvas>());
 		Director.instance.sayDialogBoxCanvas.enabled = true;
+
 	}
 
 	public void RestartLevel()

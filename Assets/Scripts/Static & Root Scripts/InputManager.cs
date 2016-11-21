@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour {
 
@@ -33,6 +35,14 @@ public class InputManager : MonoBehaviour {
 	[HideInInspector] public bool DpadLeftDown;
 	[HideInInspector] public bool DpadRightDown;
 
+	public delegate void MenuActivated();
+	public static event MenuActivated menuActivated;
+
+	public delegate void MenuDeactivated();
+	public static event MenuDeactivated menuDeactivated;
+
+	public List<CanvasGroup> canvasGroupsToggled = new List<CanvasGroup>();
+	CanvasGroup[] cgs;
 
 	void Awake()
 	{
@@ -50,8 +60,64 @@ public class InputManager : MonoBehaviour {
 		inputFrom = InputFrom.keyboardMouse;
 	}
 
+	#region MenuButtons
+	void OnEnable()
+	{
+		menuActivated += TurnOffBlockRaycasts;
+		menuDeactivated += TurnOnBlockRaycasts;
+	}
+	void OnDisable()
+	{
+		menuActivated -= TurnOffBlockRaycasts;
+		menuDeactivated -= TurnOnBlockRaycasts;
+	}
+
+	public void CallMenuActivated()
+	{
+		menuActivated();
+	}
+	public void CallMenuDeactivaed()
+	{
+		menuDeactivated();
+	}
+	void TurnOffBlockRaycasts() //when turning ON menu
+	{
+		if(inputFrom == InputFrom.keyboardMouse)
+		{
+			return;
+		}
+		cgs = FindObjectsOfType<CanvasGroup>();
+
+		foreach(CanvasGroup cg in cgs)
+		{
+			if(cg.tag == "ToggleableMenu")
+			{
+				cg.blocksRaycasts = false;
+				canvasGroupsToggled.Add(cg);
+			}
+		}
+	}
+	void TurnOnBlockRaycasts() //when turning OFF menu
+	{
+		foreach(CanvasGroup cg in canvasGroupsToggled)
+		{
+			if(cg.tag == "ToggleableMenu")
+			{
+				cg.blocksRaycasts = true;
+			}
+		}
+		canvasGroupsToggled.Clear();
+	}
+	#endregion
+
 	void Update()
 	{
+		//If we start using the mouse, deactivate the selections that the buttons had set up, and just go by mouse input
+		if(inputFrom == InputFrom.keyboardMouse && EventSystem.current.IsPointerOverGameObject())
+		{
+			EventSystem.current.SetSelectedGameObject(null);
+		}		
+
 		if(conventionMode)
 		{
 			if(Input.anyKey || !Mathf.Approximately(Input.GetAxis("Gamepad Left Horizontal"), 0) || 
@@ -165,12 +231,18 @@ public class InputManager : MonoBehaviour {
 		if(newType == InputFrom.keyboardMouse)
 		{
 			Cursor.visible = true;
+			EventSystem.current.SetSelectedGameObject(null);
 		//	RadioCommands.instance.SwitchHelperButtons("keyboard"); 
+			TurnOnBlockRaycasts();
 		}
 		else
 		{
 			Cursor.visible = false;
+
+			if(FindObjectOfType<Button>())
+				EventSystem.current.SetSelectedGameObject(FindObjectOfType<Button>().gameObject);
 		//	RadioCommands.instance.SwitchHelperButtons("gamepad");
+			TurnOffBlockRaycasts();
 		}
 	}
 
