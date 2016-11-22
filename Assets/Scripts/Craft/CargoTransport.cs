@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(RecolourMe))]
 
@@ -27,6 +28,8 @@ public class CargoTransport : TargetableObject {
 	[Tooltip("This should be the second lowest point on the vertical for container attachments")]
 	public float lowestDoubleContainerAllowed = -18f;
 
+	List<ShippingContainer> allContainers = new List<ShippingContainer>();
+
 
 	void Start () 
 	{
@@ -47,6 +50,8 @@ public class CargoTransport : TargetableObject {
 		for (int i = 0; i < numContainers; i++) 
 		{
 			containersParent.GetChild (i).GetComponent<SpriteRenderer>().enabled = true;
+			containersParent.GetChild (i).gameObject.AddComponent<ShippingContainer>();
+			allContainers.Add(containersParent.GetChild (i).gameObject.GetComponent<ShippingContainer>());
 			containersParent.GetChild (i).gameObject.SetActive(true);
 		}
 
@@ -77,6 +82,7 @@ public class CargoTransport : TargetableObject {
 				{
 					randomSpriteInt -= singleContainers.Length;
 					containersParent.GetChild (i).GetComponent<SpriteRenderer>().sprite = doubleContainers[randomSpriteInt];
+					allContainers[i].isDouble = true;
 					lastSpriteWasDouble = true;
 				}
 				else //random number landed within length of the first group
@@ -100,21 +106,73 @@ public class CargoTransport : TargetableObject {
 			if(!containersParent.GetChild (i).GetComponent<SpriteRenderer>().enabled) 
 			{
 				containersParent.GetChild (i).gameObject.SetActive(false);
+				allContainers.Remove(containersParent.GetChild(i).GetComponent<ShippingContainer>());
 			}
 		}
 	
 		//DETACH CONTAINERS IF NOT FULLY FULL,
 		int numberToRemove = Mathf.FloorToInt( ((100f-fullPercentage)/100f) * numContainers);
+		int numberRemoved = 0;
 
-		for(int i = 0; i < numberToRemove; i++)
+		if(numberToRemove == 0)
+			return;
+
+		while(ContainersRemaining() > numContainers-numberToRemove)
 		{
-			GameObject go = containersParent.GetChild(Random.Range(0, containersParent.childCount)).gameObject;
-			if(go.activeSelf)
-				go.SetActive(false);
-			else
-				i--;
+			if(allContainers.Count == 0)
+			{
+				return;
+			}
+			if(allContainers.Count == 1 && allContainers[0].isDouble && numberRemoved +2 != numberToRemove)
+			{
+				return;
+			}
+			ShippingContainer cont = allContainers[Random.Range(0, allContainers.Count-1)];
+			if(!cont.isDouble)
+			{
+				numberRemoved++;	
+				cont.gameObject.SetActive(false);
+				allContainers.Remove(cont);
+			}
+			else if(cont.isDouble)
+			{
+				if((numberRemoved +2) <= numberToRemove)
+				{
+					numberRemoved +=2;
+					cont.gameObject.SetActive(false);
+					allContainers.Remove(cont);
+				}
+				else //if this is the last single container to be removed, see if there is a single remaining to take away, if not leave it
+				{
+					foreach(ShippingContainer container in allContainers)
+					{
+						if(!container.isDouble)
+						{
+							container.gameObject.SetActive(false);
+							allContainers.Remove(container);
+							break;
+						}
+					}
+				}
+			}
 		}
+		ContainersRemaining();
+
+
 	}//end of SETUPCONTAINERS()
+
+	int ContainersRemaining()
+	{
+		int remainingContainers = 0;
+		foreach(ShippingContainer cont in allContainers)
+		{
+			if(cont.isDouble)
+				remainingContainers +=2;
+			else if(!cont.isDouble)
+				remainingContainers ++;
+		}
+		return remainingContainers;
+	}
 
 	[ContextMenu("Wreck Ship")]
 	public void WreckShip ()
@@ -164,3 +222,9 @@ public class CargoTransport : TargetableObject {
 	}
 
 }//Mono
+
+class ShippingContainer: MonoBehaviour
+{
+	public bool isDouble = false;
+	public string contents = "Construction Materials";
+}

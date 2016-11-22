@@ -47,6 +47,8 @@ Find a base, supply route, or mini-base randomly
 
 COULD GO OUT ON OUTINGS IN AN OPEN WORLD SENSE AND ONLY GO BACK WHEN TIRED OR FOR UPGRADES OR TO ADVANCE TIME
 
+When coming to a waypoint on patrol, could generate enemies, but if not then at least genreate some dialogue. Never have nothing happening.
+
 
 DECK CREW
 Can repair x amount of hull damage per day
