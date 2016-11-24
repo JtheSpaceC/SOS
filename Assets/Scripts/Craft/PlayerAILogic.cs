@@ -17,7 +17,7 @@ public class PlayerAILogic : FighterFunctions {
 	
 	public GameObject target;
 
-	[HideInInspector] public bool[] previousPlayerControlBools = new bool[4];
+	[HideInInspector] public bool[] previousPlayerControlBools = new bool[7];
 
 
 	void Awake()
@@ -56,7 +56,7 @@ public class PlayerAILogic : FighterFunctions {
 
 	}
 
-	public void TogglePlayerControl(bool healthScriptenabled, bool engineScriptEnabled,
+	public IEnumerator TogglePlayerControl(bool healthScriptenabled, bool engineScriptEnabled,
 		bool dodgeScriptEnabled, bool shootScriptEnabled, bool radioEnabled, bool tacMapEnabled, bool escMenuEnabled)
 	{
 		previousPlayerControlBools = new bool[]
@@ -69,6 +69,8 @@ public class PlayerAILogic : FighterFunctions {
 		shootScript.enabled = shootScriptEnabled;
 		RadialRadioMenu.instance.canAccessRadialRadio = radioEnabled;
 		CameraTactical.instance.canAccessTacticalMap = tacMapEnabled;
+
+		yield return new WaitForEndOfFrame();
 		ClickToPlay.instance.escCanGiveQuitMenu = escMenuEnabled;
 	}
 

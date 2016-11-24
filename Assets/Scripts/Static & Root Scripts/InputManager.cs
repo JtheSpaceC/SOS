@@ -90,7 +90,6 @@ public class InputManager : MonoBehaviour {
 
 		foreach(CanvasGroup cg in cgs)
 		{
-			print(cgs.Length +" "+ cg.name);
 			if(cg.tag == "ToggleableMenu")
 			{
 				cg.blocksRaycasts = false;

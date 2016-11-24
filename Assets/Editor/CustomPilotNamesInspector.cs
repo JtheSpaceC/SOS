@@ -29,7 +29,7 @@ public class CustomPilotNamesInspector : Editor {
 	{
 		string[] options = new string[]{"Male Names", "Female Names", "Last Names", "Callsigns", "Callsigns (male only)", "Callsigns (female only)"};
 
-		if(GUILayout.Button("Tidy All Lists"))
+		if(GUILayout.Button("Tidy & Sort All Lists"))
 		{
 			myNames.SortAlphabetical();
 			scrollPos = Vector2.zero;
@@ -61,6 +61,9 @@ public class CustomPilotNamesInspector : Editor {
 		GUILayout.EndVertical();
 
 		//DrawDefaultInspector();
+
+		//saves Data
+		EditorUtility.SetDirty(myNames);
 	}
 
 	void ShowList(List<string> namesList)

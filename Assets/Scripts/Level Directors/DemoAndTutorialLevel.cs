@@ -196,7 +196,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			go.SetActive(!go.activeInHierarchy);
 		}
 
-		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
+		StartCoroutine (PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false));
 
 		Director.instance.timer = -introDuration;
 		cameraStartPoint = Camera.main.transform.position;
@@ -221,7 +221,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 			obj.SetActive(!obj.activeSelf);
 		}
 
-		PlayerAILogic.instance.TogglePlayerControl(true, true, true, true, true, true, true);
+		StartCoroutine( PlayerAILogic.instance.TogglePlayerControl(true, true, true, true, true, true, true));
 	}
 	void SkipToAfterIntro()
 	{
@@ -638,7 +638,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		AudioMasterScript.instance.FadeChannel("Master vol", -80, 2, 6);
 
 		yield return new WaitForSeconds(3);
-		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
+		StartCoroutine( PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false));
 
 		yield return new WaitForSeconds(1.5f);
 		Tools.instance.MoveCanvasToFront(demoCanvas);
@@ -658,7 +658,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	}
 	IEnumerator PlayerDied()
 	{
-		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, true);
+		StartCoroutine( PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, true));
 
 		//means main menu Restart will go to checkpoint, not total restart
 		mainRestartButton.onClick = restartEventsIfPlayerDead;
@@ -669,7 +669,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		AudioMasterScript.instance.FadeChannel("Master vol", -80, 2, 6);
 
 		yield return new WaitForSeconds(3);
-		PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
+		StartCoroutine( PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false));
 
 		yield return new WaitForSeconds(1.5f);
 		Tools.instance.MoveCanvasToFront(demoCanvas);
@@ -695,7 +695,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		Tools.instance.VibrationStop();
 
 		if(setPlayerFullyInactive)
-			PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false);
+			StartCoroutine( PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false));
 
 		tutorialHeaderText.text = header;
 		tutorialImage.GetComponent<SpriteAnimator>().framesPrimary = tutorialFrames;
@@ -713,7 +713,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		AudioMasterScript.instance.masterMixer.SetFloat("Master vol", 0);
 
 		bool[] bools = PlayerAILogic.instance.previousPlayerControlBools;
-		PlayerAILogic.instance.TogglePlayerControl (bools[0], bools[1], bools[2], bools[3], bools[4], bools[5], bools[6]);
+		StartCoroutine( PlayerAILogic.instance.TogglePlayerControl (bools[0], bools[1], bools[2], bools[3], bools[4], bools[5], bools[6]));
 		Tools.instance.AlterTimeScale(1);
 
 		tutorialWindow.SetActive(false);
