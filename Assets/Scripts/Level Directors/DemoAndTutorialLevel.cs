@@ -393,6 +393,8 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 				CancelInvoke("CoverMeTutorial");
 				coverMeTutorialActive = false;
 				CloseTutorialWindow();
+				//fixes a bug where couldn't Escape after this because two off toggles came in a row
+				ClickToPlay.instance.escCanGiveQuitMenu = true; 
 				RadialRadioMenu.instance.ActivateRadialMenu();
 			}
 		}

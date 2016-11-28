@@ -4,7 +4,7 @@
 public class SpriteDepthAndSortingOrder : MonoBehaviour {
 
 	SpriteRenderer myRenderer;
-	int startingOrderInLayer;
+	int startingOrderInLayer = 0;
 
 	public enum SortingOrderMode {DontChange, ChangeAtStart, Continuous};
 	public SortingOrderMode sortingOrderMode;
@@ -16,7 +16,6 @@ public class SpriteDepthAndSortingOrder : MonoBehaviour {
 	void Awake()
 	{
 		myRenderer = GetComponent<SpriteRenderer>();
-		startingOrderInLayer = myRenderer.sortingOrder;
 	}
 
 	void OnEnable()
