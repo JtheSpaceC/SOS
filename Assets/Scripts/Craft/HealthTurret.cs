@@ -13,11 +13,15 @@ public class HealthTurret : Health {
 	
 	void Awake()
 	{
-		StartBaseClass ();
 		turretScript = GetComponent<WeaponsTurret> ();		
 		myRenderer = GetComponent<SpriteRenderer> ();
 		
 		radarSig = transform.FindChild ("RadarSig").gameObject;
+	}
+
+	void Start()
+	{
+		StartBaseClass ();
 	}
 	
 	void Update () 

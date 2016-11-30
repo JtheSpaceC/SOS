@@ -12,11 +12,15 @@ public class HealthTransport : Health {
 
 	void Awake ()
 	{
-		StartBaseClass ();
-
 		myAIScript = GetComponent<AITransport> ();
 		engineScript = GetComponent<EnginesFighter> ();
 
+
+	}
+
+	void Start()
+	{
+		StartBaseClass ();
 		flames.transform.position += (Vector3)Random.insideUnitCircle * 0.5f;
 		smoke.transform.position = flames.transform.position - transform.up * 0.22f;
 	}
