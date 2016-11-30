@@ -249,24 +249,21 @@ public class ClickToPlay : MonoBehaviour
 	{
 		switch(which)
 		{
-		case 1:
-			try{
+			case 1:
 				PlayerPrefsManager.SetControllerStickBehaviourKey("StickRotates");
-			}catch{};
-			break;
-		case 2:
-			try{
-				PlayerPrefsManager.SetControllerStickBehaviourKey("StickPoints");}catch{};
-			break;
-		default:
-			Debug.Log("Invalid control scheme selected");
-			break;
+				break;
+			case 2:
+				PlayerPrefsManager.SetControllerStickBehaviourKey("StickPoints");
+				break;
+			default:
+				Debug.Log("Invalid control scheme selected");
+				break;
 		}
 
 		ChangeControlsImage ();
 	}
 
-	void ChangeControlsImage () //TODO: This is used in Demo level but is irrelevant in other scenes. Remove when done with Demo level
+	void ChangeControlsImage ()
 	{
 		if(controlsImage == null)
 			return;

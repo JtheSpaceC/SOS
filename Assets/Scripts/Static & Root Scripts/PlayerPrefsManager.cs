@@ -32,7 +32,7 @@ public class PlayerPrefsManager: MonoBehaviour {
 
 	public static string GetControllerStickBehaviourKey()
 	{
-		return PlayerPrefs.GetString(CONTROLLER_STICK_BEHAVIOUR_KEY);
+		return PlayerPrefs.GetString(CONTROLLER_STICK_BEHAVIOUR_KEY, "StickRotates");
 	}
 	public static void SetControllerStickBehaviourKey(string whichScheme)
 	{
