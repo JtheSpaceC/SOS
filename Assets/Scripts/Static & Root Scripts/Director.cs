@@ -352,6 +352,12 @@ public class Director : MonoBehaviour {
 
 			if(Input.GetKeyDown(KeyCode.Delete))
 				GameObject.FindGameObjectWithTag("PlayerFighter").GetComponent<HealthFighter>().health = 0;
+
+			if(Input.GetKeyDown(KeyCode.End))
+				GameObject.Find("Arrow 2").GetComponent<HealthFighter>().health = 0;
+
+			if(Input.GetKeyDown(KeyCode.PageDown))
+				GameObject.Find("Arrow 3").GetComponent<HealthFighter>().health = 0;
 			
 			#endif
 
