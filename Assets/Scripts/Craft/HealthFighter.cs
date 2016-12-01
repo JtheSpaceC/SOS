@@ -109,7 +109,7 @@ public class HealthFighter : Health {
 		if(health <= (maxHealth*0.66f)&& health>0)
 		{
 			smoke.gameObject.SetActive(true);
-			smokeEm.rate = new ParticleSystem.MinMaxCurve((1 -(health*0.01f))*150);
+			smokeEm.rateOverTime = new ParticleSystem.MinMaxCurve((1 -(health*0.01f))*150);
 		}
 		else
 		{smoke.gameObject.SetActive(false);}
@@ -118,7 +118,7 @@ public class HealthFighter : Health {
 		if(health <= (maxHealth*0.33f) && health >0)
 		{
 			flames.gameObject.SetActive(true);
-			flamesEm.rate = new ParticleSystem.MinMaxCurve( (0.5f -(health*0.01f))*100);
+			flamesEm.rateOverTime = new ParticleSystem.MinMaxCurve( (0.5f -(health*0.01f))*100);
 		}
 		else
 		{flames.gameObject.SetActive(false);}
@@ -814,10 +814,10 @@ public class HealthFighter : Health {
 				GetComponent<Rotator>().rotationMode = Rotator.RotationMode.RandomizedAtStart;
 				GetComponent<Rotator>().randomizeDirection = true;
 				smoke.gameObject.SetActive(true);
-				smokeEm.rate = 150;
+				smokeEm.rateOverTime = 150;
 				smoke.startLifetime *= 3;
 				flames.gameObject.SetActive(true);
-				flamesEm.rate = 100;
+				flamesEm.rateOverTime = 100;
 				flames.startLifetime *= 3;
 				temporarilyInvincible = true;
 
@@ -888,8 +888,8 @@ public class HealthFighter : Health {
 
 	void StopParticles()
 	{
-		smokeEm.rate = 0;
-		flamesEm.rate = 0;
+		smokeEm.rateOverTime = 0;
+		flamesEm.rateOverTime = 0;
 	}
 
 	IEnumerator SlowMoDeath()

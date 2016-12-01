@@ -530,7 +530,7 @@ public class EnginesFighter : MonoBehaviour {
 
 	protected void RotationalThrust(float direction)
 	{
-		transform.Rotate (0.0f, 0.0f, turnSpeed * -direction * Time.deltaTime); //old way. no force
+		transform.Rotate (0.0f, 0.0f, turnSpeed * -direction * Time.deltaTime); // no force
 
 		#region Force-Based Turning
 		//this didn't feel good, and rotate was technically way too fast for the engines but felt too slow

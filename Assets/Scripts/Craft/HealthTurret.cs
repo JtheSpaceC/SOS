@@ -63,7 +63,7 @@ public class HealthTurret : Health {
 	{
 		yield return new WaitForSeconds(Random.Range(10,20));
 		
-		smokeEm.rate = new ParticleSystem.MinMaxCurve(0);
+		smokeEm.rateOverTime = new ParticleSystem.MinMaxCurve(0);
 		
 		Destroy (smokeEffects, 3f);
 	}

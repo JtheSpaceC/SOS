@@ -44,7 +44,6 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 
 	public GameObject radarCamera;
 
-	bool haveLoadedMenu = false;
 	public GameObject mainMenu;
 
 	public bool showEnemyUI = true;

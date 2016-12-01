@@ -48,7 +48,8 @@ public class UI_resizer : MonoBehaviour {
 
 			foreach (LineRenderer lr in allLines) 
 			{
-				lr.SetWidth (startLineThickness * newProportion, startLineThickness * newProportion);
+				lr.startWidth = (startLineThickness * newProportion);
+				lr.endWidth = lr.startWidth;
 			}
 			previousOrthoSize = mainCam.orthographicSize;
 		}

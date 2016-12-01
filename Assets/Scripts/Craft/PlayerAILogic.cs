@@ -19,6 +19,8 @@ public class PlayerAILogic : FighterFunctions {
 
 	[HideInInspector] public bool[] previousPlayerControlBools = new bool[7];
 
+	public GameObject localization;
+
 
 	void Awake()
 	{
@@ -107,7 +109,9 @@ public class PlayerAILogic : FighterFunctions {
 
 	void Update()
 	{
+		#if UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.KeypadMinus))
-			healthScript.health--;
+			localization.GetComponent<Fungus.Localization>().ActiveLanguage = "";
+		#endif
 	}
 }//Mono

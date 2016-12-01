@@ -75,7 +75,7 @@ public class PlayerPrefsManager: MonoBehaviour {
 
 	public static string GetCharacterPoolUsageKey()
 	{
-		return PlayerPrefs.GetString(CHARACTER_POOL_USAGE_KEY);
+		return PlayerPrefs.GetString(CHARACTER_POOL_USAGE_KEY, "Random & Character Pool");
 	}
 	public static void SetCharacterPoolUsageKey(string whichMode)
 	{
