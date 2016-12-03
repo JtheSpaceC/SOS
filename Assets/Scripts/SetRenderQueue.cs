@@ -8,6 +8,8 @@
 
 using UnityEngine;
 
+namespace AssemblyCSharp{
+
 [AddComponentMenu("Rendering/SetRenderQueue")]
 
 public class SetRenderQueue : MonoBehaviour {
@@ -20,5 +22,6 @@ public class SetRenderQueue : MonoBehaviour {
 		for (int i = 0; i < materials.Length && i < m_queues.Length; ++i) {
 			materials[i].renderQueue = m_queues[i];
 		}
+	}
 	}
 }
