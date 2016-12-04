@@ -90,7 +90,7 @@ public class Character : MonoBehaviour {
 	{
 		appearances.avatarWorldPositionModifier++;
 
-		transform.position = new Vector3 (appearances.avatarWorldPositionModifier * 5, 1000, 1000); //stops avatars lining up on each other
+		transform.position = new Vector3 (appearances.avatarWorldPositionModifier * 5, 1000, -1000); //stops avatars lining up on each other
 
 		transform.SetParent(null);
 
