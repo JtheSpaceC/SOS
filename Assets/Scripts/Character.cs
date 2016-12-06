@@ -391,7 +391,7 @@ public class Character : MonoBehaviour {
 		}
 		else 
 		{
-			facialHair.sprite = null;
+			facialHair.sprite = null; 
 		}
 
 		hair.color = myAppearance.hairColours[Int32.Parse(seed[7].ToString())];
