@@ -411,7 +411,7 @@ public class Character : MonoBehaviour {
 
 	public void AdjustFacialFeatureColour() //mostly for scar colour matching skin tone
 	{
-		Debug.Log("Accessing AdjustFacialFeatureColour(), but it's commented out."); 
+		Debug.Log("Accessing AdjustFacialFeatureColour(), but it's commented out.");
 		//facialFeatures1.color = Color.Lerp(body.color, Color.black, 0.4f);
 	}
 
