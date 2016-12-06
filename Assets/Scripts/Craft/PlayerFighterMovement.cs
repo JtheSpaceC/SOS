@@ -5,6 +5,10 @@ public class PlayerFighterMovement : EnginesFighter {
 
 	Text playerSpeedText;
 
+	[Header("For Camera Shake with Afterburners")]
+	float amplitude = 0.075f;
+	float duration = 0.25f;
+
 	
 	void Awake()
 	{
@@ -166,6 +170,11 @@ public class PlayerFighterMovement : EnginesFighter {
 			if(!braking && Input.GetButton("Afterburners") && nitroRemaining > 0 /*&& Input.GetAxis("Accelerate") > 0*/)
 			{
 				Tools.instance.VibrateController(0, 0.1f, 0.1f, 0.1f);
+				if(!CameraShake.instance.isShaking)
+				{
+					CameraShake.instance.Shake(amplitude, duration);
+				}
+
 				afterburnerIsOn = true;
 
 				nitroRemaining -= nitroBurnRate * Time.deltaTime;

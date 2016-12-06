@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityStandardAssets.ImageEffects;
 using System.Collections;
 
 
@@ -6,6 +7,7 @@ public class EnginesFighter : MonoBehaviour {
 
 	AIFighter myAIFighterScript;
 	TiltAnimation tiltAnimationScript;
+	public MotionBlur motionBlur;
 
 	[HideInInspector] public Rigidbody2D myRigidBody;
 
@@ -18,7 +20,7 @@ public class EnginesFighter : MonoBehaviour {
 	public float normalAccelerationRate = 300;
 	[HideInInspector] public float currentAccelerationRate;
 	[Range(1, 5)]
-	public float afterburnerMultiplier = 1;
+	public float afterburnerMultiplier = 1.5f;
 	public float reverseMultiplier = 0.66f; //on the Arrows, I allow each of 4 reversing thrustsers a value of 1 power, and the rear engines
 	//have a value of 3 each, totalling 6 power. 6 forward versus 4 reverse. 4/6 = 0.66f
 	public float lateralThrustMultiplier = 0.66f; //there's visually only two thrusters on either side, on the Arrows, pretending there's 4
@@ -112,6 +114,9 @@ public class EnginesFighter : MonoBehaviour {
 		}
 
 		currentAccelerationRate = normalAccelerationRate;
+
+		motionBlur = Camera.main.GetComponent<MotionBlur>();
+
 	}
 	
 
@@ -675,7 +680,6 @@ public class EnginesFighter : MonoBehaviour {
 
 		smoothedAccelerationInput = Mathf.Clamp01(smoothedAccelerationInput);
 
-
 		//first we adjust the engine scale. This always needs to animate, so we haven't checked the bool yet
 
 		if(engine1 != null)
@@ -689,9 +693,17 @@ public class EnginesFighter : MonoBehaviour {
 
 			if(afterburnerIsOn) //increase the length and width of the effect
 			{
-				engineScale.x *= afterburnerMultiplier;
+				engineScale.x *= afterburnerMultiplier * 1.25f;
 				engineScale.y *= afterburnerMultiplier;
+
+				if(motionBlur)
+				{
+					motionBlur.blurAmount += Time.deltaTime;
+					motionBlur.blurAmount = Mathf.Clamp(motionBlur.blurAmount, 0, 0.8f);
+				}
 			}
+			else if(motionBlur)
+				motionBlur.blurAmount -= Time.deltaTime;
 			if(securedToDock) //if we're docked, make sure the engines look off
 				engineScale.y = 0;
 

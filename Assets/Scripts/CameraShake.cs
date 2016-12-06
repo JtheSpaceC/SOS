@@ -5,7 +5,7 @@ public class CameraShake : MonoBehaviour {
 
 	public static CameraShake instance;
 	
-	bool isShaking = false;
+	[HideInInspector] public bool isShaking = false;
 	GameObject CamPosOnPlayer;
 	float offset;
 	Vector2 newPosition;
