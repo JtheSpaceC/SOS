@@ -79,7 +79,7 @@ public class CharacterPool : MonoBehaviour {
 	Character avatar;
 	public GameObject avatarOutputForCharacterCreationScreen;
 
-	public char[] seedCharArray;
+	public string[] seedStringArray;
 
 	[TextArea()]
 	public string[] testBox;
@@ -99,13 +99,14 @@ public class CharacterPool : MonoBehaviour {
 	}
 	void CheckAvatarOutput()
 	{
-		if(avatar.avatarOutput != null)
+		if(avatar && avatar.avatarOutput != null)
 		{
 			if(GetComponent<AudioSource>().enabled)
 				StartCoroutine(PlayAudio(2));
 		}
 		else
 		{
+			avatar = FindObjectOfType<Character>();
 			avatar.avatarOutput = avatarOutputForCharacterCreationScreen;
 
 			if(GetComponent<AudioSource>().enabled)
@@ -329,8 +330,11 @@ public class CharacterPool : MonoBehaviour {
 		//for viewing in Inspector
 		avatar.appearanceSeed = selectedCharacter.appearanceSeed;
 
+		char[] splitBy = new char[]{','};
+		string[] splitAppearanceSeed = avatar.appearanceSeed.Split(splitBy, System.StringSplitOptions.RemoveEmptyEntries);
+
 		if(thisIsASavedCharacter)
-			avatar.GenerateAppearanceBySeed(avatar.appearanceSeed.ToCharArray());
+			avatar.GenerateAppearanceBySeed(splitAppearanceSeed);
 
 		characterPoolPanel.SetActive(false);
 		backOutOfCharacterPoolScreenButton.enabled = false;
@@ -347,20 +351,20 @@ public class CharacterPool : MonoBehaviour {
 		genderEntryText.text = avatar.gender == Character.Gender.Male? "0" : "1";
 
 		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour
-		seedCharArray = selectedCharacter.appearanceSeed.ToCharArray();
+		seedStringArray = selectedCharacter.appearanceSeed.Split(new char[]{','});
 
-		selectedGenderText.text = seedCharArray[0].ToString();
-		selectedBodyText.text = seedCharArray[1].ToString();
-		selectedSkinColourText.text = seedCharArray[2].ToString();
-		selectedNoseText.text = seedCharArray[3].ToString();
-		selectedEyesText.text = seedCharArray[4].ToString();
-		selectedHairText.text = seedCharArray[5].ToString();
-		selectedFacialHairText.text = seedCharArray[6].ToString();
-		selectedHairColourText.text = seedCharArray[7].ToString();
-		selectedEyesPropText.text = seedCharArray[8].ToString();
-		selectedFacialFeatureText.text = seedCharArray[9].ToString();
-		selectedHelmetText.text = seedCharArray[10].ToString();
-		selectedSpacesuitColourText.text = seedCharArray[11].ToString();
+		selectedGenderText.text = seedStringArray[0].ToString();
+		selectedBodyText.text = seedStringArray[1].ToString();
+		selectedSkinColourText.text = seedStringArray[2].ToString();
+		selectedNoseText.text = seedStringArray[3].ToString();
+		selectedEyesText.text = seedStringArray[4].ToString();
+		selectedHairText.text = seedStringArray[5].ToString();
+		selectedFacialHairText.text = seedStringArray[6].ToString();
+		selectedHairColourText.text = seedStringArray[7].ToString();
+		selectedEyesPropText.text = seedStringArray[8].ToString();
+		selectedFacialFeatureText.text = seedStringArray[9].ToString();
+		selectedHelmetText.text = seedStringArray[10].ToString();
+		selectedSpacesuitColourText.text = seedStringArray[11].ToString();
 	}
 
 	void SpaceSuitShouldBeOn(bool shouldBeOn)
@@ -529,7 +533,12 @@ public class CharacterPool : MonoBehaviour {
 		if(currentTask == CurrentTask.EditingCharacter) //if we're editing a new character
 		{
 			//converts the char array from the on-screen avatar into a single string
-			selectedCharacter.appearanceSeed = new string(seedCharArray); 
+
+			selectedCharacter.appearanceSeed = null;
+			foreach(string seedFragment in seedStringArray)
+			{
+				selectedCharacter.appearanceSeed += seedFragment; 
+			}
 		}
 		else if(currentTask == CurrentTask.ImportExport)
 		{
@@ -799,33 +808,38 @@ public class CharacterPool : MonoBehaviour {
 		if(avatar.gender == Character.Gender.Male)
 		{
 			avatar.gender = Character.Gender.Female;
+			avatar.myAppearance = avatar.femaleAppearances;
 			selectedCharacter.firstName = namesSO.femaleNames[UnityEngine.Random.Range(0, namesSO.femaleNames.Count)];				
 			selectedGenderText.text = "1";
-			avatar.eyes.sprite = avatar.appearances.eyesFemale[0];
+			avatar.eyeLids.sprite = avatar.myAppearance.eyes[0];
 			selectedEyesText.text = "0";
 			avatar.facialHair.sprite = null;
 			selectedFacialHairText.text = "0";
 			selectedFacialHairText.transform.parent.gameObject.SetActive(false);
-			avatar.hair.sprite = avatar.appearances.hairFemale[0];
+			avatar.hair.sprite = avatar.myAppearance.hair[0];
 			selectedHairText.text = "0";
 		}
 		else 
 		{
 			avatar.gender = Character.Gender.Male;
+			avatar.myAppearance = avatar.maleAppearances;
 			selectedCharacter.firstName = namesSO.maleNames[UnityEngine.Random.Range(0, namesSO.maleNames.Count)];
 			selectedGenderText.text = "0";
-			avatar.eyes.sprite = avatar.appearances.eyesMale[0];
+			avatar.eyeLids.sprite = avatar.myAppearance.eyes[0];
 			selectedEyesText.text = "0";
-			avatar.facialHair.sprite = avatar.appearances.facialHair[0];
+			avatar.facialHair.sprite = avatar.myAppearance.facialHair[0];
 			selectedFacialHairText.text = "0";
 			selectedFacialHairText.transform.parent.gameObject.SetActive(true);
-			avatar.hair.sprite = avatar.appearances.hairMale[0];
-			avatar.body.sprite = avatar.appearances.baseBody[Int32.Parse(selectedBodyText.text)];
+			avatar.hair.sprite = avatar.myAppearance.hair[0];
+			avatar.body.sprite = avatar.myAppearance.baseBody[Int32.Parse(selectedBodyText.text)];
 		}
 		firstNameEntryText.text = "First Name: " + selectedCharacter.firstName;
 		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
-		avatar.originalEyes = avatar.eyes.sprite;
-		seedCharArray[0] = selectedGenderText.text[0];
+		avatar.eyeSet[0] = avatar.eyeLids.sprite;
+		avatar.eyeSet[1] = avatar.eyeWhites.sprite;
+		avatar.eyeSet[2] = avatar.eyeIrises.sprite;
+		avatar.eyeSet[3] = avatar.eyesBlinking.sprite;
+		seedStringArray[0] = selectedGenderText.text + ',';
 	}
 
 	public void NextBodyType(int i)
@@ -834,16 +848,16 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.baseBody.Length -1;
-		else if(arrayPosition >= avatar.appearances.baseBody.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.baseBody.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.baseBody.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.body.sprite = avatar.appearances.baseBody[arrayPosition];
+		avatar.body.sprite = avatar.myAppearance.baseBody[arrayPosition];
 
 		selectedBodyText.text = arrayPosition.ToString();
 
-		seedCharArray[1] = selectedBodyText.text[0];
+		seedStringArray[1] = selectedBodyText.text + ',';
 	}
 
 	public void NextSkinColour(int i)
@@ -857,16 +871,16 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.skinTones.Length -1;
-		else if(arrayPosition >= avatar.appearances.skinTones.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.skinTones.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.skinTones.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.body.color = avatar.appearances.skinTones[arrayPosition];
+		avatar.body.color = avatar.myAppearance.skinTones[arrayPosition];
 		avatar.AdjustFacialFeatureColour();
 		selectedSkinColourText.text = arrayPosition.ToString();
 
-		seedCharArray[2] = selectedSkinColourText.text[0];
+		seedStringArray[2] = selectedSkinColourText.text + ',';
 	}
 
 	public void NextNose(int i)
@@ -875,15 +889,15 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.noses.Length -1;
-		else if(arrayPosition >= avatar.appearances.noses.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.noses.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.noses.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.nose.sprite = avatar.appearances.noses[arrayPosition];
+		avatar.nose.sprite = avatar.myAppearance.noses[arrayPosition];
 		selectedNoseText.text = arrayPosition.ToString();
 
-		seedCharArray[3] = selectedNoseText.text[0];
+		seedStringArray[3] = selectedNoseText.text + ',';
 	}
 
 	public void NextEyes(int i)
@@ -891,32 +905,21 @@ public class CharacterPool : MonoBehaviour {
 		int arrayPosition = Int32.Parse(selectedEyesText.text);
 		arrayPosition += i;
 
-		if(genderEntryText.text == "0")
-		{
-			if(arrayPosition < 0) //check if it's less than 0
-				arrayPosition = avatar.appearances.eyesMale.Length -1;
-			else if(arrayPosition >= avatar.appearances.eyesMale.Length) //check if it's greater than length
-				arrayPosition = 0;
+		if(arrayPosition < 0) //check if it's less than 0
+			arrayPosition = avatar.myAppearance.eyes.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.eyes.Length) //check if it's greater than length
+			arrayPosition = 0;
 
-			//then set
-			avatar.eyes.sprite = avatar.appearances.eyesMale[arrayPosition];
-		}
-		else if(genderEntryText.text == "1")
-		{
-			if(arrayPosition < 0) //check if it's less than 0
-				arrayPosition = avatar.appearances.eyesFemale.Length -1;
-			else if(arrayPosition >= avatar.appearances.eyesFemale.Length) //check if it's greater than length
-				arrayPosition = 0;
-
-			//then set
-			avatar.eyes.sprite = avatar.appearances.eyesFemale[arrayPosition];
-		}
+		//then set
+		avatar.eyeLids.sprite = avatar.myAppearance.eyes[arrayPosition];
 
 		//then set
 		selectedEyesText.text = arrayPosition.ToString();
-		avatar.originalEyes = avatar.eyes.sprite;
-
-		seedCharArray[4] = selectedEyesText.text[0];
+		avatar.eyeSet[0] = avatar.eyeLids.sprite;
+		avatar.eyeSet[1] = avatar.eyeWhites.sprite;
+		avatar.eyeSet[2] = avatar.eyeIrises.sprite;
+		avatar.eyeSet[3] = avatar.eyesBlinking.sprite;
+		seedStringArray[4] = selectedEyesText.text + ',';
 	}
 
 	public void NextHair(int i)
@@ -926,31 +929,19 @@ public class CharacterPool : MonoBehaviour {
 		int arrayPosition = Int32.Parse(selectedHairText.text);
 		arrayPosition += i;
 
-		if(genderEntryText.text == "0")
-		{
-			if(arrayPosition < 0) //check if it's less than 0
-				arrayPosition = avatar.appearances.hairMale.Length -1;
-			else if(arrayPosition >= avatar.appearances.hairMale.Length) //check if it's greater than length
-				arrayPosition = 0;
+		if(arrayPosition < 0) //check if it's less than 0
+			arrayPosition = avatar.myAppearance.hair.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.hair.Length) //check if it's greater than length
+			arrayPosition = 0;
 
-			//then set
-			avatar.hair.sprite = avatar.appearances.hairMale[arrayPosition];
-		}
-		else if(genderEntryText.text == "1")
-		{
-			if(arrayPosition < 0) //check if it's less than 0
-				arrayPosition = avatar.appearances.hairFemale.Length -1;
-			else if(arrayPosition >= avatar.appearances.hairFemale.Length) //check if it's greater than length
-				arrayPosition = 0;
+		//then set
+		avatar.hair.sprite = avatar.myAppearance.hair[arrayPosition];
 
-			//then set
-			avatar.hair.sprite = avatar.appearances.hairFemale[arrayPosition];
-		}
 
 		//then set
 		selectedHairText.text = arrayPosition.ToString();
 
-		seedCharArray[5] = selectedHairText.text[0];
+		seedStringArray[5] = selectedHairText.text + ',';
 	}
 
 	public void NextFacialHair(int i)
@@ -961,15 +952,15 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.facialHair.Length -1;
-		else if(arrayPosition >= avatar.appearances.facialHair.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.facialHair.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.facialHair.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.facialHair.sprite = avatar.appearances.facialHair[arrayPosition];
+		avatar.facialHair.sprite = avatar.myAppearance.facialHair[arrayPosition];
 		selectedFacialHairText.text = arrayPosition.ToString();
 
-		seedCharArray[6] = selectedFacialHairText.text[0];
+		seedStringArray[6] = selectedFacialHairText.text + ',';
 	}
 
 	public void NextHairColour(int i)
@@ -980,16 +971,16 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.hairColours.Length -1;
-		else if(arrayPosition >= avatar.appearances.hairColours.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.hairColours.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.hairColours.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.facialHair.color = avatar.appearances.hairColours[arrayPosition];
-		avatar.hair.color = avatar.appearances.hairColours[arrayPosition];
+		avatar.facialHair.color = avatar.myAppearance.hairColours[arrayPosition];
+		avatar.hair.color = avatar.myAppearance.hairColours[arrayPosition];
 		selectedHairColourText.text = arrayPosition.ToString();
 
-		seedCharArray[7] = selectedHairColourText.text[0];
+		seedStringArray[7] = selectedHairColourText.text + ',';
 	}
 
 	public void NextEyesProp(int i)
@@ -998,15 +989,18 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.eyesProp.Length -1;
-		else if(arrayPosition >= avatar.appearances.eyesProp.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.eyesProp.Length;
+		else if(arrayPosition > avatar.myAppearance.eyesProp.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.eyesProp.sprite = avatar.appearances.eyesProp[arrayPosition];
-		selectedEyesPropText.text = arrayPosition.ToString();
+		if(arrayPosition == 0)
+			avatar.eyesProp.sprite = null;
+		else
+			avatar.eyesProp.sprite = avatar.myAppearance.eyesProp[arrayPosition-1];
+		selectedEyesPropText.text = (arrayPosition).ToString();
 
-		seedCharArray[8] = selectedEyesPropText.text[0];
+		seedStringArray[8] = selectedEyesPropText.text + ',';
 	}
 
 	public void NextFacialFeature(int i)
@@ -1015,17 +1009,19 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.facialFeatures.Length -1;
-		else if(arrayPosition >= avatar.appearances.facialFeatures.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.facialFeatures1.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.facialFeatures1.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.facialFeature.sprite = avatar.appearances.facialFeatures[arrayPosition];
+		avatar.facialFeatures1.sprite = avatar.myAppearance.facialFeatures1[arrayPosition];
 		avatar.AdjustFacialFeatureColour();
 		selectedFacialFeatureText.text = arrayPosition.ToString();
 
-		seedCharArray[9] = selectedFacialFeatureText.text[0];
+		seedStringArray[9] = selectedFacialFeatureText.text + ',';
 	}
+	//TODO: same as above for Features2 (and rename above to '1')
+	//TODO: two for scars also
 
 	public void NextHelemt(int i)
 	{
@@ -1035,15 +1031,15 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.helmets.Length -1;
-		else if(arrayPosition >= avatar.appearances.helmets.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.helmets.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.helmets.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.helmet.sprite = avatar.appearances.helmets[arrayPosition];
+		avatar.helmet.sprite = avatar.myAppearance.helmets[arrayPosition];
 		selectedHelmetText.text = arrayPosition.ToString();
 
-		seedCharArray[10] = selectedHelmetText.text[0];
+		seedStringArray[10] = selectedHelmetText.text + ',';
 	}
 
 	public void NextSpacesuitColour(int i)
@@ -1054,16 +1050,16 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.appearances.spaceSuitColours.Length -1;
-		else if(arrayPosition >= avatar.appearances.spaceSuitColours.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.spaceSuitColours.Length -1;
+		else if(arrayPosition >= avatar.myAppearance.spaceSuitColours.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.spaceSuit.color = avatar.appearances.spaceSuitColours[arrayPosition];
-		avatar.helmet.color = avatar.appearances.spaceSuitColours[arrayPosition];
+		avatar.spaceSuit.color = avatar.myAppearance.spaceSuitColours[arrayPosition];
+		avatar.helmet.color = avatar.myAppearance.spaceSuitColours[arrayPosition];
 		selectedSpacesuitColourText.text = arrayPosition.ToString();
 
-		seedCharArray[11] = selectedSpacesuitColourText.text[0];
+		seedStringArray[11] = selectedSpacesuitColourText.text + ',';
 	}
 
 

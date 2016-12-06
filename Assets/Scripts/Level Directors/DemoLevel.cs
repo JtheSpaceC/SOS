@@ -283,7 +283,10 @@ public class DemoLevel : MonoBehaviour {
 		character.appearanceSeed = savedData[6];
 		character.myAIFighterScript.nameHUDText.text = character.callsign;
 
-		character.GenerateAppearanceBySeed(character.appearanceSeed.ToCharArray());
+		char[] splitBy = new char[]{','};
+		string[] splitAppearanceSeed = character.appearanceSeed.Split(splitBy, System.StringSplitOptions.RemoveEmptyEntries);
+
+		character.GenerateAppearanceBySeed(splitAppearanceSeed);
 	}
 
 

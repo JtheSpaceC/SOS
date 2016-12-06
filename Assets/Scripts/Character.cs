@@ -25,26 +25,45 @@ public class Character : MonoBehaviour {
 	public string lastName;
 	public string callsign;
 	public string characterBio;
-	public string appearanceSeed; //NB!! Do in this order: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+	public string appearanceSeed; //NB!! FOR SEED (string): ORDER IS: 
+	//Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
 
 	public bool inSpace = true;
 
-	public Appearance appearances;
+	[HideInInspector] public Appearance myAppearance;
+	public Appearance maleAppearances;
+	public Appearance femaleAppearances;
 	public Names names;
 	public GameObject avatarOutputPrefab;
 	RenderTexture myRenderTexture;
 
 	[Header("Appearance")]
 	public SpriteRenderer body;
-	public SpriteRenderer eyes;
-	public SpriteRenderer eyesProp;
-	public SpriteRenderer facialFeature;
-	public SpriteRenderer nose;
-	public SpriteRenderer mouth;
-	public Transform eyeballs;
-	public SpriteRenderer facialHair;
-	public SpriteRenderer hair;
 	public SpriteRenderer clothes;
+	public SpriteRenderer ears;
+	public SpriteRenderer head;
+	public SpriteRenderer chin;
+	public SpriteRenderer eyeLids;
+	public SpriteRenderer eyeWhites;
+	public SpriteRenderer eyeIrises;
+	public SpriteRenderer eyesBlinking;
+	public Transform eyeballs;
+	public SpriteRenderer mouth;
+	[Range(0,100)]
+	public int chanceOfFacialFeatures = 25;
+	public SpriteRenderer facialFeatures1;
+	public SpriteRenderer facialFeatures2;
+	public SpriteRenderer facialHair;
+	public SpriteRenderer nose;
+	[Range(0,100)]
+	public int chanceOfScarring = 25;
+	public SpriteRenderer scars1;
+	public SpriteRenderer scars2;
+	[Range(0,100)]
+	public int chanceOfEyesProp = 25;
+	public SpriteRenderer eyesProp;
+	public SpriteRenderer eyebrows;
+	public SpriteRenderer hair;
 	public SpriteRenderer helmet;
 	public SpriteRenderer spaceSuit;
 	public SpriteRenderer cockpit;
@@ -67,7 +86,7 @@ public class Character : MonoBehaviour {
 	float startTime = 0;
 	float timeToMove = 0.1f;
 	public Vector2 nextPosition;
-	[HideInInspector] public Sprite originalEyes;
+	[HideInInspector] public Sprite[] eyeSet; //0 is lids, 1 is whites, 2 is irises, 3 is blinking
 
 	//for speaking & mouth behaviour
 	Sprite originalMouth;
@@ -75,22 +94,22 @@ public class Character : MonoBehaviour {
 
 	int callsignChecks;
 
-
-
 	void Awake()
 	{
 		myRenderTexture = new RenderTexture(256, 256, 24);
 		myRenderTexture.name = "Avatar RT "+ transform.root.gameObject.name;
 		bgScrollerScript = GetComponentInChildren<BGScroller>();
 
-		//appearances.avatarWorldPositionModifier = 0;
+		eyeSet = new Sprite[4];
+
+		//Appearance.avatarWorldPositionModifier = 0;
 	}
 
 	void Start () 
 	{
-		appearances.avatarWorldPositionModifier++;
+		Appearance.avatarWorldPositionModifier++;
 
-		transform.position = new Vector3 (appearances.avatarWorldPositionModifier * 5, 1000, -1000); //stops avatars lining up on each other
+		transform.position = new Vector3 (Appearance.avatarWorldPositionModifier * 5, 1000, -1000); //stops avatars lining up on each other
 
 		transform.SetParent(null);
 
@@ -101,7 +120,6 @@ public class Character : MonoBehaviour {
 		GenerateRandomNewAppearance();
 		GenerateName();
 
-		originalEyes = eyes.sprite;
 		originalMouth = mouth.sprite;
 
 		StartCoroutine("AlertEyes");
@@ -141,7 +159,7 @@ public class Character : MonoBehaviour {
 
 		if(mySquadUnitNumber != 0)
 		{
-			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = appearances.unitNumbers[mySquadUnitNumber];
+			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().sprite = myAppearance.unitNumbers[mySquadUnitNumber];
 			//TODO: Remove this line below when unit numbers are brought back. 
 			avatarOutput.transform.FindChild("Flash Image/Unit Number").GetComponent<Image>().color = Color.clear;
 		}
@@ -162,25 +180,33 @@ public class Character : MonoBehaviour {
 	{
 		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, HelmetColour
 
-		if(UnityEngine.Random.Range(0f, 2f) > 1)
+		if(UnityEngine.Random.Range(0f, 2f) > -1) //TODO: re-enable females
 		{
 			gender = Gender.Male;
-			appearanceSeed = "0";
+			myAppearance = maleAppearances;
+			appearanceSeed = "0,";
 		}
 		else 
 		{
 			gender = Gender.Female;
-			appearanceSeed = "1";
+			myAppearance = femaleAppearances;
+			appearanceSeed = "1,";
 		}
 
-		body.sprite = appearances.baseBody[NewSeed(appearances.baseBody.Length)];
-		body.color = appearances.skinTones[NewSeed(appearances.skinTones.Length)];
-		nose.sprite = appearances.noses[NewSeed(appearances.noses.Length)];
-		eyes.sprite = gender == Gender.Male? appearances.eyesMale[NewSeed(appearances.eyesMale.Length)] : 
-			appearances.eyesFemale[NewSeed(appearances.eyesFemale.Length)];
-		originalEyes = eyes.sprite;
-		hair.sprite = gender == Gender.Male? appearances.hairMale[NewSeed(appearances.hairMale.Length)] : 
-			appearances.hairFemale[NewSeed(appearances.hairFemale.Length)];
+		body.sprite = myAppearance.baseBody[NewSeed(myAppearance.baseBody.Length)];
+		body.color = myAppearance.skinTones[NewSeed(myAppearance.skinTones.Length)];
+		nose.sprite = myAppearance.noses[NewSeed(myAppearance.noses.Length)];
+		int numSetsOfEyes = (myAppearance.eyes.Length /3)-1; //TODO: 4 when we add lids 
+		int eyeSetChoice = NewSeed(numSetsOfEyes) * 3;
+		eyeLids.sprite = myAppearance.eyes[eyeSetChoice];
+		eyeWhites.sprite = myAppearance.eyes[eyeSetChoice+1];
+		eyeIrises.sprite = myAppearance.eyes[eyeSetChoice+2];
+		//eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+3];
+		eyeSet[0] = eyeLids.sprite;
+		eyeSet[1] = eyeWhites.sprite;
+		eyeSet[2] = eyeIrises.sprite;
+		eyeSet[3] = eyesBlinking.sprite;
+		hair.sprite = myAppearance.hair[NewSeed(myAppearance.hair.Length)];
 
 		//facial hair
 		if(gender == Gender.Male)
@@ -188,7 +214,7 @@ public class Character : MonoBehaviour {
 			//50:50 chance to be a clean shaven male
 			if(UnityEngine.Random.Range(0,10) >=5)
 			{
-				facialHair.sprite = appearances.facialHair[NewSeed(appearances.facialHair.Length)]; 
+				facialHair.sprite = myAppearance.facialHair[NewSeed(myAppearance.facialHair.Length)]; 
 			}
 			else
 				NewSeed(0);
@@ -199,13 +225,13 @@ public class Character : MonoBehaviour {
 			NewSeed(0);
 		}
 
-		hair.color = appearances.hairColours[NewSeed(appearances.hairColours.Length)];
+		hair.color = myAppearance.hairColours[NewSeed(myAppearance.hairColours.Length)];
 		facialHair.color = hair.color;
 
 		//chance of having a prop for the eyes
-		if(UnityEngine.Random.Range(0f, 2f) > 1.33f)
+		if(UnityEngine.Random.Range(0,100) >= chanceOfEyesProp)
 		{
-			eyesProp.sprite = appearances.eyesProp[NewSeed(appearances.eyesProp.Length)];
+			eyesProp.sprite = myAppearance.eyesProp[NewSeed(myAppearance.eyesProp.Length)];
 		}
 		else
 		{
@@ -216,26 +242,27 @@ public class Character : MonoBehaviour {
 		//chance of having a facial feature like a scar
 		if(UnityEngine.Random.Range(0f, 2f) > 1.33f)
 		{
-			facialFeature.sprite = appearances.facialFeatures[NewSeed(appearances.facialFeatures.Length)];
+			facialFeatures1.sprite = myAppearance.facialFeatures1[NewSeed(myAppearance.facialFeatures1.Length)];
 			AdjustFacialFeatureColour();
+			//TODO: FF1 & 2, Scars 1 & 2
 		}
 		else
 		{
-			facialFeature.sprite = null;
+			facialFeatures1.sprite = null;
 			NewSeed(0);
 		}
 
-		helmet.sprite = appearances.helmets[NewSeed(appearances.helmets.Length)];
-		helmet.color = appearances.spaceSuitColours[NewSeed(appearances.spaceSuitColours.Length)];
+		helmet.sprite = myAppearance.helmets[NewSeed(myAppearance.helmets.Length)];
+		helmet.color = myAppearance.spaceSuitColours[NewSeed(myAppearance.spaceSuitColours.Length)];
 		spaceSuit.color = helmet.color;
 
 		//SEED OVER. REST IS IRRELEVANT FOR SEED AT THE MOMENT
 		//currently only one mouth. Ignore for seed
-		mouth.sprite = GetARandomSprite(appearances.mouths);
+		mouth.sprite = GetARandomSprite(myAppearance.mouths);
 
-		clothes.sprite = GetARandomSprite(appearances.clothes);
-		helmet.sprite = GetARandomSprite(appearances.helmets);
-		spaceSuit.sprite = GetARandomSprite(appearances.spaceSuits);
+		clothes.sprite = GetARandomSprite(myAppearance.clothes);
+		helmet.sprite = GetARandomSprite(myAppearance.helmets);
+		spaceSuit.sprite = GetARandomSprite(myAppearance.spaceSuits);
 
 	}//end of GenerateRandomNewAppearance
 
@@ -321,7 +348,7 @@ public class Character : MonoBehaviour {
 	int NewSeed(int arrayLength) //this function adds its result to the string recording the seed of this appearance
 	{
 		int choice = UnityEngine.Random.Range(0, arrayLength);
-		appearanceSeed += choice.ToString();
+		appearanceSeed += choice.ToString() + ",";
 		return choice;
 	}
 
@@ -330,52 +357,62 @@ public class Character : MonoBehaviour {
 		return whatArray[UnityEngine.Random.Range(0, whatArray.Length)];
 	}
 
-	public void GenerateAppearanceBySeed(char[] seed)
+	public void GenerateAppearanceBySeed(string[] seed)
 	{
 		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature
 
-		if(seed[0] == '0') //male
+		if(seed[0] == "0") //male
+		{
 			gender = Gender.Male;
-		else if(seed[0] == '1') //female
+			myAppearance = maleAppearances;
+		}
+		else if(seed[0] == "1") //female
+		{
 			gender = Gender.Female;
+			myAppearance = femaleAppearances;
+		}
 		else
 			Debug.Log("Something Went Wrong");
 
-		body.sprite = appearances.baseBody[Int32.Parse(seed[1].ToString())];
-		body.color = appearances.skinTones[Int32.Parse(seed[2].ToString())];
-		nose.sprite = appearances.noses[Int32.Parse(seed[3].ToString())];
-		eyes.sprite = gender == Gender.Male? appearances.eyesMale[Int32.Parse(seed[4].ToString())] : 
-			appearances.eyesFemale[Int32.Parse(seed[4].ToString())];
-		originalEyes = eyes.sprite;
-		hair.sprite = gender == Gender.Male? appearances.hairMale[Int32.Parse(seed[5].ToString())] : 
-			appearances.hairFemale[Int32.Parse(seed[5].ToString())];
+		body.sprite = myAppearance.baseBody[Int32.Parse(seed[1].ToString())];
+		body.color = myAppearance.skinTones[Int32.Parse(seed[2].ToString())];
+		nose.sprite = myAppearance.noses[Int32.Parse(seed[3].ToString())];
+		eyeLids.sprite = myAppearance.eyes[Int32.Parse(seed[4].ToString())];
+		eyeSet[0] = eyeLids.sprite;
+		eyeSet[1] = eyeWhites.sprite;
+		eyeSet[2] = eyeIrises.sprite;
+		eyeSet[3] = eyesBlinking.sprite;
+		hair.sprite = myAppearance.hair[Int32.Parse(seed[5].ToString())];
 
 		//facial hair
 		if(gender == Gender.Male)
 		{
-			facialHair.sprite = appearances.facialHair[Int32.Parse(seed[6].ToString())];
+			facialHair.sprite = myAppearance.facialHair[Int32.Parse(seed[6].ToString())];
 		}
 		else 
 		{
 			facialHair.sprite = null;
 		}
 
-		hair.color = appearances.hairColours[Int32.Parse(seed[7].ToString())];
+		hair.color = myAppearance.hairColours[Int32.Parse(seed[7].ToString())];
 		facialHair.color = hair.color;
 
-		eyesProp.sprite = appearances.eyesProp[Int32.Parse(seed[8].ToString())];
+		eyesProp.sprite = myAppearance.eyesProp[Int32.Parse(seed[8].ToString())];
 
-		facialFeature.sprite = appearances.facialFeatures[Int32.Parse(seed[9].ToString())];
+		facialFeatures1.sprite = myAppearance.facialFeatures1[Int32.Parse(seed[9].ToString())];
+		//TODO: FF 1 & 2, Scars 1 & 2
+
 		AdjustFacialFeatureColour();
 
-		helmet.sprite = appearances.helmets[Int32.Parse(seed[10].ToString())];
-		helmet.color = appearances.spaceSuitColours[Int32.Parse(seed[11].ToString())];
+		helmet.sprite = myAppearance.helmets[Int32.Parse(seed[10].ToString())];
+		helmet.color = myAppearance.spaceSuitColours[Int32.Parse(seed[11].ToString())];
 		spaceSuit.color = helmet.color;
 	}
 
 	public void AdjustFacialFeatureColour() //mostly for scar colour matching skin tone
 	{
-		facialFeature.color = Color.Lerp(body.color, Color.black, 0.4f);
+		Debug.Log("Accessing AdjustFacialFeatureColour(), but it's commented out.");
+		//facialFeatures1.color = Color.Lerp(body.color, Color.black, 0.4f);
 	}
 
 
@@ -421,12 +458,12 @@ public class Character : MonoBehaviour {
 	{		
 		yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 5f));
 
-		eyes.sprite = GetARandomSprite(appearances.eyesBlinking);
-		eyeballs.gameObject.SetActive(false);
+		eyesBlinking.enabled = true;
+
 		yield return new WaitForSeconds(0.15f);
 
-		eyes.sprite = originalEyes;
-		eyeballs.gameObject.SetActive(true);
+		eyesBlinking.enabled = false;
+
 		StartCoroutine("Blinking");
 	}
 
@@ -434,7 +471,7 @@ public class Character : MonoBehaviour {
 	{
 		//speaking = true;
 		Invoke ("StopSpeaking", 1);
-		mouth.sprite = GetARandomSprite(appearances.speakingMouthShapes);
+		mouth.sprite = GetARandomSprite(myAppearance.speakingMouthShapes);
 
 		yield return new WaitForSeconds(0.1f);
 
@@ -459,7 +496,7 @@ public class Character : MonoBehaviour {
 
 	public IEnumerator TenseMouth()
 	{
-		mouth.sprite = GetARandomSprite(appearances.tenseMouthSahpes);
+		mouth.sprite = GetARandomSprite(myAppearance.tenseMouthSahpes);
 		yield return new WaitForSeconds(UnityEngine.Random.Range(0.3f, 1f));
 		mouth.sprite = originalMouth;
 	}
