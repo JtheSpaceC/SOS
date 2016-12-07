@@ -106,9 +106,6 @@ public class CharacterPool : MonoBehaviour {
 		}
 		else
 		{
-			avatar = FindObjectOfType<Character>();
-			avatar.avatarOutput = avatarOutputForCharacterCreationScreen;
-
 			if(GetComponent<AudioSource>().enabled)
 			{
 				StartCoroutine("PlayAudio", 6);

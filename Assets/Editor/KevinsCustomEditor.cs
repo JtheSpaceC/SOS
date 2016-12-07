@@ -32,7 +32,8 @@ public static class KevinsCustomEditor : object {
 			"Check that self-play level has automatic camera.." +
 			"Set Quit Behaviour (application or menu).." +
 			"Website & Feedback links on/off.." +
-			"Set Correct Checkpoints (first) in scenes that have them.";
+			"Set Correct Checkpoints (first) in scenes that have them." +
+			"Check \"Leave Feedback\" buttons array in Tools in demo level.";
 		
 		string[] checklistItems = checklist.Split(new string[]{"."}, System.StringSplitOptions.RemoveEmptyEntries);
 		foreach(string item in checklistItems)
