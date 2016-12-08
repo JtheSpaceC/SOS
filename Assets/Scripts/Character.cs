@@ -25,7 +25,7 @@ public class Character : MonoBehaviour {
 	public string lastName;
 	public string callsign;
 	public string characterBio;
-	public string appearanceSeed; //NB!! FOR SEED (string): ORDER IS: 
+	public string appearanceSeed; //APPEARANCE_SEED //NB!! FOR SEED (string): ORDER IS: 
 	//Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
 
 	public bool inSpace = true;
@@ -178,6 +178,7 @@ public class Character : MonoBehaviour {
 	[ContextMenu("Generate Random Appearance")]
 	public void GenerateRandomNewAppearance()
 	{
+		//APPEARANCE_SEED
 		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, HelmetColour
 
 		if(UnityEngine.Random.Range(0f, 2f) > -1) //TODO: re-enable females
@@ -227,6 +228,7 @@ public class Character : MonoBehaviour {
 
 		hair.color = myAppearance.hairColours[NewSeed(myAppearance.hairColours.Length)];
 		facialHair.color = hair.color;
+		eyebrows.color = hair.color;
 
 		//chance of having a prop for the eyes
 		if(UnityEngine.Random.Range(0,100) >= chanceOfEyesProp)
@@ -359,6 +361,7 @@ public class Character : MonoBehaviour {
 
 	public void GenerateAppearanceBySeed(string[] seed)
 	{
+		//APPEARANCE_SEED
 		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature
 
 		if(seed[0] == "0") //male

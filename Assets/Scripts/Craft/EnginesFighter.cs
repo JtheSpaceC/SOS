@@ -699,7 +699,7 @@ public class EnginesFighter : MonoBehaviour {
 				if(motionBlur)
 				{
 					motionBlur.blurAmount += Time.deltaTime;
-					motionBlur.blurAmount = Mathf.Clamp(motionBlur.blurAmount, 0, 0.8f);
+					motionBlur.blurAmount = Mathf.Clamp(motionBlur.blurAmount, 0, 0.7f);
 				}
 			}
 			else if(motionBlur)

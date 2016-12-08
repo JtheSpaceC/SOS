@@ -14,8 +14,8 @@ public class ButtonSelectAuto : MonoBehaviour {
 	public KeyCode selectButtonWith;
 	public KeyCode alternateSelectButton;
 
-	[Tooltip("Only select if using Gamepad?")]
-	public bool dependsOnInputType = false;
+	/*[Tooltip("Only select if using Gamepad?")]
+	public bool dependsOnInputType = false;*/
 
 
 	void Awake()

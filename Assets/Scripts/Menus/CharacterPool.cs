@@ -19,6 +19,7 @@ public class CharacterPool : MonoBehaviour {
 	public GameObject characterPoolPanel;
 	public GameObject characterCreationPanel;
 	public ButtonSelectAuto backOutOfCharacterPoolScreenButton;
+	public ButtonSelectAuto backOutOfCharacterGroupImportScreenButton;
 	public GameObject characterBioEditPanel;
 	public GameObject poolImportExportEditPanel;
 	public GameObject poolExportConfirmationPanel;
@@ -297,15 +298,14 @@ public class CharacterPool : MonoBehaviour {
 			selectedFacialHairText.transform.parent.gameObject.SetActive(true);		
 
 		if(selectedCharacter == null)
-			Debug.LogError("Fuck");
-
+			Debug.LogError("Feck");
 
 		selectedCharacter.firstName = 
 			avatar.gender == Character.Gender.Male? 
 			namesSO.maleNames[UnityEngine.Random.Range(0, namesSO.maleNames.Count)] : 
 			namesSO.femaleNames[UnityEngine.Random.Range(0, namesSO.femaleNames.Count)];
 		selectedCharacter.lastName = namesSO.lastNames[UnityEngine.Random.Range(0, namesSO.lastNames.Count)];
-		selectedCharacter.callsign = namesSO.lastNames[UnityEngine.Random.Range(0, namesSO.lastNames.Count)];
+		selectedCharacter.callsign = namesSO.callsigns[UnityEngine.Random.Range(0, namesSO.callsigns.Count)];
 		selectedCharacter.appearanceSeed = avatar.appearanceSeed;
 		currentBio = "";
 
@@ -347,8 +347,11 @@ public class CharacterPool : MonoBehaviour {
 		callsignEntryText.text = "Callsign: " + selectedCharacter.callsign;
 		genderEntryText.text = avatar.gender == Character.Gender.Male? "0" : "1";
 
-		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour
-		seedStringArray = selectedCharacter.appearanceSeed.Split(new char[]{','});
+		//APPEARANCE_SEED:
+		//FOR SEED (string): ORDER IS: 
+		//Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour
+
+		seedStringArray = selectedCharacter.appearanceSeed.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);	
 
 		selectedGenderText.text = seedStringArray[0].ToString();
 		selectedBodyText.text = seedStringArray[1].ToString();
@@ -534,7 +537,7 @@ public class CharacterPool : MonoBehaviour {
 			selectedCharacter.appearanceSeed = null;
 			foreach(string seedFragment in seedStringArray)
 			{
-				selectedCharacter.appearanceSeed += seedFragment; 
+				selectedCharacter.appearanceSeed += seedFragment + ','; 
 			}
 		}
 		else if(currentTask == CurrentTask.ImportExport)
@@ -798,6 +801,7 @@ public class CharacterPool : MonoBehaviour {
 
 	#region Avatar Characteristics
 
+	//APPEARANCE_SEED:
 	//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour
 
 	public void NextGender() //changing this is touger as it requires changing possible eyes, hair, facial hair, etc
@@ -975,6 +979,7 @@ public class CharacterPool : MonoBehaviour {
 		//then set
 		avatar.facialHair.color = avatar.myAppearance.hairColours[arrayPosition];
 		avatar.hair.color = avatar.myAppearance.hairColours[arrayPosition];
+		avatar.eyebrows.color = avatar.myAppearance.hairColours[arrayPosition];
 		selectedHairColourText.text = arrayPosition.ToString();
 
 		seedStringArray[7] = selectedHairColourText.text + ',';

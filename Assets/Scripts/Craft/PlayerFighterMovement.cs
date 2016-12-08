@@ -6,7 +6,7 @@ public class PlayerFighterMovement : EnginesFighter {
 	Text playerSpeedText;
 
 	[Header("For Camera Shake with Afterburners")]
-	float amplitude = 0.075f;
+	float amplitude = 0.06f;
 	float duration = 0.25f;
 
 	

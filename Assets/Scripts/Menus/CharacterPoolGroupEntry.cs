@@ -13,6 +13,12 @@ public class CharacterPoolGroupEntry : MonoBehaviour {
 	{
 		CharacterPool.instance.selectedCharacterGroup = this;
 		CharacterPool.instance.poolDeleteConfirmationPanel.SetActive(true);
+		CharacterPool.instance.backOutOfCharacterGroupImportScreenButton.enabled = false;
+	}
+
+	public void ReEnableBackOutButton()
+	{
+		CharacterPool.instance.backOutOfCharacterGroupImportScreenButton.enabled = true;
 	}
 
 	public void AddSelectedCharactersToGroup()
