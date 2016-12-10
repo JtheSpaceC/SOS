@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿//NOTE: There are two ways that facial features are picked.
+//GenerateRandomNewAppearance() and  GenerateAppearanceBySeed(string[] seed)
+//The seed is also referenced in 4 places
+
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,7 +45,7 @@ public class Character : MonoBehaviour {
 	[Header("Appearance")]
 	public SpriteRenderer body;
 	public SpriteRenderer clothes;
-	public SpriteRenderer ears;
+	public SpriteRenderer[] ears;
 	public SpriteRenderer head;
 	public SpriteRenderer chin;
 	public SpriteRenderer eyeLids;
@@ -48,6 +53,7 @@ public class Character : MonoBehaviour {
 	public SpriteRenderer eyeIrises;
 	public SpriteRenderer eyesBlinking;
 	public Transform eyeballs;
+	public SpriteRenderer cheeks;
 	public SpriteRenderer mouth;
 	[Range(0,100)]
 	public int chanceOfFacialFeatures = 25;
@@ -86,7 +92,6 @@ public class Character : MonoBehaviour {
 	float startTime = 0;
 	float timeToMove = 0.1f;
 	public Vector2 nextPosition;
-	[HideInInspector] public Sprite[] eyeSet; //0 is lids, 1 is whites, 2 is irises, 3 is blinking
 
 	//for speaking & mouth behaviour
 	Sprite originalMouth;
@@ -99,8 +104,6 @@ public class Character : MonoBehaviour {
 		myRenderTexture = new RenderTexture(256, 256, 24);
 		myRenderTexture.name = "Avatar RT "+ transform.root.gameObject.name;
 		bgScrollerScript = GetComponentInChildren<BGScroller>();
-
-		eyeSet = new Sprite[4];
 
 		//Appearance.avatarWorldPositionModifier = 0;
 	}
@@ -178,7 +181,7 @@ public class Character : MonoBehaviour {
 	[ContextMenu("Generate Random Appearance")]
 	public void GenerateRandomNewAppearance()
 	{
-		//APPEARANCE_SEED
+		//APPEARANCE_SEED//SAVED HERE
 		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, HelmetColour
 
 		if(UnityEngine.Random.Range(0f, 2f) > -1) //TODO: re-enable females
@@ -203,10 +206,6 @@ public class Character : MonoBehaviour {
 		eyeWhites.sprite = myAppearance.eyes[eyeSetChoice+1];
 		eyeIrises.sprite = myAppearance.eyes[eyeSetChoice+2];
 		//eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+3];
-		eyeSet[0] = eyeLids.sprite;
-		eyeSet[1] = eyeWhites.sprite;
-		eyeSet[2] = eyeIrises.sprite;
-		eyeSet[3] = eyesBlinking.sprite;
 		hair.sprite = myAppearance.hair[NewSeed(myAppearance.hair.Length)];
 
 		//facial hair
@@ -267,6 +266,57 @@ public class Character : MonoBehaviour {
 		spaceSuit.sprite = GetARandomSprite(myAppearance.spaceSuits);
 
 	}//end of GenerateRandomNewAppearance
+
+
+	public void GenerateAppearanceBySeed(string[] seed)
+	{
+		//APPEARANCE_SEED
+		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature
+
+		if(seed[0] == "0") //male
+		{
+			gender = Gender.Male;
+			myAppearance = maleAppearances;
+		}
+		else if(seed[0] == "1") //female
+		{
+			gender = Gender.Female;
+			myAppearance = femaleAppearances;
+		}
+		else
+			Debug.Log("Something Went Wrong");
+
+		body.sprite = myAppearance.baseBody[Int32.Parse(seed[1].ToString())];
+		body.color = myAppearance.skinTones[Int32.Parse(seed[2].ToString())];
+		nose.sprite = myAppearance.noses[Int32.Parse(seed[3].ToString())];
+		eyeLids.sprite = myAppearance.eyes[Int32.Parse(seed[4].ToString())];
+		hair.sprite = myAppearance.hair[Int32.Parse(seed[5].ToString())];
+
+		//facial hair
+		if(gender == Gender.Male)
+		{
+			facialHair.sprite = myAppearance.facialHair[Int32.Parse(seed[6].ToString())];
+		}
+		else 
+		{
+			facialHair.sprite = null; 
+		}
+
+		hair.color = myAppearance.hairColours[Int32.Parse(seed[7].ToString())];
+		facialHair.color = hair.color;
+
+		eyesProp.sprite = myAppearance.eyesProp[Int32.Parse(seed[8].ToString())];
+
+		facialFeatures1.sprite = myAppearance.facialFeatures1[Int32.Parse(seed[9].ToString())];
+		//TODO: FF 1 & 2, Scars 1 & 2
+
+		AdjustFacialFeatureColour();
+
+		helmet.sprite = myAppearance.helmets[Int32.Parse(seed[10].ToString())];
+		helmet.color = myAppearance.spaceSuitColours[Int32.Parse(seed[11].ToString())];
+		spaceSuit.color = helmet.color;
+
+	}//end of GenerateAppearanceBySeed()
 
 	public void GenerateName()
 	{
@@ -357,59 +407,6 @@ public class Character : MonoBehaviour {
 	public Sprite GetARandomSprite(Sprite[] whatArray)
 	{
 		return whatArray[UnityEngine.Random.Range(0, whatArray.Length)];
-	}
-
-	public void GenerateAppearanceBySeed(string[] seed)
-	{
-		//APPEARANCE_SEED
-		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature
-
-		if(seed[0] == "0") //male
-		{
-			gender = Gender.Male;
-			myAppearance = maleAppearances;
-		}
-		else if(seed[0] == "1") //female
-		{
-			gender = Gender.Female;
-			myAppearance = femaleAppearances;
-		}
-		else
-			Debug.Log("Something Went Wrong");
-
-		body.sprite = myAppearance.baseBody[Int32.Parse(seed[1].ToString())];
-		body.color = myAppearance.skinTones[Int32.Parse(seed[2].ToString())];
-		nose.sprite = myAppearance.noses[Int32.Parse(seed[3].ToString())];
-		eyeLids.sprite = myAppearance.eyes[Int32.Parse(seed[4].ToString())];
-		eyeSet[0] = eyeLids.sprite;
-		eyeSet[1] = eyeWhites.sprite;
-		eyeSet[2] = eyeIrises.sprite;
-		eyeSet[3] = eyesBlinking.sprite;
-		hair.sprite = myAppearance.hair[Int32.Parse(seed[5].ToString())];
-
-		//facial hair
-		if(gender == Gender.Male)
-		{
-			facialHair.sprite = myAppearance.facialHair[Int32.Parse(seed[6].ToString())];
-		}
-		else 
-		{
-			facialHair.sprite = null; 
-		}
-
-		hair.color = myAppearance.hairColours[Int32.Parse(seed[7].ToString())];
-		facialHair.color = hair.color;
-
-		eyesProp.sprite = myAppearance.eyesProp[Int32.Parse(seed[8].ToString())];
-
-		facialFeatures1.sprite = myAppearance.facialFeatures1[Int32.Parse(seed[9].ToString())];
-		//TODO: FF 1 & 2, Scars 1 & 2
-
-		AdjustFacialFeatureColour();
-
-		helmet.sprite = myAppearance.helmets[Int32.Parse(seed[10].ToString())];
-		helmet.color = myAppearance.spaceSuitColours[Int32.Parse(seed[11].ToString())];
-		spaceSuit.color = helmet.color;
 	}
 
 	public void AdjustFacialFeatureColour() //mostly for scar colour matching skin tone

@@ -836,10 +836,6 @@ public class CharacterPool : MonoBehaviour {
 		}
 		firstNameEntryText.text = "First Name: " + selectedCharacter.firstName;
 		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
-		avatar.eyeSet[0] = avatar.eyeLids.sprite;
-		avatar.eyeSet[1] = avatar.eyeWhites.sprite;
-		avatar.eyeSet[2] = avatar.eyeIrises.sprite;
-		avatar.eyeSet[3] = avatar.eyesBlinking.sprite;
 		seedStringArray[0] = selectedGenderText.text + ',';
 	}
 
@@ -877,7 +873,16 @@ public class CharacterPool : MonoBehaviour {
 			arrayPosition = 0;
 
 		//then set
-		avatar.body.color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.head.color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.chin.color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.eyeLids.color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.eyesBlinking.color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.cheeks.color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.mouth.color = Color.Lerp(Color.white, avatar.myAppearance.skinTones[arrayPosition], 0.5f);
+		avatar.nose.color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.ears[0].color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.ears[1].color = avatar.myAppearance.skinTones[arrayPosition];
+		avatar.eyesBlinking.color = avatar.myAppearance.skinTones[arrayPosition];
 		avatar.AdjustFacialFeatureColour();
 		selectedSkinColourText.text = arrayPosition.ToString();
 
@@ -916,10 +921,6 @@ public class CharacterPool : MonoBehaviour {
 
 		//then set
 		selectedEyesText.text = arrayPosition.ToString();
-		avatar.eyeSet[0] = avatar.eyeLids.sprite;
-		avatar.eyeSet[1] = avatar.eyeWhites.sprite;
-		avatar.eyeSet[2] = avatar.eyeIrises.sprite;
-		avatar.eyeSet[3] = avatar.eyesBlinking.sprite;
 		seedStringArray[4] = selectedEyesText.text + ',';
 	}
 
