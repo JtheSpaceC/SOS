@@ -11,6 +11,8 @@ using System;
 
 public class Character : MonoBehaviour {
 
+	int nextSeedChoice;
+
 	public bool showShipInsteadOfAvatar = false;
 
 	[HideInInspector] public Heartbeat heartbeatScript;
@@ -30,8 +32,7 @@ public class Character : MonoBehaviour {
 	public string lastName;
 	public string callsign;
 	public string characterBio;
-	public string appearanceSeed; //APPEARANCE_SEED //NB!! FOR SEED (string): ORDER IS: 
-	//Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp
+	public string appearanceSeed;
 
 	public bool inSpace = true;
 
@@ -181,89 +182,207 @@ public class Character : MonoBehaviour {
 	[ContextMenu("Generate Random Appearance")]
 	public void GenerateRandomNewAppearance()
 	{
-		//APPEARANCE_SEED//SAVED HERE
-		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, HelmetColour
+		GenerateRandomNewAppearance(999);
+	}
 
-		if(UnityEngine.Random.Range(0f, 2f) > -1) //TODO: re-enable females
+	public void GenerateRandomNewAppearance(int genderInt) //where 0 is male, 1 is female, otherwise random
+	{
+		//APPEARANCE_SEED//SAVED HERE
+		//FOR SEED (string): ORDER IS: 
+		//OLD(Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour)
+
+		//0-Gender, 1-Body, 2-Clothes, 3-Ears, 4-Head, 5-Chin, 6-Eyes, 7-Cheeks, 8-Mouth, 9-Facial 1, 10-Facial 2, 11-Scar 1, 12-Scar 2,
+		//13-Facial Hair, 14-Nose,  15-Eye Prop, 16-Eyebrows, 17-Hair, 18-Space suit, 19-helmet,
+		//20-Skin Colour, 21-Hair Colour, 22-Eye colour, 23-Spacesuit Colour 1, 24-Spacesuit Colour 2
+
+		if(genderInt == 0)
 		{
 			gender = Gender.Male;
 			myAppearance = maleAppearances;
 			appearanceSeed = "0,";
 		}
-		else 
+		else if(genderInt == 1)
 		{
 			gender = Gender.Female;
 			myAppearance = femaleAppearances;
 			appearanceSeed = "1,";
 		}
+		else //random choice of male or female
+		{
+			if(UnityEngine.Random.Range(0f, 2f) > -1) //TODO: re-enable females
+			{
+				gender = Gender.Male;
+				myAppearance = maleAppearances;
+				appearanceSeed = "0,";
+			}
+			else 
+			{
+				gender = Gender.Female;
+				myAppearance = femaleAppearances;
+				appearanceSeed = "1,";
+			}
+		}
 
-		body.sprite = myAppearance.baseBody[NewSeed(myAppearance.baseBody.Length)];
-		body.color = myAppearance.skinTones[NewSeed(myAppearance.skinTones.Length)];
-		nose.sprite = myAppearance.noses[NewSeed(myAppearance.noses.Length)];
+		body.sprite = myAppearance.body[NewSeed(myAppearance.body.Length, false)];
+		clothes.sprite = myAppearance.clothes[NewSeed(myAppearance.clothes.Length, false)];
+		ears[0].sprite = myAppearance.ears[NewSeed(myAppearance.ears.Length, false)];
+		ears[1].sprite = ears[0].sprite;
+		head.sprite = myAppearance.heads[NewSeed(myAppearance.heads.Length, false)];
+		chin.sprite = myAppearance.chins[NewSeed(myAppearance.chins.Length, false)];
+
+		//Generate Eyes
 		int numSetsOfEyes = (myAppearance.eyes.Length /3)-1; //TODO: 4 when we add lids 
-		int eyeSetChoice = NewSeed(numSetsOfEyes) * 3;
+		int eyeSetChoice = NewSeed(numSetsOfEyes, false) * 3;
 		eyeLids.sprite = myAppearance.eyes[eyeSetChoice];
 		eyeWhites.sprite = myAppearance.eyes[eyeSetChoice+1];
 		eyeIrises.sprite = myAppearance.eyes[eyeSetChoice+2];
 		//eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+3];
-		hair.sprite = myAppearance.hair[NewSeed(myAppearance.hair.Length)];
+		//eye iris colour is set lower down
 
-		//facial hair
+		cheeks.sprite = myAppearance.cheeks[NewSeed(myAppearance.cheeks.Length, false)];
+		mouth.sprite = myAppearance.mouths[NewSeed(myAppearance.mouths.Length, false)];
+
+		//chance of having FACIAL FEATURE
+		int result = UnityEngine.Random.Range(0, 4);
+
+		if(result == 0) //just one facial feature
+		{
+			nextSeedChoice = NewSeed(myAppearance.facialFeatures1.Length, true);
+			if(nextSeedChoice == 0)
+				facialFeatures1.sprite = null;
+			else
+				facialFeatures1.sprite = myAppearance.facialFeatures1[nextSeedChoice-1];
+
+			facialFeatures2.sprite = null;
+			NewSeed(0, false); //for ff2
+
+			AdjustFacialFeatureColour();
+		}
+		else if(result == 2) //two facial features
+		{
+			nextSeedChoice = NewSeed(myAppearance.facialFeatures1.Length, true);
+			if(nextSeedChoice == 0)
+				facialFeatures1.sprite = null;
+			else
+				facialFeatures1.sprite = myAppearance.facialFeatures1[nextSeedChoice-1];
+			
+			nextSeedChoice = NewSeed(myAppearance.facialFeatures2.Length, true);
+			if(nextSeedChoice == 0)
+				facialFeatures2.sprite = null;
+			else
+				facialFeatures2.sprite = myAppearance.facialFeatures2[nextSeedChoice-1];	
+
+			AdjustFacialFeatureColour();
+		}
+		else
+		{
+			facialFeatures1.sprite = null;
+			facialFeatures2.sprite = null;
+			NewSeed(0, false); //for ff1
+			NewSeed(0, false); //for ff2
+		}
+
+		//chance of having SCARS
+		int result2 = UnityEngine.Random.Range(0, 3);
+
+		if(result2 == 0) //just one scar
+		{
+			nextSeedChoice = NewSeed(myAppearance.scars1.Length, true);
+			if(nextSeedChoice == 0)
+				scars1.sprite = null;
+			else
+				scars1.sprite = myAppearance.scars1[nextSeedChoice-1];
+
+			scars2.sprite = null;
+			NewSeed(0, false); //for scars2
+
+			AdjustFacialFeatureColour();
+		}
+		else
+		{
+			scars1.sprite = null;
+			scars2.sprite = null;
+			NewSeed(0, false); //for scars1
+			NewSeed(0, false); //for scars2
+		}
+
+		//FACIAL HAIR
 		if(gender == Gender.Male)
 		{
 			//50:50 chance to be a clean shaven male
 			if(UnityEngine.Random.Range(0,10) >=5)
 			{
-				facialHair.sprite = myAppearance.facialHair[NewSeed(myAppearance.facialHair.Length)]; 
+				nextSeedChoice = NewSeed(myAppearance.facialHair.Length, true);
+				if(nextSeedChoice == 0)
+					facialHair.sprite = null;
+				else
+					facialHair.sprite = myAppearance.facialHair[nextSeedChoice-1]; 
 			}
 			else
-				NewSeed(0);
+			{
+				facialHair.sprite = null;
+				NewSeed(0, false);
+			}
 		}
 		else 
 		{
 			facialHair.sprite = null;
-			NewSeed(0);
+			NewSeed(0, false);
 		}
 
-		hair.color = myAppearance.hairColours[NewSeed(myAppearance.hairColours.Length)];
-		facialHair.color = hair.color;
-		eyebrows.color = hair.color;
+		nose.sprite = myAppearance.noses[NewSeed(myAppearance.noses.Length, false)];
 
-		//chance of having a prop for the eyes
+		//chance of having EYE PROP
 		if(UnityEngine.Random.Range(0,100) >= chanceOfEyesProp)
 		{
-			eyesProp.sprite = myAppearance.eyesProp[NewSeed(myAppearance.eyesProp.Length)];
+			nextSeedChoice = NewSeed(myAppearance.eyesProp.Length, true);
+			if(nextSeedChoice == 0)
+				eyesProp.sprite = null;
+			else
+				eyesProp.sprite = myAppearance.eyesProp[nextSeedChoice-1];
 		}
 		else
 		{
 			eyesProp.sprite = null;
-			NewSeed(0);
+			NewSeed(0, false);
 		}
 
-		//chance of having a facial feature like a scar
-		if(UnityEngine.Random.Range(0f, 2f) > 1.33f)
-		{
-			facialFeatures1.sprite = myAppearance.facialFeatures1[NewSeed(myAppearance.facialFeatures1.Length)];
-			AdjustFacialFeatureColour();
-			//TODO: FF1 & 2, Scars 1 & 2
-		}
+		eyebrows.sprite = myAppearance.eyebrows[NewSeed(myAppearance.eyebrows.Length, false)];
+
+		//HAIR
+		nextSeedChoice = NewSeed(myAppearance.hair.Length, true);
+		if(nextSeedChoice == 0)
+			hair.sprite = null;
 		else
-		{
-			facialFeatures1.sprite = null;
-			NewSeed(0);
-		}
+			hair.sprite = myAppearance.hair[nextSeedChoice-1];
 
-		helmet.sprite = myAppearance.helmets[NewSeed(myAppearance.helmets.Length)];
-		helmet.color = myAppearance.spaceSuitColours[NewSeed(myAppearance.spaceSuitColours.Length)];
-		spaceSuit.color = helmet.color;
+		spaceSuit.sprite = myAppearance.spaceSuits[NewSeed(myAppearance.spaceSuits.Length, false)];
+		helmet.sprite = myAppearance.helmets[NewSeed(myAppearance.helmets.Length, false)];
 
-		//SEED OVER. REST IS IRRELEVANT FOR SEED AT THE MOMENT
-		//currently only one mouth. Ignore for seed
-		mouth.sprite = GetARandomSprite(myAppearance.mouths);
+		//SKIN COLOUR
+		Color skinColor = myAppearance.skinTones[NewSeed(myAppearance.skinTones.Length, false)];
+		head.color = skinColor;
+		chin.color = skinColor;
+		eyeLids.color = skinColor;
+		eyesBlinking.color = skinColor;
+		cheeks.color = skinColor;
+		mouth.color = Color.Lerp(Color.white, skinColor, 0.5f);
+		nose.color = skinColor;
+		ears[0].color = skinColor;
+		ears[1].color = skinColor;
+		AdjustFacialFeatureColour();
 
-		clothes.sprite = GetARandomSprite(myAppearance.clothes);
-		helmet.sprite = GetARandomSprite(myAppearance.helmets);
-		spaceSuit.sprite = GetARandomSprite(myAppearance.spaceSuits);
+		//HAIR COLOUR
+		hair.color = myAppearance.hairColours[NewSeed(myAppearance.hairColours.Length, false)];
+		facialHair.color = hair.color;
+		eyebrows.color = hair.color;
+
+		//EYE COLOUR
+		eyeIrises.color = myAppearance.eyeColours[NewSeed(myAppearance.eyeColours.Length, false)];
+
+		//SPACE SUIT COLOURS
+		helmet.color = myAppearance.spaceSuitColours1[NewSeed(myAppearance.spaceSuitColours1.Length, false)];
+		spaceSuit.color = myAppearance.spaceSuitColours2[NewSeed(myAppearance.spaceSuitColours1.Length, false)];
 
 	}//end of GenerateRandomNewAppearance
 
@@ -271,7 +390,12 @@ public class Character : MonoBehaviour {
 	public void GenerateAppearanceBySeed(string[] seed)
 	{
 		//APPEARANCE_SEED
-		//FOR SEED (string): ORDER IS: Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature
+		//FOR SEED (string): ORDER IS: 
+		//OLD(Gender, Body, Skin Colour, Nose, Eyes, Hair, FacialHair, HairColour, EyesProp, FacialFeature, Helmet, SpacesuitColour)
+
+		//0-Gender, 1-Body, 2-Clothes, 3-Ears, 4-Head, 5-Chin, 6-Eyes, 7-Cheeks, 8-Mouth, 9-Facial 1, 10-Facial 2, 11-Scar 1, 12-Scar 2,
+		//13-Facial Hair, 14-Nose,  15-Eye Prop, 16-Eyebrows, 17-Hair, 18-Space suit, 19-helmet,
+		//20-Skin Colour, 21-Hair Colour, 22-Eye colour, 23-Spacesuit Colour 1, 24-Spacesuit Colour 2
 
 		if(seed[0] == "0") //male
 		{
@@ -286,35 +410,110 @@ public class Character : MonoBehaviour {
 		else
 			Debug.Log("Something Went Wrong");
 
-		body.sprite = myAppearance.baseBody[Int32.Parse(seed[1].ToString())];
-		body.color = myAppearance.skinTones[Int32.Parse(seed[2].ToString())];
-		nose.sprite = myAppearance.noses[Int32.Parse(seed[3].ToString())];
-		eyeLids.sprite = myAppearance.eyes[Int32.Parse(seed[4].ToString())];
-		hair.sprite = myAppearance.hair[Int32.Parse(seed[5].ToString())];
+		body.sprite = myAppearance.body[Int32.Parse(seed[1].ToString())];
+		clothes.sprite = myAppearance.clothes[Int32.Parse(seed[2].ToString())];
+		ears[0].sprite = myAppearance.ears[Int32.Parse(seed[3].ToString())];
+		ears[1].sprite = ears[0].sprite;
+		head.sprite = myAppearance.heads[Int32.Parse(seed[4].ToString())];
+		chin.sprite = myAppearance.chins[Int32.Parse(seed[5].ToString())];
 
-		//facial hair
+		int eyeSetChoice = Int32.Parse(seed[6].ToString())* 3; //TODO: 4 when we add lids
+		eyeLids.sprite = myAppearance.eyes[eyeSetChoice];
+		eyeWhites.sprite = myAppearance.eyes[eyeSetChoice+1];
+		eyeIrises.sprite = myAppearance.eyes[eyeSetChoice+2];
+		//eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+3];
+		//eye iris colour is set lower down
+
+		cheeks.sprite = myAppearance.cheeks[Int32.Parse(seed[7].ToString())];
+		mouth.sprite = myAppearance.mouths[Int32.Parse(seed[8].ToString())];
+
+		//FACIAL FEATURES
+		int facialFeature = Int32.Parse(seed[9].ToString());
+		if(facialFeature == 0)
+			facialFeatures1.sprite = null;
+		else
+			facialFeatures1.sprite = myAppearance.facialFeatures1[facialFeature-1];
+		
+		facialFeature = Int32.Parse(seed[10].ToString());
+		if(facialFeature == 0)
+			facialFeatures2.sprite = null;
+		else
+			facialFeatures2.sprite = myAppearance.facialFeatures2[facialFeature-1];
+
+		//SCARS
+		facialFeature = Int32.Parse(seed[11].ToString());
+		if(facialFeature == 0)
+			scars1.sprite = null;
+		else
+			scars1.sprite = myAppearance.scars1[facialFeature-1];
+
+		facialFeature = Int32.Parse(seed[12].ToString());
+		if(facialFeature == 0)
+			scars2.sprite = null;
+		else
+			scars2.sprite = myAppearance.scars2[facialFeature-1];
+
+		//FACIAL HAIR
 		if(gender == Gender.Male)
 		{
-			facialHair.sprite = myAppearance.facialHair[Int32.Parse(seed[6].ToString())];
+			facialFeature = Int32.Parse(seed[13].ToString());
+			if(facialFeature == 0)
+				facialHair.sprite = null;
+			else
+				facialHair.sprite = myAppearance.facialHair[facialFeature-1];
 		}
 		else 
 		{
 			facialHair.sprite = null; 
 		}
 
-		hair.color = myAppearance.hairColours[Int32.Parse(seed[7].ToString())];
-		facialHair.color = hair.color;
+		nose.sprite = myAppearance.noses[Int32.Parse(seed[14].ToString())];
 
-		eyesProp.sprite = myAppearance.eyesProp[Int32.Parse(seed[8].ToString())];
+		//EYE PROP
+		facialFeature = Int32.Parse(seed[15].ToString());
+		if(facialFeature == 0)
+			eyesProp.sprite = null;
+		else 
+			eyesProp.sprite = myAppearance.eyesProp[facialFeature-1];
 
-		facialFeatures1.sprite = myAppearance.facialFeatures1[Int32.Parse(seed[9].ToString())];
-		//TODO: FF 1 & 2, Scars 1 & 2
+		eyebrows.sprite = myAppearance.eyebrows[Int32.Parse(seed[16].ToString())];
 
+		//HAIR
+		facialFeature = Int32.Parse(seed[17].ToString());
+		if(facialFeature == 0)
+			hair.sprite = null;
+		else
+			hair.sprite = myAppearance.hair[facialFeature-1];
+
+		spaceSuit.sprite = myAppearance.spaceSuits[Int32.Parse(seed[18].ToString())];
+		helmet.sprite = myAppearance.helmets[Int32.Parse(seed[19].ToString())];
+
+		//SKIN COLOUR
+		Color newColour = myAppearance.skinTones[Int32.Parse(seed[20].ToString())];
+		head.color = newColour;
+		chin.color = newColour;
+		eyeLids.color = newColour;
+		eyesBlinking.color = newColour;
+		cheeks.color = newColour;
+		mouth.color = Color.Lerp(Color.white, newColour, 0.5f);
+		nose.color = newColour;
+		ears[0].color = newColour;
+		ears[1].color = newColour;
 		AdjustFacialFeatureColour();
 
-		helmet.sprite = myAppearance.helmets[Int32.Parse(seed[10].ToString())];
-		helmet.color = myAppearance.spaceSuitColours[Int32.Parse(seed[11].ToString())];
-		spaceSuit.color = helmet.color;
+		//HAIR COLOUR
+		newColour = myAppearance.hairColours[Int32.Parse(seed[21].ToString())];
+		hair.color = newColour;
+		facialHair.color = newColour;
+		eyebrows.color = newColour;
+
+		eyeIrises.color = myAppearance.eyeColours[Int32.Parse(seed[22].ToString())];
+
+		//SPACESUIT COLOUR 1 & 2
+		newColour = myAppearance.spaceSuitColours1[Int32.Parse(seed[23].ToString())];
+		spaceSuit.color = newColour;
+		newColour = myAppearance.spaceSuitColours2[Int32.Parse(seed[24].ToString())];
+		helmet.color = newColour;
 
 	}//end of GenerateAppearanceBySeed()
 
@@ -397,9 +596,14 @@ public class Character : MonoBehaviour {
 		callsign = possibleCallsigns [UnityEngine.Random.Range (0, possibleCallsigns.Count)];
 	}
 
-	int NewSeed(int arrayLength) //this function adds its result to the string recording the seed of this appearance
+	int NewSeed(int arrayLength, bool zeroIsEmpty) //this function adds its result to the string recording the seed of this appearance
 	{
-		int choice = UnityEngine.Random.Range(0, arrayLength);
+		int choice = 0;
+		if(zeroIsEmpty) //this is because a choice of zero is meant to be nothing on scars, facial features, etc, not the first selection
+			choice = UnityEngine.Random.Range(0, arrayLength+1);
+		else
+			choice = UnityEngine.Random.Range(0, arrayLength);
+		
 		appearanceSeed += choice.ToString() + ",";
 		return choice;
 	}
@@ -413,6 +617,9 @@ public class Character : MonoBehaviour {
 	{
 		Debug.Log("Accessing AdjustFacialFeatureColour(), but it's commented out.");
 		//facialFeatures1.color = Color.Lerp(body.color, Color.black, 0.4f);
+		//facialFeatures2.color = Color.Lerp(body.color, Color.black, 0.4f);
+		//scars1
+		//scars2
 	}
 
 
