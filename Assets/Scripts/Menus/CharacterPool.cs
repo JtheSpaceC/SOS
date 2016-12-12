@@ -909,6 +909,15 @@ public class CharacterPool : MonoBehaviour {
 		selectedHeadText.text = arrayPosition.ToString();
 
 		seedStringArray[4] = selectedHeadText.text + ',';
+
+		//then ears/hair have to change
+		avatar.AdjustEarsAndHair(arrayPosition);
+
+		//also choose a new hair
+		int hairPosition = Int32.Parse(selectedHairText.text);
+		avatar.hair.sprite = hairPosition == 0? null: avatar.myAppearance.hairToUse[hairPosition-1];
+		hairPosition = Int32.Parse(selectedFacialHairText.text);
+		avatar.facialHair.sprite = hairPosition == 0? null: avatar.myAppearance.facialHairToUse[hairPosition-1];
 	}
 
 	public void NextSkinColour(int i)
@@ -985,12 +994,12 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.myAppearance.hair.Length;
-		else if(arrayPosition > avatar.myAppearance.hair.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.hairToUse.Length;
+		else if(arrayPosition > avatar.myAppearance.hairToUse.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.hair.sprite = arrayPosition == 0? null : avatar.myAppearance.hair[arrayPosition-1];
+		avatar.hair.sprite = arrayPosition == 0? null : avatar.myAppearance.hairToUse[arrayPosition-1];
 
 		//then set
 		selectedHairText.text = arrayPosition.ToString();
@@ -1006,12 +1015,12 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = avatar.myAppearance.facialHair.Length;
-		else if(arrayPosition > avatar.myAppearance.facialHair.Length) //check if it's greater than length
+			arrayPosition = avatar.myAppearance.facialHairToUse.Length;
+		else if(arrayPosition > avatar.myAppearance.facialHairToUse.Length) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.facialHair.sprite = arrayPosition == 0? null : avatar.myAppearance.facialHair[arrayPosition-1];
+		avatar.facialHair.sprite = arrayPosition == 0? null : avatar.myAppearance.facialHairToUse[arrayPosition-1];
 		selectedFacialHairText.text = arrayPosition.ToString();
 
 		seedStringArray[13] = selectedFacialHairText.text + ',';

@@ -227,7 +227,12 @@ public class Character : MonoBehaviour {
 		clothes.sprite = myAppearance.clothes[NewSeed(myAppearance.clothes.Length, false)];
 		ears[0].sprite = myAppearance.ears[NewSeed(myAppearance.ears.Length, false)];
 		ears[1].sprite = ears[0].sprite;
-		head.sprite = myAppearance.heads[NewSeed(myAppearance.heads.Length, false)];
+
+		int headShape = NewSeed(myAppearance.heads.Length, false);
+		head.sprite = myAppearance.heads[headShape];
+		//then ear positions have to change
+		AdjustEarsAndHair(headShape);
+
 		chin.sprite = myAppearance.chins[NewSeed(myAppearance.chins.Length, false)];
 
 		//Generate Eyes
@@ -312,11 +317,11 @@ public class Character : MonoBehaviour {
 			//50:50 chance to be a clean shaven male
 			if(UnityEngine.Random.Range(0,10) >=5)
 			{
-				nextSeedChoice = NewSeed(myAppearance.facialHair.Length, true);
+				nextSeedChoice = NewSeed(myAppearance.facialHairToUse.Length, true);
 				if(nextSeedChoice == 0)
 					facialHair.sprite = null;
 				else
-					facialHair.sprite = myAppearance.facialHair[nextSeedChoice-1]; 
+					facialHair.sprite = myAppearance.facialHairToUse[nextSeedChoice-1]; 
 			}
 			else
 			{
@@ -350,11 +355,11 @@ public class Character : MonoBehaviour {
 		eyebrows.sprite = myAppearance.eyebrows[NewSeed(myAppearance.eyebrows.Length, false)];
 
 		//HAIR
-		nextSeedChoice = NewSeed(myAppearance.hair.Length, true);
+		nextSeedChoice = NewSeed(myAppearance.hairToUse.Length, true);
 		if(nextSeedChoice == 0)
 			hair.sprite = null;
 		else
-			hair.sprite = myAppearance.hair[nextSeedChoice-1];
+			hair.sprite = myAppearance.hairToUse[nextSeedChoice-1];
 
 		spaceSuit.sprite = myAppearance.spaceSuits[NewSeed(myAppearance.spaceSuits.Length, false)];
 		helmet.sprite = myAppearance.helmets[NewSeed(myAppearance.helmets.Length, false)];
@@ -411,10 +416,17 @@ public class Character : MonoBehaviour {
 			Debug.Log("Something Went Wrong");
 
 		body.sprite = myAppearance.body[Int32.Parse(seed[1].ToString())];
+
+
 		clothes.sprite = myAppearance.clothes[Int32.Parse(seed[2].ToString())];
 		ears[0].sprite = myAppearance.ears[Int32.Parse(seed[3].ToString())];
 		ears[1].sprite = ears[0].sprite;
-		head.sprite = myAppearance.heads[Int32.Parse(seed[4].ToString())];
+
+		int headShape = Int32.Parse(seed[4].ToString());
+		head.sprite = myAppearance.heads[headShape];
+		//then ear positions have to change
+		AdjustEarsAndHair(headShape);
+
 		chin.sprite = myAppearance.chins[Int32.Parse(seed[5].ToString())];
 
 		int eyeSetChoice = Int32.Parse(seed[6].ToString())* 3; //TODO: 4 when we add lids
@@ -460,7 +472,7 @@ public class Character : MonoBehaviour {
 			if(facialFeature == 0)
 				facialHair.sprite = null;
 			else
-				facialHair.sprite = myAppearance.facialHair[facialFeature-1];
+				facialHair.sprite = myAppearance.facialHairToUse[facialFeature-1];
 		}
 		else 
 		{
@@ -483,7 +495,7 @@ public class Character : MonoBehaviour {
 		if(facialFeature == 0)
 			hair.sprite = null;
 		else
-			hair.sprite = myAppearance.hair[facialFeature-1];
+			hair.sprite = myAppearance.hairToUse[facialFeature-1];
 
 		spaceSuit.sprite = myAppearance.spaceSuits[Int32.Parse(seed[18].ToString())];
 		helmet.sprite = myAppearance.helmets[Int32.Parse(seed[19].ToString())];
@@ -620,6 +632,37 @@ public class Character : MonoBehaviour {
 		//facialFeatures2.color = Color.Lerp(body.color, Color.black, 0.4f);
 		//scars1
 		//scars2
+	}
+
+	public void AdjustEarsAndHair(int shape)
+	{
+		//ear positions and hair types have to change
+		if(shape == 0) //broad
+		{
+			ears[0].transform.localPosition = myAppearance.earPositions[0];
+			ears[1].transform.localPosition = myAppearance.earPositions[0] * (-2);
+
+			myAppearance.hairToUse = myAppearance.hair_broad;
+			myAppearance.facialHairToUse = myAppearance.facialHair_broad;
+		}
+		else if(shape == 1) //medium
+		{
+			ears[0].transform.localPosition = myAppearance.earPositions[1];
+			ears[1].transform.localPosition = myAppearance.earPositions[1] * (-2);
+
+			myAppearance.hairToUse = myAppearance.hair_medium;
+			myAppearance.facialHairToUse = myAppearance.facialHair_medium;
+		}
+		else if(shape == 2) //narrow
+		{
+			ears[0].transform.localPosition = myAppearance.earPositions[2];
+			ears[1].transform.localPosition = myAppearance.earPositions[2] * (-2);
+
+			myAppearance.hairToUse = myAppearance.hair_narrow;
+			myAppearance.facialHairToUse = myAppearance.facialHair_narrow;
+		}
+		else 
+			Debug.LogWarning("You've used more than 3 head types haven't you?...");
 	}
 
 
