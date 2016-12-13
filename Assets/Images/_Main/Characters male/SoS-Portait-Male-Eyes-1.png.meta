@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: a82d41ebb847629499b7f80ba4216008
-timeCreated: 1480710550
+guid: 0ee693cbb5773354a893bc15b3954f20
+timeCreated: 1481638890
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -22,6 +22,18 @@ TextureImporter:
     21300030: SoS-Portait-Male-Eyes-1_15
     21300032: SoS-Portait-Male-Eyes-1_16
     21300034: SoS-Portait-Male-Eyes-1_17
+    21300036: SoS-Portait-Male-Eyes-1_18
+    21300038: SoS-Portait-Male-Eyes-1_19
+    21300040: SoS-Portait-Male-Eyes-1_20
+    21300042: SoS-Portait-Male-Eyes-1_21
+    21300044: SoS-Portait-Male-Eyes-1_22
+    21300046: SoS-Portait-Male-Eyes-1_23
+    21300048: SoS-Portait-Male-Eyes-1_24
+    21300050: SoS-Portait-Male-Eyes-1_25
+    21300052: SoS-Portait-Male-Eyes-1_26
+    21300054: SoS-Portait-Male-Eyes-1_27
+    21300056: SoS-Portait-Male-Eyes-1_28
+    21300058: SoS-Portait-Male-Eyes-1_29
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -54,7 +66,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
@@ -146,8 +158,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 1600
+        x: 720
+        y: 2000
         width: 240
         height: 400
       alignment: 0
@@ -159,8 +171,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_4
       rect:
         serializedVersion: 2
-        x: 240
-        y: 1600
+        x: 960
+        y: 2000
         width: 240
         height: 400
       alignment: 0
@@ -172,7 +184,7 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_5
       rect:
         serializedVersion: 2
-        x: 480
+        x: 0
         y: 1600
         width: 240
         height: 400
@@ -185,8 +197,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_6
       rect:
         serializedVersion: 2
-        x: 0
-        y: 1200
+        x: 240
+        y: 1600
         width: 240
         height: 400
       alignment: 0
@@ -198,8 +210,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_7
       rect:
         serializedVersion: 2
-        x: 240
-        y: 1200
+        x: 480
+        y: 1600
         width: 240
         height: 400
       alignment: 0
@@ -211,8 +223,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_8
       rect:
         serializedVersion: 2
-        x: 480
-        y: 1200
+        x: 720
+        y: 1600
         width: 240
         height: 400
       alignment: 0
@@ -224,8 +236,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_9
       rect:
         serializedVersion: 2
-        x: 0
-        y: 800
+        x: 960
+        y: 1600
         width: 240
         height: 400
       alignment: 0
@@ -237,8 +249,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_10
       rect:
         serializedVersion: 2
-        x: 240
-        y: 800
+        x: 0
+        y: 1200
         width: 240
         height: 400
       alignment: 0
@@ -250,8 +262,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_11
       rect:
         serializedVersion: 2
-        x: 480
-        y: 800
+        x: 240
+        y: 1200
         width: 240
         height: 400
       alignment: 0
@@ -263,8 +275,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_12
       rect:
         serializedVersion: 2
-        x: 0
-        y: 400
+        x: 480
+        y: 1200
         width: 240
         height: 400
       alignment: 0
@@ -276,8 +288,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_13
       rect:
         serializedVersion: 2
-        x: 240
-        y: 400
+        x: 720
+        y: 1200
         width: 240
         height: 400
       alignment: 0
@@ -289,8 +301,8 @@ TextureImporter:
       name: SoS-Portait-Male-Eyes-1_14
       rect:
         serializedVersion: 2
-        x: 480
-        y: 400
+        x: 960
+        y: 1200
         width: 240
         height: 400
       alignment: 0
@@ -303,7 +315,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 800
         width: 240
         height: 400
       alignment: 0
@@ -316,7 +328,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 240
-        y: 0
+        y: 800
         width: 240
         height: 400
       alignment: 0
@@ -329,6 +341,162 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 480
+        y: 800
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_18
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 800
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_19
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 800
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_21
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 400
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_22
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 400
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_23
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 400
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_24
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 400
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_26
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 0
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_27
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_28
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 0
+        width: 240
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Eyes-1_29
+      rect:
+        serializedVersion: 2
+        x: 960
         y: 0
         width: 240
         height: 400

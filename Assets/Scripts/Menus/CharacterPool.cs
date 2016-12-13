@@ -260,7 +260,6 @@ public class CharacterPool : MonoBehaviour {
 	{
 		selectedCharacters.Clear();
 
-		print("AllCharacters Length: " + allCharacters.Length);
 		for(int i = 0; i < allCharacters.Length; i++)
 		{
 			if(allCharacters[i].GetComponentInChildren<Toggle>().isOn)
@@ -352,7 +351,7 @@ public class CharacterPool : MonoBehaviour {
 		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
 	}
 
-	void SetCorrectNumbersOnEditButtons()
+	public void SetCorrectNumbersOnEditButtons()
 	{
 		firstNameEntryText.text = "First Name: "+ selectedCharacter.firstName;
 		lastNameEntryText.text = "Last Name: " + selectedCharacter.lastName;
@@ -1089,15 +1088,16 @@ public class CharacterPool : MonoBehaviour {
 		arrayPosition += i;
 
 		if(arrayPosition < 0) //check if it's less than 0
-			arrayPosition = (avatar.myAppearance.eyes.Length/3) -1;
-		else if(arrayPosition >= avatar.myAppearance.eyes.Length/3) //check if it's greater than length
+			arrayPosition = (avatar.myAppearance.eyes.Length/5) -1;
+		else if(arrayPosition >= avatar.myAppearance.eyes.Length/5) //check if it's greater than length
 			arrayPosition = 0;
 
 		//then set
-		avatar.eyeLids.sprite = avatar.myAppearance.eyes[arrayPosition * 3]; //TODO:Update to 4?
-		avatar.eyeWhites.sprite = avatar.myAppearance.eyes[(arrayPosition * 3)+1];
-		avatar.eyeIrises.sprite = avatar.myAppearance.eyes[(arrayPosition * 3)+2];
-		//eyesBlinking.sprite = myAppearance.eyes[(arrayPosition * 3)+3];
+		avatar.eyeLids.sprite = avatar.myAppearance.eyes[arrayPosition * 5];
+		avatar.eyeWhites.sprite = avatar.myAppearance.eyes[(arrayPosition * 5)+1];
+		avatar.eyeIrises.sprite = avatar.myAppearance.eyes[(arrayPosition * 5)+2];
+		avatar.eyeShine.sprite = avatar.myAppearance.eyes[(arrayPosition * 5)+3];
+		avatar.eyesBlinking.sprite = avatar.myAppearance.eyes[(arrayPosition * 5)+4];
 
 		//then set
 		selectedEyesText.text = (arrayPosition).ToString();

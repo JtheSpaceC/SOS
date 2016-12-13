@@ -1,6 +1,8 @@
-﻿//NOTE: There are two ways that facial features are picked.
+﻿//NOTE: There are two ways that facial features are picked in here.
 //GenerateRandomNewAppearance() and  GenerateAppearanceBySeed(string[] seed)
-//The seed is also referenced in 4 places
+//It is also changed in CharacterPool with the Next option in the Character Creation screen.
+//Any change to any sprites may require changes in 3 places.
+//The seed is also referenced in 4 places with "APPEARANCE_SEED"
 
 
 using UnityEngine;
@@ -52,6 +54,7 @@ public class Character : MonoBehaviour {
 	public SpriteRenderer eyeLids;
 	public SpriteRenderer eyeWhites;
 	public SpriteRenderer eyeIrises;
+	public SpriteRenderer eyeShine;
 	public SpriteRenderer eyesBlinking;
 	public Transform eyeballs;
 	public SpriteRenderer cheeks;
@@ -183,6 +186,7 @@ public class Character : MonoBehaviour {
 	public void GenerateRandomNewAppearance()
 	{
 		GenerateRandomNewAppearance(999);
+		GenerateName();
 	}
 
 	public void GenerateRandomNewAppearance(int genderInt) //where 0 is male, 1 is female, otherwise random
@@ -236,12 +240,13 @@ public class Character : MonoBehaviour {
 		chin.sprite = myAppearance.chins[NewSeed(myAppearance.chins.Length, false)];
 
 		//Generate Eyes
-		int numSetsOfEyes = (myAppearance.eyes.Length /3)-1; //TODO: 4 when we add lids 
-		int eyeSetChoice = NewSeed(numSetsOfEyes, false) * 3;
+		int numSetsOfEyes = (myAppearance.eyes.Length /5)-1;
+		int eyeSetChoice = NewSeed(numSetsOfEyes, false) * 5;
 		eyeLids.sprite = myAppearance.eyes[eyeSetChoice];
 		eyeWhites.sprite = myAppearance.eyes[eyeSetChoice+1];
 		eyeIrises.sprite = myAppearance.eyes[eyeSetChoice+2];
-		//eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+3];
+		eyeShine.sprite = myAppearance.eyes[eyeSetChoice+3];
+		eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+4];
 		//eye iris colour is set lower down
 
 		cheeks.sprite = myAppearance.cheeks[NewSeed(myAppearance.cheeks.Length, false)];
@@ -429,11 +434,12 @@ public class Character : MonoBehaviour {
 
 		chin.sprite = myAppearance.chins[Int32.Parse(seed[5].ToString())];
 
-		int eyeSetChoice = Int32.Parse(seed[6].ToString())* 3; //TODO: 4 when we add lids
+		int eyeSetChoice = Int32.Parse(seed[6].ToString())* 5;
 		eyeLids.sprite = myAppearance.eyes[eyeSetChoice];
 		eyeWhites.sprite = myAppearance.eyes[eyeSetChoice+1];
 		eyeIrises.sprite = myAppearance.eyes[eyeSetChoice+2];
-		//eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+3];
+		eyeShine.sprite = myAppearance.eyes[eyeSetChoice+3];
+		eyesBlinking.sprite = myAppearance.eyes[eyeSetChoice+4];
 		//eye iris colour is set lower down
 
 		cheeks.sprite = myAppearance.cheeks[Int32.Parse(seed[7].ToString())];
@@ -627,11 +633,8 @@ public class Character : MonoBehaviour {
 
 	public void AdjustFacialFeatureColour() //mostly for scar colour matching skin tone
 	{
-		Debug.Log("Accessing AdjustFacialFeatureColour(), but it's commented out.");
-		//facialFeatures1.color = Color.Lerp(body.color, Color.black, 0.4f);
-		//facialFeatures2.color = Color.Lerp(body.color, Color.black, 0.4f);
-		//scars1
-		//scars2
+		facialFeatures1.color = Color.Lerp(body.color, Color.black, 0.4f);
+		facialFeatures2.color = Color.Lerp(body.color, Color.black, 0.4f);
 	}
 
 	public void AdjustEarsAndHair(int shape)
