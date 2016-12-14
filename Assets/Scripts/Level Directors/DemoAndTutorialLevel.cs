@@ -193,7 +193,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 		//turn off UI
 		foreach(GameObject go in objectsToToggleAtStart)
 		{
-			go.SetActive(!go.activeInHierarchy);
+			go.SetActive(!go.activeSelf);
 		}
 
 		StartCoroutine (PlayerAILogic.instance.TogglePlayerControl(false, false, false, false, false, false, false));
@@ -227,7 +227,7 @@ public class DemoAndTutorialLevel : MonoBehaviour {
 	{
 		foreach(GameObject go in objectsToToggleAtStart)
 		{
-			go.SetActive(!go.activeInHierarchy);
+			go.SetActive(!go.activeSelf);
 		}
 		foreach(GameObject obj in objectsToToggleAfterApproach)
 		{

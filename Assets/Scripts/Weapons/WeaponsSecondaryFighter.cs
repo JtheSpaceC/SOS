@@ -15,8 +15,14 @@ public class WeaponsSecondaryFighter : MonoBehaviour {
 
 	public GameObject target;
 	public GameObject targetingPip;
+	public GameObject noTargetReadout;
+	public float noTargetTextDisplayTime = 1.5f;
 	public float rotSpeed = 50;
 	GameObject theFirer;
+
+	public AudioClip noLockSound;
+	public AudioClip lockSound;
+	AudioSource myAudioSource;
 
 
 	void Awake()
@@ -30,6 +36,8 @@ public class WeaponsSecondaryFighter : MonoBehaviour {
 		}
 		if (!playerControlled)
 			InvokeRepeating ("LaunchProjectile", 1, 1);
+
+		myAudioSource = GetComponent<AudioSource>();
 	}
 
 	void Update () 
@@ -74,14 +82,30 @@ public class WeaponsSecondaryFighter : MonoBehaviour {
 
 	public void LockOn()
 	{
+		CancelInvoke("DeactivateNoTargetText");
+		DeactivateNoTargetText();
+
 		Collider2D hit;
 		
 		hit = Physics2D.OverlapCircle(transform.position + transform.up * 12f, 10f, targetSeekMask);
 		if(hit != null)
 		{
 			target = hit.gameObject;
-			GetComponent<AudioSource>().Play();
+			myAudioSource.clip = lockSound;
+			myAudioSource.Play();
 		}
+		else
+		{
+			noTargetReadout.SetActive(true);
+			myAudioSource.clip = noLockSound;
+			myAudioSource.Play();
+			Invoke("DeactivateNoTargetText", noTargetTextDisplayTime);
+		}
+	}
+
+	void DeactivateNoTargetText()
+	{
+		noTargetReadout.SetActive(false);
 	}
 
 	public void LaunchProjectile()

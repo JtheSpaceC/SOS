@@ -10,11 +10,10 @@ public class SpriteAnimator : MonoBehaviour {
 	public bool disableGameObjectAfterLoop = false;
 	[SerializeField] bool playInReverseOrder = false;
 
-	public enum RendererType {SpriteRenderer, ImageUI};
+	public enum RendererType {SpriteRenderer, ImageUI, Text};
+	public RendererType myRendererType;
 
 	[Header ("For Sprite Swap")]
-
-	public RendererType myRendererType;
 	public bool rendererIsInParent = false;
 	[Tooltip("Will the animation play the same even if TimeScale is slowed?")] 
 	public bool framerateIndependent = false;
@@ -26,6 +25,7 @@ public class SpriteAnimator : MonoBehaviour {
 	public Sprite[] framesSecondary;
 	SpriteRenderer mySpriteRenderer;
 	Image myImage;
+	Text myText;
 	public float framesPerSecond = 4f;
 
 	int currentFrame = 0;
@@ -83,6 +83,13 @@ public class SpriteAnimator : MonoBehaviour {
 				myImage = GetComponentInParent<Image>();
 			else
 				myImage = GetComponent<Image> ();
+		}
+		else if(myRendererType == RendererType.Text)
+		{
+			if(rendererIsInParent)
+				myText = GetComponentInParent<Text>();
+			else
+				myText = GetComponent<Text> ();
 		}
 			
 		currentFrame = 0;
@@ -288,12 +295,12 @@ public class SpriteAnimator : MonoBehaviour {
 			newColour = Color.Lerp(myColors[currentColourInt], myColors[currentColourInt+1], (Time.time - colourReachedTime)/ timePerColour);
 		}
 
-		mySpriteRenderer.color = Color.Lerp(originalColour, newColour, newColourBalance);
-
 		if(myRendererType == RendererType.SpriteRenderer)
 			mySpriteRenderer.color = Color.Lerp(originalColour, newColour, newColourBalance);
 		else if(myRendererType == RendererType.ImageUI)
 			myImage.color = Color.Lerp(originalColour, newColour, newColourBalance);
+		else if(myRendererType == RendererType.Text)
+			myText.color = Color.Lerp(originalColour, newColour, newColourBalance);
 	}
 
 }//Mono
