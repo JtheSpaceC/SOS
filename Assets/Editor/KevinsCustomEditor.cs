@@ -1,14 +1,32 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
 
 public static class KevinsCustomEditor : object {
-
+	
 
 	[MenuItem("SOS Crow's Nest/Player Prefs/Clear Player Prefs")]
 	public static void ClearPlayerPrefs()
 	{
 		PlayerPrefs.DeleteAll();
+	}
+
+	[MenuItem("Tools/Show Prefab Changes")]
+	public static void ShowPrefabChanges() 
+	{
+		PropertyModification[] changes = PrefabUtility.GetPropertyModifications(Selection.activeGameObject);
+
+		if(changes == null)
+		{
+			Debug.Log("NO CHANGES");
+			return;
+		}
+
+		foreach(PropertyModification change in changes)
+		{
+			if(!change.propertyPath.Contains("m_LocalRotation") && !change.propertyPath.Contains("m_LocalPosition")
+				&& !change.propertyPath.Contains("m_RootOrder") && !change.propertyPath.Contains("m_Anchor"))
+				Debug.Log("CHANGE: " + change.target.name + " " + change.propertyPath + " " + change.value);
+		}
 	}
 
 	[MenuItem("SOS Crow's Nest/Checklist Before Public Build")]

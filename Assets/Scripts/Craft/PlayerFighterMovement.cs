@@ -45,6 +45,8 @@ public class PlayerFighterMovement : EnginesFighter {
 
 		Tools.instance.nitroRemainingSlider.maxValue = maxNitro;
 		UpdateNitroHUDElements();
+
+		motionBlur = Camera.main.GetComponent<UnityStandardAssets.ImageEffects.MotionBlur>();
 	}
 
 	void Update()

@@ -7,7 +7,7 @@ public class EnginesFighter : MonoBehaviour {
 
 	AIFighter myAIFighterScript;
 	TiltAnimation tiltAnimationScript;
-	public MotionBlur motionBlur;
+	protected MotionBlur motionBlur;
 
 	[HideInInspector] public Rigidbody2D myRigidBody;
 
@@ -114,9 +114,6 @@ public class EnginesFighter : MonoBehaviour {
 		}
 
 		currentAccelerationRate = normalAccelerationRate;
-
-		motionBlur = Camera.main.GetComponent<MotionBlur>();
-
 	}
 	
 
@@ -699,7 +696,7 @@ public class EnginesFighter : MonoBehaviour {
 				if(motionBlur)
 				{
 					motionBlur.blurAmount += Time.deltaTime;
-					motionBlur.blurAmount = Mathf.Clamp(motionBlur.blurAmount, 0, 0.7f);
+					motionBlur.blurAmount = Mathf.Clamp(motionBlur.blurAmount, 0, 0.6f);
 				}
 			}
 			else if(motionBlur)
