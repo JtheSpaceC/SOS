@@ -52,8 +52,8 @@ public class Character : MonoBehaviour {
 	public SpriteRenderer head;
 	public SpriteRenderer chin;
 	public SpriteRenderer eyeLids;
-	public SpriteRenderer eyeWhites;
-	public SpriteRenderer eyeIrises;
+	public Image eyeWhites;
+	public Image eyeIrises;
 	public SpriteRenderer eyeShine;
 	public SpriteRenderer eyesBlinking;
 	public Transform eyeballs;
@@ -89,7 +89,7 @@ public class Character : MonoBehaviour {
 	public Vector2 lowerLeft;
 	public Vector2 left;
 	public Vector2 upperLeft;
-	Vector2[] eyePositions;
+	public Vector2[] eyePositions;
 
 	//for moving eyes around
 	Vector2 startPos;

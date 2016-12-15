@@ -34,7 +34,7 @@ If you lure in an enemy ship and damage its engines, it will be at that location
 
 The present campaign/nemesis is your primary concern at a given time, but if left too long (and a progress bar fills) then either there'll be an attack on your home base, or on a civilian base, resulting in an evac mission, and pirates establishing a base in that sector.
 
-Early NPC relation needs to be better than you and help you, so you feel their loss.
+Aunt Zacha needs to be better than you and help you, so you feel their loss.
 
 Scouting an enemy installation without a stealth fighter will raise its defenses (meaning more enemies on the map initially, before reinforcements).
 
@@ -50,5 +50,4 @@ COULD GO OUT ON OUTINGS IN AN OPEN WORLD SENSE AND ONLY GO BACK WHEN TIRED OR FO
 When coming to a waypoint on patrol, could generate enemies, but if not then at least genreate some dialogue. Never have nothing happening.
 
 
-DECK CREW
-Can repair x amount of hull damage per day
+DECK CREW Can repair x amount of hull damage per day
