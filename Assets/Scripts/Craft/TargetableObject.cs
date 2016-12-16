@@ -9,7 +9,7 @@ public class TargetableObject : MonoBehaviour {
 
 	[HideInInspector] public Rigidbody2D myRigidbody;
 
-	public enum WhichSide {Enemy, Ally, Civilian};
+	public enum WhichSide {Pirate, PMC, Civilian};
 	public WhichSide whichSide;
 	[HideInInspector] public LayerMask friendlyFireMask;
 	protected LayerMask potshotAtEnemiesMask;
@@ -34,17 +34,19 @@ public class TargetableObject : MonoBehaviour {
 	public float accuracy = 1f;
 	
 
-	protected void SetUpSideInfo () {
+	public void SetUpSideInfo () {
 
-		if (whichSide == WhichSide.Ally)
+		if (whichSide == WhichSide.PMC)
 		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
+			myCommander = Tools.instance.pmcCommander;
+			enemyCommander = Tools.instance.pirateCommander;
+			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Color.green;
 		}
-		else if (whichSide == WhichSide.Enemy)
+		else if (whichSide == WhichSide.Pirate)
 		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
+			myCommander = Tools.instance.pirateCommander;
+			enemyCommander = Tools.instance.pmcCommander;
+			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Color.red;
 		}
 
 		friendlyFireMask = myCommander.fighterFriendlyFireMask;
@@ -206,7 +208,7 @@ public class TargetableObject : MonoBehaviour {
 		kills++;
 		myCommander.kills++;
 		
-		if(whichSide == WhichSide.Ally && tag != "PlayerFighter")
+		if(whichSide == WhichSide.PMC && tag != "PlayerFighter")
 		{
 			int roll = Random.Range(0,11);
 			if(roll >= 3)

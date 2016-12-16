@@ -76,8 +76,7 @@ public class ShotMover : MonoBehaviour {
 		{
 			myRigidbody.velocity = theFirer.transform.root.GetComponent<Rigidbody2D>().velocity;
 			myRigidbody.AddForce (transform.up * shotSpeed / Time.fixedDeltaTime * Tools.instance.normalFixedDeltaTime);
-		}
-		
+		}		
 		else
 		{
 			//FORMER (CORRECT WAY)

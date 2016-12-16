@@ -378,7 +378,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 		AIFighter[] fighterscripts = FindObjectsOfType<AIFighter>();
 		foreach(AIFighter fighter in fighterscripts)
 		{
-			if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Ally)
+			if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.PMC)
 			{
 				if(fighter.GetComponentInChildren<SquadronLeader>())
 				{
@@ -386,7 +386,7 @@ public class DemoSelfPlayingLevel : MonoBehaviour {
 				}
 				fighter.statsAlreadyAdjusted = true;
 			}
-			else if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Enemy)				
+			else if (!fighter.statsAlreadyAdjusted && fighter.whichSide == TargetableObject.WhichSide.Pirate)				
 			{
 				if(!showEnemyUI)
 				{

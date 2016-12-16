@@ -60,4 +60,20 @@ public class SupportShipFunctions : TargetableObject {
 		else 
 			engineScript.MoveToTarget (desiredPos, false);
 	}
+
+	public void ChangeTurretsSide(WhichSide newSide)
+	{
+		foreach(GameObject turret in myTurrets)
+		{
+			WeaponsTurret wt = turret.GetComponent<WeaponsTurret>();
+			wt.whichSide = newSide;
+			wt.SetUpSideInfo();
+			wt.targetsMask = wt.myCommander.turretTargetsMask;
+
+			if(wt.myCommander == Tools.instance.pmcCommander)
+				turret.layer = LayerMask.NameToLayer("PMCTurrets");
+			else if(wt.myCommander == Tools.instance.pirateCommander)
+				turret.layer = LayerMask.NameToLayer("EnemyTurrets");
+		}
+	}
 }

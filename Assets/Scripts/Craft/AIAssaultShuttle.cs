@@ -23,30 +23,31 @@ public class AIAssaultShuttle : SupportShipFunctions {
 	[HideInInspector] bool pickingUpPlayer = false;
 
 
-	void Awake()
+	void Start()
 	{
 		healthScript = GetComponent<HealthTransport> ();
 		engineScript = GetComponent<EnginesFighter> ();
 		warpDrive = GetComponentInChildren<WarpDrive>();
 		myRigidbody = GetComponent<Rigidbody2D>();
+		SetUpSideInfo();
 
-		if (whichSide == WhichSide.Ally)
-		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-		}
-		else if (whichSide == WhichSide.Enemy)
-		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
-		}
-
+		if(myCommander == Tools.instance.pmcCommander)
+			gameObject.layer = LayerMask.NameToLayer("PMCTransports");
+		else if(myCommander == Tools.instance.pirateCommander)
+			gameObject.layer = LayerMask.NameToLayer("EnemyTransports");
+		
 		myCommander.myAssaultShuttles.Add (this.gameObject);
+
+		ChangeTurretsSide(whichSide);
 		foreach(GameObject turret in myTurrets)
 		{
 			if(!myCommander.myTurrets.Contains(turret))
 			{
 				myCommander.myTurrets.Add(turret);
+			}
+			if(enemyCommander.myTurrets.Contains(turret))
+			{
+				enemyCommander.myTurrets.Remove(turret);
 			}
 		}
 
@@ -183,7 +184,7 @@ public class AIAssaultShuttle : SupportShipFunctions {
 
 			warpOutLookAtPoint = (literalSpawnPoint - transform.position).normalized * 1000;
 
-			if(whichSide == WhichSide.Ally)
+			if(whichSide == WhichSide.PMC)
 			{
 				Subtitles.instance.PostSubtitle(new string[] {this.name + ". Warping out!"});
 			}

@@ -538,7 +538,7 @@ public class HealthFighter : Health {
 			//5. Flash collider off to reduce repeat hits all at once (delay if enemy)
 			if (!dead)
 			{
-				if(myAIScript.whichSide == TargetableObject.WhichSide.Enemy)
+				if(myAIScript.whichSide == TargetableObject.WhichSide.Pirate)
 					StartCoroutine (FlashOnInvincibility (2));
 				else
 					StartCoroutine (FlashOnInvincibility (0));
@@ -658,7 +658,7 @@ public class HealthFighter : Health {
 
 		myAIScript.myCommander.retreated++;
 
-		if(myAIScript.whichSide == TargetableObject.WhichSide.Ally)
+		if(myAIScript.whichSide == TargetableObject.WhichSide.PMC)
 			Subtitles.instance.PostSubtitle(new string[]{this.name + " has Returned To Base."});
 
 		try{

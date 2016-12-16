@@ -67,6 +67,10 @@ public class HealthTransport : Health {
 		float damage = baseDamage;
 		damage *= 1; //may want to adjust damage by crit or bonus damage 
 
+		//return if friendly fire
+		if(theAttacker.GetComponent<TargetableObject>().myCommander == GetComponent<TargetableObject>().myCommander)
+			return;
+
 		//1. apply damage
 		
 		//health -= (int)damage; TODO: restore this, as Transport never takes damage now.
@@ -104,7 +108,7 @@ public class HealthTransport : Health {
 		}
 		
 		//2. Flah collider off to reduce repeat hits all at once
-		if(GetComponent<SupportShipFunctions>().whichSide == TargetableObject.WhichSide.Enemy)
+		if(GetComponent<SupportShipFunctions>().whichSide == TargetableObject.WhichSide.Pirate)
 			StartCoroutine (FlashOnInvincibility (2));
 		else
 			StartCoroutine (FlashOnInvincibility (0));

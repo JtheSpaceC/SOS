@@ -40,7 +40,7 @@ public class AITransport : SupportShipFunctions {
 
 
 
-	void Awake()
+	void Start()
 	{
 		healthScript = GetComponent<HealthTransport> ();
 		engineScript = GetComponent<EnginesFighter> ();
@@ -48,33 +48,27 @@ public class AITransport : SupportShipFunctions {
 		//myRenderer = GetComponent<SpriteRenderer> ();
 		//myRigidbody = GetComponent<Rigidbody2D> ();
 
-		if (whichSide == WhichSide.Ally)
-		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-		}
-		else if (whichSide == WhichSide.Enemy)
-		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
-			enemyCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
-		}
+		SetUpSideInfo();
 
 		myCommander.myTransports.Add (this.gameObject);
+
+		ChangeTurretsSide(whichSide);
 		foreach(GameObject turret in myTurrets)
-		{
+		{			
 			if(!myCommander.myTurrets.Contains(turret))
 			{
 				myCommander.myTurrets.Add(turret);
+			}
+			if(enemyCommander.myTurrets.Contains(turret))
+			{
+				enemyCommander.myTurrets.Remove(turret);
 			}
 		}
 
 		warpOutLookAtPoint = myCommander.transform.position;
 		carrySpots = new Transform[]{carry1, carry2, carry3};
 		pickupOfferCollider.enabled = false;
-	}
 
-	void Start()
-	{
 		ChangeToNewState(currentState);
 	}
 
@@ -456,13 +450,13 @@ public class AITransport : SupportShipFunctions {
 
 		if(Time.time > startTime + warpInTime)
 		{
-			if(whichSide == WhichSide.Ally && thisWasInitialInsertionJump)
+			if(whichSide == WhichSide.PMC && thisWasInitialInsertionJump)
 			{
 				Invoke("ReleaseFightersAfterInsertion", 1.5f);
 				Subtitles.instance.PostSubtitle(new string[] {this.name + " has arrived. Releasing Fighters.."});
 				ChangeToNewState(StateMachine.HoldingPosition);
 			}
-			else if(whichSide == WhichSide.Ally && !thisWasInitialInsertionJump)
+			else if(whichSide == WhichSide.PMC && !thisWasInitialInsertionJump)
 			{
 				Subtitles.instance.PostSubtitle(new string[] {this.name + " entering combat zone. Ready for extraction."});
 				ChangeToNewState(StateMachine.AwaitingPickup);
@@ -529,7 +523,7 @@ public class AITransport : SupportShipFunctions {
 
 			warpOutLookAtPoint = (literalSpawnPoint - transform.position).normalized * 10000;
 
-			if(whichSide == WhichSide.Ally)
+			if(whichSide == WhichSide.PMC)
 			{
 				Subtitles.instance.PostSubtitle(new string[] {this.name + ". Warping out!"});
 			}

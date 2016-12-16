@@ -10,6 +10,8 @@ public class Tools: MonoBehaviour
 	public static Tools instance;
 
 	public GameObject playerUI;
+	public AICommander pmcCommander;
+	public AICommander pirateCommander;
 	public Transform[] avatarsPanelUI;
 	int nextFreePanel = 0;
 

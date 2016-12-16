@@ -8,14 +8,21 @@ public class WeaponsTurret : TargetableObject {
 	Collider2D[] targetArray;
 	
 	GameObject obj1;
-	
+	GameObject obj2;
+
 	GameObject manualCrosshairs;
+
+	public enum FireMode {Linked, Sequential, Burst}; //TODO: Finish Burst
+	public FireMode fireMode;
+
+	Transform lastFired;
 
 	[Tooltip("Can be null, because a default is set up, but you can set any projectile here")]
 	public GameObject weaponTypeFromObjectPoolList;
 
 	public Transform target;
 	public Transform shotSpawn1;	
+	public Transform shotSpawn2;
 	
 	private GameObject theFirer;
 	
@@ -28,7 +35,7 @@ public class WeaponsTurret : TargetableObject {
 	public int shotDamage = 1;
 	public float shotCritChance = 0;
 	public float projectileSpeed = 9f;
-	public LayerMask targetsMask;
+	[HideInInspector] public LayerMask targetsMask;
 
 	public bool automaticControl = true;
 	public bool manualControl = false;
@@ -46,7 +53,7 @@ public class WeaponsTurret : TargetableObject {
 	float timer = 0;
 	
 	
-	void Awake()
+	void Start()
 	{
 		theFirer = this.transform.parent.parent.gameObject;
 
@@ -67,6 +74,7 @@ public class WeaponsTurret : TargetableObject {
 		}		
 
 		SetUpSideInfo();
+		targetsMask = myCommander.turretTargetsMask;
 	}
 	
 		
@@ -222,7 +230,7 @@ public class WeaponsTurret : TargetableObject {
 		}
 		
 		Vector3 dir = targetLook - transform.position; 
-		float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 45;
+		float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + -90;
 		Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
 		
 		if(!System.Single.IsNaN(angle))
@@ -239,17 +247,63 @@ public class WeaponsTurret : TargetableObject {
 		
 		nextFire = Time.time + fireRate;
 
-		if(shotSpawn1 != null)
+		if(fireMode == FireMode.Linked)
 		{
-			obj1 = cannonShotPoolerScript.current.GetPooledObject();
-						
-			//not needed if Will Grow is true
-			//if (obj1 == null) return;
-			
-			obj1.transform.position = shotSpawn1.position;
-			obj1.transform.rotation = shotSpawn1.rotation;
-			obj1.SetActive(true);
-			obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, accuracy);
+			if(shotSpawn1 != null)
+			{
+				obj1 = cannonShotPoolerScript.current.GetPooledObject();
+							
+				//not needed if Will Grow is true
+				//if (obj1 == null) return;
+				
+				obj1.transform.position = shotSpawn1.position;
+				obj1.transform.rotation = shotSpawn1.rotation;
+				obj1.SetActive(true);
+				obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, accuracy);
+			}
+			if(shotSpawn2 != null)
+			{
+				obj2 = cannonShotPoolerScript.current.GetPooledObject();
+
+				//not needed if Will Grow is true
+				//if (obj1 == null) return;
+
+				obj2.transform.position = shotSpawn2.position;
+				obj2.transform.rotation = shotSpawn2.rotation;
+				obj2.SetActive(true);
+				obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, accuracy);
+			}
+		}
+		else if(fireMode == FireMode.Sequential)
+		{
+			if(lastFired != shotSpawn1 && shotSpawn1 != null)
+			{
+				obj1 = cannonShotPoolerScript.current.GetPooledObject();
+
+				//not needed if Will Grow is true
+				//if (obj1 == null) return;
+
+				obj1.transform.position = shotSpawn1.position;
+				obj1.transform.rotation = shotSpawn1.rotation;
+				obj1.SetActive(true);
+				obj1.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, accuracy);
+
+				lastFired = shotSpawn1;
+			}
+			else if(lastFired != shotSpawn2 && shotSpawn2 != null)
+			{
+				obj2 = cannonShotPoolerScript.current.GetPooledObject();
+
+				//not needed if Will Grow is true
+				//if (obj1 == null) return;
+
+				obj2.transform.position = shotSpawn2.position;
+				obj2.transform.rotation = shotSpawn2.rotation;
+				obj2.SetActive(true);
+				obj2.GetComponent<ShotMover>().OkayGo(theFirer, shotDamage, shotCritChance, projectileSpeed, accuracy);
+
+				lastFired = shotSpawn2;
+			}
 		}
 	}
 	

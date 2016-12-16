@@ -89,7 +89,7 @@ public class Character : MonoBehaviour {
 	public Vector2 lowerLeft;
 	public Vector2 left;
 	public Vector2 upperLeft;
-	public Vector2[] eyePositions;
+	Vector2[] eyePositions;
 
 	//for moving eyes around
 	Vector2 startPos;

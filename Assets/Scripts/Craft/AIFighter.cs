@@ -105,7 +105,7 @@ public class AIFighter : FighterFunctions {
 
 	void Start () 
 	{
-		if(whichSide == WhichSide.Enemy)
+		if(whichSide == WhichSide.Pirate)
 			cowardice = Mathf.Clamp(cowardice *= Random.Range (0.25f, 1.5f), 0, 99); //TODO: based on character stats for PMC?
 		else
 			cowardice = 100/healthScript.maxHealth;

@@ -11,6 +11,7 @@ public class AICommander : MonoBehaviour {
 	public LayerMask fighterPotshotMask;
 	public LayerMask fighterEnemyTargets;
 	public LayerMask fighterEnemyDangerSources;
+	public LayerMask turretTargetsMask;
 
 	public List<GameObject> myFighters;
 	public List<GameObject> myOrphanedFighters;
