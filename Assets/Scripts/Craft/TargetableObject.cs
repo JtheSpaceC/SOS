@@ -9,7 +9,7 @@ public class TargetableObject : MonoBehaviour {
 
 	[HideInInspector] public Rigidbody2D myRigidbody;
 
-	public enum WhichSide {Pirate, PMC, Civilian};
+	public enum WhichSide {Pirate, PMC, Civilian, Unknown, Wreck};
 	public WhichSide whichSide;
 	[HideInInspector] public LayerMask friendlyFireMask;
 	protected LayerMask potshotAtEnemiesMask;
@@ -40,18 +40,33 @@ public class TargetableObject : MonoBehaviour {
 		{
 			myCommander = Tools.instance.pmcCommander;
 			enemyCommander = Tools.instance.pirateCommander;
-			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Color.green;
+			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Tools.instance.icons.pmcColour;
 		}
 		else if (whichSide == WhichSide.Pirate)
 		{
 			myCommander = Tools.instance.pirateCommander;
 			enemyCommander = Tools.instance.pmcCommander;
-			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Color.red;
+			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Tools.instance.icons.pirateColour;
+		}
+		else if(whichSide == WhichSide.Civilian)
+		{
+			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Tools.instance.icons.civilianColour;
+		}
+		else if(whichSide == WhichSide.Unknown)
+		{
+			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Tools.instance.icons.unknownColour;
+		}
+		else if(whichSide == WhichSide.Wreck)
+		{
+			transform.FindChild("RadarSig").GetComponent<SpriteRenderer>().color = Color.Lerp(Color.grey, Color.black, 0.4f);
 		}
 
-		friendlyFireMask = myCommander.fighterFriendlyFireMask;
-		potshotAtEnemiesMask = myCommander.fighterPotshotMask;
-		potshotsPlusFriendliesMask = friendlyFireMask + potshotAtEnemiesMask;
+		if(myCommander)
+		{
+			friendlyFireMask = myCommander.fighterFriendlyFireMask;
+			potshotAtEnemiesMask = myCommander.fighterPotshotMask;
+			potshotsPlusFriendliesMask = friendlyFireMask + potshotAtEnemiesMask;
+		}
 	}
 
 

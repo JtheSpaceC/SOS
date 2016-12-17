@@ -33,8 +33,17 @@ public class CargoTransport : TargetableObject {
 
 	void Start () 
 	{
-		if(!isDamaged)
+		SetUpSideInfo();
+
+		if(whichSide != WhichSide.Wreck)
 			SetUpContainers();
+
+		if(!myCommander)
+			gameObject.layer = LayerMask.NameToLayer("OtherShips");		
+		else if(myCommander == Tools.instance.pmcCommander)
+			gameObject.layer = LayerMask.NameToLayer("PMCTransports");
+		else if(myCommander == Tools.instance.pirateCommander)
+			gameObject.layer = LayerMask.NameToLayer("EnemyTransports");
 	}
 
 	[ContextMenu("Set Up Containers")]

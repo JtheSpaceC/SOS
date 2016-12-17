@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 public class SquadronLeader : MonoBehaviour {
 
-	public enum WhichSide {Enemy, Ally};
-	public WhichSide whichSide;
+	public TargetableObject.WhichSide whichSide;
 
 	[HideInInspector] public string squadName;
 
@@ -481,7 +480,7 @@ public class SquadronLeader : MonoBehaviour {
 
 	void AcknowledgeOrderIfWingmenAlive(string[] possibleReplies)
 	{
-		if(whichSide == WhichSide.Ally && isPlayerSquad)
+		if(whichSide == TargetableObject.WhichSide.PMC && isPlayerSquad)
 		{
 			if(mate01 == null || !mate01.activeSelf || mate01.GetComponent<HealthFighter>().dead)
 				return;
@@ -586,7 +585,7 @@ public class SquadronLeader : MonoBehaviour {
 
 	public void AddStarsToCallsign()
 	{
-		if(transform.parent.GetComponentInParent<AIFighter>() && whichSide == WhichSide.Ally)
+		if(transform.parent.GetComponentInParent<AIFighter>() && whichSide == TargetableObject.WhichSide.PMC)
 		{
 			string name = GetComponentInParent<AIFighter>().nameHUDText.text;
 			if(name.ToCharArray()[0] != '*')
@@ -598,7 +597,7 @@ public class SquadronLeader : MonoBehaviour {
 
 	void RemoveStarsFromCallsign()
 	{
-		if(transform.parent.GetComponentInParent<AIFighter>() && whichSide == WhichSide.Ally)
+		if(transform.parent.GetComponentInParent<AIFighter>() && whichSide == TargetableObject.WhichSide.PMC)
 		{
 			string name = GetComponentInParent<AIFighter>().nameHUDText.text;
 			if(name.ToCharArray()[0] == '*')

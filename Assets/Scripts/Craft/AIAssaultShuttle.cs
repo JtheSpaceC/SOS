@@ -243,6 +243,8 @@ public class AIAssaultShuttle : SupportShipFunctions {
 
 		CameraTactical.reportedInfo += "\n";
 
+		CameraTactical.instance.pipCamera.orthographicSize = 2;
+
 		if (healthScript.health / healthScript.maxHealth < (0.33f)) {
 			CameraTactical.reportedInfo += "Heavily Damaged";
 		}

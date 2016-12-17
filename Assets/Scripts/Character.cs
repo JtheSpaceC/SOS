@@ -141,7 +141,6 @@ public class Character : MonoBehaviour {
 		}
 		else
 		{
-			hair.enabled = false;
 			clothes.enabled = false;
 			helmet.enabled = true;
 			spaceSuit.enabled = true;

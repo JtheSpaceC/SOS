@@ -422,7 +422,6 @@ public class CharacterPool : MonoBehaviour {
 		avatar.inSpace = !avatar.inSpace;
 		avatar.spaceSuit.enabled = avatar.inSpace;
 		avatar.helmet.enabled = avatar.inSpace;
-		avatar.hair.enabled = !avatar.inSpace;
 		avatar.clothes.enabled = !avatar.inSpace;
 	}
 

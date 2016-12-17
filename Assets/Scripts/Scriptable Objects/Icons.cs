@@ -28,6 +28,12 @@ public class Icons : ScriptableObject {
 	public Sprite returnToBaseIconHighlighted;
 	public Sprite engageAtWillIconHighlighted;
 
+	[Header("Radar Sig Colours")]
+	public Color pmcColour;
+	public Color pirateColour;
+	public Color civilianColour;
+	public Color unknownColour;
+
 	[Header("Other")]
 	public Sprite fighterArrow;
 	public Sprite fighterMantis;

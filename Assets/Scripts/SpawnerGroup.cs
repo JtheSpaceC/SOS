@@ -20,8 +20,7 @@ public class SpawnerGroup : MonoBehaviour {
 	float approachTime;
 	float startTime;
 
-	public enum WhichSide {Enemy, Ally};
-	public WhichSide whichSide;
+	TargetableObject.WhichSide whichSide;
 
 	public GameObject objectPrefab;
 	public GameObject squadLeaderPrefab;
@@ -49,13 +48,13 @@ public class SpawnerGroup : MonoBehaviour {
 	void Start()
 	{
 		//check which side we're on and get a squad name from it
-		if (whichSide == WhichSide.Ally)
+		if (whichSide == TargetableObject.WhichSide.PMC)
 		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("PMC Commander").GetComponent<AICommander> ();
+			myCommander = Tools.instance.pmcCommander;
 		}
-		else if (whichSide == WhichSide.Enemy)
+		else if (whichSide == TargetableObject.WhichSide.Pirate)
 		{
-			myCommander = GameObject.FindGameObjectWithTag("AIManager").transform.FindChild("Enemy Commander").GetComponent<AICommander> ();
+			myCommander = Tools.instance.pirateCommander;
 		}
 
 		if(spawnMode == SpawnMode.Normal)
@@ -128,7 +127,8 @@ public class SpawnerGroup : MonoBehaviour {
 		squadLeaderPrefab = Instantiate (squadLeaderPrefab, transform.position, Quaternion.identity) as GameObject;
 		squadLeaderPrefab.transform.SetParent (craft [0].transform.FindChild ("Abilities"));
 		squadLeaderPrefab.transform.localPosition = Vector3.zero;
-		squadLeaderPrefab.GetComponent<SquadronLeader>().whichSide = (whichSide == WhichSide.Ally) ? SquadronLeader.WhichSide.Ally : SquadronLeader.WhichSide.Enemy;
+		squadLeaderPrefab.GetComponent<SquadronLeader>().whichSide = 
+			(whichSide == TargetableObject.WhichSide.PMC) ? TargetableObject.WhichSide.PMC : TargetableObject.WhichSide.Pirate;
 		squadLeaderPrefab.GetComponent<SquadronLeader>().squadName = squadronName;
 		myCommander.mySquadrons.Add(squadLeaderPrefab.GetComponent<SquadronLeader>());
 
@@ -140,9 +140,9 @@ public class SpawnerGroup : MonoBehaviour {
 			craft [i].GetComponent<AIFighter>().currentState = AIFighter.StateMachine.Covering;
 		}
 
-		if(whichSide == WhichSide.Ally)
+		if(whichSide == TargetableObject.WhichSide.PMC)
 			_battleEventManager.instance.CallPMCFightersSpawned();
-		else if(whichSide == WhichSide.Enemy)
+		else if(whichSide == TargetableObject.WhichSide.Pirate)
 			_battleEventManager.instance.CallEnemyFightersSpawned();
 
 		alreadySpawned = true;
