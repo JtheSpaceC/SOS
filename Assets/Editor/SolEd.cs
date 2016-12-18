@@ -49,6 +49,8 @@ public class SolEd : EditorWindow {
 		icons = (Icons)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Scriptable Objects/Icons.asset", typeof(Icons));
 		tex = icons.solEdBackground.texture;
 
+		Undo.RecordObject(shipStats, "SolEd");
+
 		//Get window size and set background texture
 		var window = this;
 		float width = window.position.width;
