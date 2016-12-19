@@ -53,15 +53,18 @@ public class Tools: MonoBehaviour
 	public Toggle useHintsToggleSwitch;
 	[HideInInspector] public bool useHintsThisSession = true;
 
-	[Header("Waypoint Prefabs")]
+	[Header("Prefabs")]
 	public GameObject waypointPrefab;
+	public GameObject avatarPrefab;
+	public GameObject shipDefenseGunPrefab;
 
+	[Space(15)]
 	public Color avatarAwarenessFlashColour;
 	public Color avatarHitFlashColour;
 
 	[HideInInspector] public float normalFixedDeltaTime;
 
-	[Space()]
+	[Space(15)]
 
 	[Tooltip ("If a camera were to follow a ship, what stuff should it normally see?")]
 	public LayerMask normalCameraViewingLayers;
@@ -75,6 +78,7 @@ public class Tools: MonoBehaviour
 	public GameObject[] leaveFeedbackButtons;
 
 	GameObject obj;
+
 
 
 	void Awake()

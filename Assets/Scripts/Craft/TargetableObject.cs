@@ -243,4 +243,30 @@ public class TargetableObject : MonoBehaviour {
 			Tools.instance.StartCoroutine(Tools.instance.TextAnim(Tools.instance.killsText, Color.green, Color.white, 0.5f));
 		}
 	}
+
+	protected void SpawnAvatar()
+	{
+		Transform toParentTo = transform.FindChild("Effects");
+		GameObject newAvatar = Instantiate(Tools.instance.avatarPrefab, toParentTo) as GameObject;
+		newAvatar.GetComponent<Character>().inSpace = true;
+	}
+
+	protected void SpawnTurret(List<GameObject> turrets, float howWellDefended)
+	{
+		Transform toParentTo = transform.FindChild("Weapons");
+		GameObject newTurret;
+		int turretsToCreate = Mathf.FloorToInt(turrets.Count * (howWellDefended/100f));
+
+		for(int i = 0; i < turretsToCreate; i++)
+		{
+			newTurret = Instantiate(Tools.instance.shipDefenseGunPrefab, toParentTo) as GameObject;
+			newTurret.transform.localPosition = turrets[i].transform.localPosition;
+		}
+
+		for(int i = turrets.Count-1; i >=0; i--)
+		{
+			DestroyImmediate(turrets[i]);
+		}
+		turrets.Clear();
+	}
 }

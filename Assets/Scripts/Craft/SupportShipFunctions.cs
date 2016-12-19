@@ -6,8 +6,9 @@ public class SupportShipFunctions : TargetableObject {
 	[HideInInspector]public HealthTransport healthScript;
 	[HideInInspector]public EnginesFighter engineScript;
 
-	public List<GameObject> myTurrets;
-
+	[HideInInspector] public List<GameObject> myTurrets;
+	[Range(0, 100)]
+	public float howWellDefended = 0;
 
 	[Header ("Warp Stuff")]
 	public float warpInTime = 10;

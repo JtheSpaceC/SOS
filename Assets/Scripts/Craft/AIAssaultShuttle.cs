@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class AIAssaultShuttle : SupportShipFunctions {
 
@@ -37,6 +36,24 @@ public class AIAssaultShuttle : SupportShipFunctions {
 			gameObject.layer = LayerMask.NameToLayer("EnemyTransports");
 		
 		myCommander.myAssaultShuttles.Add (this.gameObject);
+
+		//turn turret placeholders into the list of turrets, then spawn real turrets from that
+		Transform weaponsParent = transform.FindChild("Weapons");
+		SpriteRenderer[] weaponChildren = weaponsParent.GetComponentsInChildren<SpriteRenderer>();
+		foreach(SpriteRenderer child in weaponChildren)
+		{
+			if(child.name.StartsWith("tur"))
+			{
+				myTurrets.Add(child.gameObject);
+			}
+		}
+		SpawnTurret(myTurrets, howWellDefended);
+
+		WeaponsTurret[] turrets = weaponsParent.GetComponentsInChildren<WeaponsTurret>();
+		foreach(WeaponsTurret tur in turrets)
+		{
+			myTurrets.Add(tur.gameObject);
+		}
 
 		ChangeTurretsSide(whichSide);
 		foreach(GameObject turret in myTurrets)

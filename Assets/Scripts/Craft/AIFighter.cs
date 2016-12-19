@@ -94,6 +94,8 @@ public class AIFighter : FighterFunctions {
 		deathStates = new StateMachine[] {StateMachine.NA};
 		fallbackStates = new StateMachine[]{StateMachine.FallBack};
 
+		SpawnAvatar();
+
 		if(GetComponentInChildren<Character>())
 		{
 			myCharacterAvatarScript = GetComponentInChildren<Character>();
