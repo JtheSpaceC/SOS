@@ -683,7 +683,8 @@ public class HealthFighter : Health {
 
 		GetComponent<SpriteRenderer>().enabled = true;
 		transform.FindChild("Effects/GUI (health)").gameObject.SetActive(false);
-		transform.FindChild("Effects/GUI (missile readout)").gameObject.SetActive(false);
+		if(thisIsPlayer)
+			transform.FindChild("Effects/GUI (missile readout)").gameObject.SetActive(false);
 		transform.FindChild("Effects/engine noise").GetComponent<AudioSource>().enabled = false;
 
 		if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters" && !thisIsPlayer)

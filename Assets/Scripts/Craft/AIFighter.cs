@@ -94,7 +94,8 @@ public class AIFighter : FighterFunctions {
 		deathStates = new StateMachine[] {StateMachine.NA};
 		fallbackStates = new StateMachine[]{StateMachine.FallBack};
 
-		SpawnAvatar();
+		if(whichSide == WhichSide.PMC)
+			SpawnAvatar();
 
 		if(GetComponentInChildren<Character>())
 		{

@@ -27,11 +27,16 @@ public class Spawner : MonoBehaviour {
 	public int level = 1;
 	public string specialTag;
 
+	bool wasAutoMaticAtStart = false; //used to enable automatic spawning if you click it ON from OFF in the editor at runtime
+
 
 	void Start()
 	{
 		if(automaticSpawning)
+		{
 			Invoke ("Spawn", firstDelay);
+			wasAutoMaticAtStart = true;
+		}
 	
 		player = GameObject.FindGameObjectWithTag ("PlayerFighter");
 
@@ -45,11 +50,25 @@ public class Spawner : MonoBehaviour {
 		{
 			DoTheSpawn();
 		}
+		if(!wasAutoMaticAtStart)
+		{
+			if(automaticSpawning)
+			{
+				Invoke ("Spawn", firstDelay);
+				wasAutoMaticAtStart = true;
+			}
+		}
 	}
 
 	void Spawn()
 	{
-		if (enemyCommanderScript.myFighters.Count >= maxFightersAtOnce)
+		if(!automaticSpawning)
+		{			
+			wasAutoMaticAtStart = false;
+			return;
+		}
+
+		if (enemyCommanderScript.myFighters.Count + numberInGroup > maxFightersAtOnce) //if there'd be too many fighters, don't spawn
 		{
 			Invoke ("Spawn", spawnTime);
 			return;
