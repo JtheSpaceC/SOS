@@ -10,14 +10,18 @@ public class MusicManager : MonoBehaviour {
 	public bool persistAfterLoad = true;
 
 	public AudioSource[] musicClips;
-	private AudioSource turntableA;
+	AudioSource turntableA;
 	[Range(0,1)]
 	public float turntableAMaxVolume = 1.0f;
-	private AudioSource turntableB;
+	AudioSource turntableB;
 	[Range(0,1)]
 	public float turntableBMaxVolume = 0.5f;
+	AudioSource stabSound;
 
-	public float fadeSpeed = 0.25f;
+	[Tooltip("How much fades every second? Higher is faster.")]
+	public float fadeToCalmAmountPerSecond = 0.25f;
+	[Tooltip("How much fades every second? Higher is faster.")]
+	public float fadeToDangerAmountPerSecond = 1f;
 
 	[Tooltip("Will track A fade to B when enemies are near, or just continue?")]
 	public bool switchableTracks = true;
@@ -47,6 +51,7 @@ public class MusicManager : MonoBehaviour {
 
 		turntableA = musicClips [0];
 		turntableB = musicClips [1];
+		stabSound = musicClips [2];
 
 		InvokeRepeating ("CheckForAPlayer", 0, 5);
 	}
@@ -67,14 +72,14 @@ public class MusicManager : MonoBehaviour {
 		{
 			if(player != null)
 			{				
-				Collider2D[] enemyFighterArray = Physics2D.OverlapCircleAll (player.transform.position, dangerZone, mask1);
-				if(enemyFighterArray.Length <= 0)
+				if(InAction && Tools.instance.pirateCommander.myFighters.Count == 0)
 				{
 					Invoke("SwitchInAction", 1.5f);
 				}
-				else if (enemyFighterArray.Length > 0)
+				else if (!InAction && Tools.instance.pirateCommander.myFighters.Count > 0)
 				{
 					InAction = true;
+					stabSound.Play();
 				}
 				
 				
@@ -83,7 +88,6 @@ public class MusicManager : MonoBehaviour {
 					FadeIn(turntableA);
 					FadeOut(turntableB);
 				}
-				
 				else if (InAction == true) 
 				{
 					FadeIn(turntableB);
@@ -119,12 +123,12 @@ public class MusicManager : MonoBehaviour {
 		}
 		if(whichTrack == turntableA && turntableA.volume < turntableAMaxVolume)
 		{
-			whichTrack.volume += fadeSpeed * Time.deltaTime; 
+			whichTrack.volume += fadeToCalmAmountPerSecond * Time.deltaTime; 
 		}
 
 		else if(whichTrack == turntableB && turntableB.volume < turntableBMaxVolume)
 		{
-			whichTrack.volume += fadeSpeed * Time.deltaTime; 
+			whichTrack.volume += fadeToDangerAmountPerSecond * Time.deltaTime; 
 		}
 	}
 	
@@ -132,11 +136,11 @@ public class MusicManager : MonoBehaviour {
 	{
 		if(whichTrack == turntableA && turntableA.volume > 0)
 		{
-			whichTrack.volume -= fadeSpeed * Time.deltaTime;
+			whichTrack.volume -= fadeToCalmAmountPerSecond * Time.deltaTime;
 		}
 		else if(whichTrack == turntableB && turntableB.volume >0)
 		{
-			whichTrack.volume -= fadeSpeed * Time.deltaTime;
+			whichTrack.volume -= fadeToCalmAmountPerSecond * Time.deltaTime;
 		}
 
 		if(turntableA.volume == 0 && turntableB.volume == 0)

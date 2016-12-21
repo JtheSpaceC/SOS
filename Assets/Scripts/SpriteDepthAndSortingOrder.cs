@@ -16,6 +16,7 @@ public class SpriteDepthAndSortingOrder : MonoBehaviour {
 	void Awake()
 	{
 		myRenderer = GetComponent<SpriteRenderer>();
+		this.enabled = true;
 	}
 
 	void OnEnable()
@@ -37,6 +38,7 @@ public class SpriteDepthAndSortingOrder : MonoBehaviour {
 		myRenderer.color = Color.Lerp(Color.white, Color.black, transform.position.z / blackDistance);
 	}
 
+	[ContextMenu("Change Layer")]
 	public void ChangeSortingOrder()
 	{
 		myRenderer.sortingOrder = -Mathf.RoundToInt(100 * transform.position.z) + startingOrderInLayer;
