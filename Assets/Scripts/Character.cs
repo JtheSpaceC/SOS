@@ -27,7 +27,7 @@ public class Character : MonoBehaviour {
 	[Tooltip("For Character Pool screen")] public bool selected = false;
 
 	public enum Gender {Male, Female};
-	public Gender gender;
+	public Gender myGender;
 
 	public string characterID;
 	public string firstName;
@@ -35,6 +35,7 @@ public class Character : MonoBehaviour {
 	public string callsign;
 	public string characterBio;
 	public string appearanceSeed;
+	public string nameForPlayer;
 
 	public bool inSpace = true;
 
@@ -102,6 +103,7 @@ public class Character : MonoBehaviour {
 	//bool speaking = false;
 
 	int callsignChecks;
+
 
 	void Awake()
 	{
@@ -186,6 +188,17 @@ public class Character : MonoBehaviour {
 	{
 		GenerateRandomNewAppearance(999);
 		GenerateName();
+		GenerateCharacteristics(myGender);
+	}
+
+	public void GenerateCharacteristics(Gender gender) //0 is male, 1 is female
+	{
+		//TODO: personality types
+
+		//Name for Player
+		nameForPlayer = myAppearance.namesForPlayer[UnityEngine.Random.Range(0, myAppearance.namesForPlayer.Length)];
+
+		//ifs
 	}
 
 	public void GenerateRandomNewAppearance(int genderInt) //where 0 is male, 1 is female, otherwise random
@@ -200,13 +213,13 @@ public class Character : MonoBehaviour {
 
 		if(genderInt == 0)
 		{
-			gender = Gender.Male;
+			myGender = Gender.Male;
 			myAppearance = maleAppearances;
 			appearanceSeed = "0,";
 		}
 		else if(genderInt == 1)
 		{
-			gender = Gender.Female;
+			myGender = Gender.Female;
 			myAppearance = femaleAppearances;
 			appearanceSeed = "1,";
 		}
@@ -214,13 +227,13 @@ public class Character : MonoBehaviour {
 		{
 			if(UnityEngine.Random.Range(0f, 2f) > -1) //TODO: re-enable females
 			{
-				gender = Gender.Male;
+				myGender = Gender.Male;
 				myAppearance = maleAppearances;
 				appearanceSeed = "0,";
 			}
 			else 
 			{
-				gender = Gender.Female;
+				myGender = Gender.Female;
 				myAppearance = femaleAppearances;
 				appearanceSeed = "1,";
 			}
@@ -316,7 +329,7 @@ public class Character : MonoBehaviour {
 		}
 
 		//FACIAL HAIR
-		if(gender == Gender.Male)
+		if(myGender == Gender.Male)
 		{
 			//50:50 chance to be a clean shaven male
 			if(UnityEngine.Random.Range(0,10) >=5)
@@ -408,12 +421,12 @@ public class Character : MonoBehaviour {
 
 		if(seed[0] == "0") //male
 		{
-			gender = Gender.Male;
+			myGender = Gender.Male;
 			myAppearance = maleAppearances;
 		}
 		else if(seed[0] == "1") //female
 		{
-			gender = Gender.Female;
+			myGender = Gender.Female;
 			myAppearance = femaleAppearances;
 		}
 		else
@@ -471,7 +484,7 @@ public class Character : MonoBehaviour {
 			scars2.sprite = myAppearance.scars2[facialFeature-1];
 
 		//FACIAL HAIR
-		if(gender == Gender.Male)
+		if(myGender == Gender.Male)
 		{
 			facialFeature = Int32.Parse(seed[13].ToString());
 			if(facialFeature == 0)
@@ -585,11 +598,11 @@ public class Character : MonoBehaviour {
 		//firstName = NameGenerator.Instance.getRandomFirstName(gender.ToString().ToCharArray()[0]);
 		//lastName = NameGenerator.Instance.getRandomLastName();
 
-		if(gender == Gender.Male)	
+		if(myGender == Gender.Male)	
 		{
 			firstName = names.maleNames[UnityEngine.Random.Range(0, names.maleNames.Count)];
 		}
-		else if(gender == Gender.Female)
+		else if(myGender == Gender.Female)
 		{
 			firstName = names.femaleNames[UnityEngine.Random.Range(0, names.femaleNames.Count)];
 		}
@@ -602,11 +615,11 @@ public class Character : MonoBehaviour {
 		List<string> possibleCallsigns = new List<string>();
 		possibleCallsigns.AddRange(names.callsigns);
 
-		if (gender == Gender.Male) 
+		if (myGender == Gender.Male) 
 		{
 			possibleCallsigns.AddRange (names.callsignsMaleOnly);
 		}
-		else if (gender == Gender.Female) 
+		else if (myGender == Gender.Female) 
 		{
 			possibleCallsigns.AddRange (names.callsignsFemaleOnly);
 		}

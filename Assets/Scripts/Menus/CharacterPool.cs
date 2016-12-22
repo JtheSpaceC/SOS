@@ -126,6 +126,9 @@ public class CharacterPool : MonoBehaviour {
 			}
 		}
 
+		//NEWER
+		avatar.avatarOutput = avatarOutputForCharacterCreationScreen;
+
 	}
 
 
@@ -166,9 +169,9 @@ public class CharacterPool : MonoBehaviour {
 		DestroyChildEntries ();
 
 		//Load All Characters. Get from a list of saved, active characters. Create a list
-		if (ES2.Exists ("allCharacterIDs" + encryption)) 
+		if (ES2.Exists ("Characters/" + "allCharacterIDs" + encryption)) 
 		{
-			allIDs = ES2.Load<string> ("allCharacterIDs" + encryption);
+			allIDs = ES2.Load<string> ("Characters/" + "allCharacterIDs" + encryption);
 		}
 		else 
 		{
@@ -226,18 +229,18 @@ public class CharacterPool : MonoBehaviour {
 			cpcSubHeaderText.text = "Import a Character from an existing Collection";
 		}
 
-		if(System.IO.Directory.Exists(Application.persistentDataPath + "/CharacterPool"))
+		if(System.IO.Directory.Exists(Application.persistentDataPath + "/Characters/Collections"))
 		{
-			foreach(string file in System.IO.Directory.GetFiles(Application.persistentDataPath + "/CharacterPool"))
+			foreach(string file in System.IO.Directory.GetFiles(Application.persistentDataPath + "/Characters/Collections"))
 			{
 				string[] info = file.Split(new String[]{"\\", ".es"}, StringSplitOptions.None);
 				testBox = info;
 
 				//Load All Character Lists.
-				if (ES2.Exists ("CharacterPool/" + info[1] + encryption)) 
+				if (ES2.Exists ("Characters/Collections/" + info[1] + encryption)) 
 				{
 					string[] groupInfo =
-						ES2.Load<string> ("CharacterPool/" + info[1] + encryption).Split(new string[]{"\n"}, StringSplitOptions.RemoveEmptyEntries);
+						ES2.Load<string> ("Characters/Collections/" + info[1] + encryption).Split(new string[]{"\n"}, StringSplitOptions.RemoveEmptyEntries);
 					testBox = groupInfo;
 
 					GameObject newEntry = Instantiate(poolGroupEntryPrefab) as GameObject;
@@ -303,7 +306,7 @@ public class CharacterPool : MonoBehaviour {
 		selectedCharacter = go.AddComponent<CharacterPoolEntry>();
 
 		avatar.GenerateRandomNewAppearance();
-		if(avatar.gender == Character.Gender.Female)
+		if(avatar.myGender == Character.Gender.Female)
 			selectedFacialHairText.transform.parent.gameObject.SetActive(false);
 		else
 			selectedFacialHairText.transform.parent.gameObject.SetActive(true);		
@@ -312,13 +315,14 @@ public class CharacterPool : MonoBehaviour {
 			Debug.LogError("Feck");
 
 		selectedCharacter.firstName = 
-			avatar.gender == Character.Gender.Male? 
+			avatar.myGender == Character.Gender.Male? 
 			namesSO.maleNames[UnityEngine.Random.Range(0, namesSO.maleNames.Count)] : 
 			namesSO.femaleNames[UnityEngine.Random.Range(0, namesSO.femaleNames.Count)];
 		selectedCharacter.lastName = namesSO.lastNames[UnityEngine.Random.Range(0, namesSO.lastNames.Count)];
 		selectedCharacter.callsign = namesSO.callsigns[UnityEngine.Random.Range(0, namesSO.callsigns.Count)];
 		selectedCharacter.appearanceSeed = avatar.appearanceSeed;
 		currentBio = "";
+		selectedCharacter.callsPlayer = avatar.nameForPlayer;
 
 		ActivateCharacterEditScreen(selectedCharacter, false);
 
@@ -356,7 +360,7 @@ public class CharacterPool : MonoBehaviour {
 		firstNameEntryText.text = "First Name: "+ selectedCharacter.firstName;
 		lastNameEntryText.text = "Last Name: " + selectedCharacter.lastName;
 		callsignEntryText.text = "Callsign: " + selectedCharacter.callsign;
-		genderEntryText.text = avatar.gender == Character.Gender.Male? "0" : "1";
+		genderEntryText.text = avatar.myGender == Character.Gender.Male? "0" : "1";
 
 		//APPEARANCE_SEED:
 		//FOR SEED (string): ORDER IS: 
@@ -556,7 +560,8 @@ public class CharacterPool : MonoBehaviour {
 		"ID:" + selectedCharacter.characterID + "FN:" + selectedCharacter.firstName +
 		"LN:" + selectedCharacter.lastName + "CS:" + selectedCharacter.callsign +
 		"BIO:" + selectedCharacter.characterBio +
-		"APP:" + selectedCharacter.appearanceSeed;
+		"APP:" + selectedCharacter.appearanceSeed +
+		"CP:" + selectedCharacter.callsPlayer;
 
 		return stringToReturn;
 	}
@@ -591,19 +596,19 @@ public class CharacterPool : MonoBehaviour {
 		string saveData = CollectInfo();
 
 		//for debugging in Inspector
-		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:"};
+		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:", "CP:"};
 		saveDataOutput = saveData.Split(parameters, System.StringSplitOptions.None);
 			
 		//save it with all character info
-		ES2.Save(saveData, selectedCharacter.characterID + encryption);
+		ES2.Save(saveData, "Characters/" + selectedCharacter.characterID + encryption);
 
 		//save a new list of all character IDs
 
 		allIDs = selectedCharacter.characterID + ',';
 
-		if(ES2.Exists("allCharacterIDs" + encryption))
+		if(ES2.Exists("Characters/" + "allCharacterIDs" + encryption))
 		{
-			string oldSaves = ES2.Load<string>("allCharacterIDs" + encryption);
+			string oldSaves = ES2.Load<string>("Characters/" + "allCharacterIDs" + encryption);
 
 			if(oldSaves.Contains(selectedCharacter.characterID))
 			{
@@ -621,7 +626,7 @@ public class CharacterPool : MonoBehaviour {
 			Debug.Log("allCharacterIDs file did NOT exist");
 		}
 
-		ES2.Save(allIDs, "allCharacterIDs" + encryption);
+		ES2.Save(allIDs, "Characters/" + "allCharacterIDs" + encryption);
 
 		//to see in Inspector (for debugging)
 		allIDsArray = allIDs.Split(new char[]{','}, System.StringSplitOptions.RemoveEmptyEntries);
@@ -672,7 +677,7 @@ public class CharacterPool : MonoBehaviour {
 			exportField += exportCharacterString + "\n";
 		}
 
-		ES2.Save(exportField, "CharacterPool/" + exportSelectionName + encryption);
+		ES2.Save(exportField, "Characters/Collections/" +  exportSelectionName + encryption);
 
 		selectedCharacters.Clear();
 		ActivateCharacterPoolPanel();
@@ -699,7 +704,7 @@ public class CharacterPool : MonoBehaviour {
 			Debug.Log("Character ID was empty. Returning.");
 			return;
 		}
-		else if(!ES2.Exists(charID + encryption))
+		else if(!ES2.Exists("Characters/" + charID + encryption))
 		{
 			Debug.Log("No character info found to Load. Returning.");
 			return;
@@ -709,7 +714,7 @@ public class CharacterPool : MonoBehaviour {
 		CharacterPoolEntry characterScript = newPoolEntry.GetComponent<CharacterPoolEntry>();
 		newPoolEntry.transform.SetParent(parentForNewEntries);
 
-		string characterInfo = ES2.Load<string>(charID + encryption);
+		string characterInfo = ES2.Load<string>("Characters/" + charID + encryption);
 		GiveCharacterPoolEntryScriptItsInfo(characterInfo, characterScript);
 
 		newPoolEntry.GetComponentInChildren<Text>().text = 
@@ -718,15 +723,17 @@ public class CharacterPool : MonoBehaviour {
 
 	void GiveCharacterPoolEntryScriptItsInfo(string characterInfo, CharacterPoolEntry cpeScript)
 	{
-		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:"};
-		cpeScript.savedData = characterInfo.Split(parameters, System.StringSplitOptions.None);
+		string[] parameters = new string[]{"ID:","FN:","LN:","CS:", "BIO:", "APP:", "CP:"};
+		cpeScript.savedData = characterInfo.Split(parameters, StringSplitOptions.None);
 
+		//position 0 is always blank
 		cpeScript.characterID = cpeScript.savedData[1];
 		cpeScript.firstName = cpeScript.savedData[2];
 		cpeScript.lastName = cpeScript.savedData[3];
 		cpeScript.callsign = cpeScript.savedData[4];
 		cpeScript.characterBio = cpeScript.savedData[5];
 		cpeScript.appearanceSeed = cpeScript.savedData[6];
+		cpeScript.callsPlayer = cpeScript.savedData[7];
 	}
 
 
@@ -736,9 +743,9 @@ public class CharacterPool : MonoBehaviour {
 
 		for(int i = 0; i < selectedCharacters.Count; i++)
 		{
-			if(ES2.Exists(selectedCharacters[i].characterID + encryption))
+			if(ES2.Exists("Characters/" + selectedCharacters[i].characterID + encryption))
 			{
-				ES2.Delete(selectedCharacters[i].characterID + encryption);
+				ES2.Delete("Characters/" + selectedCharacters[i].characterID + encryption);
 				print("Removing");
 				removedIDs += selectedCharacters[i].characterID +',';
 			}
@@ -749,9 +756,9 @@ public class CharacterPool : MonoBehaviour {
 		//SAVE NEW LIST OF ALL IDs
 		//first, get the original list
 
-		if (ES2.Exists ("allCharacterIDs" + encryption)) 
+		if (ES2.Exists ("Characters/" + "allCharacterIDs" + encryption)) 
 		{
-			allIDs = ES2.Load<string> ("allCharacterIDs" + encryption);
+			allIDs = ES2.Load<string> ("Characters/" + "allCharacterIDs" + encryption);
 		}
 		else 
 		{
@@ -772,7 +779,7 @@ public class CharacterPool : MonoBehaviour {
 				newAllIDs += allIDsArray[i] + ',';
 			}
 		}
-		ES2.Save(newAllIDs, "allCharacterIDs" + encryption);
+		ES2.Save(newAllIDs, "Characters/" + "allCharacterIDs" + encryption);
 
 		//repopulate the list so we can see who's left
 		PopulateActiveCharacterPoolList();
@@ -782,9 +789,9 @@ public class CharacterPool : MonoBehaviour {
 
 	public void DeleteSelectedGroup()
 	{
-		if(ES2.Exists("CharacterPool/" + selectedCharacterGroup.nameText.text + encryption))
+		if(ES2.Exists("Characters/Collections" + selectedCharacterGroup.nameText.text + encryption))
 		{
-			ES2.Delete("CharacterPool/" + selectedCharacterGroup.nameText.text + encryption);
+			ES2.Delete("Characters/Collections" + selectedCharacterGroup.nameText.text + encryption);
 		}
 		else
 		{
@@ -800,11 +807,11 @@ public class CharacterPool : MonoBehaviour {
 	public void OpenCharacterPoolFolder()
 	{
 		try{
-		System.Diagnostics.Process.Start(Application.persistentDataPath + "/CharacterPool");
+		System.Diagnostics.Process.Start(Application.persistentDataPath + "/Characters/Collections");
 		}
 		catch{
-			System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/CharacterPool");
-			System.Diagnostics.Process.Start(Application.persistentDataPath + "/CharacterPool");
+			System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/Characters/Collections");
+			System.Diagnostics.Process.Start(Application.persistentDataPath + "/Characters/Collections");
 		}
 	}
 
@@ -852,9 +859,9 @@ public class CharacterPool : MonoBehaviour {
 
 	public void NextGender() //changing this is touger as it requires changing possible eyes, hair, facial hair, etc
 	{
-		if(avatar.gender == Character.Gender.Male)
+		if(avatar.myGender == Character.Gender.Male)
 		{
-			avatar.gender = Character.Gender.Female;
+			avatar.myGender = Character.Gender.Female;
 			avatar.myAppearance = avatar.femaleAppearances;
 			selectedCharacter.firstName = namesSO.femaleNames[UnityEngine.Random.Range(0, namesSO.femaleNames.Count)];				
 			selectedGenderText.text = "1";
@@ -862,12 +869,14 @@ public class CharacterPool : MonoBehaviour {
 		}
 		else 
 		{
-			avatar.gender = Character.Gender.Male;
+			avatar.myGender = Character.Gender.Male;
 			avatar.myAppearance = avatar.maleAppearances;
 			selectedCharacter.firstName = namesSO.maleNames[UnityEngine.Random.Range(0, namesSO.maleNames.Count)];
 			selectedGenderText.text = "0";
 			avatar.GenerateRandomNewAppearance(0);
 		}
+		avatar.GenerateCharacteristics(avatar.myGender);
+
 		firstNameEntryText.text = "First Name: " + selectedCharacter.firstName;
 		characterEditScreenHeaderText.text = selectedCharacter.firstName + " \"" + selectedCharacter.callsign + "\" " + selectedCharacter.lastName;
 		seedStringArray[0] = selectedGenderText.text + ',';

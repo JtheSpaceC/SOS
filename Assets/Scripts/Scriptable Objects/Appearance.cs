@@ -42,8 +42,8 @@ public class Appearance : ScriptableObject {
 	public Color[] spaceSuitColours1; 
 	public Color[] spaceSuitColours2; 
 	public Sprite[] unitNumbers;
-
-
+	public string[] namesForPlayer;
+	public string[] inapropriateNamesForPlayer;
 
 	[HideInInspector] public static int avatarWorldPositionModifier = 0; //used at start so avatars aren't on top of each other
 }

@@ -259,8 +259,8 @@ public class TargetableObject : MonoBehaviour {
 
 		for(int i = 0; i < turretsToCreate; i++)
 		{
-			newTurret = Instantiate(Tools.instance.shipDefenseGunPrefab, toParentTo) as GameObject;
-			newTurret.transform.localPosition = turrets[i].transform.localPosition;
+			newTurret = Instantiate(Tools.instance.shipDefenseGunPrefab, 
+				turrets[i].transform.position, Quaternion.identity, toParentTo) as GameObject;
 		}
 
 		for(int i = turrets.Count-1; i >=0; i--)

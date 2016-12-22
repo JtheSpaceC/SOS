@@ -6,6 +6,7 @@ public class CharacterPoolEntry : MonoBehaviour {
 	public string firstName;
 	public string lastName;
 	public string callsign;
+	public string callsPlayer;
 
 	public string characterBio;
 	[HideInInspector] public string startingBioText;
