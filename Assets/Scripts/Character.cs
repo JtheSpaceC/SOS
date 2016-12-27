@@ -199,6 +199,7 @@ public class Character : MonoBehaviour {
 		nameForPlayer = myAppearance.namesForPlayer[UnityEngine.Random.Range(0, myAppearance.namesForPlayer.Length)];
 
 		//ifs
+		//if rank is Lieutenant, a chance for name to be 'L.T.'
 	}
 
 	public void GenerateRandomNewAppearance(int genderInt) //where 0 is male, 1 is female, otherwise random
