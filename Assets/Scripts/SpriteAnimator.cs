@@ -53,8 +53,11 @@ public class SpriteAnimator : MonoBehaviour {
 
 
 	[Header("Events")]
+	public UnityEvent myOnClickEvents;
 	public UnityEvent myOnEnableEvents;
 	public UnityEvent myOnDisableEvents;
+	public UnityEvent myMouseEnterEvents;
+	public UnityEvent myMouseExitEvents;
 
 	//for coroutine animation
 	bool doAnimation = false;
@@ -116,6 +119,21 @@ public class SpriteAnimator : MonoBehaviour {
 	{
 		myOnDisableEvents.Invoke();
 		StopAnimatingSpriteSwap();
+	}
+
+	void OnMouseEnter()
+	{
+		myMouseEnterEvents.Invoke();
+	}
+
+	void OnMouseExit()
+	{
+		myMouseExitEvents.Invoke();
+	}
+
+	void OnMouseDown()
+	{
+		myOnClickEvents.Invoke();
 	}
 
 	void Update()
