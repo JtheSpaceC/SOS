@@ -43,6 +43,7 @@ public class HomeBaseManager : MonoBehaviour {
 
 	public void ActivateElevator()
 	{
+		TurnOffRooms();
 		choicePanel.SetActive(false);
 		blackoutPanel.SetActive(true);
 		elevatorPanel.SetActive(true);
@@ -50,15 +51,19 @@ public class HomeBaseManager : MonoBehaviour {
 
 	public void GoToRoom(GameObject newRoom)
 	{
-		hangar.SetActive(false);
-		bar.SetActive(false);
-		briefing.SetActive(false);
-
+		TurnOffRooms();
 		elevatorPanel.SetActive(false);
 
 		//change this to a fade
 		blackoutPanel.SetActive(false);
 
 		newRoom.SetActive(true);
+	}
+
+	void TurnOffRooms()
+	{
+		hangar.SetActive(false);
+		bar.SetActive(false);
+		briefing.SetActive(false);
 	}
 }

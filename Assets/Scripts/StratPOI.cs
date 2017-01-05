@@ -27,8 +27,11 @@ public class StratPOI : MonoBehaviour {
 			lr.startWidth = 0.05f;
 			lr.endWidth = 0.05f;
 
-			lr.SetPosition(0, transform.position);
-			lr.SetPosition(1, myConnections[i].transform.position);
+			if(myConnections[i] != null)
+			{
+				lr.SetPosition(0, transform.position);
+				lr.SetPosition(1, myConnections[i].transform.position);
+			}
 		}
 	}
 }
