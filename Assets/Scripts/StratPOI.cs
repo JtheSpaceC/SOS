@@ -6,6 +6,9 @@ using UnityEngine;
 public class StratPOI : MonoBehaviour {
 
 	public List<StratPOI> myConnections = new List<StratPOI>();
+	public int myIndex = 0;
+
+	public static int index = 0;
 
 	/*public void MakeConnections(StratPOI other)
 	{
@@ -15,6 +18,11 @@ public class StratPOI : MonoBehaviour {
 			other.myConnections.Add(this);
 		}
 	}*/
+	void Awake()
+	{
+		myIndex = index;
+		index++;
+	}
 
 	public void DrawLines()
 	{
