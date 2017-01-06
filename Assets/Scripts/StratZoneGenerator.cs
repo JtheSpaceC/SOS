@@ -14,6 +14,10 @@ public class StratZoneGenerator : MonoBehaviour {
 	public int maxConnections;
 
 	int numConnections;
+	List<List<StratPOI>> listOfGroups = new List<List<StratPOI>>();
+	List<StratPOI> checkedPOIs = new List<StratPOI>();
+	bool hasMarchedFurther = false;
+	List<StratPOI> thisGroup = new List<StratPOI>();
 
 	public void GenerateNewZone()
 	{
@@ -39,7 +43,7 @@ public class StratZoneGenerator : MonoBehaviour {
 			float maxDist = 0.5f;
 			if(pointsOfInterest.Count > 1)
 			{
-				while(Vector2.Distance(newPOI.transform.position, absoluteNearestPOI(newStratPOI).transform.position) < 1.5f)
+				while(Vector2.Distance(newPOI.transform.position, AbsoluteNearestPOI(newStratPOI).transform.position) < 1.5f)
 				{
 					newPOI.transform.position = Random.insideUnitCircle.normalized * maxDist;
 					maxDist += .5f;
@@ -75,13 +79,20 @@ public class StratZoneGenerator : MonoBehaviour {
 		{
 			if(pointsOfInterest[i].myConnections.Count == 0)
 			{
-				StratPOI poiToAdd = absoluteNearestPOI(pointsOfInterest[i]);
-				if(!pointsOfInterest[i].myConnections.Contains(poiToAdd))
-					pointsOfInterest[i].myConnections.Add(poiToAdd);
-				if(!poiToAdd.myConnections.Contains(pointsOfInterest[i]))
-					poiToAdd.myConnections.Add(pointsOfInterest[i]);
+				StratPOI poiToAdd = AbsoluteNearestPOI(pointsOfInterest[i]);
+
+				if(poiToAdd != null)
+				{
+					if(!pointsOfInterest[i].myConnections.Contains(poiToAdd))
+						pointsOfInterest[i].myConnections.Add(poiToAdd);
+					if(!poiToAdd.myConnections.Contains(pointsOfInterest[i]))
+						poiToAdd.myConnections.Add(pointsOfInterest[i]);
+				}
 			}
 		}
+
+		//find and connect isolated regions
+		print("Isolated Groups: "+ MarchToFindIsolatedGroups());
 
 		#endregion
 
@@ -131,7 +142,7 @@ public class StratZoneGenerator : MonoBehaviour {
 		return nearestResult;
 	}
 
-	StratPOI absoluteNearestPOI(StratPOI startingPOI)
+	StratPOI AbsoluteNearestPOI(StratPOI startingPOI)
 	{
 		float nearestDistance = Mathf.Infinity;
 		StratPOI nearestResult = null;
@@ -148,5 +159,62 @@ public class StratZoneGenerator : MonoBehaviour {
 			}
 		}
 		return nearestResult;
+	}
+
+	int MarchToFindIsolatedGroups()
+	{
+		listOfGroups.Clear();
+		checkedPOIs.Clear();
+		hasMarchedFurther = false;
+		int isolatedGroups = 0;
+
+		foreach(StratPOI poi in pointsOfInterest.ToArray()) //look at every POI in the map
+		{
+			//see if it's contained in a check already. Only execute the march if it hasn't
+			if(!checkedPOIs.Contains(poi))
+			{
+				//increase the number of isolated groups.
+				isolatedGroups ++;
+				thisGroup.Clear();
+
+				//add POI to Checked and to a new Group immediately.
+				checkedPOIs.Add(poi);
+				thisGroup.Add(poi);
+
+				//add all its connections to Checked and the same Group
+				foreach(StratPOI connectedPOI in poi.myConnections)
+				{
+					checkedPOIs.Add(connectedPOI);
+					thisGroup.Add(connectedPOI);
+					hasMarchedFurther = true;
+				}
+
+				//for each of its connections, recursively check their connections
+				while(hasMarchedFurther)
+				{
+					hasMarchedFurther = false;
+
+					foreach(StratPOI doubleConnectedPOI in thisGroup)
+					{
+						if(!checkedPOIs.Contains(doubleConnectedPOI))
+						{
+							hasMarchedFurther = true;
+
+							checkedPOIs.Add(doubleConnectedPOI);
+							thisGroup.Add(doubleConnectedPOI);
+						}
+					}
+				}
+
+				//add thisGroup to the list of groups
+				print("This group is " + thisGroup.Count);
+				listOfGroups.Add(thisGroup);
+			}
+		}
+
+		//return how many individual groups there were
+		return isolatedGroups;
+
+		//should then connect all group members who are closest to the centre to each other
 	}
 }

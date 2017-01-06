@@ -7,7 +7,6 @@ public class HealthTurret : Health {
 		
 	private SpriteRenderer myRenderer;
 	
-	public GameObject smokeEffects;
 	private GameObject radarSig;
 	
 	
@@ -91,9 +90,10 @@ public class HealthTurret : Health {
 
 		if(makeSmoke)
 		{
-			smokeEffects = Instantiate (smokeEffects, transform.position, transform.rotation) as GameObject;
-			smokeEffects.transform.parent = this.transform;		
-			StartCoroutine (SmokeFade(smokeEffects));
+			smoke.gameObject.SetActive(true);
+			smokeEm.rateOverTime = 150;
+			smoke.startLifetime *= 3;	
+			StartCoroutine (SmokeFade(smoke.gameObject));
 		}
 		if (turnOffSprite)
 			myRenderer.enabled = false;

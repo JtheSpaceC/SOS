@@ -343,7 +343,7 @@ public class Tools: MonoBehaviour
 			Debug.LogError("ERROR: " + theCaller.name + " checked if a FORMATION was retreating. ");
 			return false;
 		}
-		else if(targetToCheck.tag == "PlayerFighter" || targetToCheck.tag == "Turret")
+		else if(targetToCheck.tag == "PlayerFighter" || targetToCheck.tag == "Turret" || targetToCheck.tag == "Transport")
 		{
 			return false;
 		}

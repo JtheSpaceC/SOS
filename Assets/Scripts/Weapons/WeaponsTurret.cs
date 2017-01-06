@@ -24,7 +24,7 @@ public class WeaponsTurret : TargetableObject {
 	public Transform shotSpawn1;	
 	public Transform shotSpawn2;
 	
-	private GameObject theFirer;
+	GameObject theFirer;
 	
 	//private bool targetInSight = false;
 	public bool allowedToFire = true;
@@ -55,6 +55,7 @@ public class WeaponsTurret : TargetableObject {
 	
 	void Start()
 	{
+		//the turret will tell every bullet it fires that it was fired by the root craft (i.e. shuttle, NOT turret)
 		theFirer = this.transform.parent.parent.gameObject;
 
 		if(weaponTypeFromObjectPoolList == null)

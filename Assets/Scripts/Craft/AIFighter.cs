@@ -920,7 +920,7 @@ public class AIFighter : FighterFunctions {
 			{
 				if(target)
 					target.GetComponent<TargetableObject>().myAttackers.Remove(this.gameObject);
-				
+
 				target = theAttacker;
 				target.GetComponent<TargetableObject>().myAttackers.Add(this.gameObject);
 			}

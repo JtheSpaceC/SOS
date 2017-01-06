@@ -106,11 +106,21 @@ public class Health : MonoBehaviour {
 		myAudioSource = GetComponent<AudioSource> ();
 
 		GameObject smokeGO = Instantiate(Tools.instance.environments.smokeTrailPrefab, transform.FindChild("Effects")) as GameObject;
-		smokeGO.transform.localPosition = new Vector3(0, -.35f, 0);
+		if(tag != "Turret")
+			smokeGO.transform.localPosition = new Vector3(0, -.35f, 0);
+		else 
+		{
+			smokeGO.transform.localPosition = Vector3.zero;
+		}
 		smoke = smokeGO.GetComponent<ParticleSystem>();
 
 		GameObject flamesGO = Instantiate(Tools.instance.environments.flamesTrailPrefab, transform.FindChild("Effects")) as GameObject;
-		flamesGO.transform.localPosition = new Vector3(0, -.35f, 0);
+		if(tag != "Turret")
+			flamesGO.transform.localPosition = new Vector3(0, -.35f, 0);
+		else 
+		{
+			flamesGO.transform.localPosition = Vector3.zero;
+		}
 		flames = flamesGO.GetComponent<ParticleSystem>();
 
 		smokeEm = smoke.emission;

@@ -288,6 +288,37 @@ public class EnginesFighter : MonoBehaviour {
 				- (myRigidBody.velocity *1.5f);
 			//AdjustForAfterburner(myRigidBody,target.transform.parent.parent.parent.GetComponent<Rigidbody2D>()); 
 		}
+		else if(target != null && target.tag == "Transport")
+		{
+			SupportShipFunctions targetScript = target.GetComponent<SupportShipFunctions>();
+			GameObject targetTurret = null;
+
+			if(targetScript.myTurrets.Count > 0)
+			{
+				for(int i = 0; i < targetScript.myTurrets.Count; i++)
+				{
+					if(!targetScript.myTurrets[i].GetComponent<HealthTurret>().dead)
+					{
+						targetTurret = targetScript.myTurrets[i];
+						break;
+					}
+				}
+
+				if(targetTurret != null) //then we move behind the turret
+				{
+					newMovementPosition = moveToWhere + (target.GetComponent<Rigidbody2D>().velocity *1.5f) 
+						- (myRigidBody.velocity *1.5f);
+					//AdjustForAfterburner(myRigidBody,target.transform.parent.parent.parent.GetComponent<Rigidbody2D>()); 
+				}
+				else
+				{
+					newMovementPosition = (Vector2)target.transform.FindChild("Craft's Six").position + 
+						(target.GetComponent<Rigidbody2D>().velocity *1.5f) - (myRigidBody.velocity *1.5f);
+					//AdjustForAfterburner(myRigidBody,target.transform.parent.parent.parent.GetComponent<Rigidbody2D>()); 
+				}
+			}
+			 
+		}
 		else if(target == null) //i.e. waypoints
 		{
 			if(stopAtWaypoint)
