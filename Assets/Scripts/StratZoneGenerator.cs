@@ -17,7 +17,6 @@ public class StratZoneGenerator : MonoBehaviour {
 	List<List<StratPOI>> listOfGroups = new List<List<StratPOI>>();
 	List<StratPOI> checkedPOIs = new List<StratPOI>();
 	bool hasMarchedFurther = false;
-	List<StratPOI> thisGroup = new List<StratPOI>();
 
 	public void GenerateNewZone()
 	{
@@ -40,13 +39,13 @@ public class StratZoneGenerator : MonoBehaviour {
 			allPointsOfInterest.Add(newStratPOI);
 
 			//push them apart if needs be
-			float maxDist = 0.5f;
+			float maxDist = 0.25f;
 			if(allPointsOfInterest.Count > 1)
 			{
 				while(Vector2.Distance(newPOI.transform.position, AbsoluteNearestPOI(newStratPOI).transform.position) < 1.5f)
 				{
 					newPOI.transform.position = Random.insideUnitCircle.normalized * maxDist;
-					maxDist += .5f;
+					maxDist += .25f;
 				}
 			}
 
@@ -93,109 +92,84 @@ public class StratZoneGenerator : MonoBehaviour {
 			}
 		}
 
-		//find isolated regions
-		print("Isolated Groups: "+ MarchToFindIsolatedGroups());
-		int groupInt = 1;
+		//find isolated regions and Connect them
+		StartCoroutine(ConnectIsolatedZones()); //this also draws the lines
 
-		foreach(List<StratPOI> group in listOfGroups)
-		{
-			foreach(StratPOI poi in group)
-			{
-				print("Group Int: " + groupInt + ". My Index: " + poi.myIndex);
-			}
-			groupInt++;
-		}
+		#endregion
+	}
 
-		//Connect them
-	//	while(MarchToFindIsolatedGroups() != 1)
-		{
+	IEnumerator ConnectIsolatedZones ()
+	{
+		while (MarchToFindIsolatedGroups () > 1)//also creates listOfGroups
+		 {
 			float shortestDistance = Mathf.Infinity;
 			List<StratPOI> closestGroup = null;
 			List<StratPOI> secondClosestGroup = null;
-
 			List<List<StratPOI>> groupsToCheck = listOfGroups;
-			/*print(groupsToCheck[0][0].transform.position);
-			print(groupsToCheck[0][1].transform.position);
-			print(groupsToCheck[1][0].transform.position);
-			print(groupsToCheck[1][1].transform.position);
-			print(groupsToCheck[2][0].transform.position);
-			print(groupsToCheck[2][1].transform.position);*/
-
 			//find the group nearest the origin point
-			foreach(List<StratPOI> list in groupsToCheck)
+			foreach (List<StratPOI> list in groupsToCheck) 
 			{
 				Vector3 averagePosition = Vector3.zero;
 				//get average position of group
-				foreach(StratPOI poi in list)
+				foreach (StratPOI poi in list) 
 				{
 					averagePosition += poi.transform.position;
 				}
-				float distance = Vector2.Distance(averagePosition, Vector2.zero);
-				print("1st group dist: " + distance);
-				if(distance < shortestDistance)
+				averagePosition /= list.Count;
+
+				float distance = Vector2.Distance (averagePosition, Vector2.zero);
+				if (distance < shortestDistance) 
 				{
 					closestGroup = list;
 					shortestDistance = distance;
 				}
 			}
-
 			//find the second nearest group
-			groupsToCheck.Remove(closestGroup);
-
+			groupsToCheck.Remove (closestGroup);
 			shortestDistance = Mathf.Infinity;
-
-			foreach(List<StratPOI> list in groupsToCheck)
+			foreach (List<StratPOI> list in groupsToCheck) 
 			{
 				Vector3 averagePosition = Vector3.zero;
 				//get average position of group
-				foreach(StratPOI poi in list)
+				foreach (StratPOI poi in list) 
 				{
 					averagePosition += poi.transform.position;
 				}
-				float distance = Vector2.Distance(averagePosition, Vector2.zero);
-				print("2nd group dist: " + distance);
+				averagePosition /= list.Count;
 
-				if(distance < shortestDistance)
+				float distance = Vector2.Distance (averagePosition, Vector2.zero);
+				if (distance < shortestDistance) 
 				{
 					secondClosestGroup = list;
 					shortestDistance = distance;
 				}
 			}
-
 			//find the nearest pair of POIs, one from each group
 			shortestDistance = Mathf.Infinity;
 			StratPOI[] closestPair = new StratPOI[2];
-
-			foreach(StratPOI firstPOI in closestGroup)
+			foreach (StratPOI firstPOI in closestGroup) 
 			{
-				foreach(StratPOI secondPOI in secondClosestGroup)
+				foreach (StratPOI secondPOI in secondClosestGroup) 
 				{
-					float distance = Vector2.Distance(firstPOI.transform.position, secondPOI.transform.position);
-					if(distance < shortestDistance)
+					float distance = Vector2.Distance (firstPOI.transform.position, secondPOI.transform.position);
+					if (distance < shortestDistance) 
 					{
 						shortestDistance = distance;
-						closestPair = new StratPOI[]{firstPOI, secondPOI};
+						closestPair = new StratPOI[]{firstPOI,secondPOI};
 					}
 				}
 			}
-
 			//connect them
+			closestPair [0].myConnections.Add (closestPair [1]);
+			closestPair [1].myConnections.Add (closestPair [0]);
 
-			print(closestPair[0].myConnections.Count + " : " + closestPair[1].myConnections.Count);
-			closestPair[0].myConnections.Add(closestPair[1]);
-			closestPair[1].myConnections.Add(closestPair[0]);
-			print(closestPair[0].myConnections.Count + " : " + closestPair[1].myConnections.Count);
+			//Draw the lines
+			for(int i = 0; i < allPointsOfInterest.Count; i++)
+			{
+				allPointsOfInterest[i].DrawLines();
+			}
 
-			print("Isolated Groups: "+ MarchToFindIsolatedGroups());
-
-		}
-
-		#endregion
-
-		//Draw the lines
-		for(int i = 0; i < allPointsOfInterest.Count; i++)
-		{
-			allPointsOfInterest[i].DrawLines();
+			yield return new WaitForSeconds(.9f);
 		}
 	}
 
@@ -264,6 +238,7 @@ public class StratZoneGenerator : MonoBehaviour {
 	{
 		checkedPOIs.Clear();
 		hasMarchedFurther = false;
+		listOfGroups.Clear();
 		int isolatedGroups = 0;
 
 		foreach(StratPOI poi in allPointsOfInterest.ToArray()) //look at every POI in the map
@@ -271,13 +246,14 @@ public class StratZoneGenerator : MonoBehaviour {
 			//see if it's contained in a check already. Only execute the march if it hasn't
 			if(!checkedPOIs.Contains(poi))
 			{
+				List<StratPOI> thisGroup = new List<StratPOI>();
+
 				//increase the number of isolated groups.
 				isolatedGroups ++;
 				thisGroup.Clear();
 
 				//add POI to Checked and to a new Group immediately.
 				checkedPOIs.Add(poi);
-				print("TEST INDEX: " + poi.myIndex);
 
 				thisGroup.Add(poi);
 				hasMarchedFurther = true;
@@ -296,8 +272,6 @@ public class StratZoneGenerator : MonoBehaviour {
 							{
 								hasMarchedFurther = true;
 
-								print("TEST INDEX: " + doubleConnectedPOI.myIndex);
-
 								checkedPOIs.Add(doubleConnectedPOI);
 								tempGroup.Add(doubleConnectedPOI);
 								break;
@@ -306,7 +280,7 @@ public class StratZoneGenerator : MonoBehaviour {
 					}
 					thisGroup.AddRange(tempGroup);
 				}
-
+				
 				//add thisGroup to the list of groups
 				listOfGroups.Add(thisGroup);
 			}
