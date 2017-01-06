@@ -49,6 +49,8 @@ public class StratZoneGenerator : MonoBehaviour {
 					maxDist += .5f;
 				}
 			}
+
+			//TODO: destroy any that are too far outside the bounds
 		}
 
 		//MAKE CONNECTIONS
@@ -91,8 +93,9 @@ public class StratZoneGenerator : MonoBehaviour {
 			}
 		}
 
-		//find and connect isolated regions
+		//find isolated regions
 		print("Isolated Groups: "+ MarchToFindIsolatedGroups());
+		//TODO: Connect them
 
 		#endregion
 
@@ -180,41 +183,36 @@ public class StratZoneGenerator : MonoBehaviour {
 				//add POI to Checked and to a new Group immediately.
 				checkedPOIs.Add(poi);
 				thisGroup.Add(poi);
-
-				//add all its connections to Checked and the same Group
-				foreach(StratPOI connectedPOI in poi.myConnections)
-				{
-					checkedPOIs.Add(connectedPOI);
-					thisGroup.Add(connectedPOI);
-					hasMarchedFurther = true;
-				}
+				hasMarchedFurther = true;
 
 				//for each of its connections, recursively check their connections
 				while(hasMarchedFurther)
 				{
 					hasMarchedFurther = false;
+					List<StratPOI> tempGroup = new List<StratPOI>();
 
-					foreach(StratPOI doubleConnectedPOI in thisGroup)
+					foreach(StratPOI connectedPOI in thisGroup)
 					{
-						if(!checkedPOIs.Contains(doubleConnectedPOI))
+						foreach(StratPOI doubleConnectedPOI in connectedPOI.myConnections)
 						{
-							hasMarchedFurther = true;
+							if(!checkedPOIs.Contains(doubleConnectedPOI))
+							{
+								hasMarchedFurther = true;
 
-							checkedPOIs.Add(doubleConnectedPOI);
-							thisGroup.Add(doubleConnectedPOI);
+								checkedPOIs.Add(doubleConnectedPOI);
+								tempGroup.Add(doubleConnectedPOI);
+								break;
+							}
 						}
 					}
+					thisGroup.AddRange(tempGroup);
 				}
 
 				//add thisGroup to the list of groups
-				print("This group is " + thisGroup.Count);
 				listOfGroups.Add(thisGroup);
 			}
 		}
-
 		//return how many individual groups there were
 		return isolatedGroups;
-
-		//should then connect all group members who are closest to the centre to each other
 	}
 }
