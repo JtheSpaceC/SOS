@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: b1c23f5a1a82ecb43837545c5647ec9c
-timeCreated: 1480731523
+timeCreated: 1483729438
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -22,6 +22,24 @@ TextureImporter:
     21300030: SoS-Portait-Male-Mouth-1_15
     21300032: SoS-Portait-Male-Mouth-1_16
     21300034: SoS-Portait-Male-Mouth-1_17
+    21300036: SoS-Portait-Male-Mouth-2_0
+    21300038: SoS-Portait-Male-Mouth-2_1
+    21300040: SoS-Portait-Male-Mouth-2_2
+    21300042: SoS-Portait-Male-Mouth-2_3
+    21300044: SoS-Portait-Male-Mouth-2_4
+    21300046: SoS-Portait-Male-Mouth-2_5
+    21300048: SoS-Portait-Male-Mouth-2_6
+    21300050: SoS-Portait-Male-Mouth-2_7
+    21300052: SoS-Portait-Male-Mouth-2_8
+    21300054: SoS-Portait-Male-Mouth-2_9
+    21300056: SoS-Portait-Male-Mouth-2_10
+    21300058: SoS-Portait-Male-Mouth-2_11
+    21300060: SoS-Portait-Male-Mouth-2_12
+    21300062: SoS-Portait-Male-Mouth-2_13
+    21300064: SoS-Portait-Male-Mouth-2_14
+    21300066: SoS-Portait-Male-Mouth-2_15
+    21300068: SoS-Portait-Male-Mouth-2_16
+    21300070: SoS-Portait-Male-Mouth-2_17
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -104,234 +122,234 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_0
+      name: SoS-Portait-Male-Mouth-2_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 6800
-        width: 240
-        height: 400
+        y: 3400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 6400
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 6000
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 5600
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 5200
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_5
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 4800
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_6
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 4400
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_7
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 4000
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_8
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 3600
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_9
+      name: SoS-Portait-Male-Mouth-2_1
       rect:
         serializedVersion: 2
         x: 0
         y: 3200
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_10
+      name: SoS-Portait-Male-Mouth-2_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3000
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_3
       rect:
         serializedVersion: 2
         x: 0
         y: 2800
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_11
+      name: SoS-Portait-Male-Mouth-2_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2600
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_5
       rect:
         serializedVersion: 2
         x: 0
         y: 2400
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_12
+      name: SoS-Portait-Male-Mouth-2_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2200
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_7
       rect:
         serializedVersion: 2
         x: 0
         y: 2000
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_13
+      name: SoS-Portait-Male-Mouth-2_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1800
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_9
       rect:
         serializedVersion: 2
         x: 0
         y: 1600
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_14
+      name: SoS-Portait-Male-Mouth-2_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1400
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_11
       rect:
         serializedVersion: 2
         x: 0
         y: 1200
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_15
+      name: SoS-Portait-Male-Mouth-2_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1000
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_13
       rect:
         serializedVersion: 2
         x: 0
         y: 800
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_16
+      name: SoS-Portait-Male-Mouth-2_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_15
       rect:
         serializedVersion: 2
         x: 0
         y: 400
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Mouth-1_17
+      name: SoS-Portait-Male-Mouth-2_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Mouth-2_17
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

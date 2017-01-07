@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 249fa44fe2abd1a44a7643e4be7802c9
-timeCreated: 1480710401
+timeCreated: 1483728959
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -11,6 +11,13 @@ TextureImporter:
     21300008: SoS-Portait-Male-Cheeks-1_4
     21300010: SoS-Portait-Male-Cheeks-1_5
     21300012: SoS-Portait-Male-Cheeks-1_6
+    21300014: SoS-Portait-Male-Cheeks-2_0
+    21300016: SoS-Portait-Male-Cheeks-2_1
+    21300018: SoS-Portait-Male-Cheeks-2_2
+    21300020: SoS-Portait-Male-Cheeks-2_3
+    21300022: SoS-Portait-Male-Cheeks-2_4
+    21300024: SoS-Portait-Male-Cheeks-2_5
+    21300026: SoS-Portait-Male-Cheeks-2_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -93,91 +100,91 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SoS-Portait-Male-Cheeks-1_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 2400
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Cheeks-1_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 2000
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Cheeks-1_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1600
-        width: 240
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SoS-Portait-Male-Cheeks-1_3
+      name: SoS-Portait-Male-Cheeks-2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 1200
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Cheeks-1_4
+      name: SoS-Portait-Male-Cheeks-2_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1000
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Cheeks-2_2
       rect:
         serializedVersion: 2
         x: 0
         y: 800
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Cheeks-1_5
+      name: SoS-Portait-Male-Cheeks-2_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Cheeks-2_4
       rect:
         serializedVersion: 2
         x: 0
         y: 400
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SoS-Portait-Male-Cheeks-1_6
+      name: SoS-Portait-Male-Cheeks-2_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Cheeks-2_6
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 240
-        height: 400
+        width: 120
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
