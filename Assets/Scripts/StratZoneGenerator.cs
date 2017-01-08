@@ -187,7 +187,7 @@ public class StratZoneGenerator : MonoBehaviour {
 		StratPOI.index = 0;
 	}
 
-	StratPOI nearestPOI(StratPOI startingPOI)
+	/*StratPOI nearestPOI(StratPOI startingPOI)
 	{
 		float nearestDistance = Mathf.Infinity;
 		StratPOI nearestResult = null;
@@ -213,7 +213,7 @@ public class StratZoneGenerator : MonoBehaviour {
 			nearestResult.myConnections.Add(startingPOI);
 
 		return nearestResult;
-	}
+	}*/
 
 	StratPOI AbsoluteNearestPOI(StratPOI startingPOI)
 	{
