@@ -230,11 +230,11 @@ public class TargetableObject : MonoBehaviour {
 			{
 				string[] killConfirms = new string[]{"Got him!", "One less to worry about!", "Boom! Tell your friends!", "Take that!",
 					"That'll teach you!"};
-				Subtitles.instance.PostSubtitle(killConfirms);
+				//Subtitles.instance.PostSubtitle(killConfirms);
 				_battleEventManager.instance.CallWingmanGotAKill();
 
 				if(GetComponent<AIFighter>() && GetComponent<AIFighter>().myCharacterAvatarScript)
-					GetComponent<AIFighter>().myCharacterAvatarScript.StartCoroutine("Speaking");
+					GetComponent<AIFighter>().myCharacterAvatarScript.SaySpeechBubble(killConfirms);
 			}
 		}
 		if(tag == "PlayerFighter")

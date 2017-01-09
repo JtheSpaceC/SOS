@@ -690,6 +690,10 @@ public class HealthFighter : Health {
 		if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters" && !thisIsPlayer)
 		{
 			Subtitles.instance.PostSubtitle(new string[]{this.name + " HAS BEEN DESTROYED!!!"});
+
+			myAIScript.myCharacterAvatarScript.SaySpeechBubble(
+				new string[]{"AAAAAAAAAGH!!!.............", "EJECTING!", "No WAIT! AAAAAAGH...."});
+
 			_battleEventManager.instance.CallWingmanDied();
 		}
 

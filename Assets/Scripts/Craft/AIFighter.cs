@@ -242,8 +242,8 @@ public class AIFighter : FighterFunctions {
 
 				if(LayerMask.LayerToName(gameObject.layer) == "PMCFighters")
 				{
-					Subtitles.instance.PostSubtitle(new string[]{"This is " +this.name + ". I'm hit! Breaking off!", 
-						"This is " +this.name + ". I've taken critical damage! Bugging out!"});
+					myCharacterAvatarScript.SaySpeechBubble(
+						new string[]{"I'm hit! Breaking off!", "I've taken heavy damage! Bugging out!"});
 					HUDPointerOn(4);
 					_battleEventManager.instance.CallWingmanInTrouble();
 

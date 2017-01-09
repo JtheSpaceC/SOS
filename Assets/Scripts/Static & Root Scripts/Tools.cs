@@ -456,9 +456,21 @@ public class Tools: MonoBehaviour
 
 	public Transform NextFreeAvatarsPanelUI()
 	{
-		Transform selectedPanel = avatarsPanelUI[nextFreePanel];
-		nextFreePanel ++;
-		return selectedPanel;
+		if(nextFreePanel < avatarsPanelUI.Length)
+		{
+			Transform selectedPanel = avatarsPanelUI[nextFreePanel];
+
+			nextFreePanel ++;
+			return selectedPanel;
+		}
+		else //make a new one
+		{
+			GameObject newPanel = Instantiate(avatarsPanelUI[0].parent.parent.gameObject) as GameObject;
+			Destroy(newPanel.GetComponentInChildren<RawImage>().gameObject); //delete the now duplicated avatar output from the new panel
+			newPanel.transform.SetParent(avatarsPanelUI[0].parent.parent.parent); //this slots it into line on the right side of the screen
+			newPanel.transform.localScale = Vector3.one;
+			return newPanel.GetComponentInChildren<Mask>().transform;
+		}
 	}
 
 	public void MoveCanvasToFront(Canvas subjectCanvas)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -223,6 +224,7 @@ public class SquadronLeader : MonoBehaviour {
 			{
 				AIFighter aiScript = activeWingmen[i].GetComponent<AIFighter>();
 				aiScript.SetSquadReferences();
+
 				if(isPlayerSquad)
 				{
 					aiScript.myCharacterAvatarScript.SetUpAvatar(aiScript.mySquadUnitNumber);
@@ -363,7 +365,8 @@ public class SquadronLeader : MonoBehaviour {
 		}
 
 		string[] acknowledgments = new string[] {"Roger that. Forming up!"};
-		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		//AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		fighter.myCharacterAvatarScript.SaySpeechBubble(acknowledgments[Random.Range(0, acknowledgments.Length)]);
 	}
 
 	public void EngageAtWill(AIFighter fighter)
@@ -384,7 +387,8 @@ public class SquadronLeader : MonoBehaviour {
 		}
 			
 		string[] acknowledgments = new string[] {"Affirmative. Searching for targets!",	"Affirmative. Going hunting!"};
-		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		//AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		fighter.myCharacterAvatarScript.SaySpeechBubble(acknowledgments[Random.Range(0, acknowledgments.Length)]);
 	}
 
 	public void CoverMe(AIFighter fighter)
@@ -405,7 +409,11 @@ public class SquadronLeader : MonoBehaviour {
 		}
 
 		string[] acknowledgments = new string[] {"Acknowledged. Got your back!", "Got you covered!"};
-		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+
+		//AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		fighter.myCharacterAvatarScript.SaySpeechBubble(acknowledgments[Random.Range(0, acknowledgments.Length)]);
+
+		_battleEventManager.instance.CallWingmanAcknowledgeOrder();
 
 		if(isPlayerSquad)
 			_battleEventManager.instance.CallOrdersCoverMe();
@@ -429,7 +437,8 @@ public class SquadronLeader : MonoBehaviour {
 		}
 
 		string[] acknowledgments = new string[] {"Roger. Breaking off!", "Heading Home!"};
-		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		//AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		fighter.myCharacterAvatarScript.SaySpeechBubble(acknowledgments[Random.Range(0, acknowledgments.Length)]);
 	}
 
 
@@ -451,7 +460,8 @@ public class SquadronLeader : MonoBehaviour {
 		}
 
 		string[] acknowledgments = new string[] {"Roger. Backing off!", "Acknowledged. They're all yours."};
-		AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		//AcknowledgeOrderIfWingmenAlive (acknowledgments);
+		fighter.myCharacterAvatarScript.SaySpeechBubble(acknowledgments[Random.Range(0, acknowledgments.Length)]);
 	}
 
 
@@ -491,12 +501,13 @@ public class SquadronLeader : MonoBehaviour {
 			}
 			else
 			{
-				Subtitles.instance.PostSubtitle (possibleReplies);
+				/*Subtitles.instance.PostSubtitle (possibleReplies);
+
 				foreach(GameObject wingman in activeWingmen)
 				{
 					wingman.GetComponent<AIFighter>().myCharacterAvatarScript.StartCoroutine("Speaking");
 				}
-				_battleEventManager.instance.CallWingmanAcknowledgeOrder();
+				_battleEventManager.instance.CallWingmanAcknowledgeOrder();*/
 			}
 		}
 	}

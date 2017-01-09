@@ -20,6 +20,9 @@ public class Character : MonoBehaviour {
 	[HideInInspector] public Heartbeat heartbeatScript;
 	[HideInInspector] public BGScroller bgScrollerScript;
 	[HideInInspector] public AIFighter myAIFighterScript;
+	public Image mySpeechBubble;
+	public Image mySpeechBubblePointer;
+	public Text mySpeechBubbleText;
 
 	[Tooltip("Usually okay to leave blank if on a Fighter. Gets set by SquadronLeader script normally.")] 
 	public GameObject avatarOutput;
@@ -152,13 +155,17 @@ public class Character : MonoBehaviour {
 	}
 
 	public void SetUpAvatar (int mySquadUnitNumber)
-	{
-		if(mySquadUnitNumber > 3)
-			return;
+	{		
 		GetComponentInChildren<Camera>().enabled = true;
 		GetComponentInChildren<Camera>().targetTexture = myRenderTexture;
 		avatarOutput = Instantiate (avatarOutputPrefab) as GameObject;
-		avatarOutput.transform.SetParent (Tools.instance.NextFreeAvatarsPanelUI());
+
+		Transform myAvatarPanel = Tools.instance.NextFreeAvatarsPanelUI();
+		avatarOutput.transform.SetParent (myAvatarPanel);
+		mySpeechBubble = myAvatarPanel.parent.parent.FindChild("Speech Bubble").GetComponentInChildren<Image>();
+		mySpeechBubblePointer = mySpeechBubble.transform.FindChild("Speech Pointer").GetComponent<Image>();
+		mySpeechBubbleText = mySpeechBubble.GetComponentInChildren<Text>();
+
 		avatarOutput.GetComponent<RawImage> ().texture = myRenderTexture;
 		avatarOutput.transform.localScale = Vector3.one;
 		avatarOutput.GetComponent<RectTransform>().offsetMax = Vector2.zero;
@@ -736,7 +743,7 @@ public class Character : MonoBehaviour {
 	public IEnumerator Speaking()
 	{
 		//speaking = true;
-		Invoke ("StopSpeaking", 1);
+		Invoke ("StopSpeaking", 1); //TODO: Change 1 second to length of text itelf.
 		mouth.sprite = GetARandomSprite(myAppearance.speakingMouthShapes);
 
 		yield return new WaitForSeconds(0.1f);
@@ -771,7 +778,51 @@ public class Character : MonoBehaviour {
 	{
 		heartbeatScript.bpm = newBpm;
 	}
+
+	IEnumerator SpeechBubbleFadeIn()
+	{
+		StopCoroutine("SpeechBubbleFadeOut");
+		mySpeechBubble.color = Color.clear;
+		float fadeStartTime = Time.time;
+
+		while(mySpeechBubble.color.a != 1)
+		{
+			mySpeechBubble.color = Color.Lerp(Color.clear, Color.white, (Time.time - fadeStartTime)/0.5f);
+			mySpeechBubblePointer.color = mySpeechBubble.color;
+			mySpeechBubbleText.color = mySpeechBubble.color;
+			yield return new WaitForEndOfFrame();
+		}
+		StartCoroutine("SpeechBubbleFadeOut");
+	}
+
+	IEnumerator SpeechBubbleFadeOut()
+	{
+		StopCoroutine("SpeechBubbleFadeIn");
+		yield return new WaitForSeconds(2.5f);
+
+		float fadeStartTime = Time.time;
+
+		while(mySpeechBubble.color.a != 0)
+		{
+			mySpeechBubble.color = Color.Lerp(Color.white, Color.clear, (Time.time - fadeStartTime)/0.5f);
+			mySpeechBubblePointer.color = mySpeechBubble.color;
+			mySpeechBubbleText.color = mySpeechBubble.color;
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
 	#endregion
+
+	public void SaySpeechBubble(string toSay)
+	{
+		StartCoroutine("Speaking");
+		StartCoroutine("SpeechBubbleFadeIn");
+		mySpeechBubbleText.text = toSay;	
+	}
+	public void SaySpeechBubble(string[] sayOptions)
+	{
+		SaySpeechBubble(sayOptions[UnityEngine.Random.Range(0, sayOptions.Length)]);
+	}
 
 	void OnDisable()
 	{
