@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 6b794d4a593e5c546b0c00f884dcdad4
-timeCreated: 1483729385
+timeCreated: 1484064198
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -16,6 +16,9 @@ TextureImporter:
     21300018: SoS-Portait-Male-Misc-2_3
     21300020: SoS-Portait-Male-Misc-2_4
     21300022: SoS-Portait-Male-Misc-2_5
+    21300024: SoS-Portait-Male-Misc-2_6
+    21300026: SoS-Portait-Male-Misc-2_7
+    21300028: SoS-Portait-Male-Misc-2_8
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -102,7 +105,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1000
+        y: 1600
         width: 120
         height: 200
       alignment: 0
@@ -115,7 +118,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 800
+        y: 1400
         width: 120
         height: 200
       alignment: 0
@@ -128,7 +131,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 600
+        y: 1200
         width: 120
         height: 200
       alignment: 0
@@ -141,7 +144,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 400
+        y: 1000
         width: 120
         height: 200
       alignment: 0
@@ -154,7 +157,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 200
+        y: 800
         width: 120
         height: 200
       alignment: 0
@@ -164,6 +167,45 @@ TextureImporter:
       tessellationDetail: 0
     - serializedVersion: 2
       name: SoS-Portait-Male-Misc-2_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Misc-2_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Misc-2_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 120
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SoS-Portait-Male-Misc-2_8
       rect:
         serializedVersion: 2
         x: 0

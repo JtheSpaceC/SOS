@@ -20,7 +20,7 @@ public class SpawnerGroup : MonoBehaviour {
 	float approachTime;
 	float startTime;
 
-	TargetableObject.WhichSide whichSide;
+	public TargetableObject.WhichSide whichSide;
 
 	public GameObject objectPrefab;
 	public GameObject squadLeaderPrefab;
